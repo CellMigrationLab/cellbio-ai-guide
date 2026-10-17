@@ -20,7 +20,7 @@ This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2
 
 The commands below are for the **operator**, not the LLM being tested. Run them from the repository root. Replace `<id>` and `<agent_id>` with the actual identifiers.
 
-1. Prepare the run: `PYTHONPATH=. python fig3/v2/run_operator.py prepare <id>`. Preparation refuses a non-empty harness scratchpad.
+1. Prepare the run: `PYTHONPATH=. python fig3/v2/run_operator.py prepare <id>` (with `SUBJECT_SCRATCHPAD` set to the operator session's scratchpad directory). Preparation refuses a non-empty harness scratchpad.
 2. Start a fresh sub-agent using the type in `rows.csv`, from its assigned folder. Give it only `subject_message.txt`. Rows A, B and D use `subject-chat` (read/web, no shell); row C uses `general-purpose`.
 3. Answer at most three follow-up questions, using only `answer_sheet.md`. For row B, supply development files only when requested before code: `run_operator.py give_dev_files <id>`. For row D, send the prescribed second and third turns from `prompts/`.
 4. Audit the transcript: `run_operator.py audit <id> <agent_id>`. Record metadata with `run_operator.py meta <id> <agent_id> "<notes>"`. Follow the protocol's rerun rules if the audit finds a violation.

@@ -25,6 +25,8 @@ and fig3/deviations.md (including the lessons from the round-2 pilot).
    - the sub-agent type `subject-chat` (Read, WebSearch, WebFetch only; no shell) is available. If it is not, stop
      and tell me: rows A, B and D must not be run with an agent that has a shell.
    - Record `pip freeze` in fig3/v2/environment_freeze.txt.
+   - Export SUBJECT_SCRATCHPAD=<your session's scratchpad directory, from your system prompt> for every
+     run_operator.py call (prepare and audit use it to check and archive what subjects write there).
 
 2. Preflight: one scenario per row x task (12 runs), following fig3/v2/README.md step by step, in
    fig3/v2/runs_preflight/ (not used in the figure). Fix harness problems only (operator, runner, scorer, framing),

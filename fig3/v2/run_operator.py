@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -21,10 +22,18 @@ from common.paths import REPO_ROOT
 V2 = REPO_ROOT / "fig3" / "v2"
 ASSETS, RUNS = V2 / "assets", V2 / "runs"
 SUBJECT_ROOT = Path("/home/user/sessions_v2")
-TRANSCRIPTS = Path("/root/.claude/projects/-home-user")
-# The harness tells every sub-agent to use this scratchpad; it is emptied before each subject and anything a subject
-# leaves there is archived with its run.
-SCRATCH = Path("/tmp/claude-0/-home-user/8b3112e1-653c-5f4c-bdba-69ecd9f94f24/scratchpad")
+TRANSCRIPTS = Path("/root/.claude/projects")    # sub-agent transcripts: <project>/<session>/subagents/agent-<id>.jsonl
+
+
+def scratchpad() -> Path:
+    """The operator session's scratchpad (set SUBJECT_SCRATCHPAD to the path given in the session's system prompt).
+
+    The harness tells every sub-agent to use this folder for temporary files; it is emptied before each subject and
+    anything a subject leaves there is archived with its run. No default: a wrong path would hide what subjects wrote."""
+    value = os.environ.get("SUBJECT_SCRATCHPAD")
+    if not value:
+        raise RuntimeError("set SUBJECT_SCRATCHPAD to this session's scratchpad directory")
+    return Path(value)
 MODEL_ALIASES = {"sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5", "haiku": "claude-haiku-5-5"}
 TOOLS = {  # tools a subject may use, by the 'tools' column of rows.csv; paths are checked separately
     "web": {"ToolSearch", "WebSearch", "WebFetch"},
@@ -73,8 +82,9 @@ def prepare(scenario_id: str) -> None:
     folder, run_dir = subject_dir(sc), RUNS / scenario_id
     if folder.exists() or run_dir.exists():
         raise FileExistsError(f"{folder} or {run_dir} exists (a scenario is prepared once; rerun = reject first)")
-    if SCRATCH.exists() and any(SCRATCH.iterdir()):
-        raise RuntimeError(f"{SCRATCH} is not empty; run audit on the previous scenario first")
+    scratch = scratchpad()
+    if scratch.exists() and any(scratch.iterdir()):
+        raise RuntimeError(f"{scratch} is not empty; run audit on the previous scenario first")
     folder.mkdir(parents=True)
     run_dir.mkdir(parents=True)
     sent = copy_assets(sc["folder_files"], folder)
@@ -102,7 +112,7 @@ def give_dev_files(scenario_id: str) -> None:
 
 
 def transcript(agent_id: str) -> tuple[list[dict], dict]:
-    hits = list(TRANSCRIPTS.glob(f"*/subagents/agent-{agent_id}.jsonl"))
+    hits = list(TRANSCRIPTS.glob(f"*/*/subagents/agent-{agent_id}.jsonl"))
     if len(hits) != 1:
         raise FileNotFoundError(f"transcript for agent {agent_id}: {len(hits)} found")
     meta = json.loads(Path(str(hits[0]).replace(".jsonl", ".meta.json")).read_text())
@@ -132,6 +142,7 @@ def audit(scenario_id: str, agent_id: str) -> None:
     sc = scenario(scenario_id)
     folder, run_dir = subject_dir(sc), RUNS / scenario_id
     allowed = TOOLS[row_spec(sc["row"])["tools"]]
+    scratch = scratchpad()
     events, _ = transcript(agent_id)
     calls, flags, notes, lines = [], [], [], [f"# {scenario_id}\n"]
     for ev in events:
@@ -154,26 +165,26 @@ def audit(scenario_id: str, agent_id: str) -> None:
                     flags.append(f"tool {name} not offered for row {sc['row']}")
                 for key in ("file_path", "path", "notebook_path"):
                     if isinstance(inp.get(key), str):
-                        if inp[key].startswith(str(SCRATCH)):
+                        if inp[key].startswith(str(scratch)):
                             notes.append(f"{name} in the harness scratchpad (archived)")
                         elif outside(inp[key], folder):
                             flags.append(f"{name} outside the subject folder: {inp[key]}")
                 if name == "Bash":
                     cmd = inp.get("command", "")
-                    bad = [p for p in shell_paths_outside(cmd, folder) if not p.startswith(str(SCRATCH))]
+                    bad = [p for p in shell_paths_outside(cmd, folder) if not p.startswith(str(scratch))]
                     if bad:
                         flags.append(f"Bash refers to paths outside the subject folder {bad[:5]}: {cmd[:200]}")
-                    if str(SCRATCH) in cmd:
+                    if str(scratch) in cmd:
                         notes.append("Bash in the harness scratchpad (archived)")
             elif kind == "tool_result":
                 text = block.get("content")
                 text = text if isinstance(text, str) else json.dumps(text)
                 lines.append(f"## tool result\n\n```\n{text[:3000]}\n```\n")
     archived = []
-    if SCRATCH.exists() and any(SCRATCH.iterdir()):
+    if scratch.exists() and any(scratch.iterdir()):
         target = run_dir / "subject_scratchpad"
         target.mkdir(exist_ok=True)
-        for item in SCRATCH.iterdir():
+        for item in scratch.iterdir():
             shutil.move(str(item), target / item.name)
             archived.append(item.name)
     result = {"agent_id": agent_id, "n_tool_calls": len(calls), "flags": flags,
