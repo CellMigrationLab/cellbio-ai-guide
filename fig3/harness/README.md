@@ -1,10 +1,14 @@
-# Harness: how the Figure 3 runs were executed and collected (as used; paths are those of the working folder)
+# Historical Figure 3 execution scripts
 
-| File | Role |
+These scripts record how the **round-1 draft** LLM runs were collected, executed and scored. They are retained for audit, not recommended as the runner for a new experiment. For the replacement study, see [protocol v2](../PROTOCOL_V2.md) and its [current harness](../v2/README.md).
+
+| File | Historical role |
 |---|---|
-| `collect.py` | read each finished sub-agent transcript, extract the first code block, write `script.py` / `macro.ijm` (macro input/output lines replaced by absolute paths), queue it |
-| `queue_runner.sh`, `ijm_runner.sh` | run queued Python scripts (Cellpose 4.2.1.1, CPU, 1 h timeout) and Fiji macros (headless, 30 min timeout) one at a time, then score |
-| `score_task.py` + `legacy_scorers/` | the scorers used at the time (`score_cancer.py`, `score_endo.py`, `score_nuclei.py`, `matching.py`); `../scoring/tasks.py` re-implements them on repository paths and reproduces every score |
-| `build_scores.py`, `make_legend.py` | built `fig_scores.json` and the legend for the figure |
-| `turn2.py` | queue the script from a model's second reply (pilots) |
-| `export_prompts.py`, `export_conversations.py`, `grab.py`, `grab_round2.py` | export prompts, replies and hand-back reports from transcripts |
+| `collect.py` | Read transcripts, extract the first code block, save a Python script or Fiji macro and queue it. |
+| `queue_runner.sh`, `ijm_runner.sh` | Execute queued scripts and macros sequentially, with timeouts, then score outputs. |
+| `score_task.py`, `legacy_scorers/` | Scoring implementations used at the time. [scoring/tasks.py](../scoring/tasks.py) reproduces their scores on repository paths. |
+| `build_scores.py`, `make_legend.py` | Assemble the draft figure scores and legend. |
+| `turn2.py` | Queue a script returned in a second reply during the pilots. |
+| `export_prompts.py`, `export_conversations.py`, `grab.py`, `grab_round2.py` | Export conversations, prompts and hand-back records. |
+
+The scripts retain the working-folder paths and execution conventions used at the time. Consult the saved transcripts and [deviations](../deviations.md) before interpreting a historical score.
