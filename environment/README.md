@@ -1,11 +1,36 @@
-# Environments
+# Software environments
 
-| Purpose | Requirements | Notes |
+Most figure checks need only the base Python dependencies. Re-running the deep-learning models or SQUIRREL requires additional software.
+
+## Start here
+
+From the repository root:
+
+```bash
+python3 -m pip install -r environment/requirements.txt
+make check
+make full
+```
+
+The base environment uses Python 3.13. The SVG builders themselves use the Python standard library.
+
+## Optional software
+
+| Task | Setup | Notes |
 |---|---|---|
-| Rebuild figures, recompute scores, run tests (`make check`, `make full`) | `python3 -m pip install -r environment/requirements.txt` | Python 3.13; the figure builders need only the standard library |
-| Re-run Cellpose segmentations (`python tools/check_full.py --with-models`) | `python3 -m pip install -r environment/requirements-models.txt --extra-index-url https://download.pytorch.org/whl/cpu` (the `+cpu` torch build is only on the PyTorch index) | `pretrained_model='cyto3'` silently loads `cpsam_v2` in this version (Fig 3a) |
-| SQUIRREL (Fig 2e; `--with-squirrel`) | `requirements-nanopyx.txt`, in its own virtual environment | separate environment because of NumPy pins |
-| Fiji macros (Fig 3 round 1, row b; not used in protocol v2) | plain Fiji (Linux x64, downloaded 16 Oct 2026), no update sites added | run headless: `xvfb-run -a ImageJ-linux64 -batch macro.ijm` |
-| LLM runs (Fig 3) | Claude Code sub-agents, model claude-sonnet-5-5 (protocol v2: `subject-chat` for rows A, B, D) | not reproducible bit-for-bit; transcripts are stored in `fig3/*/runs/` and `fig3/v2/runs/` |
+| Re-run Cellpose segmentations | `python3 -m pip install -r environment/requirements-models.txt --extra-index-url https://download.pytorch.org/whl/cpu` | The CPU PyTorch build comes from the PyTorch index; use `python tools/check_full.py --with-models`. |
+| Re-run SQUIRREL (Figure 2e) | Install [requirements-nanopyx.txt](requirements-nanopyx.txt) in a **separate virtual environment** | NanoPyx has different NumPy requirements; run the full check with `--with-squirrel`. |
+| Re-run the historical Fiji macros (Figure 3 round 1) | Fiji for Linux x64, as used on 16 October 2026 | Headless invocation: `xvfb-run -a ImageJ-linux64 -batch macro.ijm`. Not part of protocol v2. |
+| Review Figure 3 LLM experiments | [Figure 3 records](../fig3/README.md) and [protocol v2](../fig3/PROTOCOL_V2.md) | The LLM conversations cannot be reproduced byte-for-byte; their outputs and transcripts are retained. |
 
-PDFs are rendered from the SVGs with headless Chromium: `make pdf` (`tools/svg_to_pdf.py`).
+**Cellpose version caveat:** in Cellpose 4.2.1.1, asking for the removed `cyto3` model can silently load `cpsam_v2`. Figure 3a uses this as an example of why a script running successfully does not prove the requested model was used.
+
+## Export PDFs
+
+The SVGs are converted using headless Chromium:
+
+```bash
+make pdf
+```
+
+See [tools/svg_to_pdf.py](../tools/svg_to_pdf.py) for the converter.
