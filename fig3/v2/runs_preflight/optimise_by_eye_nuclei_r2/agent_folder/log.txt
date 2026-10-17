@@ -1,0 +1,4 @@
+v1: Cellpose cpsam_v2, diameter=None, percentile 1-99 norm, flow 0.4, cellprob 0 on image.tif (CPU ~100 s): 584 objects. Dim endothelial ovals segmented well; bright round cancer nuclei also segmented.
+v2: Checked halo ratio (ring/object) as cancer feature: did not separate classes -> dropped. Used mean intensity.
+v3: Added debris filter (<50 um2, removed 14) and cancer filter (mean intensity > 1.6 x median of dim population, dim/bright split by Otsu on log intensity; ref 455, cutoff 728; removed 113). Final: 457 nuclei, median area 168 um2, median AR 1.54. Added touches_border column (not filtered).
+Outputs: labels.tif, measurements.csv, overlay.png. Only image.tif was used.

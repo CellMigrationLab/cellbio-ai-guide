@@ -1,0 +1,50 @@
+item,type,quote,classification,checked_against,source,note
+Cellpose,software,"Use **Cellpose (pretrained, no fine-tuning at first)**",current,installed_version,cellpose 4.2.1.1 installed,Installed and runs on Python 3.13 CPU.
+cpsam,model,`cpsam`,current,installed_version,cellpose 4.2.1.1 installed,In MODEL_NAMES; April 2025 release per models page.
+cpsam_v2,model,`cpsam_v2`,current,installed_version,cellpose 4.2.1.1 installed; https://cellpose.readthedocs.io/en/latest/models.html,Current default model; docs date it June 2026 as the reply says.
+cpdino,model,`cpdino`,current,installed_version,cellpose 4.2.1.1 installed; https://cellpose.readthedocs.io/en/latest/models.html,
+cpdino-vitb,model,`cpdino-vitb`,current,installed_version,cellpose 4.2.1.1 installed; https://cellpose.readthedocs.io/en/latest/models.html,
+cellpose.models.CellposeModel,function,models.CellposeModel(,current,installed_version,cellpose 4.2.1.1 installed,
+CellposeModel pretrained_model,parameter,pretrained_model=MODEL_NAME,current,installed_version,cellpose 4.2.1.1 installed,
+CellposeModel gpu,parameter,gpu=False,current,installed_version,cellpose 4.2.1.1 installed,
+CellposeModel.eval,function,model.eval(image_norm),current,installed_version,cellpose 4.2.1.1 installed,"Returns (masks, flows, styles), matching the 3-way unpacking; eval also re-normalises by default (normalize=True)."
+StarDist,software,StarDist `2D_versatile_fluo`,current,pypi,"https://pypi.org/project/stardist/ (0.9.2, cp313 wheels)",Not installed; 0.9.2 has Python 3.13 wheels.
+2D_versatile_fluo,model,`2D_versatile_fluo`,current,documentation,https://pypi.org/project/stardist/ (README pretrained models),Listed pretrained model for single-channel fluorescence nuclei.
+tensorflow,package,It needs TensorFlow,current,pypi,"https://pypi.org/project/tensorflow/ (2.21.0, cp313 wheels)",Reply could not check Python 3.13 support; TensorFlow 2.21.0 has CPU wheels for 3.13.
+stardist.matching.matching,function,`stardist.matching.matching`,current,source_code,https://github.com/stardist/stardist/blob/main/stardist/matching.py,"matching(y_true, y_pred, thresh=0.5, criterion='iou', report_matches=False); requires installing stardist."
+scipy.optimize.linear_sum_assignment,function,`scipy.optimize.linear_sum_assignment`,current,installed_version,scipy 1.18.1 installed,
+scikit-image,package,"from skimage import io, measure, segmentation, exposure",current,installed_version,scikit-image 0.26.0 installed,
+skimage.io.imread,function,io.imread(path),current,installed_version,scikit-image 0.26.0 installed,
+skimage.io.imsave,function,"io.imsave(out / ""labels.tif""",current,installed_version,scikit-image 0.26.0 installed,
+imsave check_contrast,parameter,check_contrast=False,current,installed_version,scikit-image 0.26.0 installed,
+skimage.measure.regionprops,function,`regionprops`,current,installed_version,scikit-image 0.26.0 installed,
+regionprops intensity_image,parameter,"`regionprops(labels, intensity_image=image)`",current,installed_version,scikit-image 0.26.0 installed,"Turn-0 code omits it, so intensity_mean raises AttributeError (the reply flags this; fixed in turn 1)."
+regionprops area,parameter,r.area,current,installed_version,scikit-image 0.26.0 installed,
+regionprops bbox,parameter,r.bbox,current,installed_version,scikit-image 0.26.0 installed,
+regionprops label,parameter,r.label,current,installed_version,scikit-image 0.26.0 installed,
+regionprops major_axis_length,parameter,`major_axis_length / minor_axis_length`,outdated,installed_version,scikit-image 0.26.0 installed,RegionProperties.major_axis_length deprecated since 0.26 (removed in 2.0); renamed axis_major_length.
+regionprops minor_axis_length,parameter,r.minor_axis_length,outdated,installed_version,scikit-image 0.26.0 installed,RegionProperties.minor_axis_length deprecated since 0.26 (removed in 2.0); renamed axis_minor_length.
+regionprops intensity_mean,parameter,r.intensity_mean,current,installed_version,scikit-image 0.26.0 installed,Current name (formerly mean_intensity); needs intensity_image.
+regionprops solidity,parameter,r.solidity,current,installed_version,scikit-image 0.26.0 installed,
+skimage.segmentation.mark_boundaries,function,"segmentation.mark_boundaries(image_norm, labels, color=(1, 0, 0))",current,installed_version,scikit-image 0.26.0 installed,
+mark_boundaries color,parameter,"color=(1, 0, 0)",current,installed_version,scikit-image 0.26.0 installed,
+skimage.exposure.rescale_intensity,function,exposure.rescale_intensity(,current,installed_version,scikit-image 0.26.0 installed,
+rescale_intensity in_range,parameter,"in_range=(low, high)",current,installed_version,scikit-image 0.26.0 installed,
+rescale_intensity out_range,parameter,"out_range=(0.0, 1.0)",current,installed_version,scikit-image 0.26.0 installed,
+numpy,package,import numpy as np,current,installed_version,numpy 2.5.2 installed,
+numpy.percentile,function,"np.percentile(image, PERCENTILES)",current,installed_version,numpy 2.5.2 installed,
+numpy.unique,function,np.unique(truth[truth > 0]),current,installed_version,numpy 2.5.2 installed,
+numpy.unique axis/return_counts,parameter,return_counts=True,current,installed_version,numpy 2.5.2 installed,
+numpy.stack,function,"np.stack([truth[both], pred[both]])",current,installed_version,numpy 2.5.2 installed,
+numpy.zeros,function,"np.zeros((len(t_ids), len(p_ids)))",current,installed_version,numpy 2.5.2 installed,
+pandas,package,import pandas as pd,current,installed_version,pandas 3.0.6 installed,
+pandas.DataFrame,function,pd.DataFrame(rows),current,installed_version,pandas 3.0.6 installed,
+DataFrame.to_csv,function,"table.to_csv(out / ""nuclei.csv"", index=False)",current,installed_version,pandas 3.0.6 installed,
+DataFrame.assign,function,table.assign(is_endothelial=keep),current,installed_version,pandas 3.0.6 installed,
+Series.isin,function,"table[""label""].isin(matched)",current,installed_version,pandas 3.0.6 installed,
+DataFrame.merge,function,"m.merge(table_kept, left_on=""pred"", right_on=""label"")",current,installed_version,pandas 3.0.6 installed,
+merge left_on/right_on/suffixes,parameter,"suffixes=(""_p"", ""_t"")",current,installed_version,pandas 3.0.6 installed,
+Series.median,function,endo[col].median(),current,installed_version,pandas 3.0.6 installed,
+dataclasses.dataclass (frozen),function,@dataclass(frozen=True),current,installed_version,Python 3.13.16 stdlib,
+pathlib.Path,function,from pathlib import Path,current,installed_version,Python 3.13.16 stdlib,
+sys.argv,function,sys.argv[1],current,installed_version,Python 3.13.16 stdlib,

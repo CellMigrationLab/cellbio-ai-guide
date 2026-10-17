@@ -1,0 +1,16 @@
+item,type,quote,classification,checked_against,source,note
+Cellpose,software,"Cellpose, fine-tuned on your own images",current,installed_version,cellpose 4.2.1.1 installed,
+cyto3,model,`cyto3`,outdated,installed_version,cellpose 4.2.1.1 installed,Cellpose 3 model; not in Cellpose 4 MODEL_NAMES; the name falls back to cpsam_v2 with a warning.
+cpsam,model,the newer `cpsam`,current,installed_version,cellpose 4.2.1.1 installed,Still available; Cellpose 4.2 default is now cpsam_v2.
+Cellpose GUI human-in-the-loop training,software,fine-tune it in the Cellpose GUI,current,installed_version,cellpose 4.2.1.1 installed (cellpose/gui/gui.py train_model),"GUI training exists; needs the cellpose[gui] extra (PyQt, not installed here); slow on CPU."
+Cellpose diameter,parameter,Start Cellpose with a diameter of about 60 px,current,installed_version,cellpose 4.2.1.1 installed,eval(diameter=...) exists; 60 px downsamples the image by 2 (models page).
+Cellpose automatic diameter estimation,function,or let it auto-estimate,outdated,installed_version,cellpose 4.2.1.1 installed,"Cellpose 4 has no size model (no SizeModel in 4.2.1.1); diameter=None means no rescaling, not estimation."
+StarDist,software,StarDist is a reasonable alternative,current,pypi,"https://pypi.org/project/stardist/ (0.9.2, cp313 wheels)",Has Python 3.13 wheels; with TensorFlow 2.21 runs on CPU.
+skimage.measure.regionprops,function,`skimage.measure.regionprops`,current,installed_version,scikit-image 0.26.0 installed,
+regionprops area,parameter,`area`,current,installed_version,scikit-image 0.26.0 installed,
+regionprops major_axis_length,parameter,`major_axis_length`,outdated,installed_version,scikit-image 0.26.0 installed,RegionProperties.major_axis_length deprecated since 0.26 (removed in 2.0); renamed axis_major_length.
+regionprops minor_axis_length,parameter,`minor_axis_length`,outdated,installed_version,scikit-image 0.26.0 installed,RegionProperties.minor_axis_length deprecated since 0.26 (removed in 2.0); renamed axis_minor_length.
+Fiji,software,Fiji,current,documentation,https://imagej.net/ij/docs/menus/analyze.html,
+Analyze Particles with ellipse fitting,function,Analyze Particles with ellipse fitting,current,documentation,https://imagej.net/ij/docs/menus/analyze.html,Fit Ellipse gives Major/Minor; Shape descriptors give AR.
+CellProfiler,software,CellProfiler,current,documentation,https://pypi.org/project/cellprofiler/ (4.2.8.1); https://cellprofiler-manual.s3.amazonaws.com/CellProfiler-4.2.8/modules/measurement.html,Desktop installer is independent of the user's Python; the pip package supports only Python 3.8-3.9.
+MeasureObjectSizeShape,function,`MeasureObjectSizeShape`,current,documentation,https://cellprofiler-manual.s3.amazonaws.com/CellProfiler-4.2.8/modules/measurement.html,"Gives Area, MajorAxisLength, MinorAxisLength, Min/MaxFeretDiameter."

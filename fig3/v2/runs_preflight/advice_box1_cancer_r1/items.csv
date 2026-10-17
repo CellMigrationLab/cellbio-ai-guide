@@ -1,0 +1,66 @@
+item,type,quote,classification,checked_against,source,note
+stardist,package,the `stardist` Python package,current,pypi,"https://pypi.org/project/stardist/ (0.9.2, cp313 wheels)",Not installed here; 0.9.2 has Python 3.13 wheels and runs on CPU with TensorFlow 2.
+StarDist2D,function,`StarDist2D`,current,source_code,https://github.com/stardist/stardist/blob/main/stardist/models/base.py,"Class exists (stardist.models.StarDist2D); not installed, checked in source."
+StarDist2D basedir,parameter,need a `basedir` and `name`,current,source_code,https://github.com/stardist/stardist/blob/main/stardist/models/base.py,"__init__(config, name=None, basedir='.'); config=None loads a saved model folder."
+StarDist2D name,parameter,need a `basedir` and `name`,current,source_code,https://github.com/stardist/stardist/blob/main/stardist/models/base.py,
+StarDist2D.predict_instances,function,predict_instances(normalised),current,source_code,https://github.com/stardist/stardist/blob/main/stardist/models/base.py,
+predict_instances n_tiles,parameter,# n_tiles auto,current,source_code,https://github.com/stardist/stardist/blob/main/stardist/models/base.py,"Exists, but the default n_tiles=None means one tile (no tiling), not automatic tiling as the comment says."
+csbdeep,package,csbdeep,current,pypi,https://pypi.org/project/csbdeep/ (0.8.2),Pure-Python wheel; supports TensorFlow 2.16+ with Keras 3 per source (csbdeep/utils/tf.py).
+csbdeep.utils.normalize,function,`csbdeep.utils.normalize`,current,source_code,https://github.com/CSBDeep/CSBDeep/blob/main/csbdeep/utils/utils.py,"normalize(x, pmin=3, pmax=99.8, axis=None, clip=False, eps=1e-20, dtype=float32)."
+"normalize pmin/pmax (1.0, 99.8)",parameter,"PERCENTILE_LOW, PERCENTILE_HIGH = 1.0, 99.8",current,source_code,https://github.com/CSBDeep/CSBDeep/blob/main/csbdeep/utils/utils.py,"Positional pmin/pmax; library default pmin is 3, so 1.0 is a deliberate change (reply flags it as unverified for this model)."
+normalize axis,parameter,axis=None,current,source_code,https://github.com/CSBDeep/CSBDeep/blob/main/csbdeep/utils/utils.py,
+ZeroCostDL4Mic,software,ZeroCostDL4Mic,current,documentation,https://zenodo.org/records/10572122,"Exists (the Zenodo record says the model was trained with it); runs in Google Colab, used here only as provenance of the model."
+"StarDist BF cancer cell model, 20x (Zenodo 10572122)",model,a published dataset and model from Åbo Akademi/Turku,current,documentation,https://zenodo.org/records/10572122,"Record exists: StarDist model, CC BY 4.0, 1024x1022 px at 650 nm, F1 0.921, IoU 0.793; MD5 3f08137d34f12abf6b399409fdfe99ba matches."
+StarDist BF cancer cell dataset 20x (Åbo Akademi page),dataset,20x dataset and model page,current,documentation,https://research.abo.fi/en/datasets/stardistbfcancercelldataset20x/,Page exists (HTTP 200).
+StarDist BF cancer cell dataset 10x,dataset,A 10x version also exists,current,documentation,https://research.abo.fi/en/datasets/stardistbfcancercelldataset10x/,Page exists (HTTP 200); pixel size 1.31 µm not checked (reply advises not to use it).
+tensorflow,package,Install `tensorflow` first,current,pypi,"https://pypi.org/project/tensorflow/ (2.21.0, cp313 wheels)","TensorFlow 2.21.0 has CPU wheels for Python 3.13 (Linux, macOS arm64, Windows)."
+pip install tensorflow,install_step,Check `pip install tensorflow` before anything else,current,pypi,"https://pypi.org/project/tensorflow/ (2.21.0, cp313 wheels)",Not executed (no installs allowed).
+pip install stardist tifffile pandas scikit-image scipy csbdeep,install_step,pip install stardist tifffile pandas scikit-image scipy csbdeep,current,pypi,https://pypi.org/project/stardist/ ; https://pypi.org/project/csbdeep/,All packages have Python 3.13-compatible releases on PyPI; not executed.
+Download and unzip Zenodo record; MODEL_DIR = folder with config.json and weights_*.h5,install_step,find the folder containing `config.json` and `weights_*.h5`,current,documentation,https://zenodo.org/records/10572122 (zip central directory read via HTTP range),"Zip contains Stardist_CancerCells_model/ with config.json, weights_best.h5, weights_last.h5, thresholds.json."
+Cellpose-SAM (Cellpose 4),software,Cellpose-SAM (Cellpose 4),current,installed_version,cellpose 4.2.1.1 installed,cpsam is installed; current default is cpsam_v2.
+Cellpose fine-tuning,function,fine-tuned on your annotation,current,installed_version,cellpose 4.2.1.1 installed (cellpose.train.train_seg),Runs on CPU (device follows the model) but slowly.
+Cellpose eval diameter,parameter,the Cellpose 4 API for `diameter`,current,installed_version,cellpose 4.2.1.1 installed,"CellposeModel.eval(..., diameter=None) exists; rescales the image to 30 px objects."
+cyto3,model,`cyto3`,outdated,installed_version,cellpose 4.2.1.1 installed,"Cellpose 3 model; not in Cellpose 4 MODEL_NAMES (cpsam_v2, cpdino, cpdino-vitb, cpsam); the name falls back to cpsam_v2 with a warning."
+scikit-image,package,scikit-image,current,installed_version,scikit-image 0.26.0 installed,
+skimage.measure.regionprops_table,function,`skimage.measure.regionprops_table`,current,installed_version,scikit-image 0.26.0 installed,
+regionprops area,parameter,`area`,current,installed_version,scikit-image 0.26.0 installed,
+regionprops major_axis_length,parameter,`major_axis_length / minor_axis_length`,outdated,installed_version,scikit-image 0.26.0 installed,RegionProperties.major_axis_length deprecated since 0.26 (removed in 2.0); renamed axis_major_length; still works in regionprops_table.
+regionprops minor_axis_length,parameter,`minor_axis_length == 0`,outdated,installed_version,scikit-image 0.26.0 installed,RegionProperties.minor_axis_length deprecated since 0.26 (removed in 2.0); renamed axis_minor_length; still works in regionprops_table.
+regionprops label,parameter,"""label"", ""area""",current,installed_version,scikit-image 0.26.0 installed,
+regionprops centroid,parameter,"""centroid""",current,installed_version,scikit-image 0.26.0 installed,
+regionprops bbox,parameter,"""bbox""",current,installed_version,scikit-image 0.26.0 installed,
+skimage.exposure.rescale_intensity,function,rescale_intensity(,current,installed_version,scikit-image 0.26.0 installed,
+rescale_intensity in_range,parameter,"in_range=(lo, hi)",current,installed_version,scikit-image 0.26.0 installed,
+rescale_intensity out_range,parameter,"out_range=(0, 255)",current,installed_version,scikit-image 0.26.0 installed,
+skimage.io.imsave,function,"imsave(path, rgb, check_contrast=False)",current,installed_version,scikit-image 0.26.0 installed,
+imsave check_contrast,parameter,check_contrast=False,current,installed_version,scikit-image 0.26.0 installed,
+skimage.segmentation.find_boundaries,function,"find_boundaries(labels, mode=""inner"")",current,installed_version,scikit-image 0.26.0 installed,
+find_boundaries mode,parameter,"mode=""inner""",current,installed_version,scikit-image 0.26.0 installed,
+skimage.segmentation.relabel_sequential,function,relabel_sequential,current,installed_version,scikit-image 0.26.0 installed,
+tifffile,package,tifffile,current,installed_version,tifffile 2026.10.15 installed,
+tifffile.imread,function,tifffile.imread(path),current,installed_version,tifffile 2026.10.15 installed,
+tifffile.imwrite,function,tifffile.imwrite(,current,installed_version,tifffile 2026.10.15 installed,
+scipy,package,scipy,current,installed_version,scipy 1.18.1 installed,
+scipy.optimize.linear_sum_assignment,function,linear_sum_assignment,current,installed_version,scipy 1.18.1 installed,
+numpy,package,numpy as np,current,installed_version,numpy 2.5.2 installed,
+numpy.percentile,function,"np.percentile(image, (1, 99.8))",current,installed_version,numpy 2.5.2 installed,
+numpy.bincount,function,np.bincount(labels.ravel()),current,installed_version,numpy 2.5.2 installed,
+numpy.flatnonzero,function,np.flatnonzero(,current,installed_version,numpy 2.5.2 installed,
+numpy.isin,function,"np.isin(kept, small)",current,installed_version,numpy 2.5.2 installed,
+numpy.issubdtype,function,"np.issubdtype(labels.dtype, np.integer)",current,installed_version,numpy 2.5.2 installed,
+numpy.add.at,function,np.add.at(,current,installed_version,numpy 2.5.2 installed,
+numpy.maximum,function,"np.maximum(union, 1)",current,installed_version,numpy 2.5.2 installed,
+numpy.median,function,np.median(v),current,installed_version,numpy 2.5.2 installed,
+numpy.zeros,function,np.zeros((truth.max() + 1,current,installed_version,numpy 2.5.2 installed,
+numpy.stack,function,"np.stack([gray] * 3, axis=-1)",current,installed_version,numpy 2.5.2 installed,
+pandas,package,pandas as pd,current,installed_version,pandas 3.0.6 installed,
+pandas.DataFrame,function,pd.DataFrame(regionprops_table(,current,installed_version,pandas 3.0.6 installed,
+DataFrame.rename,function,t.rename(columns=,current,installed_version,pandas 3.0.6 installed,
+DataFrame.set_index,function,"set_index(""label"")",current,installed_version,pandas 3.0.6 installed,
+DataFrame.at,function,"pt.at[p, ""area_um2""]",current,installed_version,pandas 3.0.6 installed,
+DataFrame.loc,function,"t.loc[t.minor_axis_length <= 0, 'label']",current,installed_version,pandas 3.0.6 installed,
+DataFrame.to_csv,function,"to_csv(a.out_dir / ""measurements.csv"", index=False)",current,installed_version,pandas 3.0.6 installed,
+argparse.ArgumentParser,function,argparse.ArgumentParser(description=__doc__),current,installed_version,Python 3.13.16 stdlib,"add_argument (choices, type, default), parse_args and error used as documented."
+json.dumps,function,"json.dumps(m, indent=2)",current,installed_version,Python 3.13.16 stdlib,
+pathlib.Path,function,from pathlib import Path,current,installed_version,Python 3.13.16 stdlib,"mkdir(parents, exist_ok), is_file, write_text used as documented."
+from __future__ import annotations,function,from __future__ import annotations,current,installed_version,Python 3.13.16 stdlib,

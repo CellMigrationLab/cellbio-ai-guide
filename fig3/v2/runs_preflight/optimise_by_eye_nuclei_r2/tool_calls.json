@@ -1,0 +1,86 @@
+[
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; ls -la; python -c \"\nimport tifffile as t,numpy as np\na=t.imread('image.tif');print(a.shape,a.dtype,a.min(),a.max(),np.percentile(a,[1,50,99]))\"; pip list 2>/dev/null | grep -i -E \"cellpose|torch|scikit|scipy|numpy|tifffile\""
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad; python -c \"\nimport tifffile as t,numpy as np,skimage.io as io\na=t.imread('image.tif').astype(float)\nb=np.clip(a/np.percentile(a,99.5),0,1)**0.6\nio.imsave('$S/view.png',(b*255).astype('uint8'))\"; ls ~/.cellpose/models 2>&1"
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad/view.png"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; ls ~/.cellpose/models/cpsam_v2 | head; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad; cat > $S/p0.py <<'E'\nimport tifffile as t,numpy as np,time,pickle\nfrom cellpose import models\na=t.imread('image.tif').astype(np.float32)\nm=models.CellposeModel(gpu=False)\nt0=time.time()\nlab,flow,_=m.eval(a,diameter=None,normalize={'percentile':[1,99]},flow_threshold=0.4,cellprob_threshold=0.0)\nprint(time.time()-t0,lab.max())\nnp.save('/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad/lab0.npy',lab)\nE\npython $S/p0.py 2>&1 | tail -5"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad; ls -la ~/.cellpose/models/; grep -n \"cpsam\" /usr/local/lib/python3.13/dist-packages/cellpose/models.py | head; cat > $S/ov.py <<'E'\nimport sys,tifffile as t,numpy as np,skimage.io as io\nfrom skimage.segmentation import find_boundaries\nfrom skimage.measure import regionprops\nS=sys.argv[3] if len(sys.argv)>3 else None\na=t.imread('image.tif').astype(float); lab=np.load(sys.argv[1])\nb=np.clip(a/np.percentile(a,99.5),0,1)**0.6\nrgb=np.dstack([b]*3)\nrgb[find_boundaries(lab,mode='inner')]=[1,0,0]\nio.imsave(sys.argv[2],(rgb*255).astype('uint8'))\nE\npython $S/ov.py $S/lab0.npy $S/ov0.png\npython - <<E\nimport numpy as np,tifffile as t\nfrom skimage.measure import regionprops\na=t.imread('image.tif');lab=np.load('$S/lab0.npy')\nr=regionprops(lab,a)\nimport numpy as np\nA=np.array([x.area*0.65**2 for x in r]);I=np.array([x.mean_intensity for x in r]);S=np.array([x.solidity for x in r]);E=np.array([x.major_axis_length/x.minor_axis_length for x in r])\nfor n,v in [('area',A),('int',I),('sol',S),('ar',E)]:print(n,np.percentile(v,[1,10,50,90,99]).round(2))\nE"
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad/ov0.png"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad; python -W ignore - <<E\nimport numpy as np,tifffile as t\nfrom skimage.measure import regionprops\nfrom skimage.filters import threshold_otsu\na=t.imread('image.tif');lab=np.load('$S/lab0.npy')\nr=regionprops(lab,a)\nI=np.array([x.intensity_mean for x in r]);print(np.histogram(I,bins=[0,250,300,350,400,450,500,550,600,700,800,900,1000,1200,1500,2000,4100]))\nprint(np.exp(threshold_otsu(np.log(I))),np.median(I))\nE"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad; python -W ignore - <<E\nimport numpy as np,tifffile as t,skimage.io as io\nfrom skimage.measure import regionprops\nfrom skimage.segmentation import find_boundaries\nfrom skimage.transform import resize\na=t.imread('image.tif').astype(float);lab=np.load('$S/lab0.npy')\nb=np.clip(a/np.percentile(a,99.5),0,1)**0.6\nrgb=np.dstack([b]*3)\nfor x in regionprops(lab,a):\n    m=lab==x.label\n    bd=find_boundaries(m,mode='inner')\n    I=x.intensity_mean\n    rgb[bd]=[1,0,0] if I>=800 else ([1,1,0] if I>=600 else [0,1,0])\nc=rgb[:512,:512]\nio.imsave('$S/crop.png',(np.kron(c,np.ones((2,2,1)))*255).astype('uint8'))\nE"
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad/crop.png"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad; python -W ignore - <<E\nimport numpy as np,tifffile as t\nfrom skimage.measure import regionprops\nfrom scipy import ndimage as ndi\na=t.imread('image.tif').astype(float);lab=np.load('$S/lab0.npy')\nfg=lab>0\nfor x in regionprops(lab,a):\n    y,xx=x.centroid\n    if (y<512 and xx<512) and 600<=x.intensity_mean:\n        m=lab==x.label\n        ring=ndi.binary_dilation(m,iterations=6)&~ndi.binary_dilation(m,iterations=2)&~fg\n        rm=a[ring].mean() if ring.sum()>10 else np.nan\n        print(int(xx*2),int(y*2),round(x.intensity_mean),round(x.area*.4225),round(x.axis_major_length/x.axis_minor_length,2),round(rm/x.intensity_mean,2),round(a[m].std()/x.intensity_mean,2))\nE"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; cat > pipeline.py <<'E'\n\"\"\"Segment endothelial DAPI nuclei (excluding bright cancer-cell nuclei) and measure shape.\n\nUsage: python pipeline.py <input.tif> <labels.tif> <measurements.csv>\n\nSteps (all parameters are constants below):\n 1. Read 2D uint16 image (12-bit range checked); no resampling, native 0.65 um/px.\n 2. Cellpose 4.2 'cpsam_v2' (pre-trained generalist, CPU), diameter=None (no rescaling),\n    percentile 1-99 normalisation, flow_threshold 0.4, cellprob_threshold 0.0.\n 3. Remove debris (< MIN_AREA_UM2).\n 4. Remove cancer-cell nuclei: markedly brighter than the endothelial population\n    (mean intensity > CANCER_INTENSITY_FACTOR x median of the dim population,\n    where dim/bright are split by Otsu on log intensity).\n 5. Relabel consecutively, write labels (same shape as input, uint16) and CSV.\n\"\"\"\nimport sys\nfrom pathlib import Path\n\nimport numpy as np\nimport pandas as pd\nimport tifffile\nfrom skimage.filters import threshold_otsu\nfrom skimage.measure import regionprops_table\nfrom skimage.segmentation import relabel_sequential\n\nPIXEL_SIZE_UM = 0.65\nMAX_12BIT = 4095\nMODEL_NAME = \"cpsam_v2\"\nFLOW_THRESHOLD = 0.4\nCELLPROB_THRESHOLD = 0.0\nNORM_PERCENTILES = [1, 99]\nMIN_AREA_UM2 = 50.0\nCANCER_INTENSITY_FACTOR = 1.6\n\n\ndef read_image(path: Path) -> np.ndarray:\n    image = tifffile.imread(path)\n    if image.ndim != 2:\n        raise ValueError(f\"Expected a 2D (Y, X) image, got shape {image.shape}\")\n    if image.dtype != np.uint16:\n        raise ValueError(f\"Expected uint16 data, got {image.dtype}\")\n    if image.max() > MAX_12BIT:\n        raise ValueError(f\"Values up to {image.max()} exceed the 12-bit range\")\n    return image\n\n\ndef segment_nuclei(image: np.ndarray) -> np.ndarray:\n    \"\"\"Cellpose instance segmentation of all nuclei (endothelial and cancer).\"\"\"\n    from cellpose import models  # imported here: slow import\n\n    model = models.CellposeModel(gpu=False, pretrained_model=MODEL_NAME)\n    labels, _, _ = model.eval(\n        image.astype(np.float32),\n        diameter=None,\n        normalize={\"percentile\": NORM_PERCENTILES},\n        flow_threshold=FLOW_THRESHOLD,\n        cellprob_threshold=CELLPROB_THRESHOLD,\n    )\n    return labels.astype(np.int32)\n\n\ndef object_table(labels: np.ndarray, image: np.ndarray) -> pd.DataFrame:\n    props = regionprops_table(\n        labels, intensity_image=image,\n        properties=(\"label\", \"area\", \"axis_major_length\", \"axis_minor_length\",\n                    \"intensity_mean\", \"bbox\"),\n    )\n    table = pd.DataFrame(props)\n    table[\"area_um2\"] = table[\"area\"] * PIXEL_SIZE_UM ** 2\n    table[\"aspect_ratio\"] = table[\"axis_major_length\"] / table[\"axis_minor_length\"]\n    h, w = labels.shape\n    table[\"touches_border\"] = ((table[\"bbox-0\"] == 0) | (table[\"bbox-1\"] == 0)\n                               | (table[\"bbox-2\"] == h) | (table[\"bbox-3\"] == w))\n    return table\n\n\ndef remove_labels(labels: np.ndarray, drop: np.ndarray) -> np.ndarray:\n    out = labels.copy()\n    out[np.isin(out, drop)] = 0\n    return out\n\n\ndef cancer_labels(table: pd.DataFrame) -> np.ndarray:\n    \"\"\"Labels of objects much brighter than the endothelial (dim) population.\"\"\"\n    log_i = np.log(table[\"intensity_mean\"].to_numpy())\n    dim = log_i < threshold_otsu(log_i)\n    reference = np.median(table[\"intensity_mean\"][dim])\n    cutoff = CANCER_INTENSITY_FACTOR * reference\n    print(f\"endothelial reference intensity {reference:.0f}; cancer cutoff {cutoff:.0f}\")\n    return table[\"label\"][table[\"intensity_mean\"] > cutoff].to_numpy()\n\n\ndef main(input_path: str, labels_path: str, csv_path: str) -> None:\n    image = read_image(Path(input_path))\n    labels = segment_nuclei(image)\n    print(f\"cellpose objects: {labels.max()}\")\n    if labels.max() == 0:\n        raise RuntimeError(\"Cellpose found no nuclei\")\n\n    table = object_table(labels, image)\n    small = table[\"label\"][table[\"area_um2\"] < MIN_AREA_UM2].to_numpy()\n    labels = remove_labels(labels, small)\n    print(f\"removed {len(small)} debris objects\")\n\n    table = object_table(labels, image)\n    cancer = cancer_labels(table)\n    labels = remove_labels(labels, cancer)\n    print(f\"removed {len(cancer)} bright (cancer) objects\")\n\n    labels, _, _ = relabel_sequential(labels)\n    labels = labels.astype(np.uint16)\n    table = object_table(labels, image)\n    out = table[[\"label\", \"area_um2\", \"aspect_ratio\", \"intensity_mean\", \"touches_border\"]]\n    tifffile.imwrite(labels_path, labels)\n    out.to_csv(csv_path, index=False)\n    print(f\"endothelial nuclei: {len(out)}; median area {out.area_um2.median():.1f} um2; \"\n          f\"median aspect ratio {out.aspect_ratio.median():.2f}\")\n\n\nif __name__ == \"__main__\":\n    if len(sys.argv) != 4:\n        sys.exit(__doc__)\n    main(*sys.argv[1:])\nE\npython -W ignore pipeline.py image.tif labels.tif measurements.csv 2>&1 | tail -6"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v006/8199e61d-e8ba-45a2-9fd6-cb7009967f28/scratchpad; python -W ignore -c \"\nimport tifffile as t,numpy as np;np.save('$S/lab1.npy',t.imread('labels.tif'))\"; python -W ignore $S/ov.py $S/lab1.npy overlay.png"
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2_preflight/v006/overlay.png"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v006; cat > runtime_manifest.json <<'E'\n{\n  \"entrypoint\": \"pipeline.py\",\n  \"command\": \"python pipeline.py <input.tif> <labels.tif> <measurements.csv>\",\n  \"python\": \"3.13\",\n  \"packages\": [\"numpy\", \"pandas\", \"scipy\", \"scikit-image\", \"tifffile\", \"cellpose==4.2.1.1\", \"torch (CPU)\"],\n  \"external_files\": [\"~/.cellpose/models/cpsam_v2 (Cellpose pre-trained weights, ~1.2 GB, must exist locally; not downloaded at runtime by this workflow)\"]\n}\nE\ncat > log.txt <<'E'\nv1: Cellpose cpsam_v2, diameter=None, percentile 1-99 norm, flow 0.4, cellprob 0 on image.tif (CPU ~100 s): 584 objects. Dim endothelial ovals segmented well; bright round cancer nuclei also segmented.\nv2: Checked halo ratio (ring/object) as cancer feature: did not separate classes -> dropped. Used mean intensity.\nv3: Added debris filter (<50 um2, removed 14) and cancer filter (mean intensity > 1.6 x median of dim population, dim/bright split by Otsu on log intensity; ref 455, cutoff 728; removed 113). Final: 457 nuclei, median area 168 um2, median AR 1.54. Added touches_border column (not filtered).\nOutputs: labels.tif, measurements.csv, overlay.png. Only image.tif was used.\nE\nrm -f nohup.out; ls"
+  }
+ }
+]
