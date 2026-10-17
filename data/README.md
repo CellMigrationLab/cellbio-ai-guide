@@ -29,7 +29,7 @@ field (Follain et al. 2026, EMBO J; 1022 × 1024 px, 0.649614 µm/px, written 0.
 
 To confirm before release: annotator names, annotation tool and dates (add to this table).
 
-## Second annotated field (field 209, added 17 Oct 2026; test field for Figure 3 round 2)
+## Second annotated field (field 209, added 17 Oct 2026; test field for Figure 3 protocol v2, second field in Figs 1c and 2a)
 Same file set and naming as field 104 (1022 × 1024 px, 0.6496 µm/px from the TIFF metadata): `field209_brightfield.tif`,
 `_dapi.tif`, `_pecam1.tif`; manual `_cancer_cells_manual_labels.tif` (163 cells), `_endothelial_nuclei_manual_labels.tif`
 (473 nuclei), `_endothelial_junctions_annotator1.tif` (388 complete cells) and `_annotator2.tif` (345); model outputs

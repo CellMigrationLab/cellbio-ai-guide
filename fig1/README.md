@@ -88,15 +88,15 @@ Object-level F1 over the whole field against `manual_annotation_labels.tif` (124
 | Cellpose-SAM | 191 | 122 | 69 | 2 | 0.775 | 0.78 |
 | StarDist (custom) | 102 | 97 | 5 | 27 | 0.858 | 0.86 |
 
-Reproduced by `code/f1_scores.py`. If this field was part of the StarDist training set, its score is optimistic.
+Reproduced by `code/f1_scores.py`. Neither field 104 nor field 209 was in the StarDist training set (authors, 17 Oct 2026).
 
 ## Still to confirm before deposit
 
 - Licence and deposit for the authors' own data: the Follain et al. brightfield/StarDist/pix2pix files (the paper lists Zenodo doi:10.5281/zenodo.17232437 and the community `pdac_dl`), the denoising pair, the HPMEC nuclei image and the TrackMate capture.
 - Super-resolution data: which Qiao et al. file and cell, who trained the RCAN model, and the licence.
-- CARE denoising: training data and version; confirm which file is raw and which is restored.
+- CARE denoising: training data and version (raw = uint16 `…_Z0_1.tif`, restored = float32 `…_Z0.tif`: confirmed).
 - TrackMate capture: source experiment, detector and tracker.
-- Manual annotation `manual_annotation_labels.tif`: who drew it, with which tool, and whether this field was used to train the StarDist model.
+- Manual annotations (`data/raw/field104_*`, `field209_*`): who drew them, with which tool and when (not in the StarDist training set: confirmed).
 - DeepBacs detection pixel size (160 vs 158 nm).
 
 ## Folder names

@@ -1,4 +1,4 @@
-# Box 1 (final for Figure 3 round 2): reusable prompt for LLM-assisted image analysis
+# Box 1 (final; used by Figure 3 protocol v2): reusable prompt for LLM-assisted image analysis
 
 Draft v3 (`box1_draft_v3.md`) plus four edits from the pilots, marked ➕ here (remove the marks in the manuscript):
 software/version slot; a test the user can run and its failure criterion; work only in a given folder; masks behind any

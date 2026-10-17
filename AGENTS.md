@@ -13,22 +13,23 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
   results, see `fig1/README.md`).
 - **Fig. 2** is the deep-learning output good enough for the measurement? (Cellpose perturbations, denoising,
   artificial labelling, super-resolution with SQUIRREL).
-- **Fig. 3** what changes when a cell biologist uses an LLM in different ways, on three tasks of increasing difficulty
-  (nuclei in DAPI, cancer cells in brightfield, endothelial cells in brightfield), all scored against manual annotation:
-  - `fig3/advice/` ask for advice (from memory vs after checking the documentation);
-  - `fig3/code/` ask for code (generic request vs Box 1; Fiji macro and Python);
-  - `fig3/optimise/` let an agent run and optimise the analysis (judging by eye vs scored against annotation, then
-    frozen and tested on a held-out half);
-  - `fig3/direct_answers/` ask for the answer directly (count only vs draw outlines and count).
+- **Fig. 3** what changes when a cell biologist uses an LLM (Claude) in four ways, on three tasks of increasing
+  difficulty (endothelial nuclei in DAPI, cancer cells and endothelial cells in brightfield: segment, count, area and
+  aspect ratio), scored against manual annotation on a development field (104) and a test field (209):
+  A advice (simple prompt vs Box 1), B code written by the model and run by us (simple vs Box 1), C an agent that writes,
+  runs and optimises (by eye vs with labels), D direct answers (count, size and shape, ellipses drawn).
+  Plan: `fig3/PROTOCOL_V2.md`; harness: `fig3/v2/`. The current draft figure is round 1 (`fig3/advice/`, `code/`,
+  `optimise/`, `direct_answers/`), which v2 replaces.
 
 ## Current status (17 Oct 2026)
-- Figures 1 and 2 are final; Figure 3 is a late draft (`fig3/figure/output/fig3_preview.png`).
+- Figure 1 is final. Figure 2 was updated on 17 Oct 2026 after the code audit (panel e sampling; panel a scored on
+  two fields: in progress). Figure 3: the round-1 draft (`fig3/figure/output/fig3_preview.png`) is to be replaced by protocol v2.
 - `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data.
 - `make full` passes: the Figure 1 and 2 source data regenerate from `data/raw` and rebuild both figures byte-identical
   (files it cannot regenerate are listed with the reason).
-- Next step: Figure 3 is redone under **`fig3/PROTOCOL_V2.md`** (the only current plan; earlier plans and the round-2
-  pilot are in `fig3/superseded/` and in git history). If you are asked to run scenarios, never show this repository
-  to the model being tested.
+- Next step: Figure 3 under **`fig3/PROTOCOL_V2.md`** (the only current plan; earlier plans and the round-2 pilot are
+  in `fig3/superseded/` and in git history): preflight, freeze, 72 runs. A new operator session starts from
+  `fig3/v2/NEW_SESSION_PROMPT.md`. If you run scenarios, never show this repository to the model being tested.
 
 ## Working rules (the same practices Box 1 asks of an LLM)
 - **Never modify `data/raw/`.** Checksums are in `data/manifest.csv`; `make data` verifies them.
@@ -37,8 +38,10 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 - **Use documented, maintained software**, check its current documentation, and state the version you used.
 - **Make processing explicit**: name parameters, state defaults, resizing, normalisation and post-processing; keep the
   original coordinate system and physical units.
-- **Small functions, clear names, validated inputs, informative errors, no silent fallbacks.** New code imports paths
-  from `common.paths` and scoring from `common.matching`; never hard-code absolute paths.
+- **Small functions, clear names, validated inputs, informative errors, no silent fallbacks.** New code uses the
+  shared modules: `common.paths` (paths), `common.labels` (strict reading of label images), `common.matching`
+  (matching and F1), `common.annotations` (junction lines to cells), `common.pix2pix` (registered pix2pix rows),
+  `common.metadata` (pixel sizes), `common.stats` (no NaN results); never hard-code absolute paths, never write NaN.
 - **Always score against the authors' manual annotations** in `data/raw/` (never against a model output or a derived
   copy you cannot trace to them). If you are unsure which file is the manual annotation, or it seems wrong or
   incomplete, stop and ask the authors to provide it again.

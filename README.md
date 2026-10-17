@@ -27,11 +27,11 @@ Two checks, both run in a temporary copy:
 | Folder | Content |
 |---|---|
 | `data/` | raw images and annotations (unchanged bytes), sources and citations, checksums |
-| `common/` | shared code: repository paths, object matching and F1 (with tests) |
+| `common/` | shared code (with tests): paths, strict label reading, object matching and F1, junction lines to cells, pix2pix registration, pixel sizes, statistics helpers |
 | `fig1/` | Figure 1: builder, the exact source data it draws, processing and scoring scripts, legend |
 | `fig2/` | Figure 2: as above, including SQUIRREL (NanoPyx) for panel e |
-| `fig3/` | Figure 3, split by use: `advice/`, `code/`, `optimise/`, `direct_answers/`; plus `figure/`, `scoring/`, `harness/`, `prompt_pack/`, `pilots/`, `superseded/` |
-| `box1/` | Box 1 versions (the one used in Fig. 3 and the current draft) |
+| `fig3/` | Figure 3. Plan `PROTOCOL_V2.md` and its harness `v2/`; the round-1 draft split by use (`advice/`, `code/`, `optimise/`, `direct_answers/`) with `figure/`, `scoring/`, `harness/`, `pilots/`; earlier rounds in `superseded/` |
+| `box1/` | Box 1: the final version (used by protocol v2) and earlier versions (v2 used in the round-1 draft, draft v3) |
 | `tools/` | porting and checking tools (how this repository was assembled; `check_all.py` fast check, `check_full.py` full check, `svg_to_pdf.py`) |
 | `AGENTS.md` | purpose, status and working rules for anyone (human or AI) working in this repository |
 
@@ -40,8 +40,9 @@ under the names it reads them), `figure/` (SVG, PDF), `legend.md`, `README.md` (
 `superseded/` (earlier builders, kept for the record).
 
 ## Scope
-The figures illustrate how to use AI tools; they are not benchmarks. Scores come from one field of view and, for LLMs,
-a few runs per condition on one model (Claude Sonnet, October 2026). Caveats are listed at the top of each figure README.
+The figures illustrate how to use AI tools; they are not benchmarks. Scores come from one or two fields of view of one
+experiment (field 104; field 209 as a second, test field) and, for LLMs, three runs per condition on one model (Claude
+Sonnet via Claude Code sub-agents, October 2026). Caveats are listed at the top of each figure README.
 
 ## Licence
 Code: MIT (`LICENSE`). Images, annotations, figures, prompts and text: CC BY 4.0 (`LICENSE-content.md`).

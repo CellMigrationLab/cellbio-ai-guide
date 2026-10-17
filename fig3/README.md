@@ -1,9 +1,11 @@
 # Figure 3: Using an LLM for image analysis, from advice to delegation
 
-**Status: late draft** (`figure/output/fig3_preview.png`, legend `figure/legend.md`). Builder `figure/code/make_fig3.py` (reads `figure/source_data/round1/`)
+**Status: round-1 draft, to be replaced.** The figure is being redone under `PROTOCOL_V2.md` (harness in `v2/`); this
+README, `deviations.md` and the folders below describe **round 1**, which produced the current draft
+(`figure/output/fig3_preview.png`, legend `figure/legend.md`). Builder `figure/code/make_fig3.py` (reads `figure/source_data/round1/`)
 (= `fig3_head.py` + `fig3_helpers.py` + `fig3_v9.py`, see `figure/code/build_parts/`).
 
-## Design
+## Round-1 design
 Three tasks on one field of view (cancer cells on an endothelial monolayer; 0.65 µm/px), easy to hard:
 **nuclei** (DAPI, 441 endothelial nuclei), **cancer cells** (brightfield, 124), **endothelial cells** (brightfield, 382,
 two annotators agree F1 0.90). Each row compares a common request ("before") with the request recommended in the text

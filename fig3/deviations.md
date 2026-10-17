@@ -1,5 +1,8 @@
 # Figure 3: deviations from protocol and other things an auditor should know
 
+Round 1 (the current draft). Deviations under protocol v2 will be recorded in a section of their own; the round-2
+pilot's notes are in `superseded/round2_pilot/README.md`.
+
 ## Prompts and harness
 - All runs used Claude Code sub-agents (not the claude.ai app). Each prompt starts with our wrapper text (role, which
   file may be viewed, whether code can be run, which tools may be used) and ends with an output-format instruction
