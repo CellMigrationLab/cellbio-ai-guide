@@ -1,55 +1,59 @@
-# cellbio-ai-guide
+# The cell biologist's guide to AI-assisted image analysis
 
-Data, code, prompts and LLM transcripts behind Figures 1–3 of
-**"The cell biologist's guide to AI-assisted image analysis"** (Gómez-de-Mariscal, Henriques & Jacquemet).
+This repository accompanies the manuscript **“The cell biologist's guide to AI-assisted image analysis”** by Estibaliz Gómez-de-Mariscal, Ricardo Henriques and Guillaume Jacquemet.
 
-Every pixel and every number in the three figures can be traced to a file here, and rebuilt:
+It contains the figures, microscopy images and annotations, analysis code, the reusable prompt from Box 1, and the records behind the LLM experiments. Scripts rebuild the figure files and recompute the reported scores. Published model outputs and LLM replies are stored as records when exact regeneration is not possible; each figure README states what was rerun and what was not.
 
+## Figures and data
+
+| Material | Open | What it contains |
+|---|---|---|
+| **Figure 1** | [SVG](fig1/figure/fig1.svg) · [PDF](fig1/figure/fig1.pdf) · [legend](fig1/legend.md) · [data and methods](fig1/README.md) | Where AI enters a microscopy workflow, and a practical route from a biological question to a checked analysis. |
+| **Figure 2** | [SVG](fig2/figure/fig2.svg) · [PDF](fig2/figure/fig2.pdf) · [legend](fig2/legend.md) · [data and methods](fig2/README.md) | How to decide whether segmentation, denoising, artificial labelling or super-resolution is good enough for the intended measurement. |
+| **Figure 3** | [round-1 draft](fig3/figure/output/fig3_preview.png) · [draft legend](fig3/figure/legend.md) · [round-1 records](fig3/README.md) · [protocol v2](fig3/PROTOCOL_V2.md) | Four ways to use an LLM for image analysis. The round-1 figure is a draft and will be replaced using protocol v2. |
+| **Microscopy data** | [dataset guide](data/README.md) · [visual overview](data/overview.png) · [raw files](data/raw/) · [sources and licences](data/sources.csv) | Two annotated fields of cancer cells on an endothelial monolayer, plus the denoising, artificial-labelling and super-resolution examples used in the figures. |
+| **Box 1** | [copy the prompt](box1/box1_final.md) | A reusable prompt for asking an LLM to produce an image-analysis workflow that can be inspected and tested. |
+
+## Rebuild and check the figures
+
+Install the base dependencies, then run the fast or full check:
+
+```bash
+python3 -m pip install -r environment/requirements.txt
+make check
+make full
 ```
-python3 -m pip install -r environment/requirements.txt   # numpy, scipy, scikit-image, tifffile, pillow, pandas, matplotlib
-make check                                                # fast check, ~1 min; changes no files
-make full                                                 # full check from raw data, ~2 min; changes no files
-```
 
-Two checks, both run in a temporary copy:
-- **`make check` (fast)** starts from the committed source data: unit tests, the SHA-256 of every raw file, the three
-  figure SVGs rebuilt **byte-identical**, the Figure 1 and Figure 2 scoring re-run, and **every Figure 3 score**
-  recomputed from the stored LLM outputs.
-- **`make full`** starts from `data/raw`: it deletes the Figure 1 and Figure 2 source data, regenerates it script by
-  script in dependency order (a missing input stops it), compares every regenerated file with the committed one, and
-  rebuilds both figures byte-identical from the regenerated files. It also lists every file it did **not** regenerate
-  and why: Cellpose-SAM outputs (re-run with `--with-models`, needs cellpose and torch), SQUIRREL (`--with-squirrel`,
-  NanoPyx environment), and a few crops whose producer exists only as a recovered inline command or was not recovered.
-  Figure 3 depends on LLM conversations, which cannot be regenerated; its scores are recomputed by the fast check.
+`make check` runs the tests, verifies the raw-file checksums, rebuilds the figures from the committed source data and recomputes the stored scores.
 
-## What is where
+`make full` starts from the raw data and regenerates the Figure 1 and Figure 2 source files for which a runnable producer is available. It reports any files that were kept rather than regenerated. Cellpose-SAM and SQUIRREL require the additional environments described in [`environment/README.md`](environment/README.md).
 
-| Folder | Content |
+Figure 3 depends on recorded LLM conversations. Those replies cannot be regenerated bit for bit, but the stored outputs can be rescored.
+
+## Repository layout
+
+| Path | Contents |
 |---|---|
-| `data/` | raw images and annotations (unchanged bytes), sources and citations, checksums |
-| `common/` | shared code (with tests): paths, strict label reading, object matching and F1, junction lines to cells, pix2pix registration, pixel sizes, statistics helpers |
-| `fig1/` | Figure 1: builder, the exact source data it draws, processing and scoring scripts, legend |
-| `fig2/` | Figure 2: as above, including SQUIRREL (NanoPyx) for panel e |
-| `fig3/` | Figure 3. Plan `PROTOCOL_V2.md` and its harness `v2/`; the round-1 draft split by use (`advice/`, `code/`, `optimise/`, `direct_answers/`) with `figure/`, `scoring/`, `harness/`, `pilots/`; earlier rounds in `superseded/` |
-| `box1/` | Box 1: the final version (used by protocol v2) and earlier versions (v2 used in the round-1 draft, draft v3) |
-| `tools/` | porting and checking tools (how this repository was assembled; `check_all.py` fast check, `check_full.py` full check, `svg_to_pdf.py`) |
-| `AGENTS.md` | purpose, status and working rules for anyone (human or AI) working in this repository |
+| [`data/`](data/) | Raw images, annotations, checksums, provenance and source licences. |
+| [`common/`](common/) | Shared analysis code and tests, including label validation, object matching, annotation conversion and image metadata. |
+| [`fig1/`](fig1/) | Figure 1 code, source data, figure files, legend and provenance notes. |
+| [`fig2/`](fig2/) | Figure 2 code, source data, figure files, legend and provenance notes. |
+| [`fig3/`](fig3/) | The round-1 LLM records, current draft figure, protocol v2 and its harness. |
+| [`box1/`](box1/) | The current Box 1 prompt and earlier versions used during figure development. |
+| [`tools/`](tools/) | Repository checks, figure conversion and data-porting utilities. |
 
-Each figure folder follows the same layout: `code/` (builder and scripts), `source_data/` (the files the builder reads,
-under the names it reads them), `figure/` (SVG, PDF), `legend.md`, `README.md` (provenance and caveats),
-`superseded/` (earlier builders, kept for the record).
+## Scope and current status
 
-## Scope
-The figures illustrate how to use AI tools; they are not benchmarks. Scores come from one or two fields of view of one
-experiment (field 104; field 209 as a second, test field) and, for LLMs, three runs per condition on one model (Claude
-Sonnet via Claude Code sub-agents, October 2026). Caveats are listed at the top of each figure README.
+The figures are worked examples, not benchmarks. Most quantitative panels use one or two fields of view from one experiment. The LLM experiments use small, date-stamped samples, and the interface and model are recorded with each run. The figure-specific README files give the relevant caveats and scoring conventions.
 
-## Licence
-Code: MIT (`LICENSE`). Images, annotations, figures, prompts and text: CC BY 4.0 (`LICENSE-content.md`).
-Third-party data keep their own licence. Cite the data sources in `data/sources.csv`.
+Figures 1 and 2 are the current manuscript versions. Figure 3 is being revised: the stored output is the round-1 draft, while [`fig3/PROTOCOL_V2.md`](fig3/PROTOCOL_V2.md) describes the replacement study.
 
-## Path placeholders
-Transcripts, logs and record-only scripts (`recovered_inline/`, `fig3/harness/`, superseded code) keep their original
-commands; local folder prefixes were replaced by placeholders: `<work>` and `<work2>` (the two working folders;
-`<fig3-work>` = `<work>/fig3`), `<uploads>` (the raw files, now `data/raw/` under the names in `data/raw_name_map.csv`),
-`<tasks>`, `<transcript>`, `<transcript2>` (session records, not included).
+## Citation and licence
+
+Use [`CITATION.cff`](CITATION.cff) to cite this repository. When reusing a source dataset, also cite the original source listed in [`data/sources.csv`](data/sources.csv).
+
+Code is released under the [MIT licence](LICENSE). Images, annotations, figures, prompts and text are released under [CC BY 4.0](LICENSE-content.md), except where a third-party source retains its own licence.
+
+## Working on the repository
+
+Read [`AGENTS.md`](AGENTS.md) before changing analysis code, generated files or LLM records. It explains the provenance rules and which files may be regenerated or edited.
