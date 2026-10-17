@@ -16,7 +16,7 @@ The images, annotations and model outputs used in Figures 1–3 are stored in [r
 
 ## Cancer cells on an endothelial monolayer
 
-Fields **104** and **209** are from the same experiment (Follain et al., 2026). Both contain brightfield, acquired DAPI and PECAM-1 images, with manual annotations. The pixel size is 0.649614 µm; figures use the rounded value 0.65 µm.
+Fields **104** and **209** are from the same experiment (Follain et al., 2026). Both contain brightfield, acquired DAPI and PECAM-1 images, with manual annotations prepared by the Jacquemet lab using Fiji for the FlowVision paper. The pixel size is 0.649614 µm; figures use the rounded value 0.65 µm.
 
 | Annotation | Field 104 | Field 209 |
 |---|---:|---:|
@@ -70,4 +70,4 @@ See [sources.csv](sources.csv) for the original paper, DOI and licence for each 
 
 ## Information to confirm before release
 
-The files do not establish the manual annotators' names, annotation software or dates; the CARE model version and training data; the TrackMate experiment and tracking settings; or the exact BioSR source file/cell and RCAN training provenance. These details should be confirmed by the authors rather than inferred. The [Figure 1 provenance notes](../fig1/README.md) list the remaining source-specific questions.
+The individual annotators' names and annotation dates remain unrecorded (the Jacquemet lab prepared the annotations using Fiji for the FlowVision paper); the CARE model version and training data; the TrackMate experiment and tracking settings; or the exact BioSR source file/cell and RCAN training provenance. These details should be confirmed by the authors rather than inferred. The [Figure 1 provenance notes](../fig1/README.md) list the remaining source-specific questions.

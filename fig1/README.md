@@ -96,7 +96,7 @@ Reproduced by `code/f1_scores.py`. Neither field 104 nor field 209 was in the St
 - Super-resolution data: which Qiao et al. file and cell, who trained the RCAN model, and the licence.
 - CARE denoising: training data and version (raw = uint16 `…_Z0_1.tif`, restored = float32 `…_Z0.tif`: confirmed).
 - TrackMate capture: source experiment, detector and tracker.
-- Manual annotations (`data/raw/field104_*`, `field209_*`): who drew them, with which tool and when (not in the StarDist training set: confirmed).
+- Manual annotations (`data/raw/field104_*`, `field209_*`): individual annotators and dates (prepared by the Jacquemet lab using Fiji for the FlowVision paper; not in the StarDist training set: confirmed).
 - DeepBacs detection pixel size (160 vs 158 nm).
 
 ## Folder names
