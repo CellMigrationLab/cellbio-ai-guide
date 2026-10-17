@@ -23,7 +23,7 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 
 ## Current status (17 Oct 2026)
 - Figure 1 is final. Figure 2 was updated on 17 Oct 2026 after the code audit (panel e sampling; panel a scored on
-  two fields: in progress). Figure 3: the round-1 draft (`fig3/figure/output/fig3_preview.png`) is to be replaced by protocol v2.
+  two fields). Figure 3: the round-1 draft (`fig3/figure/output/fig3_preview.png`) is to be replaced by protocol v2.
 - `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data.
 - `make full` passes: the Figure 1 and 2 source data regenerate from `data/raw` and rebuild both figures byte-identical
   (files it cannot regenerate are listed with the reason).
@@ -55,3 +55,9 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 ## Layout conventions
 `figX/code/` scripts are run with the working directory `figX/source_data/` and `PYTHONPATH` set to the repository root
 (the Makefile does this). Builders write to `figX/figure/` (Fig. 3: `fig3/figure/output/`).
+
+## Path placeholders in records
+Transcripts, logs and record-only scripts (`*/code/recovered_inline/`, `fig3/harness/`, superseded code) keep their
+original commands; local folder prefixes were replaced by placeholders: `<work>` and `<work2>` (the two working folders;
+`<fig3-work>` = `<work>/fig3`), `<uploads>` (the raw files, now `data/raw/` under the names in `data/raw_name_map.csv`),
+`<tasks>`, `<transcript>`, `<transcript2>` (session records, not included).

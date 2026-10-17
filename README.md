@@ -38,8 +38,8 @@ Figure 3 depends on recorded LLM conversations. Those replies cannot be regenera
 | [`common/`](common/) | Shared analysis code and tests, including label validation, object matching, annotation conversion and image metadata. |
 | [`fig1/`](fig1/) | Figure 1 code, source data, figure files, legend and provenance notes. |
 | [`fig2/`](fig2/) | Figure 2 code, source data, figure files, legend and provenance notes. |
-| [`fig3/`](fig3/) | The round-1 LLM records, current draft figure, protocol v2 and its harness. |
-| [`box1/`](box1/) | The current Box 1 prompt and earlier versions used during figure development. |
+| [`fig3/`](fig3/) | Protocol v2 and its harness (`v2/`), the round-1 draft figure and its LLM records, and earlier rounds (`superseded/`). |
+| [`box1/`](box1/) | The final Box 1 prompt. Earlier versions survive in the prompts of the runs that used them and in git history. |
 | [`tools/`](tools/) | Repository checks, figure conversion and data-porting utilities. |
 
 ## Scope and current status
@@ -56,4 +56,4 @@ Code is released under the [MIT licence](LICENSE). Images, annotations, figures,
 
 ## Working on the repository
 
-Read [`AGENTS.md`](AGENTS.md) before changing analysis code, generated files or LLM records. It explains the provenance rules and which files may be regenerated or edited.
+Read [`AGENTS.md`](AGENTS.md) before changing analysis code, generated files or LLM records. It explains the provenance rules, which files may be regenerated or edited, and the path placeholders (`<work>`, `<uploads>`, …) used in transcripts and recorded scripts.

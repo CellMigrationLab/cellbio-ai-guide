@@ -68,10 +68,18 @@ STEPS = [
          args=("file_minmax", "file_histeq", "file_clahe", "nonorm", "down4", "down2", "up2", "flow0.8", "cellprob2"),
          needs="models"),
     Step("fig2", "postfilter", ("panels/cp_postfilter.tif",), args=("--threshold", "50")),
+    # panel a on field 209 (same settings, threshold chosen on field 104); bars show the mean of the two fields
+    Step("fig2", "norm_inputs", (), args=("--field", "209")),          # panels/field209/in_*.tif (not stored)
+    Step("fig2", "cellpose_perturb", tuple(f"panels/field209/cp_{r}.tif" for r in (
+        "default", "file_minmax", "file_histeq", "file_clahe", "nonorm", "down4", "down2", "up2", "flow0.8", "cellprob2")),
+         args=("--field", "209", "default", "file_minmax", "file_histeq", "file_clahe", "nonorm", "down4", "down2", "up2",
+               "flow0.8", "cellprob2"), needs="models"),
+    Step("fig2", "postfilter", ("panels/field209/cp_postfilter.tif",), args=("--field", "209", "--threshold", "50")),
     Step("fig2", "errors", ("panels/err_ids_cellpose_default.json", "panels/err_ids_stardist.json")),
     Step("fig2", "score_perturb", ("panels/error_summary.json", "panels/perturb_scores.json") + tuple(
         f"panels/ts_cp_{r}.json" for r in ("cellprob2", "default", "down2", "down4", "file_clahe", "file_histeq",
                                            "file_minmax", "flow0.8", "nonorm", "postfilter", "up2"))),
+    Step("fig2", "score_fields", ("panels/perturb_scores_fields.json",)),
     Step("fig2", "export_errors_window", ("panels/err_bf.png", "panels/err_cellpose_filtered.json",
                                           "panels/err_markers.json", "panels/err_ref.json", "panels/err_stardist.json")),
     Step("fig2", "annot_agree", ("panels/annot_agree.json", "panels/pecam_annotator1.json",
@@ -134,10 +142,11 @@ def same_content(a: Path, b: Path, extra_keys: set[str]) -> bool:
 
 
 def check_inventory(steps: list[Step]) -> bool:
-    """Every committed source-data file must be a step output or listed in NOT_REGENERATED, and vice versa."""
+    """Every committed source-data file (git ls-files) must be a step output or listed in NOT_REGENERATED, and vice versa."""
     listed = {(s.figure, o) for s in steps for o in s.outputs} | set(NOT_REGENERATED)
-    present = {(fig, str(p.relative_to(REPO / fig / "source_data")))
-               for fig in FIGURES for p in (REPO / fig / "source_data").rglob("*") if p.is_file()}
+    committed = subprocess.run(["git", "ls-files", *(f"{fig}/source_data" for fig in FIGURES)], cwd=REPO,
+                               capture_output=True, text=True, check=True).stdout.split()
+    present = {(c.split("/", 1)[0], c.split("/source_data/", 1)[1]) for c in committed}
     unlisted, missing = sorted(present - listed), sorted(listed - present)
     detail = (f"unlisted: {unlisted} " if unlisted else "") + (f"listed but absent: {missing}" if missing else "")
     return report(f"inventory: {len(present)} source-data files, each produced by a step or listed with a reason",

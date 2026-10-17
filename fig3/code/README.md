@@ -2,7 +2,7 @@
 
 These are the **round-1 draft** code-generation runs, not the planned replacement experiment ([protocol v2](../PROTOCOL_V2.md)).
 
-The LLM wrote Fiji macros (row b1) or Python scripts (row b2) for nuclei, cancer cells and endothelial cells. Each task was tried with a short generic request and with the then-current [Box 1 v2 prompt](../../box1/box1_v2_used_in_figure3.md), three runs per condition.
+The LLM wrote Fiji macros (row b1) or Python scripts (row b2) for nuclei, cancer cells and endothelial cells. Each task was tried with a short generic request and with the then-current Box 1 v2 prompt (the exact text sent is in each run's `prompt.md`), three runs per condition.
 
 The model could inspect an image preview but could not execute its code. We ran the returned scripts separately.
 

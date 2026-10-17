@@ -12,6 +12,7 @@ The [runs](runs/) folder contains earlier conversations (indexed in [runs_index.
 | Brightfield cancer-cell runs | Replaced by the two-target and later three-task designs. |
 | Earlier specific code prompts | Replaced by the Box 1 prompt. |
 | Box 1 v1 | Prompt wording changed; subsequent runs used v2. |
+| [Round-2 pilot](round2_pilot/README.md) (three accepted scenarios, 17 Oct 2026) | Stopped and replaced by protocol v2 after the authors' redesign and two audits. |
 | Interrupted annotation-assisted agents | Sessions were restarted and repeated from clean folders. |
 
 These records document what was tried, not results that should be pooled with the current study.
