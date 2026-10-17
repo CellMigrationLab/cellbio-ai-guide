@@ -15,17 +15,16 @@ All three tasks used one field of cancer cells on an endothelial monolayer, with
 | C | Let an agent optimise by eye or against annotations | [optimise/](optimise/README.md) |
 | D | Ask for a count directly or ask the model to draw and count objects | [direct_answers/](direct_answers/README.md) |
 
-The run folders contain the prompts, verbatim conversations, metadata, code and outputs. [runs_index.csv](runs_index.csv) maps run IDs to records; [all_runs.csv](all_runs.csv) contains the draft scores. The [historical harness](harness/README.md), [deviations](deviations.md) and [superseded rounds](superseded/README.md) document how this first study was carried out.
+The run folders contain the prompts, verbatim conversations, metadata, code and outputs. [runs_index.csv](runs_index.csv) maps run IDs to records; [all_runs.csv](all_runs.csv) contains the draft scores. [deviations.md](deviations.md) records how this first study departed from its plan; earlier rounds, pilots and the run scripts are in git history.
 
 ## Other folders
 
 | Folder | Contents |
 |---|---|
-| [figure/](figure/) | Draft figure builder `code/make_fig3.py` (assembled from `code/build_parts/`: `fig3_head.py`, `fig3_helpers.py`, `fig3_v9.py`), the scores it reads (`source_data/round1/`) and its output. |
+| [figure/](figure/) | Draft figure builder `code/make_fig3.py`, the scores it reads (`source_data/round1/`) and its output. |
 | [scoring/](scoring/) | Task references and scoring conventions (`tasks.py`), the draft score table (`build_scores.py`), rescoring of the agents' development scores and the all-runs table. |
 | [baselines/](baselines/) | Cellpose with default settings on the DAPI image, for comparison. |
 | [v2/](v2/README.md) | Harness of protocol v2 (prompts, runner, scorer, operator tools). |
-| [pilots/](pilots/README.md), [superseded/](superseded/README.md) | Box 1 draft v3 pilots and earlier rounds, including the round-2 pilot; not in the figure. |
 
 ## Recheck the draft scores
 

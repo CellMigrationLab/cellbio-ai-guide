@@ -1,7 +1,11 @@
 # Figure 3: deviations from protocol and other things an auditor should know
 
-Round 1 (the current draft). Deviations under protocol v2 will be recorded in a section of their own; the round-2
-pilot's notes are in `superseded/round2_pilot/README.md`.
+Round 1 (the current draft). Deviations under protocol v2 will be recorded in a section of their own.
+
+Lessons from the round-2 pilot (3 scenarios, 17 Oct 2026; removed, see git history), built into the v2 harness: Claude
+sub-agents always have a shell (rows without code use the `subject-chat` agent); the harness scratchpad is shared
+(emptied before each subject); torchvision must match the CPU build of torch; answer-sheet lines must not mention
+files that were not sent; a script that fails must never be scored as successful.
 
 ## Prompts and harness
 - All runs used Claude Code sub-agents (not the claude.ai app). Each prompt starts with our wrapper text (role, which
@@ -15,8 +19,8 @@ pilot's notes are in `superseded/round2_pilot/README.md`.
 
 ## Running the code
 - Fiji macros: the `input = …` and `output = …` lines were replaced by absolute paths so that the macros could run
-  headless (`harness/collect.py`); nothing else was edited.
-- Python scripts were run unchanged in a folder containing the image (`harness/queue_runner.sh`).
+  headless; nothing else was edited.
+- Python scripts were run unchanged in a folder containing the image.
 - Two Fiji macros failed and wrote no output, counted as F1 0 (× in the figure): `fiji_generic_cancer_r3` calls a
   non-existent command ("Set Scaling…"); `fiji_box1_nuclei_r2` calls `ceil()`, which the ImageJ macro language does not have.
 - Draw runs: the model's polygons were rasterised (`direct_answers/code/rasterise_poly.py`). `draw_nuclei_r2` returned
@@ -34,7 +38,7 @@ pilot's notes are in `superseded/round2_pilot/README.md`.
 - Agents' reported development scores came from their own scoring code; re-scored with ours in `optimise/dev_rescored.json`.
 
 ## Answers to follow-up questions (pilots only)
-- In the Box 1 v3 pilots we answered the models' questions from a fixed answer sheet (`pilots/answer_sheet_pilot.md`).
+- In the Box 1 v3 pilots we answered the models' questions from a fixed answer sheet (the pilots were later removed; git history).
   One answer was wrong ("label the visible part of endothelial cells under cancer cells"; the annotation runs under
   them); the advice run that spotted the inconsistency received the correction, the code pilot did not.
 

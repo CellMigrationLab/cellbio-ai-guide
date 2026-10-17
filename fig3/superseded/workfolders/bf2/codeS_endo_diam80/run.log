@@ -1,8 +1,0 @@
-<work2>/cpenv/lib/python3.13/site-packages/cellpose/dynamics.py:541: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
-  coo = torch.sparse_coo_tensor(pt, torch.ones(pt.shape[1], device=pt.device, dtype=torch.int),
-Cellpose raw objects: 371
-<fig3-work>/bf2/codeS_endo_diam80/script.py:64: FutureWarning: `RegionProperties.equivalent_diameter` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.equivalent_diameter_area` instead. 
-  diam_um = p.equivalent_diameter * PIXEL_SIZE_UM
-Removed as small fragments: 5
-Removed as round/refractile (cancer) cells: 110
-Number of endothelial cells: 256

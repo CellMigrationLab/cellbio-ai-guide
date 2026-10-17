@@ -1,5 +1,0 @@
-{"iteration": 1, "change": "baseline: gauss, log-otsu + local threshold, EDT watershed", "F1": 0.779, "TP": 206, "FN": 20, "FP": 97}
-{"iteration": 2, "change": "drop objects with mean intensity>550 or area>1000 (reference excludes bright non-endothelial cells)", "F1": 0.892, "TP": 199, "FN": 27, "FP": 21}
-{"iteration": 3, "change": "MIN_AREA 80->120 to remove small debris", "F1": 0.905, "TP": 199, "FN": 27, "FP": 15}
-{"iteration": 4, "change": "tested MIN_DIST 5/8/10 (no gain, keep 6) and local-threshold block 101->51 (better separation of nuclei from bright halos)", "F1": 0.915, "TP": 204, "FN": 22, "FP": 16}
-{"iteration": 5, "change": "tried block 35/25 (worse), IMAX 520/580 (worse/equal), local-threshold offset +-0.03 (worse); reverted to v4 settings", "F1": 0.906, "TP": 203, "FN": 23, "FP": 19}

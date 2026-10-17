@@ -38,9 +38,9 @@ Figure 3 depends on recorded LLM conversations. Those replies cannot be regenera
 | [`common/`](common/) | Shared analysis code and tests, including label validation, object matching, annotation conversion and image metadata. |
 | [`fig1/`](fig1/) | Figure 1 code, source data, figure files, legend and provenance notes. |
 | [`fig2/`](fig2/) | Figure 2 code, source data, figure files, legend and provenance notes. |
-| [`fig3/`](fig3/) | Protocol v2 and its harness (`v2/`), the round-1 draft figure and its LLM records, and earlier rounds (`superseded/`). |
+| [`fig3/`](fig3/) | Protocol v2 and its harness (`v2/`); the round-1 draft figure and its LLM records. |
 | [`box1/`](box1/) | The final Box 1 prompt. Earlier versions survive in the prompts of the runs that used them and in git history. |
-| [`tools/`](tools/) | Repository checks, figure conversion and data-porting utilities. |
+| [`tools/`](tools/) | Repository checks (fast and full) and SVG-to-PDF conversion. |
 
 ## Scope and current status
 

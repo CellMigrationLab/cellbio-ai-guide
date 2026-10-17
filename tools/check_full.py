@@ -109,13 +109,6 @@ NOT_REGENERATED = {  # (figure, file) -> reason; these files are kept from the c
     ("fig1", "panel_c_steps2_4/rep2.png"): "producer not recovered (crop coordinates in fig1/README.md)",
     ("fig1", "panel_c_step5/trackmate_crop.png"): "recovered inline command (code/recovered_inline/data9_trackmate_crop.png.sh)",
     ("fig2", "from_fig1_panel_a/dark_tile.png"): "recovered inline command (code/recovered_inline/data5_dark_tile.png.sh)",
-    ("fig2", "panels/al_bf.png"): "earlier version, not read by the builder",
-    ("fig2", "panels/al_pred.png"): "earlier version, not read by the builder",
-    ("fig2", "panels/perturb.log"): "console log of the Cellpose runs (not read by any script)",
-    ("fig2", "panels/perturb_flow.log"): "console log of the Cellpose runs (not read by any script)",
-    ("fig2", "panels/perturb_norm.log"): "console log of the Cellpose runs (not read by any script)",
-    ("fig2", "panels/perturb_pecam.log"): "console log of the Cellpose runs (not read by any script)",
-    ("fig2", "panels/perturb_up.log"): "console log of the Cellpose runs (not read by any script)",
 }
 
 

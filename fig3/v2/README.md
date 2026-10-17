@@ -1,6 +1,6 @@
 # Figure 3 protocol v2: running and scoring the experiment
 
-This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2.md). **Read the protocol before running a scenario.** The earlier Figure 3 experiments are retained separately in [round 1](../README.md) and [superseded](../superseded/).
+This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2.md). **Read the protocol before running a scenario.** The round-1 draft is described in [../README.md](../README.md).
 
 ## Files to know
 

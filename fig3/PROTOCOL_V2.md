@@ -1,7 +1,7 @@
 # Figure 3, protocol v2 (draft for the authors' review, 17 Oct 2026)
 
-Replaces the round-2 design. The runs made under round 2 (three accepted, three rejected) are a **pilot**, kept in
-`superseded/round2_pilot/` and not used in the figure. Nothing in this file is frozen yet; after the authors' review it is
+Replaces the round-2 design. The runs made under round 2 (three accepted, three rejected) are a **pilot**, not used in the
+figure (removed from the repository; git history). Nothing in this file is frozen yet; after the authors' review it is
 implemented in `fig3/v2/`, tested in a short preflight (section 11) and then frozen (hashes of every file that defines
 the protocol, including the operator code and the environment).
 
@@ -206,15 +206,15 @@ freeze protocol v2: hashes of prompts, answer sheet, rows.csv, operator, runner,
 this file and the figure layout; a test fails if any changes. Changes after the freeze go to `deviations.md` with the
 affected runs.
 
-## 12. Figures 1 and 2 (separate from Figure 3)
+## 12. Figures 1 and 2 (separate from Figure 3) — done 17 Oct 2026
 - Fig. 1: no change (step 4 already uses field 209).
-- Fig. 2a: add to the legend: "With the same settings on a second field, F1 is 0.40 (default) and 0.81 (with the
-  post-filter)." (computed 17 Oct 2026, Cellpose-SAM default, contrast threshold 50 frozen on field 104).
-- Fig. 2c (denoising): unchanged.
-- Fig. 2e (tubule width): sampling fixed (orientation-neutral spacing along reference skeletons, exclusions counted);
-  panel numbers and legend recomputed.
-- Code-audit P0 items and inexpensive P1 items for Figs. 1–2, keeping `make check` and `make full` green and
-  documenting any number that changes.
+- Fig. 2a: every variant re-run on field 209 with the settings chosen on field 104; bars show the mean F1 of the two
+  fields, dots each field (default 0.59, post-filter 0.86; `fig2/code/score_fields.py`).
+- Fig. 2c (denoising): unchanged; the high-SNR comparison stays exploratory (`fig2/analysis/`).
+- Fig. 2e (tubule width): orientation-neutral sampling on the reference skeleton, exclusions counted; 1,301 locations,
+  prediction minus reference −9 nm.
+- Code-audit P0 items and inexpensive P1 items done; `make check` and `make full` pass; every changed number is
+  documented in the figure README.
 
 ## 13. Decisions (authors, 17 Oct 2026) and open items
 - Row A example: chosen after the runs, as an illustration (not by a rule); all replies are available.

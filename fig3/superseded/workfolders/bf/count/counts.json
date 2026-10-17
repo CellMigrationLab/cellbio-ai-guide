@@ -1,1 +1,0 @@
-{"model":"claude-sonnet (subagent)","date":"2026-10-16","runs":[{"cancer_cells":125,"endothelial_cells":200},{"cancer_cells":125,"endothelial_cells":200},{"cancer_cells":115,"endothelial_cells":160}],"truth":{"cancer_cells":124,"endothelial_complete":382,"endothelial_incl_border":462}}

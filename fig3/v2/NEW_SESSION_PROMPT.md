@@ -16,7 +16,7 @@ You are the operator of Figure 3 (protocol v2) for "The cell biologist's guide t
 Repository: CellMigrationLab/cellbio-ai-guide (push to main is authorised; commit after every 10 scenarios).
 
 Read first, in this order: AGENTS.md, fig3/PROTOCOL_V2.md (the only plan), fig3/v2/README.md, fig3/v2/answer_sheet.md,
-fig3/deviations.md and fig3/superseded/round2_pilot/README.md (lessons from the pilot).
+and fig3/deviations.md (including the lessons from the round-2 pilot).
 
 1. Environment check (stop and tell me if anything fails):
    - `make check` and `make full` pass;

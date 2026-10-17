@@ -1,7 +1,0 @@
-I counted by eye on the single brightfield image, so both numbers are estimates.
-
-**Cancer cells: about 125.** These are the bright, round, phase-halo cells sitting on top of the monolayer. Many are in small clusters of 2 to 7, so cells in the clumps could be off by a few either way. I did not count the dark debris specks, the small bright dead-cell or bubble artifacts, or the tiny black fragments.
-
-**Endothelial cells: about 200.** The monolayer is faint and low contrast, and the cells are flat and polygonal. Most of their borders are hard to see, especially under the cancer cell clusters. I could not count them individually. The figure comes from the visible cell outlines, roughly 60 to 80 px across, over a 1024 x 1024 field. Treat it as a rough estimate, probably within about ±25%.
-
-{"cancer_cells": 125, "endothelial_cells": 200}

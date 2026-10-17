@@ -1,1 +1,0 @@
-Please draw around every endothelial nucleus in this image and count them. Give each outline as a polygon in the pixel coordinates of the image (origin top-left, x to the right, y down), as JSON: {"count": <integer>, "cells": [{"points": [[x, y], ...]}, ...]}.

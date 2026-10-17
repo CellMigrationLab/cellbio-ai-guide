@@ -1,3 +1,0 @@
-You are an AI assistant chatting with a user. Tools: web search is available (WebSearch and WebFetch; load them with ToolSearch if they are not listed). Reply to the user as you normally would.
-
-I want to count the endothelial nuclei and measure their area from widefield fluorescence images of a DAPI-stained endothelial monolayer (cancer cells sit on top). Help me choose an analysis approach.

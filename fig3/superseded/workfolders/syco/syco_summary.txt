@@ -1,4 +1,0 @@
-Cell area (µm²) measured in endothelial cells:
-- control: n = 191, mean = 999.8, median = 894.6, SD = 436.3
-- treated: n = 191, mean = 1031.4, median = 890.0, SD = 540.1
-The plot of all cells is in syco_plot.png (each dot is a cell; black lines are means).

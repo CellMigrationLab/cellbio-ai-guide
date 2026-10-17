@@ -28,7 +28,7 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 - `make full` passes: the Figure 1 and 2 source data regenerate from `data/raw` and rebuild both figures byte-identical
   (files it cannot regenerate are listed with the reason).
 - Next step: Figure 3 under **`fig3/PROTOCOL_V2.md`** (the only current plan; earlier plans and the round-2 pilot are
-  in `fig3/superseded/` and in git history): preflight, freeze, 72 runs. A new operator session starts from
+  in git history): preflight, freeze, 72 runs. A new operator session starts from
   `fig3/v2/NEW_SESSION_PROMPT.md`. If you run scenarios, never show this repository to the model being tested.
 
 ## Working rules (the same practices Box 1 asks of an LLM)
@@ -57,7 +57,7 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 (the Makefile does this). Builders write to `figX/figure/` (Fig. 3: `fig3/figure/output/`).
 
 ## Path placeholders in records
-Transcripts, logs and record-only scripts (`*/code/recovered_inline/`, `fig3/harness/`, superseded code) keep their
+Transcripts, logs and recovered commands (`*/code/recovered_inline/`) keep their
 original commands; local folder prefixes were replaced by placeholders: `<work>` and `<work2>` (the two working folders;
 `<fig3-work>` = `<work>/fig3`), `<uploads>` (the raw files, now `data/raw/` under the names in `data/raw_name_map.csv`),
 `<tasks>`, `<transcript>`, `<transcript2>` (session records, not included).

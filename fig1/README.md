@@ -28,9 +28,8 @@ The builder uses the Python standard library only; it embeds the PNGs in `source
 
 Recovered commands (`code/recovered_inline/`) are copied verbatim from the session transcripts; their paths are those of
 the original working folder (`U` = the upload folder, now `data/raw/` with the names in `data/raw_name_map.csv`;
-`dl_deepbacs`, `dl_abx` = `data/raw/third_party/`). Explorations for earlier versions
-(`compare_*.py`, `b12.py`, `b13.py`, `export_bf_example.py`, `agent_run.py`, `extract_tracks.py`) are in `superseded/exploratory/` and are
-not part of the figure; earlier builders are in `superseded/`. `code/` holds only producers and the builder.
+`dl_deepbacs`, `dl_abx` = `data/raw/third_party/`). `code/` holds only the producers of `source_data/` and the builder; earlier builders and explorations were removed
+(git history).
 
 Changes in v16 relative to the provenance notes below (written for the data package of 16 Oct, 11:58): the step-3
 candidates are labelled "Pre-trained generalist" and "Custom-trained"; the super-resolution tile is a 2× zoom

@@ -1,4 +1,4 @@
-"""Write fig3/all_runs.csv: one row per LLM run (shown, pilot or superseded) with its score where it produced labels.
+"""Write fig3/all_runs.csv: one row per LLM run of the round-1 draft figure, with its score where it produced labels.
 
 Usage: PYTHONPATH=. python fig3/scoring/all_runs_table.py
 Task and scoring follow fig3/scoring/tasks.py; runs without a whole-field label image get an empty score.
@@ -21,7 +21,7 @@ TASK_WORDS = {"nuclei": "nuclei", "cancer": "cancer", "endothelial": "endo"}
 
 
 def task_of(run_id: str) -> str | None:
-    """Task scored for a run, inferred from its id (None for runs without a task, e.g. sycophancy tests)."""
+    """Task scored for a run, inferred from its id (None for runs without a task)."""
     return next((task for word, task in TASK_WORDS.items() if word in run_id), None)
 
 

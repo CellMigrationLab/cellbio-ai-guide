@@ -1,8 +1,7 @@
 # Figure 2: Is the deep-learning output good enough for the measurement?
 
 Final version: `figure/fig2.svg` / `fig2.pdf`; legend `legend.md`. Builder `code/make_fig2.py` (= working version v3,
-16 Oct 2026), assembled from `code/build_parts/` (`fig2_head.py` + `blk_*.py` + the tail of `fig2_body.py`, see
-`build_parts/rebuild.sh`).
+16 Oct 2026; updated 17 Oct 2026 for panels a and e).
 
 ## Rebuild and re-score
 ```
@@ -47,13 +46,11 @@ Default Cellpose labels are shared with Fig. 1: `../fig1/source_data/full_field_
   and `postfilter.py` with `--field 209`; outputs in `panels/field209/`) and scored by `score_fields.py`, which also
   checks that the field-104 values equal `perturb_scores.json`. The bars show the mean of the two fields, dots each
   field (`panels/perturb_scores_fields.json`). The post-filter threshold (50) was chosen on field 104 only.
-  `analysis/second_field_check.py` is the first, default/post-filter-only version of this check (same numbers).
 - `panels/squirrel.json` contains the runtime of each SQUIRREL call (`"s"`), which `squirrel_run.py` now prints instead
   of storing (it is not a result and varies between runs); the checks ignore that key.
-- `panels/pecam_annotator{1,2}.json`, `panels/perturb*.log` and some `ts_cp_*.json` variants are intermediate files not drawn
+- `panels/pecam_annotator{1,2}.json` and some `ts_cp_*.json` variants are intermediate files not drawn
   in the final figure.
 - Published model outputs (custom StarDist, pix2pix, CARE, RCAN) were not re-run; Cellpose and SQUIRREL were.
-- Earlier builders: `superseded/`.
 
 ## Folder names
 `source_data/` folders were renamed after porting (17 Oct 2026): `data` → `panels`, `data4` → `from_fig1_panel_c`,
