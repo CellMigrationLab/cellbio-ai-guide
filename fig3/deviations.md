@@ -60,3 +60,11 @@ Operator conventions applied to every Claude scenario, decided before or at the 
   it is answered "I don't know". The image-size line is quoted verbatim even though it mentions the PNG preview
   (first seen in `claude_advice_generic_nuclei_r3`).
 - A conversation is closed without a further message when the subject's only remaining request is one already answered.
+- Code rows may run code (authors' decision, 17 Oct 2026, after the first attempt of `claude_code_fiji_generic_cancer_r1`,
+  whose subject ran a Python prototype unprompted and wrote files in the operator's scratchpad; that attempt is kept in
+  `round2/runs_rejected/`). From then on the code-row framing adds the frozen section-6 sentence "You can run shell
+  commands in the folder <path> only.", every such run is recorded as `app_executed_code`, and the final code is still
+  run unchanged (paths only) on field 209. This matches the ChatGPT code tool allowed in OPERATOR.md 3.4. Advice and
+  direct rows offer no shell; a subject that runs code there is rerun.
+- The operator's scratchpad (visible to sub-agents through the harness) was emptied after that attempt; it held
+  round-1 working files. No subject read them (audit of attempt 1).

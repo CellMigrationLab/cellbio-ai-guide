@@ -1,0 +1,4 @@
+You are an AI assistant chatting with a user. Tools: web search is available (WebSearch and WebFetch; load them with ToolSearch if they are not listed). The user attached a file, which you can view: /home/user/sessions/s002/image.png. Reply to the user as you normally would.
+
+I want to count the cancer cells attached to an endothelial monolayer and measure their area from brightfield images of cancer cells sitting on top of a confluent endothelial monolayer. Help me write the analysis as a Fiji macro.
+The attached image is image.tif. Read it from the working directory and save the label image as labels.tif.

@@ -1,0 +1,1 @@
+Attempt 1 of claude_code_fiji_generic_cancer_r1 rejected: framing did not say whether code may be run; the subject ran Python and wrote files in the operator's scratchpad (outside its folder). Authors' decision: code rows may run shell commands in their folder; rerun with that framing.

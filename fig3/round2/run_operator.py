@@ -31,8 +31,11 @@ FIJI = Path("/home/user/tools/Fiji/fiji-linux-x64")
 TIMEOUT_S = 3600
 SUBJECT_TOOLS_ALLOWED = {"advice": {"ToolSearch", "WebSearch", "WebFetch"},
                          "direct": {"ToolSearch", "WebSearch", "WebFetch", "Read"},
-                         "code_python": {"ToolSearch", "WebSearch", "WebFetch", "Read"},
-                         "code_fiji": {"ToolSearch", "WebSearch", "WebFetch", "Read"}}  # optimise: shell in its folder
+                         "code_python": {"ToolSearch", "WebSearch", "WebFetch", "Read", "Bash", "Write", "Edit", "Glob", "Grep"},
+                         "code_fiji": {"ToolSearch", "WebSearch", "WebFetch", "Read", "Bash", "Write", "Edit", "Glob", "Grep"}}
+# optimise: shell in its folder (any tool; paths checked). Code rows may run code in their folder (authors' decision,
+# 17 Oct 2026, after scenario 2; deviations.md).
+OUTSIDE_MARKERS = ("/tmp", "/root", "/home/user/cellbio", "/home/user/tools", "/home/user/r2exec", "/home/user/sessions/s")
 
 
 def scenario(scenario_id: str) -> dict:
@@ -55,6 +58,7 @@ def framing(sc: dict, folder: Path) -> str:
         parts.append("Tools: web search is available (WebSearch and WebFetch; load them with ToolSearch if they are not listed).")
     if sc["row"] in ("code_python", "code_fiji"):
         parts.append(f"The user attached a file, which you can view: {folder / 'image.png'}.")
+        parts.append(f"You can run shell commands in the folder {folder} only.")
     elif sc["row"] == "direct":
         parts.append(f"The user attached a file, which you can view: {folder / 'image.png'}.")
     elif sc["row"] == "optimise":
@@ -135,10 +139,11 @@ def audit(scenario_id: str, agent_id: str) -> None:
                 for p in paths_in(inp):
                     if not p.startswith(folder):
                         flags.append(f"{name} outside the subject folder: {p}")
-                if name == "Bash" and "cellbio" in json.dumps(inp):
-                    flags.append(f"Bash command mentions the repository: {inp.get('command', '')[:200]}")
-                if name == "Bash" and sc["row"] == "optimise" and folder not in json.dumps(inp) and "cd " not in inp.get("command", ""):
-                    flags.append(f"Bash command without the subject folder (check): {inp.get('command', '')[:200]}")
+                if name in ("Bash", "Glob", "Grep"):
+                    text = json.dumps(inp).replace(folder, "<folder>")
+                    hits = [m for m in OUTSIDE_MARKERS if m in text]
+                    if hits:
+                        flags.append(f"{name} refers to paths outside the subject folder {hits}: {text[:200]}")
             elif kind == "tool_result":
                 text = block.get("content")
                 text = text if isinstance(text, str) else json.dumps(text)[:2000]
@@ -180,6 +185,19 @@ def write_meta(scenario_id: str, agent_id: str, notes: str = "") -> None:
     print({k: meta[k] for k in ("model", "follow_ups", "web_used", "datetime_start")})
 
 
+def reject(scenario_id: str, reason: str) -> None:
+    """Move a failed attempt aside (never deleted) so the scenario can be prepared again from scratch."""
+    sc = scenario(scenario_id)
+    attic = RUNS.parent / "runs_rejected"
+    n = 1 + len(list(attic.glob(f"{scenario_id}_attempt*")))
+    target = attic / f"{scenario_id}_attempt{n}"
+    target.parent.mkdir(exist_ok=True)
+    shutil.move(str(RUNS / scenario_id), target)
+    shutil.move(str(subject_dir(sc)), target / "subject_folder")
+    (target / "REJECTED.md").write_text(f"Attempt {n} of {scenario_id} rejected: {reason}\n")
+    print("moved to", target)
+
+
 def run(scenario_id: str) -> None:
     """Run the final code (code_run.py / code_run.ijm, or the agent's pipeline) on a copy of the test image."""
     sc = scenario(scenario_id)
@@ -217,7 +235,7 @@ def run(scenario_id: str) -> None:
 
 
 if __name__ == "__main__":
-    commands = {"prepare": prepare, "audit": audit, "meta": write_meta, "run": run}
+    commands = {"prepare": prepare, "audit": audit, "meta": write_meta, "run": run, "reject": reject}
     if len(sys.argv) < 3 or sys.argv[1] not in commands:
         raise SystemExit(__doc__)
     commands[sys.argv[1]](*sys.argv[2:])
