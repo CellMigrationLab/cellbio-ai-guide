@@ -1,0 +1,2 @@
+I want to count the cancer cells attached to an endothelial monolayer and measure their area from brightfield images of cancer cells sitting on top of a confluent endothelial monolayer. Help me write the analysis as a Python script.
+The attached image is image.tif. Read it from the working directory and save the label image as labels.tif.

@@ -1,0 +1,1 @@
+I want to count the endothelial nuclei and measure their area from widefield fluorescence images of a DAPI-stained endothelial monolayer (cancer cells sit on top). Help me choose an analysis approach.

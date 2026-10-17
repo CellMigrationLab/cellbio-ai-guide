@@ -1,0 +1,1 @@
+I want to count the endothelial nuclei and measure their area from widefield fluorescence images of a DAPI-stained endothelial monolayer (cancer cells sit on top). Please run the analysis on image.tif in this folder, assess the result, improve the analysis and give me the result: save the label image as labels.tif, the areas as areas.csv and the final script as pipeline.py.

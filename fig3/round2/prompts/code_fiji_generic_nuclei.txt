@@ -1,0 +1,2 @@
+I want to count the endothelial nuclei and measure their area from widefield fluorescence images of a DAPI-stained endothelial monolayer (cancer cells sit on top). Help me write the analysis as a Fiji macro.
+The attached image is image.tif. Read it from the working directory and save the label image as labels.tif.

@@ -1,0 +1,163 @@
+run_order,scenario_id,assistant,row,condition,task,replicate,prompt_file,attach,agent_folder,subject_tools
+1,claude_advice_generic_nuclei_r3,claude,advice,generic,nuclei,3,prompts/advice_generic_nuclei.txt,,,web
+2,claude_code_fiji_generic_cancer_r1,claude,code_fiji,generic,cancer,1,prompts/code_fiji_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+3,claude_code_python_box1_cancer_r3,claude,code_python,box1,cancer,3,prompts/code_python_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+4,claude_code_python_generic_nuclei_r1,claude,code_python,generic,nuclei,1,prompts/code_python_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+5,openai_direct_box1_endo_r1,openai,direct,box1,endo,1,prompts/direct_box1_endo.txt,endo_image.png,,view attachment
+6,openai_advice_generic_nuclei_r3,openai,advice,generic,nuclei,3,prompts/advice_generic_nuclei.txt,,,web
+7,claude_code_fiji_generic_nuclei_r3,claude,code_fiji,generic,nuclei,3,prompts/code_fiji_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+8,openai_code_fiji_box1_nuclei_r1,openai,code_fiji,box1,nuclei,1,prompts/code_fiji_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+9,claude_optimise_box1_cancer_r2,claude,optimise,box1,cancer,2,prompts/optimise_box1_cancer.txt,,image_left.tif <- cancer_image_left.tif; annotation_left.tif <- cancer_annotation_left.tif,web; run code in its folder only
+10,claude_code_fiji_generic_nuclei_r1,claude,code_fiji,generic,nuclei,1,prompts/code_fiji_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+11,openai_code_fiji_box1_cancer_r3,openai,code_fiji,box1,cancer,3,prompts/code_fiji_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+12,claude_code_fiji_box1_cancer_r2,claude,code_fiji,box1,cancer,2,prompts/code_fiji_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+13,claude_direct_box1_cancer_r2,claude,direct,box1,cancer,2,prompts/direct_box1_cancer.txt,cancer_image.png,,view attachment
+14,claude_advice_box1_nuclei_r3,claude,advice,box1,nuclei,3,prompts/advice_box1_nuclei.txt,,,web
+15,openai_code_fiji_box1_nuclei_r3,openai,code_fiji,box1,nuclei,3,prompts/code_fiji_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+16,openai_code_fiji_generic_cancer_r1,openai,code_fiji,generic,cancer,1,prompts/code_fiji_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+17,claude_optimise_generic_cancer_r1,claude,optimise,generic,cancer,1,prompts/optimise_generic_cancer.txt,,image.tif <- cancer_image.tif,web; run code in its folder only
+18,claude_advice_box1_endo_r1,claude,advice,box1,endo,1,prompts/advice_box1_endo.txt,,,web
+19,openai_code_fiji_generic_nuclei_r1,openai,code_fiji,generic,nuclei,1,prompts/code_fiji_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+20,claude_advice_generic_endo_r2,claude,advice,generic,endo,2,prompts/advice_generic_endo.txt,,,web
+21,claude_code_python_generic_endo_r1,claude,code_python,generic,endo,1,prompts/code_python_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+22,claude_code_fiji_generic_endo_r1,claude,code_fiji,generic,endo,1,prompts/code_fiji_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+23,claude_code_python_generic_endo_r2,claude,code_python,generic,endo,2,prompts/code_python_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+24,openai_advice_box1_cancer_r3,openai,advice,box1,cancer,3,prompts/advice_box1_cancer.txt,,,web
+25,claude_advice_generic_cancer_r2,claude,advice,generic,cancer,2,prompts/advice_generic_cancer.txt,,,web
+26,openai_code_python_box1_endo_r1,openai,code_python,box1,endo,1,prompts/code_python_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+27,openai_code_python_box1_cancer_r1,openai,code_python,box1,cancer,1,prompts/code_python_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+28,claude_code_fiji_generic_cancer_r2,claude,code_fiji,generic,cancer,2,prompts/code_fiji_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+29,claude_direct_box1_nuclei_r3,claude,direct,box1,nuclei,3,prompts/direct_box1_nuclei.txt,nuclei_image.png,,view attachment
+30,claude_direct_generic_nuclei_r1,claude,direct,generic,nuclei,1,prompts/direct_generic_nuclei.txt,nuclei_image.png,,view attachment
+31,openai_code_python_box1_cancer_r2,openai,code_python,box1,cancer,2,prompts/code_python_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+32,claude_advice_box1_cancer_r2,claude,advice,box1,cancer,2,prompts/advice_box1_cancer.txt,,,web
+33,openai_code_python_box1_nuclei_r3,openai,code_python,box1,nuclei,3,prompts/code_python_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+34,claude_direct_box1_endo_r2,claude,direct,box1,endo,2,prompts/direct_box1_endo.txt,endo_image.png,,view attachment
+35,claude_code_fiji_box1_endo_r2,claude,code_fiji,box1,endo,2,prompts/code_fiji_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+36,claude_direct_generic_endo_r2,claude,direct,generic,endo,2,prompts/direct_generic_endo.txt,endo_image.png,,view attachment
+37,openai_code_python_generic_cancer_r2,openai,code_python,generic,cancer,2,prompts/code_python_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+38,openai_code_python_generic_cancer_r1,openai,code_python,generic,cancer,1,prompts/code_python_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+39,openai_code_fiji_generic_nuclei_r3,openai,code_fiji,generic,nuclei,3,prompts/code_fiji_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+40,openai_code_fiji_generic_nuclei_r2,openai,code_fiji,generic,nuclei,2,prompts/code_fiji_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+41,openai_direct_box1_nuclei_r2,openai,direct,box1,nuclei,2,prompts/direct_box1_nuclei.txt,nuclei_image.png,,view attachment
+42,openai_advice_generic_cancer_r2,openai,advice,generic,cancer,2,prompts/advice_generic_cancer.txt,,,web
+43,claude_optimise_box1_endo_r2,claude,optimise,box1,endo,2,prompts/optimise_box1_endo.txt,,image_left.tif <- endo_image_left.tif; annotation_left.tif <- endo_annotation_left.tif,web; run code in its folder only
+44,claude_advice_generic_cancer_r3,claude,advice,generic,cancer,3,prompts/advice_generic_cancer.txt,,,web
+45,openai_advice_generic_endo_r1,openai,advice,generic,endo,1,prompts/advice_generic_endo.txt,,,web
+46,claude_code_python_generic_nuclei_r2,claude,code_python,generic,nuclei,2,prompts/code_python_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+47,claude_code_python_generic_cancer_r3,claude,code_python,generic,cancer,3,prompts/code_python_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+48,claude_optimise_box1_nuclei_r2,claude,optimise,box1,nuclei,2,prompts/optimise_box1_nuclei.txt,,image_left.tif <- nuclei_image_left.tif; annotation_left.tif <- nuclei_annotation_left.tif,web; run code in its folder only
+49,claude_optimise_generic_cancer_r2,claude,optimise,generic,cancer,2,prompts/optimise_generic_cancer.txt,,image.tif <- cancer_image.tif,web; run code in its folder only
+50,openai_direct_generic_endo_r2,openai,direct,generic,endo,2,prompts/direct_generic_endo.txt,endo_image.png,,view attachment
+51,openai_code_fiji_generic_endo_r2,openai,code_fiji,generic,endo,2,prompts/code_fiji_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+52,claude_advice_box1_cancer_r1,claude,advice,box1,cancer,1,prompts/advice_box1_cancer.txt,,,web
+53,claude_advice_box1_endo_r3,claude,advice,box1,endo,3,prompts/advice_box1_endo.txt,,,web
+54,claude_code_python_box1_nuclei_r1,claude,code_python,box1,nuclei,1,prompts/code_python_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+55,claude_optimise_box1_cancer_r1,claude,optimise,box1,cancer,1,prompts/optimise_box1_cancer.txt,,image_left.tif <- cancer_image_left.tif; annotation_left.tif <- cancer_annotation_left.tif,web; run code in its folder only
+56,claude_code_python_box1_endo_r2,claude,code_python,box1,endo,2,prompts/code_python_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+57,claude_code_python_generic_cancer_r2,claude,code_python,generic,cancer,2,prompts/code_python_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+58,claude_code_python_generic_nuclei_r3,claude,code_python,generic,nuclei,3,prompts/code_python_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+59,claude_direct_box1_cancer_r3,claude,direct,box1,cancer,3,prompts/direct_box1_cancer.txt,cancer_image.png,,view attachment
+60,claude_advice_generic_endo_r1,claude,advice,generic,endo,1,prompts/advice_generic_endo.txt,,,web
+61,claude_code_fiji_box1_nuclei_r3,claude,code_fiji,box1,nuclei,3,prompts/code_fiji_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+62,openai_direct_box1_endo_r3,openai,direct,box1,endo,3,prompts/direct_box1_endo.txt,endo_image.png,,view attachment
+63,claude_direct_generic_nuclei_r3,claude,direct,generic,nuclei,3,prompts/direct_generic_nuclei.txt,nuclei_image.png,,view attachment
+64,openai_advice_generic_cancer_r1,openai,advice,generic,cancer,1,prompts/advice_generic_cancer.txt,,,web
+65,openai_code_python_box1_cancer_r3,openai,code_python,box1,cancer,3,prompts/code_python_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+66,claude_code_python_generic_cancer_r1,claude,code_python,generic,cancer,1,prompts/code_python_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+67,claude_advice_generic_endo_r3,claude,advice,generic,endo,3,prompts/advice_generic_endo.txt,,,web
+68,openai_direct_generic_cancer_r2,openai,direct,generic,cancer,2,prompts/direct_generic_cancer.txt,cancer_image.png,,view attachment
+69,claude_advice_box1_nuclei_r1,claude,advice,box1,nuclei,1,prompts/advice_box1_nuclei.txt,,,web
+70,openai_direct_box1_cancer_r2,openai,direct,box1,cancer,2,prompts/direct_box1_cancer.txt,cancer_image.png,,view attachment
+71,claude_code_python_box1_endo_r1,claude,code_python,box1,endo,1,prompts/code_python_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+72,claude_code_fiji_generic_nuclei_r2,claude,code_fiji,generic,nuclei,2,prompts/code_fiji_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+73,openai_direct_box1_endo_r2,openai,direct,box1,endo,2,prompts/direct_box1_endo.txt,endo_image.png,,view attachment
+74,openai_code_fiji_box1_cancer_r2,openai,code_fiji,box1,cancer,2,prompts/code_fiji_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+75,openai_direct_generic_endo_r3,openai,direct,generic,endo,3,prompts/direct_generic_endo.txt,endo_image.png,,view attachment
+76,claude_code_python_box1_endo_r3,claude,code_python,box1,endo,3,prompts/code_python_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+77,claude_direct_generic_nuclei_r2,claude,direct,generic,nuclei,2,prompts/direct_generic_nuclei.txt,nuclei_image.png,,view attachment
+78,openai_direct_box1_cancer_r1,openai,direct,box1,cancer,1,prompts/direct_box1_cancer.txt,cancer_image.png,,view attachment
+79,claude_direct_box1_nuclei_r2,claude,direct,box1,nuclei,2,prompts/direct_box1_nuclei.txt,nuclei_image.png,,view attachment
+80,openai_code_python_generic_nuclei_r1,openai,code_python,generic,nuclei,1,prompts/code_python_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+81,openai_advice_box1_nuclei_r3,openai,advice,box1,nuclei,3,prompts/advice_box1_nuclei.txt,,,web
+82,openai_code_python_generic_nuclei_r2,openai,code_python,generic,nuclei,2,prompts/code_python_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+83,openai_code_python_generic_endo_r3,openai,code_python,generic,endo,3,prompts/code_python_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+84,claude_direct_generic_endo_r1,claude,direct,generic,endo,1,prompts/direct_generic_endo.txt,endo_image.png,,view attachment
+85,claude_advice_box1_cancer_r3,claude,advice,box1,cancer,3,prompts/advice_box1_cancer.txt,,,web
+86,claude_direct_generic_cancer_r1,claude,direct,generic,cancer,1,prompts/direct_generic_cancer.txt,cancer_image.png,,view attachment
+87,claude_advice_generic_nuclei_r1,claude,advice,generic,nuclei,1,prompts/advice_generic_nuclei.txt,,,web
+88,openai_direct_box1_cancer_r3,openai,direct,box1,cancer,3,prompts/direct_box1_cancer.txt,cancer_image.png,,view attachment
+89,claude_code_python_box1_nuclei_r2,claude,code_python,box1,nuclei,2,prompts/code_python_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+90,openai_advice_box1_nuclei_r2,openai,advice,box1,nuclei,2,prompts/advice_box1_nuclei.txt,,,web
+91,openai_advice_generic_cancer_r3,openai,advice,generic,cancer,3,prompts/advice_generic_cancer.txt,,,web
+92,claude_code_fiji_box1_cancer_r3,claude,code_fiji,box1,cancer,3,prompts/code_fiji_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+93,openai_advice_generic_endo_r3,openai,advice,generic,endo,3,prompts/advice_generic_endo.txt,,,web
+94,claude_optimise_box1_cancer_r3,claude,optimise,box1,cancer,3,prompts/optimise_box1_cancer.txt,,image_left.tif <- cancer_image_left.tif; annotation_left.tif <- cancer_annotation_left.tif,web; run code in its folder only
+95,claude_code_python_box1_nuclei_r3,claude,code_python,box1,nuclei,3,prompts/code_python_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+96,openai_advice_box1_endo_r3,openai,advice,box1,endo,3,prompts/advice_box1_endo.txt,,,web
+97,claude_optimise_generic_nuclei_r2,claude,optimise,generic,nuclei,2,prompts/optimise_generic_nuclei.txt,,image.tif <- nuclei_image.tif,web; run code in its folder only
+98,claude_code_fiji_box1_endo_r1,claude,code_fiji,box1,endo,1,prompts/code_fiji_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+99,claude_optimise_generic_nuclei_r1,claude,optimise,generic,nuclei,1,prompts/optimise_generic_nuclei.txt,,image.tif <- nuclei_image.tif,web; run code in its folder only
+100,openai_advice_generic_nuclei_r2,openai,advice,generic,nuclei,2,prompts/advice_generic_nuclei.txt,,,web
+101,openai_code_python_generic_endo_r1,openai,code_python,generic,endo,1,prompts/code_python_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+102,openai_direct_box1_nuclei_r3,openai,direct,box1,nuclei,3,prompts/direct_box1_nuclei.txt,nuclei_image.png,,view attachment
+103,openai_advice_box1_endo_r1,openai,advice,box1,endo,1,prompts/advice_box1_endo.txt,,,web
+104,openai_code_python_box1_endo_r2,openai,code_python,box1,endo,2,prompts/code_python_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+105,claude_code_python_box1_cancer_r1,claude,code_python,box1,cancer,1,prompts/code_python_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+106,openai_code_fiji_box1_endo_r3,openai,code_fiji,box1,endo,3,prompts/code_fiji_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+107,claude_code_python_box1_cancer_r2,claude,code_python,box1,cancer,2,prompts/code_python_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+108,claude_optimise_generic_endo_r3,claude,optimise,generic,endo,3,prompts/optimise_generic_endo.txt,,image.tif <- endo_image.tif,web; run code in its folder only
+109,openai_direct_generic_cancer_r1,openai,direct,generic,cancer,1,prompts/direct_generic_cancer.txt,cancer_image.png,,view attachment
+110,openai_code_python_generic_nuclei_r3,openai,code_python,generic,nuclei,3,prompts/code_python_generic_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+111,openai_advice_box1_nuclei_r1,openai,advice,box1,nuclei,1,prompts/advice_box1_nuclei.txt,,,web
+112,claude_direct_box1_endo_r3,claude,direct,box1,endo,3,prompts/direct_box1_endo.txt,endo_image.png,,view attachment
+113,claude_optimise_generic_nuclei_r3,claude,optimise,generic,nuclei,3,prompts/optimise_generic_nuclei.txt,,image.tif <- nuclei_image.tif,web; run code in its folder only
+114,claude_advice_generic_cancer_r1,claude,advice,generic,cancer,1,prompts/advice_generic_cancer.txt,,,web
+115,openai_advice_box1_endo_r2,openai,advice,box1,endo,2,prompts/advice_box1_endo.txt,,,web
+116,claude_direct_box1_cancer_r1,claude,direct,box1,cancer,1,prompts/direct_box1_cancer.txt,cancer_image.png,,view attachment
+117,openai_direct_box1_nuclei_r1,openai,direct,box1,nuclei,1,prompts/direct_box1_nuclei.txt,nuclei_image.png,,view attachment
+118,openai_direct_generic_endo_r1,openai,direct,generic,endo,1,prompts/direct_generic_endo.txt,endo_image.png,,view attachment
+119,claude_optimise_generic_endo_r2,claude,optimise,generic,endo,2,prompts/optimise_generic_endo.txt,,image.tif <- endo_image.tif,web; run code in its folder only
+120,claude_optimise_box1_nuclei_r1,claude,optimise,box1,nuclei,1,prompts/optimise_box1_nuclei.txt,,image_left.tif <- nuclei_image_left.tif; annotation_left.tif <- nuclei_annotation_left.tif,web; run code in its folder only
+121,claude_code_fiji_box1_nuclei_r1,claude,code_fiji,box1,nuclei,1,prompts/code_fiji_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+122,claude_optimise_box1_endo_r1,claude,optimise,box1,endo,1,prompts/optimise_box1_endo.txt,,image_left.tif <- endo_image_left.tif; annotation_left.tif <- endo_annotation_left.tif,web; run code in its folder only
+123,claude_direct_generic_cancer_r3,claude,direct,generic,cancer,3,prompts/direct_generic_cancer.txt,cancer_image.png,,view attachment
+124,claude_direct_box1_nuclei_r1,claude,direct,box1,nuclei,1,prompts/direct_box1_nuclei.txt,nuclei_image.png,,view attachment
+125,claude_direct_box1_endo_r1,claude,direct,box1,endo,1,prompts/direct_box1_endo.txt,endo_image.png,,view attachment
+126,openai_code_fiji_generic_endo_r3,openai,code_fiji,generic,endo,3,prompts/code_fiji_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+127,openai_advice_box1_cancer_r1,openai,advice,box1,cancer,1,prompts/advice_box1_cancer.txt,,,web
+128,openai_code_fiji_box1_cancer_r1,openai,code_fiji,box1,cancer,1,prompts/code_fiji_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+129,claude_direct_generic_cancer_r2,claude,direct,generic,cancer,2,prompts/direct_generic_cancer.txt,cancer_image.png,,view attachment
+130,openai_code_fiji_generic_cancer_r2,openai,code_fiji,generic,cancer,2,prompts/code_fiji_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+131,claude_optimise_generic_cancer_r3,claude,optimise,generic,cancer,3,prompts/optimise_generic_cancer.txt,,image.tif <- cancer_image.tif,web; run code in its folder only
+132,openai_code_python_box1_nuclei_r1,openai,code_python,box1,nuclei,1,prompts/code_python_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+133,openai_advice_generic_nuclei_r1,openai,advice,generic,nuclei,1,prompts/advice_generic_nuclei.txt,,,web
+134,claude_direct_generic_endo_r3,claude,direct,generic,endo,3,prompts/direct_generic_endo.txt,endo_image.png,,view attachment
+135,openai_code_fiji_generic_cancer_r3,openai,code_fiji,generic,cancer,3,prompts/code_fiji_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+136,claude_advice_generic_nuclei_r2,claude,advice,generic,nuclei,2,prompts/advice_generic_nuclei.txt,,,web
+137,openai_code_fiji_box1_nuclei_r2,openai,code_fiji,box1,nuclei,2,prompts/code_fiji_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+138,claude_advice_box1_endo_r2,claude,advice,box1,endo,2,prompts/advice_box1_endo.txt,,,web
+139,claude_code_fiji_generic_cancer_r3,claude,code_fiji,generic,cancer,3,prompts/code_fiji_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+140,openai_advice_box1_cancer_r2,openai,advice,box1,cancer,2,prompts/advice_box1_cancer.txt,,,web
+141,claude_optimise_box1_nuclei_r3,claude,optimise,box1,nuclei,3,prompts/optimise_box1_nuclei.txt,,image_left.tif <- nuclei_image_left.tif; annotation_left.tif <- nuclei_annotation_left.tif,web; run code in its folder only
+142,openai_direct_generic_nuclei_r3,openai,direct,generic,nuclei,3,prompts/direct_generic_nuclei.txt,nuclei_image.png,,view attachment
+143,claude_optimise_box1_endo_r3,claude,optimise,box1,endo,3,prompts/optimise_box1_endo.txt,,image_left.tif <- endo_image_left.tif; annotation_left.tif <- endo_annotation_left.tif,web; run code in its folder only
+144,openai_code_python_box1_nuclei_r2,openai,code_python,box1,nuclei,2,prompts/code_python_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+145,claude_optimise_generic_endo_r1,claude,optimise,generic,endo,1,prompts/optimise_generic_endo.txt,,image.tif <- endo_image.tif,web; run code in its folder only
+146,claude_code_fiji_box1_endo_r3,claude,code_fiji,box1,endo,3,prompts/code_fiji_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+147,openai_direct_generic_cancer_r3,openai,direct,generic,cancer,3,prompts/direct_generic_cancer.txt,cancer_image.png,,view attachment
+148,openai_code_python_box1_endo_r3,openai,code_python,box1,endo,3,prompts/code_python_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+149,claude_code_python_generic_endo_r3,claude,code_python,generic,endo,3,prompts/code_python_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+150,openai_direct_generic_nuclei_r1,openai,direct,generic,nuclei,1,prompts/direct_generic_nuclei.txt,nuclei_image.png,,view attachment
+151,claude_code_fiji_box1_cancer_r1,claude,code_fiji,box1,cancer,1,prompts/code_fiji_box1_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
+152,openai_code_fiji_box1_endo_r1,openai,code_fiji,box1,endo,1,prompts/code_fiji_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+153,openai_code_fiji_box1_endo_r2,openai,code_fiji,box1,endo,2,prompts/code_fiji_box1_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+154,claude_code_fiji_generic_endo_r2,claude,code_fiji,generic,endo,2,prompts/code_fiji_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+155,openai_code_fiji_generic_endo_r1,openai,code_fiji,generic,endo,1,prompts/code_fiji_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+156,claude_code_fiji_generic_endo_r3,claude,code_fiji,generic,endo,3,prompts/code_fiji_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+157,openai_code_python_generic_endo_r2,openai,code_python,generic,endo,2,prompts/code_python_generic_endo.txt,endo_image.tif (fallback endo_image.png),,web; view attachment
+158,claude_code_fiji_box1_nuclei_r2,claude,code_fiji,box1,nuclei,2,prompts/code_fiji_box1_nuclei.txt,nuclei_image.tif (fallback nuclei_image.png),,web; view attachment
+159,openai_direct_generic_nuclei_r2,openai,direct,generic,nuclei,2,prompts/direct_generic_nuclei.txt,nuclei_image.png,,view attachment
+160,openai_advice_generic_endo_r2,openai,advice,generic,endo,2,prompts/advice_generic_endo.txt,,,web
+161,claude_advice_box1_nuclei_r2,claude,advice,box1,nuclei,2,prompts/advice_box1_nuclei.txt,,,web
+162,openai_code_python_generic_cancer_r3,openai,code_python,generic,cancer,3,prompts/code_python_generic_cancer.txt,cancer_image.tif (fallback cancer_image.png),,web; view attachment
