@@ -27,8 +27,8 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 - Next steps:
   1. An independent session checks that the figures can be rebuilt from a fresh clone.
   2. An independent model (ChatGPT) adversarially audits the repository; findings go to `docs/audit_findings.md`.
-  3. A new round of Figure 3 runs with the current Box 1 draft (`box1/box1_draft_v3.md`) in ChatGPT and claude.ai,
-     following `fig3/prompt_pack/README.md`.
+  3. Figure 3 round 2 (start from zero with the final Box 1): see `fig3/STRATEGY.md`. If you are asked to act as an
+     **operator** for these runs, never show this repository to the model being tested (STRATEGY section 4b).
 
 ## Working rules (the same practices Box 1 asks of an LLM)
 - **Never modify `data/raw/`.** Checksums are in `data/manifest.csv`; `make data` verifies them.
