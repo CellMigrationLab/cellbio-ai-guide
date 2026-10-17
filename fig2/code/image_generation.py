@@ -29,9 +29,9 @@ mk = np.zeros_like(m, int)
 mk[tuple(pk.T)] = np.arange(1, len(pk) + 1)
 lab = segmentation.watershed(-dist, mk, mask=m)
 y, x, n = 640, 520, 200
-save(lin(raw[y:y + n, x:x + n]), "data/dn_acquired.png")
-save(lin(den[y:y + n, x:x + n]), "data/dn_restored.png")
-json.dump({"w": n, "h": n, "contours": contours(lab, x, y, n, n)}, open("data/dn_mask.json", "w"))
+save(lin(raw[y:y + n, x:x + n]), "panels/dn_acquired.png")
+save(lin(den[y:y + n, x:x + n]), "panels/dn_restored.png")
+json.dump({"w": n, "h": n, "contours": contours(lab, x, y, n, n)}, open("panels/dn_mask.json", "w"))
 props_r = measure.regionprops(lab, intensity_image=raw)
 props_d = measure.regionprops(lab, intensity_image=den)
 ir = np.array([p.intensity_mean for p in props_r])
@@ -40,7 +40,7 @@ bg_r, bg_d = np.median(raw[~m]), np.median(den[~m])
 json.dump({"n_nuclei": int(lab.max()), "acquired": ir.round(1).tolist(), "restored": idn.round(1).tolist(),
            "r": round(float(np.corrcoef(ir, idn)[0, 1]), 3), "bg_acquired": float(bg_r), "bg_restored": float(bg_d),
            "ratio_median": round(float(np.median((idn - bg_d) / (ir - bg_r))), 3)},
-          open("data/dn_intensity.json", "w"))
+          open("panels/dn_intensity.json", "w"))
 print("denoise nuclei", lab.max(), "r", np.corrcoef(ir, idn)[0, 1], "bg", bg_r, bg_d)
 
 # ---- super-resolution: same region as Fig. 1a (HR px 62.6 nm; LR = HR / 2)
@@ -49,10 +49,10 @@ pr = tifffile.imread(U + "biosr_er_rcan_prediction.tif").astype(float)
 hr = tifffile.imread(U + "biosr_er_highres_reference.tif").astype(float)
 y, x, n = 160, 600, 140
 a = lin(lr[y // 2:y // 2 + n // 2, x // 2:x // 2 + n // 2])
-save(a, "data/sr_input.png", 6)
-save(lin(pr[y:y + n, x:x + n]), "data/sr_predicted.png", 3)
-save(lin(hr[y:y + n, x:x + n]), "data/sr_hr.png", 3)
-np.save("data/sr_pred_crop.npy", pr[y:y + n, x:x + n]); np.save("data/sr_hr_crop.npy", hr[y:y + n, x:x + n])
+save(a, "panels/sr_input.png", 6)
+save(lin(pr[y:y + n, x:x + n]), "panels/sr_predicted.png", 3)
+save(lin(hr[y:y + n, x:x + n]), "panels/sr_hr.png", 3)
+np.save("panels/sr_pred_crop.npy", pr[y:y + n, x:x + n]); np.save("panels/sr_hr_crop.npy", hr[y:y + n, x:x + n])
 print("sr ok")
 
 # line profile across ER tubules: row 85 of the crop (3-row mean); its predicted-vs-high-res correlation is near the
@@ -63,4 +63,4 @@ P = nz(pr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 Hh = nz(hr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 L = nz(np.repeat(lr[(y + ROW) // 2, x // 2:x // 2 + n // 2], 2))
 json.dump({"row": ROW, "px_nm": 62.6, "predicted": P.round(3).tolist(), "high_res": Hh.round(3).tolist(), "low_res": L.round(3).tolist(),
-           "r_pred_hr": round(float(np.corrcoef(P, Hh)[0, 1]), 3)}, open("data/sr_profile.json", "w"))
+           "r_pred_hr": round(float(np.corrcoef(P, Hh)[0, 1]), 3)}, open("panels/sr_profile.json", "w"))

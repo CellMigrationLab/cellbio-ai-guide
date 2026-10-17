@@ -574,8 +574,8 @@ def note(x, y, lines, col=NOC):
 
 # ======================================================================= FIGURE 3 v9: three tasks; scores + counts per row; minimal text
 import os as _os
-A3 = "bf3/fig_assets/"
-FSJ = json.load(open("bf3/fig_scores.json"))
+A3 = "round1/fig_assets/"
+FSJ = json.load(open("round1/fig_scores.json"))
 FS = FSJ["tasks"]
 MAN = FSJ["manual"]
 DEFC = "#9aa4b2"

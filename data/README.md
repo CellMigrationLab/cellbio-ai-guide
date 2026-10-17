@@ -47,3 +47,10 @@ annotation files. Manual annotations exist
 for **one field** (field 104: 124 cancer cells, 382 / 369 endothelial cells by two annotators, 441 endothelial nuclei)
 and for the DeepBacs examples (dataset ground truth). The CARE, BioSR, HPMEC and TrackMate images have no manual
 annotation (BioSR is compared with its high-resolution acquisition).
+
+## Adding data
+Send files under any name; `python data/add_raw_files.py` copies them unchanged to `raw/` with standard names
+(`field<N>_<role>.tif`, e.g. `field105_brightfield.tif`, `field105_cancer_cells_manual_labels.tif`; or
+`<prefix>_<role>.tif`, e.g. `care_denoising_highsnr_reference.tif`), checks shapes and label types, and updates
+`raw_name_map.csv` and `manifest.csv`. Pending (requested 17 Oct 2026): one more annotated field (Fig 3 test image) and
+a ground truth for the CARE example.

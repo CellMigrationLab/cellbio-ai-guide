@@ -2,7 +2,7 @@ YO = 20
 GAPR = 10
 SEGX, SEGY, SEGW, SEGH = 240, 40, 240, 260          # troubleshooting window (full-field px), as Fig. 1c step 3
 cA, cB = C["A"], C["B"]
-PS = json.load(open("data/perturb_scores.json"))
+PS = json.load(open("panels/perturb_scores.json"))
 
 
 def f1bar(x, y, w, v, lbl=None, colr=None):
@@ -61,8 +61,8 @@ def step_tile(x, key, label):
     if PS.get(key) is None:
         return (rrect(x, ty0, TW, TH, 4, "#e9edf2", "#c8d3e0", 1.2, ' stroke-dasharray="6 4"')
                 + t(x + TW / 2, ty0 + TH / 2, "running…", 15, "bold", "#7a8699", "middle"))
-    return tile(x, ty0, TW, TH, "data4/B_rep_bf.png",
-                [("data4/B_rep_ref.json", "reference (vector)", REF, DASH), (f"data/ts_cp_{key}.json", f"{label} (vector)", MODEL, None)],
+    return tile(x, ty0, TW, TH, "from_fig1_panel_c/B_rep_bf.png",
+                [("from_fig1_panel_c/B_rep_ref.json", "reference (vector)", REF, DASH), (f"panels/ts_cp_{key}.json", f"{label} (vector)", MODEL, None)],
                 f"tile {label}")
 
 
@@ -136,12 +136,12 @@ add(group("c what will you measure", "".join(cc3)))
 XD = 28 + WCC + 6
 WDN = 1812 - XD
 gg = [frame(XD, Y3, WDN, R3, "c", "Denoising: measure intensity in the acquired image", "B")]
-DI = json.load(open("data/dn_intensity.json"))
+DI = json.load(open("panels/dn_intensity.json"))
 DS = 250
-for k_, (png, lbl, cap) in enumerate([("data/dn_restored.png", "restored", "mask from here"), ("data/dn_acquired.png", "acquired", "measure here")]):
+for k_, (png, lbl, cap) in enumerate([("panels/dn_restored.png", "restored", "mask from here"), ("panels/dn_acquired.png", "acquired", "measure here")]):
     tx = XD + 16 + k_ * (DS + 34)
     gg.append(group(f"c denoise {lbl}", real_image(tx, Y3 + 78, DS, DS, png, 0.6337, 200, 20, f"denoise {lbl}")
-                    + vector_outlines_sub(tx, Y3 + 78, DS, DS, "data/dn_mask.json", "nuclei from restored image (vector)", MODEL, 1.4, None, (0, 0, 200, 200))
+                    + vector_outlines_sub(tx, Y3 + 78, DS, DS, "panels/dn_mask.json", "nuclei from restored image (vector)", MODEL, 1.4, None, (0, 0, 200, 200))
                     + halo(tx + 6, Y3 + 94, lbl)))
     gg.append(t(tx + DS / 2, Y3 + 78 + DS + 22, cap, 14, "bold", INK, "middle"))
 gg.append(arrow(XD + 16 + DS + 5, Y3 + 78 + DS / 2, XD + 16 + DS + 29, Y3 + 78 + DS / 2, cB["accent"]))
@@ -169,8 +169,8 @@ add(group("d denoising", "".join(gg)))
 Y4 = Y3 + R3 + GAPR
 RH_ = 330                                                    # height of each row box
 R4 = 66 + 2 * RH_ + 12 + 14
-AI = json.load(open("data/al_intensity.json"))
-ROI = json.load(open("data/roi.json"))
+AI = json.load(open("panels/al_intensity.json"))
+ROI = json.load(open("panels/roi.json"))
 dd = [frame(28, Y4, 1784, R4, "d", "Artificial labelling: validate what you will measure", "B")]
 dd.append(key_item(1812 - 560, Y4 + 42, MODEL, "model") + key_item(1812 - 460, Y4 + 42, REF, "manual, annotator 1", DASH)
           + key_item(1812 - 250, Y4 + 42, REF2, "manual, annotator 2", DASH))
@@ -178,7 +178,7 @@ dd.append(key_item(1812 - 560, Y4 + 42, MODEL, "model") + key_item(1812 - 460, Y
 TS_ = 278                                                    # same tile size as panel a
 FS = TS_
 ty1, ty2 = Y4 + 66 + 38, Y4 + 66 + RH_ + 12 + 38             # tile tops of row 1 and row 2
-g = [real_image(44, ty1, FS, FS, "data/al_bf_full.png", PX, 1024, 100, "d brightfield full field", "#111111"), halo(50, ty1 + 16, "brightfield")]
+g = [real_image(44, ty1, FS, FS, "panels/al_bf_full.png", PX, 1024, 100, "d brightfield full field", "#111111"), halo(50, ty1 + 16, "brightfield")]
 g.append(f'<rect x="{44+ROI["x"]*FS/1024:.1f}" y="{ty1+ROI["y"]*FS/1022:.1f}" width="{ROI["w"]*FS/1024:.1f}" height="{ROI["h"]*FS/1022:.1f}" '
          f'fill="none" stroke="#ffd23f" stroke-width="2"/>')
 dd.append(group("d brightfield", "".join(g)))
@@ -190,7 +190,7 @@ dd.append(group("d pix2pix", rrect(bx_, by_, bxw, bxh, 12, cB["tint"], cB["tints
                 + t(bx_ + bxw / 2, by_ + bxh - 10, "pix2pix", 14, fill=INK, anchor="middle")))
 x2 = 44 + FS + 56
 dd.append(arrow(bx_ + bxw + 4, ty2 + TS_ / 2, x2 - 6, ty2 + TS_ / 2, cB["accent"]))        # pix2pix -> predicted
-for png, lbl, yy in [("data/roi_acq.png", "acquired", ty1), ("data/roi_pred.png", "predicted", ty2)]:
+for png, lbl, yy in [("panels/roi_acq.png", "acquired", ty1), ("panels/roi_pred.png", "predicted", ty2)]:
     dd.append(group(f"d roi {lbl} composite", real_image(x2, yy, TS_, TS_, png, PX, ROI["w"], 20, f"d roi {lbl}", "#ffffff") + halo(x2 + 6, yy + 16, lbl)))
 dd.append(t(x2 + TS_ / 2, ty1 - 10, "DAPI + PECAM-1", 13.5, "bold", INK, "middle"))
 rx0 = x2 + TS_ + 100
@@ -248,14 +248,14 @@ def scatter(sx0, sy0, key, unit_lbl, colr, size=190):
 # row 1: intermediate step (outlines only)
 ry = Y4 + 66
 dd.append(row_box(ry, "ok", "Intermediate step: to aid segmentation"))
-seg = [("Nuclei", [("data/roi_manual_nuclei.json", "manual nuclei (vector)", REF, DASH), ("data/roi_model_nuclei.json", "StarDist on predicted DAPI (vector)", MODEL, None)],
+seg = [("Nuclei", [("panels/roi_manual_nuclei.json", "manual nuclei (vector)", REF, DASH), ("panels/roi_model_nuclei.json", "StarDist on predicted DAPI (vector)", MODEL, None)],
         "Nuclei · F1", [("model vs manual nuclei", 0.828, F1C)]),
-       ("Cells", [("data/roi_annot1_cells.json", "annotator 1 cells (vector)", REF, DASH), ("data/roi_annot2_cells.json", "annotator 2 cells (vector)", REF2, DASH),
-                  ("data/roi_model_cells.json", "Cellpose on predicted PECAM-1 (vector)", MODEL, None)],
+       ("Cells", [("panels/roi_annot1_cells.json", "annotator 1 cells (vector)", REF, DASH), ("panels/roi_annot2_cells.json", "annotator 2 cells (vector)", REF2, DASH),
+                  ("panels/roi_model_cells.json", "Cellpose on predicted PECAM-1 (vector)", MODEL, None)],
         "Cells · F1", [("annotator 1 vs 2", 0.897, "#8a94a3"), ("model vs annotator 1", 0.781, F1C), ("model vs annotator 2", 0.746, F1C)])]
 for k_, (name, lay, btitle, items) in enumerate(seg):
     tx = rx0 + 16 + k_ * (PW + 0)
-    g = [real_image(tx, ry + 38, TS_, TS_, "data5/dark_tile.png", PX, ROI["w"], 20, f"d {name} (outlines only)")]
+    g = [real_image(tx, ry + 38, TS_, TS_, "from_fig1_panel_a/dark_tile.png", PX, ROI["w"], 20, f"d {name} (outlines only)")]
     for path, l_, colr, dash in lay:
         g.append(vector_outlines_sub(tx, ry + 38, TS_, TS_, path, l_, colr, 1.5, dash, SUBR))
     g.append(halo(tx + 6, ry + 54, name.lower()))
@@ -268,8 +268,8 @@ for k_, (name, lay, btitle, items) in enumerate(seg):
 # row 2: the measurement itself (grayscale, predicted | acquired)
 ry = Y4 + 66 + RH_ + 12
 dd.append(row_box(ry, "caution", "Measurement itself: intensity"))
-for k_, (key, png, unit_lbl, colr) in enumerate([("DAPI", "data/roi_dapi_split.png", "per nucleus", "#b0359c"),
-                                                 ("PECAM-1", "data/roi_pecam_split.png", "per cell", "#2a8a3e")]):
+for k_, (key, png, unit_lbl, colr) in enumerate([("DAPI", "panels/roi_dapi_split.png", "per nucleus", "#b0359c"),
+                                                 ("PECAM-1", "panels/roi_pecam_split.png", "per cell", "#2a8a3e")]):
     tx = rx0 + 16 + k_ * PW
     dd.append(group(f"d {key} grayscale", split_widget_r(tx, ry + 38, TS_, TS_, png, "predicted", "acquired")
 ))
@@ -279,16 +279,16 @@ add(group("d artificial labelling", "".join(dd)))
 Y5 = Y4 + R4 + GAPR
 R5 = 66 + 300 + 14
 ee = [frame(28, Y5, 1784, R5, "e", "Super-resolution: check against the input and, where possible, higher-resolution data", "B")]
-SP = json.load(open("data/sr_profile.json"))
-SQ = json.load(open("data/squirrel.json"))
-TWS = json.load(open("data/tubule_width.json"))["summary"]
+SP = json.load(open("panels/sr_profile.json"))
+SQ = json.load(open("panels/squirrel.json"))
+TWS = json.load(open("panels/tubule_width.json"))["summary"]
 SS = 168
 rowy = SP["row"] / 140
 # --- left box: consistency with the diffraction-limited input (SQUIRREL)
 w1 = 16 + 3 * (SS + 10) + 196
 ee.append(rrect(42, Y5 + 66, w1, 300, 12, "#ffffff", cB["innerstroke"]))
 ee.append(t(58, Y5 + 90, "Consistency with the diffraction-limited input (SQUIRREL)", 14.5, "bold", INK))
-tiles_ = [("data/sr_input.png", "low-res input", True), ("data/sr_predicted.png", "predicted", True), ("data/sr_squirrel.png", "error map", False)]
+tiles_ = [("panels/sr_input.png", "low-res input", True), ("panels/sr_predicted.png", "predicted", True), ("panels/sr_squirrel.png", "error map", False)]
 for k_, (png, lbl, line) in enumerate(tiles_):
     tx = 58 + k_ * (SS + 10)
     ee.append(group(f"e sr {lbl}", real_image(tx, Y5 + 104, SS, SS, png, 0.0313, 140, 1, f"sr {lbl}")
@@ -297,9 +297,9 @@ for k_, (png, lbl, line) in enumerate(tiles_):
 # colour bar under the error map
 mx_ = 58 + 2 * (SS + 10)
 cb_y = Y5 + 104 + SS + 32
-ee.append(real_image(mx_ + 14, cb_y, SS - 28, 9, "data/inferno_bar.png", 1, 256, 0, "error map colour bar").replace("<line", "<!--").replace("/>\n", "-->")
+ee.append(real_image(mx_ + 14, cb_y, SS - 28, 9, "panels/inferno_bar.png", 1, 256, 0, "error map colour bar").replace("<line", "<!--").replace("/>\n", "-->")
           if False else f'<image x="{mx_+14}" y="{cb_y}" width="{SS-28}" height="9" preserveAspectRatio="none" '
-          f'xlink:href="data:image/png;base64,{base64.b64encode(open("data/inferno_bar.png","rb").read()).decode()}"/>')
+          f'xlink:href="data:image/png;base64,{base64.b64encode(open("panels/inferno_bar.png","rb").read()).decode()}"/>')
 ee.append(t(mx_ + 14, cb_y + 23, "0", 12, fill=BODY, anchor="middle") + t(mx_ + SS - 14, cb_y + 23, "high", 12, fill=BODY, anchor="middle")
           + t(mx_ + SS / 2, cb_y + 23, "error (a.u.)", 12, fill=BODY, anchor="middle"))
 # RSP bars: agreement with the input (axis 0.90-1.00)
@@ -320,7 +320,7 @@ w2 = 1798 - x2
 ee.append(rrect(x2, Y5 + 66, w2, 300, 12, "#ffffff", cB["innerstroke"]))
 ee.append(t(x2 + 16, Y5 + 90, "Comparison with higher-resolution data: test the feature you will measure", 14.5, "bold", INK))
 tx = x2 + 16
-ee.append(group("e sr reference", real_image(tx, Y5 + 104, SS, SS, "data/sr_hr.png", 0.0313, 140, 1, "sr reference")
+ee.append(group("e sr reference", real_image(tx, Y5 + 104, SS, SS, "panels/sr_hr.png", 0.0313, 140, 1, "sr reference")
                 + f'<line x1="{tx}" y1="{Y5+104+SS*rowy:.1f}" x2="{tx+SS}" y2="{Y5+104+SS*rowy:.1f}" stroke="#ffd23f" stroke-width="1.6" stroke-dasharray="4 3"/>'))
 ee.append(t(tx + SS / 2, Y5 + 104 + SS + 20, "higher-res", 14, "bold", INK, "middle"))
 px0, py0 = tx + SS + 26, Y5 + 112

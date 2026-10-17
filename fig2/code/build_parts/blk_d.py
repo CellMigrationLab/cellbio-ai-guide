@@ -2,12 +2,12 @@
 XD = 28 + WCC + 6
 WDN = 1812 - XD
 gg = [frame(XD, Y3, WDN, R3, "c", "Denoising: measure intensity in the acquired image", "B")]
-DI = json.load(open("data/dn_intensity.json"))
+DI = json.load(open("panels/dn_intensity.json"))
 DS = 250
-for k_, (png, lbl, cap) in enumerate([("data/dn_restored.png", "restored", "mask from here"), ("data/dn_acquired.png", "acquired", "measure here")]):
+for k_, (png, lbl, cap) in enumerate([("panels/dn_restored.png", "restored", "mask from here"), ("panels/dn_acquired.png", "acquired", "measure here")]):
     tx = XD + 16 + k_ * (DS + 34)
     gg.append(group(f"c denoise {lbl}", real_image(tx, Y3 + 78, DS, DS, png, 0.6337, 200, 20, f"denoise {lbl}")
-                    + vector_outlines_sub(tx, Y3 + 78, DS, DS, "data/dn_mask.json", "nuclei from restored image (vector)", MODEL, 1.4, None, (0, 0, 200, 200))
+                    + vector_outlines_sub(tx, Y3 + 78, DS, DS, "panels/dn_mask.json", "nuclei from restored image (vector)", MODEL, 1.4, None, (0, 0, 200, 200))
                     + halo(tx + 6, Y3 + 94, lbl)))
     gg.append(t(tx + DS / 2, Y3 + 78 + DS + 22, cap, 14, "bold", INK, "middle"))
 gg.append(arrow(XD + 16 + DS + 5, Y3 + 78 + DS / 2, XD + 16 + DS + 29, Y3 + 78 + DS / 2, cB["accent"]))

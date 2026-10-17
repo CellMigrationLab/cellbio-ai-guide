@@ -11,4 +11,4 @@ model = models.CellposeModel(gpu=False)          # default Cellpose-SAM weights 
 t0 = time.time()
 masks, _, _ = model.eval(bf)                     # default settings
 print(f"cellpose {version('cellpose')}: {masks.max()} objects in {time.time()-t0:.0f}s")
-tifffile.imwrite("data4/BF_cellpose_sam_labels.tif", masks.astype(np.uint16))
+tifffile.imwrite("panel_c_step3/BF_cellpose_sam_labels.tif", masks.astype(np.uint16))

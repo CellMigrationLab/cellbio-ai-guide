@@ -35,7 +35,7 @@ for q, (nm, ttl, sub, prm, (rk, rep)) in enumerate(uses):
     bx_ = x0 + 18
     if nm == "answer":
         IA = ch2 - 76 - 16
-        g.append(real_image(bx_, y0 + 74, IA, IA, "data/panelA_acquired_crop.png", 0.158436, 600, 20, "attached image"))
+        g.append(real_image(bx_, y0 + 74, IA, IA, "panel_b/panelA_acquired_crop.png", 0.158436, 600, 20, "attached image"))
         bx_ += IA + 16
     bw_ = x0 + cw2 - 18 - bx_
     ph = 26 + 21 * len(prm)

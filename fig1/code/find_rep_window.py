@@ -8,7 +8,7 @@ from compare_cancer_gt_lib import match
 from common.paths import RAW as U
 ref = tifffile.imread(U + "field104_cancer_cells_manual_labels.tif").astype(int)
 sd = tifffile.imread(U + "field104_cancer_cells_stardist_custom_labels.tif").astype(int)
-cp = tifffile.imread("data4/BF_cellpose_sam_labels.tif").astype(int)
+cp = tifffile.imread("panel_c_step3/BF_cellpose_sam_labels.tif").astype(int)
 cent = lambda L: {r.label: r.centroid for r in regionprops(L)}
 cr, cs, cc = cent(ref), cent(sd), cent(cp)
 ms, fn_s, fp_s = match(ref, sd)
@@ -39,4 +39,4 @@ for r in res:
 print("score, x, y, nref, SD missed, SD extra, CP missed, CP extra, F1 SD, F1 CP")
 for k in keep:
     print(k)
-json.dump([[float(v) for v in k] for k in keep], open("data4/rep_windows.json", "w"))
+json.dump([[float(v) for v in k] for k in keep], open("panel_c_step3/rep_windows.json", "w"))

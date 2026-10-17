@@ -36,7 +36,7 @@ for key, lab, a, p, bgm in [("DAPI", nuc, acq_d, prd_d, nuc == 0), ("PECAM-1", b
     out[key] = {"n": int(len(xa)), "r": round(float(np.corrcoef(xa, xp)[0, 1]), 3),
                 "acquired": np.round(xa, 3).tolist(), "predicted": np.round(xp, 4).tolist()}
     print(key, out[key]["n"], out[key]["r"])
-json.dump(out, open("data/al_intensity.json", "w"))
+json.dump(out, open("panels/al_intensity.json", "w"))
 
 
 def lin(x):
@@ -46,7 +46,7 @@ def lin(x):
 
 bf = tifffile.imread(U + "field104_brightfield.tif").astype(float)
 g = lin(bf)
-Image.fromarray((np.stack([g] * 3, -1) * 255).astype(np.uint8)).save("data/al_bf_full.png")
+Image.fromarray((np.stack([g] * 3, -1) * 255).astype(np.uint8)).save("panels/al_bf_full.png")
 d, p_ = lin(prd_d), lin(prd_p)
-Image.fromarray((np.stack([d, p_, d], -1) * 255).astype(np.uint8)).save("data/al_pred_full.png")
+Image.fromarray((np.stack([d, p_, d], -1) * 255).astype(np.uint8)).save("panels/al_pred_full.png")
 print("full images", bf.shape)

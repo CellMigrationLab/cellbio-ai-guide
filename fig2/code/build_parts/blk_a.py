@@ -29,8 +29,8 @@ def step_tile(x, key, label):
     if PS.get(key) is None:
         return (rrect(x, ty0, TW, TH, 4, "#e9edf2", "#c8d3e0", 1.2, ' stroke-dasharray="6 4"')
                 + t(x + TW / 2, ty0 + TH / 2, "running…", 15, "bold", "#7a8699", "middle"))
-    return tile(x, ty0, TW, TH, "data4/B_rep_bf.png",
-                [("data4/B_rep_ref.json", "reference (vector)", REF, DASH), (f"data/ts_cp_{key}.json", f"{label} (vector)", MODEL, None)],
+    return tile(x, ty0, TW, TH, "from_fig1_panel_c/B_rep_bf.png",
+                [("from_fig1_panel_c/B_rep_ref.json", "reference (vector)", REF, DASH), (f"panels/ts_cp_{key}.json", f"{label} (vector)", MODEL, None)],
                 f"tile {label}")
 
 

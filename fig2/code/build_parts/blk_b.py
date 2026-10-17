@@ -1,17 +1,17 @@
 # ---------------------------------------------------------------- b: is it good enough? compare with human agreement
 Y2 = YO + R1 + GAPR
 R2 = 66 + 330 + 14
-AG = json.load(open("data/annot_agree.json"))
+AG = json.load(open("panels/annot_agree.json"))
 cc = [frame(28, Y2, 1784, R2, "b", "Is it good enough? Compare the model with how much people agree", "A")]
 cc.append(key_item(1812 - 520, Y2 + 42, MODEL, "model") + key_item(1812 - 410, Y2 + 42, REF, "annotator 1", DASH)
           + key_item(1812 - 270, Y2 + 42, REF2, "annotator 2", DASH))
 PT = 274
 PTH = PT * 280 / 260
 cc.append(t(44, Y2 + 88, "Cell outlines, acquired PECAM-1", 15, "bold", INK))
-lay = [("data/pecam_annotator1.json", "annotator 1 (vector)", REF, DASH), ("data/pecam_annotator2.json", "annotator 2 (vector)", REF2, DASH)]
-if os.path.exists("data/pecam_model.json"):
-    lay.append(("data/pecam_model.json", "Cellpose-SAM on acquired PECAM-1 (vector)", MODEL, None))
-cc.append(tile(44, Y2 + 100, PT, PTH, "data/pecam_tile.png", lay, "b PECAM outlines", um=PX, imgw=260, bar=50, sub=(0, 0, 260, 280)))
+lay = [("panels/pecam_annotator1.json", "annotator 1 (vector)", REF, DASH), ("panels/pecam_annotator2.json", "annotator 2 (vector)", REF2, DASH)]
+if os.path.exists("panels/pecam_model.json"):
+    lay.append(("panels/pecam_model.json", "Cellpose-SAM on acquired PECAM-1 (vector)", MODEL, None))
+cc.append(tile(44, Y2 + 100, PT, PTH, "panels/pecam_tile.png", lay, "b PECAM outlines", um=PX, imgw=260, bar=50, sub=(0, 0, 260, 280)))
 # agreement
 ax0 = 44 + PT + 50
 cc.append(t(ax0, Y2 + 88, "Agreement, object F1 (IoU ≥ 0.5)", 15, "bold", INK))

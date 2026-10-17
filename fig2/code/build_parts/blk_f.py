@@ -2,16 +2,16 @@
 Y5 = Y4 + R4 + GAPR
 R5 = 66 + 300 + 14
 ee = [frame(28, Y5, 1784, R5, "e", "Super-resolution: check against the input and, where possible, higher-resolution data", "B")]
-SP = json.load(open("data/sr_profile.json"))
-SQ = json.load(open("data/squirrel.json"))
-TWS = json.load(open("data/tubule_width.json"))["summary"]
+SP = json.load(open("panels/sr_profile.json"))
+SQ = json.load(open("panels/squirrel.json"))
+TWS = json.load(open("panels/tubule_width.json"))["summary"]
 SS = 168
 rowy = SP["row"] / 140
 # --- left box: consistency with the diffraction-limited input (SQUIRREL)
 w1 = 16 + 3 * (SS + 10) + 196
 ee.append(rrect(42, Y5 + 66, w1, 300, 12, "#ffffff", cB["innerstroke"]))
 ee.append(t(58, Y5 + 90, "Consistency with the diffraction-limited input (SQUIRREL)", 14.5, "bold", INK))
-tiles_ = [("data/sr_input.png", "low-res input", True), ("data/sr_predicted.png", "predicted", True), ("data/sr_squirrel.png", "error map", False)]
+tiles_ = [("panels/sr_input.png", "low-res input", True), ("panels/sr_predicted.png", "predicted", True), ("panels/sr_squirrel.png", "error map", False)]
 for k_, (png, lbl, line) in enumerate(tiles_):
     tx = 58 + k_ * (SS + 10)
     ee.append(group(f"e sr {lbl}", real_image(tx, Y5 + 104, SS, SS, png, 0.0313, 140, 1, f"sr {lbl}")
@@ -20,9 +20,9 @@ for k_, (png, lbl, line) in enumerate(tiles_):
 # colour bar under the error map
 mx_ = 58 + 2 * (SS + 10)
 cb_y = Y5 + 104 + SS + 32
-ee.append(real_image(mx_ + 14, cb_y, SS - 28, 9, "data/inferno_bar.png", 1, 256, 0, "error map colour bar").replace("<line", "<!--").replace("/>\n", "-->")
+ee.append(real_image(mx_ + 14, cb_y, SS - 28, 9, "panels/inferno_bar.png", 1, 256, 0, "error map colour bar").replace("<line", "<!--").replace("/>\n", "-->")
           if False else f'<image x="{mx_+14}" y="{cb_y}" width="{SS-28}" height="9" preserveAspectRatio="none" '
-          f'xlink:href="data:image/png;base64,{base64.b64encode(open("data/inferno_bar.png","rb").read()).decode()}"/>')
+          f'xlink:href="data:image/png;base64,{base64.b64encode(open("panels/inferno_bar.png","rb").read()).decode()}"/>')
 ee.append(t(mx_ + 14, cb_y + 23, "0", 12, fill=BODY, anchor="middle") + t(mx_ + SS - 14, cb_y + 23, "high", 12, fill=BODY, anchor="middle")
           + t(mx_ + SS / 2, cb_y + 23, "error (a.u.)", 12, fill=BODY, anchor="middle"))
 # RSP bars: agreement with the input (axis 0.90-1.00)
@@ -43,7 +43,7 @@ w2 = 1798 - x2
 ee.append(rrect(x2, Y5 + 66, w2, 300, 12, "#ffffff", cB["innerstroke"]))
 ee.append(t(x2 + 16, Y5 + 90, "Comparison with higher-resolution data: test the feature you will measure", 14.5, "bold", INK))
 tx = x2 + 16
-ee.append(group("e sr reference", real_image(tx, Y5 + 104, SS, SS, "data/sr_hr.png", 0.0313, 140, 1, "sr reference")
+ee.append(group("e sr reference", real_image(tx, Y5 + 104, SS, SS, "panels/sr_hr.png", 0.0313, 140, 1, "sr reference")
                 + f'<line x1="{tx}" y1="{Y5+104+SS*rowy:.1f}" x2="{tx+SS}" y2="{Y5+104+SS*rowy:.1f}" stroke="#ffd23f" stroke-width="1.6" stroke-dasharray="4 3"/>'))
 ee.append(t(tx + SS / 2, Y5 + 104 + SS + 20, "higher-res", 14, "bold", INK, "middle"))
 px0, py0 = tx + SS + 26, Y5 + 112

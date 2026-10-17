@@ -18,26 +18,30 @@ python ../code/squirrel_run.py        # NanoPyx environment (environment/require
 ## Panels, scripts and source data
 | Panel | What | Script(s) in `code/` | Files in `source_data/` |
 |---|---|---|---|
-| a | Cellpose-SAM on brightfield, one setting changed at a time (normalisation, scale, thresholds, post-filter) | `norm_inputs.py` (normalised inputs), `cellpose_perturb.py` (Cellpose 4.2.1.1 runs, CPU), `postfilter.py`, `errors.py` → `score_perturb.py` (F1), `export_window.py` + recovered `data_ts_cp_.sh` (tile outlines) | `data/cp_*.tif` (labels per variant), `data/perturb_scores.json`, `data/error_summary.json`, `data/ts_cp_*.json`, `data4/B_rep_*` (window and reference, from Fig. 1) |
-| a | error types (StarDist vs Cellpose) | `errors.py`, `export_errors_window.py`, recovered `data_err_ids_.sh` | `data/err_*.json`, `data/err_bf.png` |
-| a | reference agreement between two annotators | `annot_agree.py` | `data/annot_agree.json`, `data/pecam_tile.png` |
+| a | Cellpose-SAM on brightfield, one setting changed at a time (normalisation, scale, thresholds, post-filter) | `norm_inputs.py` (normalised inputs), `cellpose_perturb.py` (Cellpose 4.2.1.1 runs, CPU), `postfilter.py`, `errors.py` → `score_perturb.py` (F1), `export_window.py` + recovered `data_ts_cp_.sh` (tile outlines) | `panels/cp_*.tif` (labels per variant), `panels/perturb_scores.json`, `panels/error_summary.json`, `panels/ts_cp_*.json`, `from_fig1_panel_c/B_rep_*` (window and reference, from Fig. 1) |
+| a | error types (StarDist vs Cellpose) | `errors.py`, `export_errors_window.py`, recovered `data_err_ids_.sh` | `panels/err_*.json`, `panels/err_bf.png` |
+| a | reference agreement between two annotators | `annot_agree.py` | `panels/annot_agree.json`, `panels/pecam_tile.png` |
 | b | decision scheme | (drawn in the builder) | — |
-| c | denoising (CARE): intensity ranking preserved, rescaled | `image_generation.py` | `data/dn_*.png`, `data/dn_intensity.json`, `data/dn_mask.json` |
-| d | artificial labelling (pix2pix): intermediate step and measurement | `al_roi.py`, `al_gray.py`, `al_intensity.py` | `data/roi*.png/json`, `data/al_*.png`, `data/al_intensity.json` |
-| e | super-resolution (RCAN, BioSR): SQUIRREL error map and RSP; line profile; tubule width | `squirrel_run.py`, `squirrel_tile.py` (NanoPyx 2.1.5), `image_generation.py`, `tubule_width.py` | `data/squirrel*.{json,tif}`, `data/sr_*.png/npy/json`, `data/tubule_width.json`, `data/inferno_bar.png` |
-| all | biological read-out from each segmentation | `bio_result.py` | `data/bio_result.json` |
+| c | denoising (CARE): intensity ranking preserved, rescaled | `image_generation.py` | `panels/dn_*.png`, `panels/dn_intensity.json`, `panels/dn_mask.json` |
+| d | artificial labelling (pix2pix): intermediate step and measurement | `al_roi.py`, `al_gray.py`, `al_intensity.py` | `panels/roi*.png/json`, `panels/al_*.png`, `panels/al_intensity.json` |
+| e | super-resolution (RCAN, BioSR): SQUIRREL error map and RSP; line profile; tubule width | `squirrel_run.py`, `squirrel_tile.py` (NanoPyx 2.1.5), `image_generation.py`, `tubule_width.py` | `panels/squirrel*.{json,tif}`, `panels/sr_*.png/npy/json`, `panels/tubule_width.json`, `panels/inferno_bar.png` |
+| all | biological read-out from each segmentation | `bio_result.py` | `panels/bio_result.json` |
 
-`data5/dark_tile.png` comes from the recovered command `code/recovered_inline/data5_dark_tile.png.sh`.
-Inputs that are regenerated rather than stored: `data/in_{minmax,histeq,clahe}.tif` (normalised brightfield; `norm_inputs.py`).
-Default Cellpose labels are shared with Fig. 1: `../fig1/source_data/full_field/cellpose_sam_labels.tif`.
+`from_fig1_panel_a/dark_tile.png` comes from the recovered command `code/recovered_inline/data5_dark_tile.png.sh`.
+Inputs that are regenerated rather than stored: `panels/in_{minmax,histeq,clahe}.tif` (normalised brightfield; `norm_inputs.py`).
+Default Cellpose labels are shared with Fig. 1: `../fig1/source_data/full_field_labels/cellpose_sam_labels.tif`.
 
 ## Caveats and notes for auditors
 - One field of view and one annotator for the cancer cells (124 cells); the endothelial reference has two annotators.
-- `data/al_intensity.json` in this repository contains an extra field `r_pixel` (whole-field pixel correlation) that
+- `panels/al_intensity.json` in this repository contains an extra field `r_pixel` (whole-field pixel correlation) that
   `al_intensity.py` does not write: it was added by a recovered inline command
   (`code/recovered_inline/add_r_pixel_to_al_intensity.sh`), shown briefly and then removed from the figure. It is not
   used by the final Figure 2.
-- `data/pecam_annotator{1,2}.json`, `data/perturb*.log` and some `ts_cp_*.json` variants are intermediate files not drawn
+- `panels/pecam_annotator{1,2}.json`, `panels/perturb*.log` and some `ts_cp_*.json` variants are intermediate files not drawn
   in the final figure.
 - Published model outputs (custom StarDist, pix2pix, CARE, RCAN) were not re-run; Cellpose and SQUIRREL were.
 - Earlier builders: `superseded/`.
+
+## Folder names
+`source_data/` folders were renamed after porting (17 Oct 2026): `data` → `panels`, `data4` → `from_fig1_panel_c`,
+`data5` → `from_fig1_panel_a`. Recovered commands in `code/recovered_inline/` keep the original names.

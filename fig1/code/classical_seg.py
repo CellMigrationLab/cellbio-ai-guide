@@ -23,11 +23,11 @@ lab = segmentation.watershed(-d, mk, mask=m)
 mt, fn, fp = match(ref, lab)
 tp = len(mt); f1 = 2 * tp / (2 * tp + len(fn) + len(fp))
 print("classical: objects", lab.max(), "TP", tp, "FN", len(fn), "FP", len(fp), "F1", round(f1, 3))
-tifffile.imwrite("data8/classical_labels.tif", lab.astype(np.uint16))
-sc = json.load(open("data4/A_scores.json")); sc["classical"] = round(f1, 3); json.dump(sc, open("data4/A_scores.json", "w"))
+tifffile.imwrite("panel_c_steps2_4/classical_labels.tif", lab.astype(np.uint16))
+sc = json.load(open("panel_c_step3/A_scores.json")); sc["classical"] = round(f1, 3); json.dump(sc, open("panel_c_step3/A_scores.json", "w"))
 X, Y, W, H = 240, 40, 240, 260
 sub = lab[Y:Y + H, X:X + W]; out = []
 for l in np.unique(sub[sub > 0]):
     for c in measure.find_contours(np.pad(sub == l, 1).astype(float), 0.5):
         c = measure.approximate_polygon(c - 1, 0.6); out.append([[round(float(v[1]), 2), round(float(v[0]), 2)] for v in c])
-json.dump({"w": W, "h": H, "contours": out}, open("data8/rep_classical.json", "w"))
+json.dump({"w": W, "h": H, "contours": out}, open("panel_c_steps2_4/rep_classical.json", "w"))

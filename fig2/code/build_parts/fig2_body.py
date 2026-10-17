@@ -2,7 +2,7 @@ YO = 20
 GAPR = 10
 SEGX, SEGY, SEGW, SEGH = 240, 40, 240, 260          # troubleshooting window (full-field px), as Fig. 1c step 3
 cA, cB = C["A"], C["B"]
-PS = json.load(open("data/perturb_scores.json"))
+PS = json.load(open("panels/perturb_scores.json"))
 
 
 def f1bar(x, y, w, v, lbl=None, colr=None):
@@ -56,8 +56,8 @@ for i, (ttl, sub, key, v) in enumerate(steps):
                   + t(x + TW / 2, ty0 + TH / 2, "running…", 15, "bold", "#7a8699", "middle"))
         bb.append(t(x, ty0 + TH + 28, "F1", 13.5, fill=BODY) + t(x, ty0 + TH + 46, "pending", 14, "bold", "#7a8699"))
         continue
-    bb.append(tile(x, ty0, TW, TH, "data4/B_rep_bf.png",
-                   [("data4/B_rep_ref.json", "reference (vector)", REF, DASH), (f"data/ts_{key}.json", f"{ttl} (vector)", MODEL, None)],
+    bb.append(tile(x, ty0, TW, TH, "from_fig1_panel_c/B_rep_bf.png",
+                   [("from_fig1_panel_c/B_rep_ref.json", "reference (vector)", REF, DASH), (f"panels/ts_{key}.json", f"{ttl} (vector)", MODEL, None)],
                    f"step {i+1} {ttl}"))
     bb.append(f1bar(x, ty0 + TH + 30, TW - 52, v, "F1"))
 # step 7: fine-tune only if needed (schematic)
@@ -92,21 +92,21 @@ exec(open("measure_icons_block.py").read())
 cc += a
 cc.append(arrow(x0 + w0 + 4, Y2 + 236, x0 + w0 + 22, Y2 + 236, cA["accent"]))
 # two tiles with error markers
-ES = json.load(open("data/error_summary.json"))
-EM = json.load(open("data/err_markers.json"))
+ES = json.load(open("panels/error_summary.json"))
+EM = json.load(open("panels/err_markers.json"))
 x1 = x0 + w0 + 26
 w1 = 1796 - x1
 cc.append(rrect(x1, Y2 + 66, w1, 340, 12, "#ffffff", cA["innerstroke"]))
 ETW = 252
 ETH = ETW * 260 / 240
 SUBE = (0, 0, 240, 260)
-cand = [("Custom-trained", "stardist", "data/err_stardist.json", ES["stardist"]),
-        ("Pre-trained generalist + post-processing", "cellpose_filtered", "data/err_cellpose_filtered.json", ES["cellpose_postfilter"])]
+cand = [("Custom-trained", "stardist", "panels/err_stardist.json", ES["stardist"]),
+        ("Pre-trained generalist + post-processing", "cellpose_filtered", "panels/err_cellpose_filtered.json", ES["cellpose_postfilter"])]
 for k_, (lbl, key, cj, s_) in enumerate(cand):
     tx = x1 + 18 + k_ * (ETW + 22)
     cc.append(t(tx, Y2 + 94, lbl, 15, "bold", INK))
-    cc.append(tile(tx, Y2 + 114, ETW, ETH, "data/err_bf.png",
-                   [("data/err_ref.json", "reference (vector)", REF, DASH), (cj, f"{lbl} (vector)", MODEL, None)],
+    cc.append(tile(tx, Y2 + 114, ETW, ETH, "panels/err_bf.png",
+                   [("panels/err_ref.json", "reference (vector)", REF, DASH), (cj, f"{lbl} (vector)", MODEL, None)],
                    f"errors {lbl}", EM[key]))
 # error table
 tx0 = x1 + 18 + 2 * (ETW + 22) + 14
@@ -114,7 +114,7 @@ cols = [tx0 + 250, tx0 + 360]
 ty = Y2 + 100
 cc.append(t(cols[0], ty, ["Custom-", "trained"], 13.5, "bold", INK, "middle", lh=16)
           + t(cols[1], ty, ["Generalist +", "post-proc."], 13.5, "bold", INK, "middle", lh=16))
-BIO = json.load(open("data/bio_result.json"))
+BIO = json.load(open("panels/bio_result.json"))
 rows_ = [("missed cells", "missed", "ring"), ("false objects", "false", "cross"), ("merged cells", "merges", None),
          ("split cells", "splits", None), ("boundary IoU, matched", "mean_iou_matched", None), ("F1 (IoU ≥ 0.5)", "f1", None)]
 RS = 29
@@ -200,7 +200,7 @@ ex = [("Cells", "Cellpose on predicted PECAM-1 vs outlines on acquired PECAM-1",
       ("Nuclei", "StarDist on predicted DAPI vs manual nuclei", "data3/B_DAPI_acquired_nuclei_tile.png",
        [("data3/B_nuclei_manual_contours.json", "manual nuclei (vector)", REF, DASH), ("data3/B_nuclei_stardist_contours.json", "StarDist on predicted DAPI (vector)", MODEL, None)],
        [("vs manual nuclei", 0.828, F1C)], "F1"),
-      ("Intensity", "predicted vs acquired, per pixel", "data5/split_intensity.png", [],
+      ("Intensity", "predicted vs acquired, per pixel", "from_fig1_panel_a/split_intensity.png", [],
        [("DAPI", 0.891, RC), ("PECAM-1", 0.243, RC)], "Pearson r")]
 for k_, (name, sub_, png, layers, bars_, metric) in enumerate(ex):
     gx = 28 + 14 + k_ * (gw + 14)
@@ -209,7 +209,7 @@ for k_, (name, sub_, png, layers, bars_, metric) in enumerate(ex):
     if name == "Intensity":
         ff.append(split_widget_r(tx, ty, TWf, THf, png, "predicted", "acquired"))
     else:
-        g = [real_image(tx, ty, TWf, THf, "data5/dark_tile.png", PX, 100, 20, f"f {name} (outlines only)")]
+        g = [real_image(tx, ty, TWf, THf, "from_fig1_panel_a/dark_tile.png", PX, 100, 20, f"f {name} (outlines only)")]
         for path, lbl, colr, dash in layers:
             g.append(vector_outlines_l(tx, ty, TWf, THf, path, lbl, colr, 1.6, dash))
         ff.append(group(f"f {name}", "".join(g)))
@@ -227,17 +227,17 @@ add(group("f good enough", "".join(ff)))
 Y5 = Y4 + R4 + GAPR
 R5 = 66 + 300 + 14
 gg = [frame(28, Y5, 1784, R5, "f", "Denoising and super-resolution: check what the model changed", "B")]
-DI = json.load(open("data/dn_intensity.json"))
-SP = json.load(open("data/sr_profile.json"))
+DI = json.load(open("panels/dn_intensity.json"))
+SP = json.load(open("panels/sr_profile.json"))
 # g1 denoising
 g1x, g1w = 42, 690
 gg.append(rrect(g1x, Y5 + 66, g1w, 300, 12, "#ffffff", cB["innerstroke"]))
 gg.append(t(g1x + 16, Y5 + 92, "Denoising: mask from the restored image, intensity from the acquired one", 15.5, "bold", INK))
 DS = 186
-for k_, (png, lbl) in enumerate([("data/dn_restored.png", "restored"), ("data/dn_acquired.png", "acquired")]):
+for k_, (png, lbl) in enumerate([("panels/dn_restored.png", "restored"), ("panels/dn_acquired.png", "acquired")]):
     tx = g1x + 16 + k_ * (DS + 34)
     gg.append(group(f"g denoise {lbl}", real_image(tx, Y5 + 108, DS, DS, png, 0.6337, 200, 20, f"denoise {lbl}")
-                    + vector_outlines_sub(tx, Y5 + 108, DS, DS, "data/dn_mask.json", "nuclei from restored image (vector)", MODEL, 1.4, None, (0, 0, 200, 200))
+                    + vector_outlines_sub(tx, Y5 + 108, DS, DS, "panels/dn_mask.json", "nuclei from restored image (vector)", MODEL, 1.4, None, (0, 0, 200, 200))
                     + halo(tx + 6, Y5 + 124, lbl)))
     gg.append(t(tx + DS / 2, Y5 + 108 + DS + 22, ["mask from here" if k_ == 0 else "measure here"], 14, "bold", INK, "middle"))
 gg.append(arrow(g1x + 16 + DS + 5, Y5 + 108 + DS / 2, g1x + 16 + DS + 29, Y5 + 108 + DS / 2, cB["accent"]))
@@ -261,15 +261,15 @@ gg.append(group("g denoise intensity scatter",
                 + t(sx0 + sw_, sy0 + sh2 - 14, "subtracted", 12, fill=BODY, anchor="end")
                 + t(sx0 + sw_ - 14, sy0 + 14, "y = x", 12.5, fill="#6b7686", anchor="end")))
 # g2 super-resolution
-SQ = json.load(open("data/squirrel.json"))
+SQ = json.load(open("panels/squirrel.json"))
 g2x = g1x + g1w + 14
 g2w = 1798 - g2x
 gg.append(rrect(g2x, Y5 + 66, g2w, 300, 12, "#ffffff", cB["innerstroke"]))
 gg.append(t(g2x + 16, Y5 + 92, "Super-resolution: check against the diffraction-limited input and, where possible, higher-resolution data", 15.5, "bold", INK))
 SS = 162
 rowy = SP["row"] / 140
-tiles_ = [("data/sr_input.png", "low-res input", True), ("data/sr_predicted.png", "predicted", True),
-          ("data/sr_squirrel.png", "SQUIRREL error map", False), ("data/sr_hr.png", "acquired high-res", True)]
+tiles_ = [("panels/sr_input.png", "low-res input", True), ("panels/sr_predicted.png", "predicted", True),
+          ("panels/sr_squirrel.png", "SQUIRREL error map", False), ("panels/sr_hr.png", "acquired high-res", True)]
 for k_, (png, lbl, line) in enumerate(tiles_):
     tx = g2x + 16 + k_ * (SS + 10) + (12 if k_ == 3 else 0)
     gg.append(group(f"g sr {lbl}", real_image(tx, Y5 + 108, SS, SS, png, 0.0626, 140, 2, f"sr {lbl}")

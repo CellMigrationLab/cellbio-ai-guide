@@ -16,7 +16,7 @@ out = {"nanopyx": version("nanopyx")}
 for name, sr in [("predicted", pr), ("high_res", hr)]:
     t0 = time.time()
     em, rse, rsp = calculate_error_map(lr, sr)
-    tifffile.imwrite(f"data/squirrel_{name}.tif", em)
+    tifffile.imwrite(f"panels/squirrel_{name}.tif", em)
     out[name] = {"RSE": round(float(rse), 3), "RSP": round(float(rsp), 4), "map_shape": list(em.shape), "s": round(time.time() - t0)}
     print(name, out[name], flush=True)
-json.dump(out, open("data/squirrel.json", "w"), indent=1)
+json.dump(out, open("panels/squirrel.json", "w"), indent=1)

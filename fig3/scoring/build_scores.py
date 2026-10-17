@@ -26,7 +26,7 @@ score = partial(tasks.score, nuclei_rule="drop_first")  # round-1 rule (reproduc
 score_heldout = partial(tasks.score_heldout, nuclei_rule="drop_first")
 
 FIG3 = REPO_ROOT / "fig3"
-FIGURE_SCORES = FIG3 / "figure" / "source_data" / "bf3" / "fig_scores.json"
+FIGURE_SCORES = FIG3 / "figure" / "source_data" / "round1" / "fig_scores.json"
 TASK_DIR_NAME = {"nuclei": "nuclei", "cancer": "cancer", "endo": "endothelial"}
 CRASHED = -1
 
@@ -84,7 +84,7 @@ def default_cellpose(task: str) -> float:
     if task == "nuclei":
         path = FIG3 / "baselines" / "cellpose_default_nuclei" / "labels.tif"
     else:
-        path = REPO_ROOT / "fig1" / "source_data" / "full_field" / "cellpose_sam_labels.tif"
+        path = REPO_ROOT / "fig1" / "source_data" / "full_field_labels" / "cellpose_sam_labels.tif"
     return score(task, tifffile.imread(path))["f1"]
 
 

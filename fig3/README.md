@@ -1,6 +1,6 @@
 # Figure 3: Using an LLM for image analysis, from advice to delegation
 
-**Status: late draft** (`figure/output/fig3_preview.png`, legend `figure/legend.md`). Builder `figure/code/make_fig3.py`
+**Status: late draft** (`figure/output/fig3_preview.png`, legend `figure/legend.md`). Builder `figure/code/make_fig3.py` (reads `figure/source_data/round1/`)
 (= `fig3_head.py` + `fig3_helpers.py` + `fig3_v9.py`, see `figure/code/build_parts/`).
 
 ## Design

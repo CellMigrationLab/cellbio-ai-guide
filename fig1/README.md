@@ -12,19 +12,19 @@ The builder uses the Python standard library only; it embeds the PNGs in `source
 ## Where every file in `source_data/` comes from
 | File (as read by the builder) | Panel | Produced by |
 |---|---|---|
-| `data5/detect_input.png`, `data5/detect_boxes.json` | a, detection | `code/recovered_inline/data5_detect_*.sh` (DeepBacs growth-stage image and published YOLOv2 boxes, `data/raw/third_party/deepbacs_ecoli_growth_stage`) |
-| `data5/split_cells.png` | a, segmentation | `code/export_splits.py` |
-| `data5/split_classif.png` | a, classification | `code/recovered_inline/data5_split_classif.png.sh` (DeepBacs antibiotic phenotyping) |
-| `data5/split_denoise.png`, `split_label.png`, `split_sr_zoom.png` | a, denoising / artificial labelling / super-resolution | `code/export_splits.py` |
-| `data/panelA_acquired_crop.png` | b, attached image | `code/segment_panelA.py` |
-| `data8/rep0.png`, `rep1.png`, `rep2.png` | c, step 2 reference fields | **producer not recovered**: 260 × 260 px crops of `field104_brightfield.tif` at (y, x) = (40, 240), (600, 620), (700, 60), resized to 300 px |
-| `data4/B_rep_bf.png`, `data4/B_rep_{ref,cellpose,stardist}.json` | c, step 3 window | `code/export_rep_window.py` (window chosen by `code/find_rep_window.py`) |
-| `data8/rep_classical.json` | c, step 3 threshold | `code/classical_seg.py` |
-| `data4/A_scores.json` | c, step 3 F1 | `code/f1_scores.py` reproduces it from `full_field/*.tif` and `data/raw` (original: `code/recovered_inline/data4_A_scores.json.sh`) |
-| `data8/test_bf.png`, `test_ref.json`, `test_stardist.json` | c, step 4 | `code/recovered_inline/data8_test_bf.png.sh` |
-| `data9/trackmate_crop.png` | c, step 5 | `code/recovered_inline/data9_trackmate_crop.png.sh` |
-| `full_field/cellpose_sam_labels.tif` | c (scores), Figs 2–3 | `code/segment_bf_cellpose.py` (Cellpose 4.2.1.1, default `cpsam`, CPU) |
-| `full_field/threshold_labels.tif` | c (scores) | `code/classical_seg.py` |
+| `panel_a/detect_input.png`, `panel_a/detect_boxes.json` | a, detection | `code/recovered_inline/data5_detect_*.sh` (DeepBacs growth-stage image and published YOLOv2 boxes, `data/raw/third_party/deepbacs_ecoli_growth_stage`) |
+| `panel_a/split_cells.png` | a, segmentation | `code/export_splits.py` |
+| `panel_a/split_classif.png` | a, classification | `code/recovered_inline/data5_split_classif.png.sh` (DeepBacs antibiotic phenotyping) |
+| `panel_a/split_denoise.png`, `split_label.png`, `split_sr_zoom.png` | a, denoising / artificial labelling / super-resolution | `code/export_splits.py` |
+| `panel_b/panelA_acquired_crop.png` | b, attached image | `code/segment_panelA.py` |
+| `panel_c_steps2_4/rep0.png`, `rep1.png`, `rep2.png` | c, step 2 reference fields | **producer not recovered**: 260 × 260 px crops of `field104_brightfield.tif` at (y, x) = (40, 240), (600, 620), (700, 60), resized to 300 px |
+| `panel_c_step3/B_rep_bf.png`, `panel_c_step3/B_rep_{ref,cellpose,stardist}.json` | c, step 3 window | `code/export_rep_window.py` (window chosen by `code/find_rep_window.py`) |
+| `panel_c_steps2_4/rep_classical.json` | c, step 3 threshold | `code/classical_seg.py` |
+| `panel_c_step3/A_scores.json` | c, step 3 F1 | `code/f1_scores.py` reproduces it from `full_field_labels/*.tif` and `data/raw` (original: `code/recovered_inline/data4_A_scores.json.sh`) |
+| `panel_c_steps2_4/test_bf.png`, `test_ref.json`, `test_stardist.json` | c, step 4 | `code/recovered_inline/data8_test_bf.png.sh` |
+| `panel_c_step5/trackmate_crop.png` | c, step 5 | `code/recovered_inline/data9_trackmate_crop.png.sh` |
+| `full_field_labels/cellpose_sam_labels.tif` | c (scores), Figs 2–3 | `code/segment_bf_cellpose.py` (Cellpose 4.2.1.1, default `cpsam`, CPU) |
+| `full_field_labels/threshold_labels.tif` | c (scores) | `code/classical_seg.py` |
 
 Recovered commands (`code/recovered_inline/`) are copied verbatim from the session transcripts; their paths are those of
 the original working folder (`U` = the upload folder, now `data/raw/` with the names in `data/raw_name_map.csv`;
@@ -70,8 +70,8 @@ All prompts and replies in panel b are illustrative and were written for the fig
 | `data/raw/field104_brightfield.tif` | Brightfield cancer cells, Follain et al. 2026, 1022 × 1024 px, 0.649614 µm/px | — |
 | `data/raw/field104_cancer_cells_manual_labels.tif` | Manual cancer-cell annotation of the same field, 124 cells, provided by the authors | — |
 | `data/raw/field104_cancer_cells_stardist_custom_labels.tif` | Custom StarDist model (ZeroCostDL4Mic), Follain et al. 2026 | Model not re-run |
-| `full_field/cellpose_sam_labels.tif` | Cellpose 4.2.1.1, default `cpsam` weights, default settings, CPU, whole field | `code/segment_bf_cellpose.py` |
-| `full_field/threshold_labels.tif` | Classical pipeline: Gaussian σ = 1 → local s.d. (7 px) → Otsu → closing (disk 3) → fill holes → remove < 250 px → opening (disk 4) → distance-transform watershed (min distance 12); parameters not tuned | `code/classical_seg.py` |
+| `full_field_labels/cellpose_sam_labels.tif` | Cellpose 4.2.1.1, default `cpsam` weights, default settings, CPU, whole field | `code/segment_bf_cellpose.py` |
+| `full_field_labels/threshold_labels.tif` | Classical pipeline: Gaussian σ = 1 → local s.d. (7 px) → Otsu → closing (disk 3) → fill holes → remove < 250 px → opening (disk 4) → distance-transform watershed (min distance 12); parameters not tuned | `code/classical_seg.py` |
 | `step2_reference_image_{0,1,2}.png` | Crops of `brightfield.tif`, 260 × 260 px at (y, x) = (40, 240), (600, 620), (700, 60), resized to 300 px | Image 0 carries the manual annotation outlines |
 | `step3_*` | Window x 240–480, y 40–300, chosen by `code/find_rep_window.py` so that its local scores resemble the whole-field scores | Vector contours (`find_contours` + `approximate_polygon`, tolerance 0.6). `code/export_rep_window.py`, `code/classical_seg.py` |
 | `step4_*` | Window x 600–840, y 620–880 of the **same** field. **See caveat 1** | As above |
@@ -97,3 +97,8 @@ Reproduced by `code/f1_scores.py`. If this field was part of the StarDist traini
 - TrackMate capture: source experiment, detector and tracker.
 - Manual annotation `manual_annotation_labels.tif`: who drew it, with which tool, and whether this field was used to train the StarDist model.
 - DeepBacs detection pixel size (160 vs 158 nm).
+
+## Folder names
+`source_data/` folders were renamed after porting (17 Oct 2026) to the panel they feed: `data` → `panel_b`,
+`data4` → `panel_c_step3`, `data5` → `panel_a`, `data8` → `panel_c_steps2_4`, `data9` → `panel_c_step5`,
+`full_field` → `full_field_labels`. Recovered commands in `code/recovered_inline/` keep the original names.

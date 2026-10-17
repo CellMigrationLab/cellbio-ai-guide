@@ -2,8 +2,8 @@
 Y4 = Y3 + R3 + GAPR
 RH_ = 330                                                    # height of each row box
 R4 = 66 + 2 * RH_ + 12 + 14
-AI = json.load(open("data/al_intensity.json"))
-ROI = json.load(open("data/roi.json"))
+AI = json.load(open("panels/al_intensity.json"))
+ROI = json.load(open("panels/roi.json"))
 dd = [frame(28, Y4, 1784, R4, "d", "Artificial labelling: validate what you will measure", "B")]
 dd.append(key_item(1812 - 560, Y4 + 42, MODEL, "model") + key_item(1812 - 460, Y4 + 42, REF, "manual, annotator 1", DASH)
           + key_item(1812 - 250, Y4 + 42, REF2, "manual, annotator 2", DASH))
@@ -11,7 +11,7 @@ dd.append(key_item(1812 - 560, Y4 + 42, MODEL, "model") + key_item(1812 - 460, Y
 TS_ = 278                                                    # same tile size as panel a
 FS = TS_
 ty1, ty2 = Y4 + 66 + 38, Y4 + 66 + RH_ + 12 + 38             # tile tops of row 1 and row 2
-g = [real_image(44, ty1, FS, FS, "data/al_bf_full.png", PX, 1024, 100, "d brightfield full field", "#111111"), halo(50, ty1 + 16, "brightfield")]
+g = [real_image(44, ty1, FS, FS, "panels/al_bf_full.png", PX, 1024, 100, "d brightfield full field", "#111111"), halo(50, ty1 + 16, "brightfield")]
 g.append(f'<rect x="{44+ROI["x"]*FS/1024:.1f}" y="{ty1+ROI["y"]*FS/1022:.1f}" width="{ROI["w"]*FS/1024:.1f}" height="{ROI["h"]*FS/1022:.1f}" '
          f'fill="none" stroke="#ffd23f" stroke-width="2"/>')
 dd.append(group("d brightfield", "".join(g)))
@@ -23,7 +23,7 @@ dd.append(group("d pix2pix", rrect(bx_, by_, bxw, bxh, 12, cB["tint"], cB["tints
                 + t(bx_ + bxw / 2, by_ + bxh - 10, "pix2pix", 14, fill=INK, anchor="middle")))
 x2 = 44 + FS + 56
 dd.append(arrow(bx_ + bxw + 4, ty2 + TS_ / 2, x2 - 6, ty2 + TS_ / 2, cB["accent"]))        # pix2pix -> predicted
-for png, lbl, yy in [("data/roi_acq.png", "acquired", ty1), ("data/roi_pred.png", "predicted", ty2)]:
+for png, lbl, yy in [("panels/roi_acq.png", "acquired", ty1), ("panels/roi_pred.png", "predicted", ty2)]:
     dd.append(group(f"d roi {lbl} composite", real_image(x2, yy, TS_, TS_, png, PX, ROI["w"], 20, f"d roi {lbl}", "#ffffff") + halo(x2 + 6, yy + 16, lbl)))
 dd.append(t(x2 + TS_ / 2, ty1 - 10, "DAPI + PECAM-1", 13.5, "bold", INK, "middle"))
 rx0 = x2 + TS_ + 100
@@ -81,14 +81,14 @@ def scatter(sx0, sy0, key, unit_lbl, colr, size=190):
 # row 1: intermediate step (outlines only)
 ry = Y4 + 66
 dd.append(row_box(ry, "ok", "Intermediate step: to aid segmentation"))
-seg = [("Nuclei", [("data/roi_manual_nuclei.json", "manual nuclei (vector)", REF, DASH), ("data/roi_model_nuclei.json", "StarDist on predicted DAPI (vector)", MODEL, None)],
+seg = [("Nuclei", [("panels/roi_manual_nuclei.json", "manual nuclei (vector)", REF, DASH), ("panels/roi_model_nuclei.json", "StarDist on predicted DAPI (vector)", MODEL, None)],
         "Nuclei · F1", [("model vs manual nuclei", 0.828, F1C)]),
-       ("Cells", [("data/roi_annot1_cells.json", "annotator 1 cells (vector)", REF, DASH), ("data/roi_annot2_cells.json", "annotator 2 cells (vector)", REF2, DASH),
-                  ("data/roi_model_cells.json", "Cellpose on predicted PECAM-1 (vector)", MODEL, None)],
+       ("Cells", [("panels/roi_annot1_cells.json", "annotator 1 cells (vector)", REF, DASH), ("panels/roi_annot2_cells.json", "annotator 2 cells (vector)", REF2, DASH),
+                  ("panels/roi_model_cells.json", "Cellpose on predicted PECAM-1 (vector)", MODEL, None)],
         "Cells · F1", [("annotator 1 vs 2", 0.897, "#8a94a3"), ("model vs annotator 1", 0.781, F1C), ("model vs annotator 2", 0.746, F1C)])]
 for k_, (name, lay, btitle, items) in enumerate(seg):
     tx = rx0 + 16 + k_ * (PW + 0)
-    g = [real_image(tx, ry + 38, TS_, TS_, "data5/dark_tile.png", PX, ROI["w"], 20, f"d {name} (outlines only)")]
+    g = [real_image(tx, ry + 38, TS_, TS_, "from_fig1_panel_a/dark_tile.png", PX, ROI["w"], 20, f"d {name} (outlines only)")]
     for path, l_, colr, dash in lay:
         g.append(vector_outlines_sub(tx, ry + 38, TS_, TS_, path, l_, colr, 1.5, dash, SUBR))
     g.append(halo(tx + 6, ry + 54, name.lower()))
@@ -101,8 +101,8 @@ for k_, (name, lay, btitle, items) in enumerate(seg):
 # row 2: the measurement itself (grayscale, predicted | acquired)
 ry = Y4 + 66 + RH_ + 12
 dd.append(row_box(ry, "caution", "Measurement itself: intensity"))
-for k_, (key, png, unit_lbl, colr) in enumerate([("DAPI", "data/roi_dapi_split.png", "per nucleus", "#b0359c"),
-                                                 ("PECAM-1", "data/roi_pecam_split.png", "per cell", "#2a8a3e")]):
+for k_, (key, png, unit_lbl, colr) in enumerate([("DAPI", "panels/roi_dapi_split.png", "per nucleus", "#b0359c"),
+                                                 ("PECAM-1", "panels/roi_pecam_split.png", "per cell", "#2a8a3e")]):
     tx = rx0 + 16 + k_ * PW
     dd.append(group(f"d {key} grayscale", split_widget_r(tx, ry + 38, TS_, TS_, png, "predicted", "acquired")
 ))

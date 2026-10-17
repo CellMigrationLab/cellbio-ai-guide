@@ -601,7 +601,7 @@ LLM_WIDGETS = [("prompt", ["“we should use the", "image and segment", "it to s
                          [("hd", "# raw uint16 in; Cellpose")],
                          [("hd", "# normalises internally")],
                          [("hd", "# (default percentiles)")]], "Code"),
-               ("img", "data5/llm_qc.png", "Check output")]
+               ("img", "panel_a/llm_qc.png", "Check output")]
 
 NN = C["N"]
 
@@ -648,13 +648,13 @@ def frame(x, y, w, h, L, title):
 # ---------------- A: six examples, two stacked groups of three
 cards_o = [
     ("A", "Turn images into measurements",
-     [("detect", "data5/detect_input.png", "data5/detect_boxes.json", "Detection"),
-      ("split", "data5/split_cells.png", "input", "output", (50 / (210 * um_bf) * WS, "50 µm"), "Segmentation"),
-      ("classify", "data5/split_classif.png", ["Control", "Mecillinam", "Nalidixate", "Rifampicin"], "Classification")]),
+     [("detect", "panel_a/detect_input.png", "panel_a/detect_boxes.json", "Detection"),
+      ("split", "panel_a/split_cells.png", "input", "output", (50 / (210 * um_bf) * WS, "50 µm"), "Segmentation"),
+      ("classify", "panel_a/split_classif.png", ["Control", "Mecillinam", "Nalidixate", "Rifampicin"], "Classification")]),
     ("B", "Predict image content",
-     [("split", "data5/split_denoise.png", "input", "output", (20 / (200 * 0.6337) * WS, "20 µm"), "Denoising"),
-      ("split", "data5/split_label.png", "input", "output", (50 / (210 * um_bf) * WS, "50 µm"), "Artificial labelling"),
-      ("split", "data5/split_sr_zoom.png", "input", "output", (1 / (140 * 0.0313) * WS, "1 µm"), "Super-resolution")]),
+     [("split", "panel_a/split_denoise.png", "input", "output", (20 / (200 * 0.6337) * WS, "20 µm"), "Denoising"),
+      ("split", "panel_a/split_label.png", "input", "output", (50 / (210 * um_bf) * WS, "50 µm"), "Artificial labelling"),
+      ("split", "panel_a/split_sr_zoom.png", "input", "output", (1 / (140 * 0.0313) * WS, "1 µm"), "Super-resolution")]),
 ]
 GH = 34 + WS + 30                      # group height
 HTOP = 66 + 2 * GH + 14
@@ -716,7 +716,7 @@ for q, (nm, ttl, sub, prm, (rk, rep)) in enumerate(uses):
     bx_ = x0 + 18
     if nm == "answer":
         IA = min(ch2 - 76 - 16, 0.4 * cw2)
-        g.append(real_image(bx_, y0 + 74 + (ch2 - 90 - IA) / 2, IA, IA, "data/panelA_acquired_crop.png", 0.158436, 600, 20, "attached image"))
+        g.append(real_image(bx_, y0 + 74 + (ch2 - 90 - IA) / 2, IA, IA, "panel_b/panelA_acquired_crop.png", 0.158436, 600, 20, "attached image"))
         bx_ += IA + 16
     bw_ = x0 + cw2 - 18 - bx_
     ph = 26 + 21 * len(prm)
@@ -797,25 +797,25 @@ for i in range(steps):
     elif i == 1:  # reference test set: several representative fields, annotated
         for k_, rp in enumerate((2, 1, 0)):         # rep0 (annotated) drawn on top
             xx, yy = ix - 6 + k_ * 16, iy + k_ * 14
-            cC_.append(real_image(xx, yy, IS - 30, IS - 30, f"data8/rep{rp}.png", PX * 260 / 300, 300, 50, f"reference field {k_}", "#111111")
+            cC_.append(real_image(xx, yy, IS - 30, IS - 30, f"panel_c_steps2_4/rep{rp}.png", PX * 260 / 300, 300, 50, f"reference field {k_}", "#111111")
                        .replace('stroke="#111111" stroke-width="2.5"', 'stroke="none" stroke-width="0"').replace('fill="#111111" text-anchor', 'fill="none" text-anchor'))
             cC_.append(rrect(xx, yy, IS - 30, IS - 30, 2, "none", "#ffffff", 1.4))
         top = (ix + 20, iy + 24, IS - 30, IS - 30)
-        cC_.append(vector_outlines_sub(ix + 26, iy + 28, IS - 30, IS - 30, "data4/B_rep_ref.json", "manual reference (vector)", REF, 1.4, DASH, (0, 0, 260, 260)))
+        cC_.append(vector_outlines_sub(ix + 26, iy + 28, IS - 30, IS - 30, "panel_c_step3/B_rep_ref.json", "manual reference (vector)", REF, 1.4, DASH, (0, 0, 260, 260)))
     elif i == 2:  # three candidates on the same reference test set (real outputs), optimisation loop
-        SC_ = json.load(open("data4/A_scores.json"))
+        SC_ = json.load(open("panel_c_step3/A_scores.json"))
         hw = 166
         gap3 = 10
         x0_ = cx - (3 * hw + 2 * gap3) / 2
-        for k_, (cj, lab, v) in enumerate([("data8/rep_classical.json", "Threshold", SC_["classical"]),
-                                           ("data4/B_rep_cellpose.json", "Pre-trained generalist", SC_["cellpose"]),
-                                           ("data4/B_rep_stardist.json", "Custom-trained", SC_["stardist"])]):
+        for k_, (cj, lab, v) in enumerate([("panel_c_steps2_4/rep_classical.json", "Threshold", SC_["classical"]),
+                                           ("panel_c_step3/B_rep_cellpose.json", "Pre-trained generalist", SC_["cellpose"]),
+                                           ("panel_c_step3/B_rep_stardist.json", "Custom-trained", SC_["stardist"])]):
             xx = x0_ + k_ * (hw + gap3)
             hh = hw * 0.92
-            cC_.append(real_image(xx, iy, hw, hh, "data4/B_rep_bf.png", PX, 240, 50, f"candidate {lab}", "#111111")
+            cC_.append(real_image(xx, iy, hw, hh, "panel_c_step3/B_rep_bf.png", PX, 240, 50, f"candidate {lab}", "#111111")
                        .replace('stroke="#111111" stroke-width="2.5"', 'stroke="none" stroke-width="0"').replace('fill="#111111" text-anchor', 'fill="none" text-anchor'))
             sb_ = slice_sub(hw, hh)
-            cC_.append(vector_outlines_sub(xx, iy, hw, hh, "data4/B_rep_ref.json", "reference (vector)", REF, 1.2, DASH, sb_))
+            cC_.append(vector_outlines_sub(xx, iy, hw, hh, "panel_c_step3/B_rep_ref.json", "reference (vector)", REF, 1.2, DASH, sb_))
             cC_.append(vector_outlines_sub(xx, iy, hw, hh, cj, f"{lab} (vector)", MODEL, 1.2, None, sb_))
             cC_.append(t(xx + hw / 2, iy + hh + 18, lab, 13.5, "bold", INK, "middle"))
             cC_.append(f'<rect x="{xx+10}" y="{iy+hh+26}" width="{hw-56}" height="10" rx="3" fill="#e4e8ee"/>'
@@ -832,13 +832,13 @@ for i in range(steps):
         cC_.append(group("find the failure (loop)", lp))
         cC_.append(t(cx, iy + 158, ["channels · object scale · context", "pre- and post-processing"], 12.5, fill=INK, anchor="middle", lh=16))
     elif i == 3:  # final check on fresh images
-        cC_.append(real_image(ix, iy, IS, IS * 260 / 240 * 0.92, "data8/test_bf.png", PX, 240, 50, "fresh image", "#111111"))
+        cC_.append(real_image(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_steps2_4/test_bf.png", PX, 240, 50, "fresh image", "#111111"))
         sb_ = slice_sub(IS, IS * 260 / 240 * 0.92)
-        cC_.append(vector_outlines_sub(ix, iy, IS, IS * 260 / 240 * 0.92, "data8/test_ref.json", "reference (vector)", REF, 1.4, DASH, sb_))
-        cC_.append(vector_outlines_sub(ix, iy, IS, IS * 260 / 240 * 0.92, "data8/test_stardist.json", "model (vector)", MODEL, 1.4, None, sb_))
+        cC_.append(vector_outlines_sub(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_steps2_4/test_ref.json", "reference (vector)", REF, 1.4, DASH, sb_))
+        cC_.append(vector_outlines_sub(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_steps2_4/test_stardist.json", "model (vector)", MODEL, 1.4, None, sb_))
         cC_.append(halo(ix + 6, iy + 16, "unseen image"))
     elif i == 4:  # final result: cells tracked over time (TrackMate capture: brightfield, spots and tracks)
-        cC_.append(real_image(ix, iy, IS, IS, "data9/trackmate_crop.png", 1.31483, 280, 100, "tracked cells (TrackMate)", "#ffffff"))
+        cC_.append(real_image(ix, iy, IS, IS, "panel_c_step5/trackmate_crop.png", 1.31483, 280, 100, "tracked cells (TrackMate)", "#ffffff"))
     if i < steps - 1:
         cC_.append(arrow(sx + sw_i + 2, iy + IS / 2, sx + sw_i + 24, iy + IS / 2, "#4a5568", 2.4))
 add(group("Panel C start a project", "".join(cC_)))

@@ -26,7 +26,7 @@ for r in runs:
         m, _, _ = model.eval(big)
         m = m[f // 2::f, f // 2::f][:bf.shape[0], :bf.shape[1]]                                           # back to native grid
     elif r.startswith("file_"):                  # pre-normalised input (0-1 float), Cellpose normalisation off
-        m, _, _ = model.eval(tifffile.imread(f"data/in_{r[5:]}.tif"), normalize=False)
+        m, _, _ = model.eval(tifffile.imread(f"panels/in_{r[5:]}.tif"), normalize=False)
     elif r == "nonorm":
         m, _, _ = model.eval(bf.astype(np.float32), normalize=False)
     elif r == "pecam":                          # acquired PECAM-1 (HUVEC junctions), default settings
@@ -35,5 +35,5 @@ for r in runs:
         m, _, _ = model.eval(bf, flow_threshold=float(r[4:]))
     elif r.startswith("cellprob"):
         m, _, _ = model.eval(bf, cellprob_threshold=float(r[8:]))
-    tifffile.imwrite(f"data/cp_{r}.tif", m.astype(np.uint16))
+    tifffile.imwrite(f"panels/cp_{r}.tif", m.astype(np.uint16))
     print(f"cellpose {version('cellpose')} {r}: {m.max()} objects in {time.time()-t0:.0f}s", flush=True)

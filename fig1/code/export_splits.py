@@ -35,14 +35,14 @@ def overlay(gray, lab, lift=True):
 def split(left, right, name):
     h = OUT // 2
     out = np.concatenate([left[:, :h], right[:, h:]], 1)
-    Image.fromarray(np.round(np.clip(out, 0, 1) * 255).astype(np.uint8)).save(f"data5/{name}.png", optimize=True)
+    Image.fromarray(np.round(np.clip(out, 0, 1) * 255).astype(np.uint8)).save(f"panel_a/{name}.png", optimize=True)
 
 
 rgb = lambda g: np.stack([g] * 3, -1)
 
 # 1 nuclei (HPMEC, Cellpose): region of the 600x800 crop, 360 x 360 px, split through the touching pair
 hp = tifffile.imread(U + "hpmec_nuclei_max_projection.tif")[1248:2048, 0:600].astype(float)
-hl = tifffile.imread("data/panelA_cellpose_labels.tif").astype(int)
+hl = tifffile.imread("panel_b/panelA_cellpose_labels.tif").astype(int)
 y, x, n = 280, 20, 480
 g = lin(hp[y:y + n, x:x + n], hp)
 split(rgb(resize(g)), overlay(resize(g), resize(hl[y:y + n, x:x + n]), lift=False), "split_nuclei")
@@ -63,7 +63,7 @@ a = lin(lr[y // 2:y // 2 + 180, x // 2:x // 2 + 180])
 b = lin(pr[y:y + 360, x:x + 360])
 split(rgb(resize(a)), rgb(b), "split_sr")
 c = lin(hr[y:y + 360, x:x + 360])
-Image.fromarray(np.round(np.stack([c] * 3, -1) * 255).astype(np.uint8)).save("data5/sr_hr_region.png")
+Image.fromarray(np.round(np.stack([c] * 3, -1) * 255).astype(np.uint8)).save("panel_a/sr_hr_region.png")
 
 # 4 artificial labelling: BF vs pix2pix DAPI (magenta) + PECAM (green), another area of the field
 pd = tifffile.imread(U + "field104_pix2pix_predicted_dapi.tif")[1:1023].astype(float)
@@ -79,7 +79,7 @@ g = resize(lin(hp[y:y + n, x:x + n], hp))
 lab = resize(hl[y:y + n, x:x + n])
 o = rgb(g)
 o[ndi.binary_dilation(find_boundaries(lab, mode="inner"), iterations=1)] = [1, 0.24, 0.82]
-Image.fromarray(np.round(o * 255).astype(np.uint8)).save("data5/llm_qc.png")
+Image.fromarray(np.round(o * 255).astype(np.uint8)).save("panel_a/llm_qc.png")
 print("ok")
 
 # --- super-resolution, zoomed in so the low-res pixels are visible (140 HR px = 8.8 um; 70 LR px)
@@ -97,5 +97,5 @@ split(rgb(resize(lin(raw[y:y + n, x:x + n]))), rgb(resize(lin(den[y:y + n, x:x +
 # --- tracking: TrackMate capture (brightfield + spots + tracks, RGB), 300 x 300 px crop
 cap = tifffile.imread(U + "trackmate_capture_tracks.tif").astype(float) / 255
 y, x, n = 380, 260, 300
-Image.fromarray(np.round(resize(cap[y:y + n, x:x + n]) * 255).astype(np.uint8)).save("data5/tracking.png")
+Image.fromarray(np.round(resize(cap[y:y + n, x:x + n]) * 255).astype(np.uint8)).save("panel_a/tracking.png")
 print("extra widgets ok")

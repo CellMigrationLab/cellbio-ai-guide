@@ -74,5 +74,5 @@ res["pred_minus_ref"] = {"median_nm": round(float(np.median(d)), 1), "q25": roun
                          "q75": round(float(np.percentile(d, 75)), 1), "median_abs_nm": round(float(np.median(np.abs(d))), 1)}
 res["noise_floor_ref_vs_ref_2px"] = {"median_nm": round(float(np.median(dn)), 1), "median_abs_nm": round(float(np.median(np.abs(dn))), 1)}
 res["px_nm_assumed"] = PX
-json.dump({"summary": res, "values": out}, open("data/tubule_width.json", "w"))
+json.dump({"summary": res, "values": out}, open("panels/tubule_width.json", "w"))
 print(res)

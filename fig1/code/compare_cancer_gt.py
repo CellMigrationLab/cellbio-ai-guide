@@ -42,7 +42,7 @@ b = np.clip((bf[Y:Y + H, X:X + W] - lo) / (hi - lo), 0, 1)
 o = np.stack([b] * 3, -1)
 o[find_boundaries(g, mode="inner")] = [0.1, 0.8, 1]
 o[find_boundaries(s, mode="inner")] = [1, 0.2, 0.6]
-Image.fromarray((np.repeat(np.repeat(o, 3, 0), 3, 1) * 255).astype(np.uint8)).save("data4/cancer_gt_vs_stardist_crop.png")
+Image.fromarray((np.repeat(np.repeat(o, 3, 0), 3, 1) * 255).astype(np.uint8)).save("panel_c_step3/cancer_gt_vs_stardist_crop.png")
 
 # panel A "check" image: StarDist vs manual reference outlines on the shared crop (no error colouring), 3x nearest
 from scipy import ndimage as ndi
@@ -56,5 +56,5 @@ extra = np.isin(sU, [l for l in fp if (s == l).any()])
 thick = lambda m: ndi.binary_dilation(m, iterations=1)
 o[thick(find_boundaries(gU, mode="inner"))] = [0.15, 0.78, 1.0]   # manual: cyan
 o[thick(find_boundaries(sU, mode="inner"))] = [1.0, 0.24, 0.82]   # StarDist: magenta
-Image.fromarray(np.round(o * 255).astype(np.uint8)).save("data4/A_check_overlay.png", optimize=True)
+Image.fromarray(np.round(o * 255).astype(np.uint8)).save("panel_c_step3/A_check_overlay.png", optimize=True)
 print("check overlay: missed in crop", int(len([l for l in fn if (g == l).any()])), "extra in crop", int(len([l for l in fp if (s == l).any()])))

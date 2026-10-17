@@ -31,5 +31,5 @@ for rgb, p in tracks:
     q = (sm - [x0, y0]) / n                  # normalised to the crop window
     if ((q > -0.05) & (q < 1.05)).all(1).any():
         out.append({"rgb": "#%02x%02x%02x" % tuple(int(round(c * 255)) for c in rgb), "pts": np.round(q, 4).tolist()})
-json.dump(out, open("data5/tracks_smoothed.json", "w"))
+json.dump(out, open("panel_a/tracks_smoothed.json", "w"))
 print("tracks in window:", len(out), "| smoothing window:", W, "points")

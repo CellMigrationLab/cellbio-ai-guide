@@ -23,7 +23,7 @@ FIGURES = {  # figure folder -> (builder relative to the folder, output written 
     "fig3/figure": ("code/make_fig3.py", "output/fig3.svg"),
 }
 FIG2_SCORING_ORDER = ["errors", "score_perturb", "annot_agree", "bio_result", "al_intensity", "tubule_width"]
-FIG2_KNOWN_EXTRA_KEYS = {("data/al_intensity.json", "r_pixel")}  # added by a recovered inline command, not used by Fig 2
+FIG2_KNOWN_EXTRA_KEYS = {("panels/al_intensity.json", "r_pixel")}  # added by a recovered inline command, not used by Fig 2
 
 
 def md5(path: Path) -> str:
@@ -71,7 +71,7 @@ def check_fig1_scores(tmp: Path) -> bool:
     if proc.returncode:
         return report("fig1: F1 scores", False, proc.stderr[-300:])
     recomputed = ast.literal_eval(proc.stdout.strip().splitlines()[-1])  # the script prints a dict literal
-    published = json.loads((REPO / "fig1/source_data/data4/A_scores.json").read_text())
+    published = json.loads((REPO / "fig1/source_data/panel_c_step3/A_scores.json").read_text())
     return report("fig1: F1 scores recomputed from label images", recomputed == published, f"{recomputed}")
 
 
@@ -82,8 +82,8 @@ def check_fig2_scores(tmp: Path, with_squirrel: bool) -> list[bool]:
     for script in scripts:
         proc = run([sys.executable, f"../code/{script}.py"], cwd=src)
         results.append(report(f"fig2: {script}.py runs", proc.returncode == 0, proc.stderr[-300:] if proc.returncode else ""))
-    for committed in sorted((REPO / "fig2/source_data/data").glob("*.json")):
-        rel = f"data/{committed.name}"
+    for committed in sorted((REPO / "fig2/source_data/panels").glob("*.json")):
+        rel = f"panels/{committed.name}"
         a = strip_known_extras(rel, json.loads(committed.read_text()))
         b = strip_known_extras(rel, json.loads((src / rel).read_text()))
         if a != b:

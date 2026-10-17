@@ -51,4 +51,4 @@ for name, gt, pr in [("annotator 2 vs annotator 1", L1, L2), ("Cellpose(pred) vs
                      ("Cellpose(pred) vs annotator 2", L2, CP)]:
     tp, fp, fn, f1, miou = match(gt, pr)
     print(f"{name:32s} TP {tp:4d} FP {fp:4d} FN {fn:4d}  F1@IoU0.5 {f1:.3f}  mean IoU of matches {miou:.3f}")
-np.save("data4/L1.npy", L1); np.save("data4/L2.npy", L2)
+np.save("panel_c_step3/L1.npy", L1); np.save("panel_c_step3/L2.npy", L2)

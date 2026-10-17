@@ -33,14 +33,14 @@ acq_d = tifffile.imread(U + "field104_dapi.tif").astype(float)
 acq_p = tifffile.imread(U + "field104_pecam1.tif").astype(float)
 prd_d = tifffile.imread(U + "field104_pix2pix_predicted_dapi.tif")[1:1023].astype(float)
 prd_p = tifffile.imread(U + "field104_pix2pix_predicted_pecam1.tif")[1:1023].astype(float)
-Image.fromarray(comp(prd_d, prd_p)).save("data/roi_pred.png")
-Image.fromarray(comp(acq_d, acq_p)).save("data/roi_acq.png")
+Image.fromarray(comp(prd_d, prd_p)).save("panels/roi_pred.png")
+Image.fromarray(comp(acq_d, acq_p)).save("panels/roi_acq.png")
 layers = {"model_cells": tifffile.imread(U + "field104_pix2pix_pecam1_cellpose_cell_labels.tif")[1:1023],
           "model_nuclei": tifffile.imread(U + "field104_pix2pix_dapi_stardist_nuclei_labels.tif")[1:1023],
           "annot1_cells": lines_to_cells(tifffile.imread(U + "field104_endothelial_junctions_annotator1.tif") > 0),
           "annot2_cells": lines_to_cells(tifffile.imread(U + "field104_endothelial_junctions_annotator2.tif") > 0),
           "manual_nuclei": tifffile.imread(U + "field104_endothelial_nuclei_manual_labels.tif")}
 for k, L in layers.items():
-    export(L.astype(int), X, Y, W, H, f"data/roi_{k}.json")
-json.dump({"x": X, "y": Y, "w": W, "h": H}, open("data/roi.json", "w"))
+    export(L.astype(int), X, Y, W, H, f"panels/roi_{k}.json")
+json.dump({"x": X, "y": Y, "w": W, "h": H}, open("panels/roi.json", "w"))
 print("roi", X, Y, W, H)

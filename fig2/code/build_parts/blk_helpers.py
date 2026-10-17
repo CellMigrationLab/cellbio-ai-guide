@@ -2,7 +2,7 @@ YO = 20
 GAPR = 10
 SEGX, SEGY, SEGW, SEGH = 240, 40, 240, 260          # troubleshooting window (full-field px), as Fig. 1c step 3
 cA, cB = C["A"], C["B"]
-PS = json.load(open("data/perturb_scores.json"))
+PS = json.load(open("panels/perturb_scores.json"))
 
 
 def f1bar(x, y, w, v, lbl=None, colr=None):

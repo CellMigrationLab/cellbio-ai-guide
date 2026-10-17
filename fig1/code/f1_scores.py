@@ -6,7 +6,7 @@ from common.matching import match
 
 from common.paths import raw_file
 
-F = "full_field/"  # derived label images, relative to fig1/source_data (run from there)
+F = "full_field_labels/"  # derived label images, relative to fig1/source_data (run from there)
 ref = tifffile.imread(raw_file("field104_cancer_cells_manual_labels.tif")).astype(int)
 out = {}
 for key, fn in [("classical", "threshold_labels.tif"), ("cellpose", "cellpose_sam_labels.tif"), ("stardist", None)]:

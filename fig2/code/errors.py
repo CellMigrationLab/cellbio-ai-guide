@@ -32,10 +32,10 @@ def errors(pr, ref=REF):
 
 if __name__ == "__main__":
     out = {}
-    for name, path in [("stardist", U + "field104_cancer_cells_stardist_custom_labels.tif"), ("cellpose_default", "../../fig1/source_data/full_field/cellpose_sam_labels.tif")] + \
-            [(a, f"data/cp_{a}.tif") for a in sys.argv[1:]]:
+    for name, path in [("stardist", U + "field104_cancer_cells_stardist_custom_labels.tif"), ("cellpose_default", "../../fig1/source_data/full_field_labels/cellpose_sam_labels.tif")] + \
+            [(a, f"panels/cp_{a}.tif") for a in sys.argv[1:]]:
         s, ids = errors(tifffile.imread(path).astype(int))
         out[name] = s
-        json.dump(ids, open(f"data/err_ids_{name}.json", "w"))
+        json.dump(ids, open(f"panels/err_ids_{name}.json", "w"))
         print(name, s)
-    json.dump(out, open("data/error_summary.json", "w"), indent=1)
+    json.dump(out, open("panels/error_summary.json", "w"), indent=1)
