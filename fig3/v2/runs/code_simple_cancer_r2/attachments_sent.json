@@ -1,0 +1,8 @@
+{
+ "subject_folder": "/home/user/sessions_v2/v007",
+ "files": [
+  "image.tif <- dev_cancer_image.tif",
+  "image.png <- dev_cancer_image.png"
+ ],
+ "cli_tools": "Read,WebSearch,WebFetch"
+}
