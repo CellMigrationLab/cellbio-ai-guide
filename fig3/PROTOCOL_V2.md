@@ -19,8 +19,8 @@ measure the shape (area and aspect ratio)** of three object types of increasing 
 |---|---|---|---|
 | A | Ask for advice | simple prompt vs Box 1 prompt | one reply per condition (chosen by a fixed rule), with every named tool, function and parameter marked current / outdated / does not exist; counts of such items over all runs |
 | B | Ask for code (the model writes, a separate runner runs) | simple prompt vs Box 1 prompt | the score of every script on field 104 (development) and field 209 (test), all tasks; crashed scripts as ×; one code excerpt (fixed rule) |
-| C | Let an agent write, run and optimise | by eye vs with labels (Box 1 in both) | test score (field 209) of every frozen pipeline, all tasks; the score the agent reported vs ours |
-| D | Ask for the answer directly | count → size and shape → ellipses drawn, count and shape from the drawing (one conversation) | stated vs manual count, stated vs measured size and shape, one drawing (fixed rule) |
+| C | Let an agent write, run and optimise on field 104 | by eye vs with labels (Box 1 in both) | score of every frozen pipeline re-run by the runner on field 104 and field 209, all tasks; the score the agent reported vs ours |
+| D | Ask for the answer directly | count → size and shape → ellipses drawn, count and shape from the drawing (one conversation per image), on field 104 and field 209 | stated vs manual count, stated vs measured size and shape, on both fields, one drawing (fixed rule) |
 
 No statistical tests (3 replicates); every run is shown.
 
@@ -135,11 +135,17 @@ on field 104 and on field 209, in a fresh per-run environment, installing only p
 annotation.tif in the labels arm. When the agent finishes, its folder is archived; `pipeline.py` is then run unchanged
 in a **clean folder** containing only the field-209 image, `pipeline.py` and the files listed in
 `runtime_manifest.json` (the field-104 image and annotation are never copied). The agent's own reported score is
-recorded and re-scored with our scorer on field 104.
+recorded. The **runner** (the same one as row B) then runs the frozen `pipeline.py` unchanged, twice, each time in a
+clean folder containing only the input image, `pipeline.py` and the files listed in `runtime_manifest.json`: on field
+104 (the image the agent optimised on; the annotation is not copied) and on field 209. Both are scored with our scorer;
+the agent's own field-104 claim is compared with our field-104 score.
 
-**D — direct answers.** 3 tasks × 3 replicates = **9 conversations**, field 209 image (PNG, full field).
+**D — direct answers.** 3 tasks × 2 fields × 3 replicates = **18 conversations**, one conversation per image (PNG,
+full field), field 104 and field 209 in separate fresh conversations. Field 104 doubles the number of images (direct
+answers are not optimised on anything, so both fields are test images for this row) and shows whether behaviour is
+consistent across two images.
 
-**Total: 63 subject runs** (+ 36 runner executions for row B). Run order randomised with a fixed seed; all within 3 days.
+**Total: 72 subject runs** (+ 72 runner executions: 36 for row B and 36 for row C, each script or pipeline on fields 104 and 209). Run order randomised with a fixed seed; all within 3 days.
 
 ## 6. Answers to follow-up questions (answer sheet v2)
 Answer only what is asked, verbatim, at most 3 replies; "I don't know" otherwise. New or changed lines:
@@ -165,8 +171,8 @@ integer-valued, within uint16/uint32 range; otherwise status `invalid_labels` (s
 | Row | Primary | Secondary |
 |---|---|---|
 | B | object F1 (IoU ≥ 0.5) on field 209; same on field 104 | runs unchanged (yes / after installing / no); count error; median area and AR vs reference (% / absolute); per matched object area and AR error; measurements.csv present, one row per label, area and AR agree with the label image (±2 % / ±0.05) |
-| C | object F1 on field 209 | as B, + agent-reported score vs our field-104 score; files used at test time |
-| D | count error (turn 1) | turn 2 area and AR vs reference medians; turn 3 ellipses: centres matched one-to-one to reference objects (centre inside an object, Hungarian on distance) → F1; count and shape from the drawing vs the reference and vs turns 1–2 |
+| C | object F1 on field 209; same on field 104 | as B, + agent-reported score vs our field-104 score; files used at test time |
+| D | count error (turn 1), each field | turn 2 area and AR vs reference medians; turn 3 ellipses: centres matched one-to-one to reference objects (centre inside an object, Hungarian on distance) → F1; count and shape from the drawing vs the reference and vs turns 1–2 |
 | A | items classified (section 5) | — |
 
 **Execution status** (`execution.json`: command, exit code, timeout, runtime) is primary: a script that exits non-zero
@@ -177,9 +183,9 @@ or times out is `crashed` even if it wrote a file (that file may be scored only 
   over all 18 runs.
 - Row B: per task, two columns of dots per condition (field 104, field 209), 3 runs each, × for crashes; one code
   excerpt: the Box 1 cancer-cell script with the median field-209 F1 among those that ran.
-- Row C: per task, field-209 F1 per run for by eye vs with labels; marker for the agent's own claim.
-- Row D: per task, stated count (turn 1) and drawn count (turn 3) vs manual; shape from turn 2 and turn 3 vs reference;
-  one ellipse overlay: the replicate with the median count error for cancer cells.
+- Row C: per task, F1 per run on field 104 and field 209 for by eye vs with labels; marker for the agent's own claim.
+- Row D: per task and field, stated count (turn 1) and drawn count (turn 3) vs manual; shape from turn 2 and turn 3 vs
+  reference; one ellipse overlay: the field-209 cancer-cell replicate with the median count error.
 - Supplementary table: every run with every measure; every conversation and script in the repository.
 
 ## 9. Rerun policy (fixed)
