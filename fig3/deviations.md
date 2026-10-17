@@ -74,3 +74,7 @@ Operator conventions applied to every Claude scenario, decided before or at the 
   (it holds nothing but the subject's own files); any other path outside the folder still means a rerun.
 - Fiji macros run as in round 1, `xvfb-run -a <Fiji> -batch macro.ijm` (virtual display, no `--headless`), because
   `--headless` fails on macros that open windows.
+- Environment fault found by the subject of `claude_code_python_box1_cancer_r3` (attempt 1): torchvision did not match
+  the CPU build of torch, so Cellpose could not be imported. Fixed (torchvision 0.29.1+cpu, now pinned in
+  `environment/requirements-models.txt`) and the scenario rerun; attempt 1 is in `round2/runs_rejected/`. Scenarios 1
+  and 2 did not depend on it (advice; a Fiji macro).

@@ -2,4 +2,5 @@
 #   python3 -m pip install -r environment/requirements-models.txt --extra-index-url https://download.pytorch.org/whl/cpu
 -r requirements.txt
 torch==2.14.1+cpu
+torchvision==0.29.1+cpu   # must be the +cpu build matching torch, or cellpose fails ("torchvision::nms does not exist")
 cellpose==4.2.1.1

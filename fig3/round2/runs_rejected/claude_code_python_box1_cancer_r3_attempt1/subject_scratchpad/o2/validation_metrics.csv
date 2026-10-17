@@ -1,0 +1,11 @@
+,value
+n_reference,98.0
+n_predicted,98.0
+count_relative_error,0.0
+matched_IoU>=0.5,0.0
+precision,0.0
+recall,0.0
+median_IoU_of_matches,
+median_area_error_um2,
+median_relative_area_error,
+total_area_relative_error,0.0
