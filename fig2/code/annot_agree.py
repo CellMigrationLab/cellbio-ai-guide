@@ -5,21 +5,15 @@ Scores: object F1 at IoU >= 0.5 (greedy one-to-one); biological result: cell cou
 import json, os
 import numpy as np
 import tifffile
-from skimage.measure import label
-from skimage.segmentation import clear_border, expand_labels
+from skimage.segmentation import clear_border
 from common.matching import match
 from export_window import export
 
+from common.annotations import lines_to_cells
 from common.paths import RAW as U
 PX = 0.649614
 
 
-def lines_to_cells(lines):
-    lab = expand_labels(label(~lines, connectivity=1), 2)
-    lab = clear_border(lab)
-    sizes = np.bincount(lab.ravel())
-    lab[np.isin(lab, np.where(sizes < 150)[0])] = 0
-    return lab
 
 
 a1 = lines_to_cells(tifffile.imread(U + "field104_endothelial_junctions_annotator1.tif") > 0)

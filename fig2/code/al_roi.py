@@ -6,19 +6,13 @@ import sys, json
 import numpy as np
 import tifffile
 from PIL import Image
-from skimage.measure import label
-from skimage.segmentation import clear_border, expand_labels
 from export_window import export
 
+from common.annotations import lines_to_cells
 from common.paths import RAW as U
 X, Y, W, H = [int(v) for v in sys.argv[1:5]] if len(sys.argv) > 4 else (220, 110, 200, 200)
 
 
-def lines_to_cells(lines):
-    lab = clear_border(expand_labels(label(~lines, connectivity=1), 2))
-    sizes = np.bincount(lab.ravel())
-    lab[np.isin(lab, np.where(sizes < 150)[0])] = 0
-    return lab
 
 
 def comp(d, p):

@@ -1,21 +1,25 @@
 """Create the files given to subject models in round 2 (all derived from data/raw, so they can be regenerated).
 
+Design (fig3/STRATEGY.md, section 2): field 104 is the DEVELOPMENT image (a model may see it and its full manual
+annotation); field 209 is the TEST image (only its image is ever given, to run a frozen script/pipeline on or, in the
+direct-answer row, to answer about; its annotation is never given to a model).
+
 Writes fig3/round2/assets/:
-  <task>_image.tif / _image.png      whole field as acquired (uint16) and an 8-bit preview (1st-99.7th percentile)
-  <task>_image_left.tif               development half (x < 512), for the optimise row
-  <task>_annotation_left.tif / .png   reference labels of the development half only (the right half is never shared)
+  dev_<task>_image.tif / .png         field 104 image (uint16 as acquired; 8-bit preview, 1st-99.7th percentile)
+  dev_<task>_annotation.tif / .png    field 104 manual annotation (label image; coloured preview)
+  test_<task>_image.tif / .png        field 209 image (never its annotation)
 Usage: PYTHONPATH=. python fig3/round2/make_assets.py
 """
 import numpy as np
 import tifffile
 from PIL import Image
-from skimage.segmentation import clear_border
 
 from common.paths import REPO_ROOT, raw_file
-from fig3.scoring.tasks import HALF_X, TASKS, reference
+from fig3.scoring.tasks import TASKS, reference
 
 OUT = REPO_ROOT / "fig3" / "round2" / "assets"
-IMAGE = {"nuclei": "field104_dapi.tif", "cancer": "field104_brightfield.tif", "endo": "field104_brightfield.tif"}
+DEV_FIELD, TEST_FIELD = 104, 209
+IMAGE_ROLE = {"nuclei": "dapi", "cancer": "brightfield", "endo": "brightfield"}
 PREVIEW_PERCENTILES = (1.0, 99.7)
 
 
@@ -35,20 +39,26 @@ def label_colours(labels: np.ndarray, seed: int = 3) -> Image.Image:
     return Image.fromarray(lut[labels])
 
 
+def write_image(prefix: str, field: int, task: str) -> None:
+    """Write a field's image for a task as TIFF (unchanged values) and PNG preview."""
+    image = tifffile.imread(raw_file(f"field{field}_{IMAGE_ROLE[task]}.tif"))
+    tifffile.imwrite(OUT / f"{prefix}_{task}_image.tif", image, compression="zlib")
+    preview(image.astype(float)).save(OUT / f"{prefix}_{task}_image.png")
+
+
 def main() -> None:
-    """Write all assets for the three tasks."""
+    """Write development and test assets for the three tasks."""
     OUT.mkdir(parents=True, exist_ok=True)
+    for old in OUT.glob("*"):
+        old.unlink()  # assets are fully regenerated; nothing else lives here
     for task in TASKS:
-        image = tifffile.imread(raw_file(IMAGE[task]))
-        tifffile.imwrite(OUT / f"{task}_image.tif", image, compression="zlib")
-        preview(image.astype(float)).save(OUT / f"{task}_image.png")
-        tifffile.imwrite(OUT / f"{task}_image_left.tif", image[:, :HALF_X], compression="zlib")
-        left = reference(task)[:, :HALF_X].astype(np.int32)
-        if task == "endo":
-            left = clear_border(left)
-        tifffile.imwrite(OUT / f"{task}_annotation_left.tif", left, compression="zlib")
-        label_colours(left).save(OUT / f"{task}_annotation_left.png")
-        print(task, image.shape, "left-half objects:", len(np.unique(left)) - 1)
+        write_image("dev", DEV_FIELD, task)
+        write_image("test", TEST_FIELD, task)
+        annotation = reference(task, DEV_FIELD).astype(np.int32)
+        tifffile.imwrite(OUT / f"dev_{task}_annotation.tif", annotation, compression="zlib")
+        label_colours(annotation).save(OUT / f"dev_{task}_annotation.png")
+        print(task, "dev objects:", len(np.unique(annotation)) - 1,
+              "| test objects (not shared):", len(np.unique(reference(task, TEST_FIELD))) - 1)
 
 
 if __name__ == "__main__":

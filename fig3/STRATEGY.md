@@ -11,23 +11,27 @@ the first draft; its fixes are already applied above it.
 |---|---|---|---|---|
 | a | Advice | first sentence only | Box 1 | advice from memory can be outdated and still run; asking to check the docs, scale and suitability changes the advice |
 | b | Code (Python, Fiji) | first sentence only | Box 1 | code that runs is not code that works; Box 1 makes settings explicit and asks for a test, only the test shows if it works |
-| c | Optimise (agent) | "run, assess, improve" | Box 1 + optimisation paragraph (annotated development half, held-out half) | without an external objective the agent judges by eye; with one, its score can be checked on held-out data |
+| c | Optimise (agent) | "run, assess, improve" | Box 1 + optimisation paragraph (annotated development field 104; tested on field 209) | without an external objective the agent judges by eye; with one, its score can be checked on a new field |
 | d | Direct answer | "How many … ?" | "Draw around every … and count them" (Box 1: request masks, not only a number) | numbers are estimated, not counted |
 | all | | | | test on representative images with reference outputs |
 
 The figure illustrates differences; it is not a benchmark. We report every run, whatever the result (section 7).
 
-## 2. Tasks, data and scoring (unchanged from round 1)
-Three tasks on one field (0.65 µm/px): **nuclei** (DAPI), **cancer cells** (brightfield), **endothelial cells**
-(brightfield). References and scorers: `fig3/scoring/tasks.py` (object F1 at IoU ≥ 0.5, one-to-one). **Every score is computed
+## 2. Tasks, data and scoring
+Three tasks (0.65 µm/px): **nuclei** (DAPI), **cancer cells** (brightfield), **endothelial cells** (brightfield), on
+two fields of the same experiment. References and scorers: `fig3/scoring/tasks.py` (object F1 at IoU ≥ 0.5, one-to-one). **Every score is computed
 against the authors' manual annotations in `data/raw/` (checksummed).** Nuclei: matched against all 441 manual
 nuclei first; only unmatched predictions lying mostly on cancer cells (unannotated cancer-cell nuclei) are ignored.
 
-**Development / held-out split for every row (audit fix A1).** If a model is given an annotation, it only ever gets the
-**left half** (x < 512). All segmentation scores are computed on the **right half** (233 nuclei, 51 cancer cells,
-181 endothelial cells), for every row and condition, so a model that saw the annotation cannot be rewarded for fitting
-it, and the rows stay comparable. Counts (row d) are compared with whole-field manual counts, because the model sees
-the whole field.
+**Development field and test field (audit fixes A1, P0.4, P0.5; replaces the left/right split).**
+- **Field 104 = development.** Code requests attach its image; agents work on it (both conditions get the same whole
+  image; the Box 1 agent additionally gets its full manual annotation); if a model asks for an annotation, it gets
+  field 104's (124 cancer cells, 441 nuclei, 382 endothelial cells).
+- **Field 209 = test**, never annotated for a model: every final script and frozen pipeline is run once, unchanged, on
+  the field-209 image and scored on the whole field against its manual annotation (163 cancer cells, 473 nuclei,
+  388 endothelial cells). Direct answers (row d) are asked about the field-209 image.
+- There is no split inside a field, so no object is cut at a split line. Both fields come from one experiment: the
+  test checks transfer to a new field, not to another experiment or microscope (stated in the legend).
 
 ## 3. Prompts
 - **Box 1**: the final text is frozen in `box1/box1_final.md` before collection (now: `box1_draft_v3.md` plus the edits
@@ -82,13 +86,13 @@ rather than the chat app, this is recorded and stated in the legend (A15).
 | Row | Measured (primary in bold) |
 |---|---|
 | a | **rubric score** (section 6.1), models/tools named (current vs removed), docs checked (cited), questions asked, length |
-| b | **held-out F1**; runs unchanged (yes/no/after installing what the reply says); number of objects; the reply's own test run on the left-half annotation: what it reports vs our held-out F1 (does the test warn the user?); complexity (`complexity.py`); runtime |
-| c | **held-out F1** of the frozen output; F1 the agent reports on the development half, re-scored with our scorer; files touched outside its folder |
-| d | **count error** vs manual; F1 of the drawn outlines (held-out half); stated count vs number of outlines drawn |
+| b | **test-field F1** (script run unchanged on field 209); runs unchanged (yes/no/after installing what the reply says); number of objects; the reply's own test run on field 104 and its annotation: what it reports vs our field-209 F1 (does the test warn the user?); complexity (`complexity.py`); runtime |
+| c | **test-field F1** of the frozen pipeline on field 209; F1 the agent reports on field 104, re-scored with our scorer; files touched outside its folder |
+| d | **count error** vs manual; F1 of the drawn outlines (field 209, whole field); stated count vs number of outlines drawn |
 
 Code is run unchanged except for input/output paths (diff stored); packages the reply asks for are installed and
-recorded. Python: CPU, 1 h limit. Fiji: plain Fiji; update sites or plugins only if the reply explicitly instructs it
-(recorded as an extra step, A5). Crash or no output: F1 0, drawn as ×.
+recorded. Python: CPU, 1 h limit. Fiji: plain Fiji; update sites or plugins are installed when the reply explicitly instructs it
+(recorded as an extra step, A5; decision 3). Crash or no output: F1 0, drawn as ×.
 
 ### 6.1 Advice rubric (A3)
 Eight yes/no items, fixed before collection: (1) names tools that exist in their current versions; (2) names no removed
@@ -102,7 +106,7 @@ independently from text with the prompt removed and the condition hidden; disagr
 - Figure: both assistants shown, marked by symbol; nothing is dropped. Supplementary table: every run (`all_runs.csv`).
 - Pre-stated expectations, reported whatever happens: Box 1 code ≥ generic for nuclei and cancer cells (round 1); Fiji
   generic fails on brightfield; advice rubric higher with Box 1; agents with annotation report scores that hold on the
-  held-out half; direct counts are estimates. If round 2 contradicts the text, the text changes, not the figure.
+  test field; direct counts are estimates. If round 2 contradicts the text, the text changes, not the figure.
 
 ## 8. Decisions (17 Oct 2026)
 1. **Box 1**: draft v3 + the four pilot edits → `box1/box1_final.md` (software/version slot; a test the user can run and
@@ -122,7 +126,7 @@ any count"), not the full Box 1.
 ## 9. Adversarial audit of the first draft (and what was changed)
 | # | Attack | Fix |
 |---|---|---|
-| A1 | If a model receives the annotation (it often asks), it can fit it, and scoring on the same image rewards that. Round 1 scored code on the whole field. | Only the left half is ever shared; every segmentation score is on the right half. |
+| A1 | If a model receives the annotation (it often asks), it can fit it, and scoring on the same image rewards that. Round 1 scored code on the whole field. | Only field 104 (development) is ever shared; every score is on field 209 (test), whose annotation no model receives. |
 | A2 | Box 1 adds information (pixel size, object size, output), not only good practice, so "after" differs in content. | Intended: Box 1 asks the user to give that information. Stated in the legend. Same file-name/output line in both conditions. An extra arm (generic + facts) is not run. |
 | A3 | Advice quality is judged subjectively and could be scored to fit the story. | Fixed 8-item rubric, two blinded raters, prompt removed, both scores kept. |
 | A4 | ChatGPT may execute code itself, so row b mixes "code" with "agent". | Allowed (realistic) and recorded; we still score our run of the final script. |
@@ -137,3 +141,18 @@ any count"), not the full Box 1.
 | A13 | An operator that reads the repo passes it to the model being tested, which then knows the hypothesis and what a "good" answer is. | Operator and subject are separate sessions; subjects receive only the scenario prompt and attachments; `meta.json` records every file and message sent to the subject; the audit checks that no repository text reached a subject. |
 | A14 | An AI operator answers follow-ups more helpfully in the Box 1 condition. | Answers only from the frozen answer sheet, quoted verbatim; condition hidden from the answering step where possible; 10 % human spot-check. |
 | A15 | API calls or sub-agents are not the chat apps readers use (tools, system prompt, web). | Record the interface per run; prefer the app when the operator can drive it; state the difference in the legend. |
+
+## 10. Changes after the independent audit (`docs/audit_findings.md`, 17 Oct 2026)
+- **Development/test fields** (P0.4, P0.5, items 1–4): field 104 for development, field 209 for testing (section 2);
+  both optimisation conditions get the same image; no split line inside a field.
+- **Scope of the comparison** (item 5, interpretation limits): generic vs Box 1 compares two complete requests; it does
+  not isolate individual Box 1 instructions. Row c compares optimisation without vs with an external annotated
+  objective. Row d compares a bare number with inspectable outlines plus a number.
+- **Advice rubric** (item 6): it measures adherence to the practices the paper recommends, not advice quality in general.
+- **Scorer** (items 7–10): `round2/score_round2.py` reads manual counts from the annotations, records missing or
+  malformed outputs explicitly, audits drawn outlines (invalid, outside, overlapping, stated count vs valid outlines),
+  and reports count error and outline F1 separately.
+- **Transcript audit** (item 11): every run's `meta.json` and attachments are checked automatically; every deviation,
+  failure and follow-up exchange is read; plus a random 20 % of the remaining transcripts.
+- **Interfaces** (item 13 and limits): chat-app runs and API/sub-agent runs are labelled and shown separately.
+- **Freeze** (item 12): tag `fig3-round2-protocol` before the first run.

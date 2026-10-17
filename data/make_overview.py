@@ -16,7 +16,7 @@ import tifffile
 from PIL import Image, ImageDraw, ImageFont
 
 from common.paths import RAW_DIR
-from fig3.scoring.tasks import lines_to_cells
+from common.annotations import lines_to_cells
 
 OUT = Path(__file__).resolve().parent / "overview.png"
 THIRD = RAW_DIR / "third_party"

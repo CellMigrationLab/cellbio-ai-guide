@@ -52,6 +52,8 @@ class TaskScorerTests(unittest.TestCase):
 
 
 class ScoreRound2Tests(unittest.TestCase):
+    """Round 2 scores the test field (209) against its manual annotation and never crashes on bad outputs."""
+
     def _run_dir(self, meta: dict) -> Path:
         run_dir = Path(tempfile.mkdtemp())
         (run_dir / "meta.json").write_text(json.dumps(meta))
@@ -59,18 +61,41 @@ class ScoreRound2Tests(unittest.TestCase):
 
     def test_code_run_with_perfect_labels(self):
         run_dir = self._run_dir({"row": "code_python", "task": "cancer", "condition": "box1"})
-        tifffile.imwrite(run_dir / "labels.tif", reference("cancer").astype(np.int32))
-        self.assertEqual(score_round2.score_run(run_dir)["f1_heldout"], 1.0)
+        tifffile.imwrite(run_dir / "labels.tif", reference("cancer", 209).astype(np.int32))
+        self.assertEqual(score_round2.score_run(run_dir)["f1"], 1.0)
+
+    def test_dev_field_labels_score_low_on_test_field(self):
+        """Labels of the development field are not a solution for the test field."""
+        run_dir = self._run_dir({"row": "optimise", "task": "cancer", "condition": "generic"})
+        tifffile.imwrite(run_dir / "labels.tif", reference("cancer", 104).astype(np.int32))
+        self.assertLess(score_round2.score_run(run_dir)["f1"], 0.2)
 
     def test_missing_labels_is_a_crash(self):
         run_dir = self._run_dir({"row": "code_fiji", "task": "nuclei", "condition": "generic"})
-        self.assertEqual(score_round2.score_run(run_dir), {"crashed": True, "f1_heldout": 0.0})
+        self.assertEqual(score_round2.score_run(run_dir), {"status": "crashed", "f1": 0.0})
 
-    def test_direct_answer_invalid_outlines_and_missing_count(self):
+    def test_manual_counts_come_from_annotations(self):
+        self.assertEqual({t: score_round2.manual_count(t) for t in TASKS}, {"nuclei": 473, "cancer": 163, "endo": 388})
+
+    def test_direct_outlines_audit(self):
         run_dir = self._run_dir({"row": "direct", "task": "cancer", "condition": "box1"})
-        (run_dir / "reply.json").write_text(json.dumps({"cells": [{"points": [[1, 1]]}, {"points": [[600, 100], [640, 100], [640, 140]]}]}))
-        result = score_round2.score_run(run_dir)
-        self.assertEqual((result["n_invalid_outlines"], result["count_error"]), (1, None))
+        square = [[600, 100], [640, 100], [640, 140], [600, 140]]
+        (run_dir / "reply.json").write_text(json.dumps(
+            {"count": 5, "cells": [{"points": [[1, 1]]}, {"points": square}, {"points": square},
+                                   {"points": [[5000, 5000], [5010, 5000], [5010, 5010]]}]}))
+        r = score_round2.score_run(run_dir)
+        self.assertEqual((r["n_invalid"], r["n_empty_or_outside"], r["n_valid"], r["stated_minus_valid_outlines"]), (1, 1, 2, 3))
+        self.assertGreater(r["overlap_px"], 0)
+
+    def test_malformed_direct_outputs_are_recorded(self):
+        run_dir = self._run_dir({"row": "direct", "task": "endo", "condition": "box1"})
+        (run_dir / "reply.json").write_text("{not json")
+        self.assertEqual(score_round2.score_run(run_dir)["status"], "invalid_json")
+        run_dir = self._run_dir({"row": "direct", "task": "endo", "condition": "generic"})
+        (run_dir / "stated_count.txt").write_text("about three hundred")
+        self.assertEqual(score_round2.score_run(run_dir)["status"], "invalid_count")
+        (run_dir / "stated_count.txt").write_text("300-340")
+        self.assertEqual(score_round2.score_run(run_dir)["stated_count"], 320)
 
 
 class ProtocolTests(unittest.TestCase):
@@ -95,7 +120,19 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(len({r["scenario_id"] for r in rows}), 162)
         for r in rows:
             if r["row"].startswith("code"):
-                self.assertTrue(r["attach"].startswith("image.tif <- "), r["scenario_id"])
+                self.assertTrue(r["attach"].startswith("image.tif <- dev_"), r["scenario_id"])
+            if r["row"] in ("code_python", "code_fiji", "optimise"):
+                self.assertTrue(r["run_final_code_on"].startswith("test_"), r["scenario_id"])
+
+    def test_test_annotation_is_never_given(self):
+        """No asset or scenario hands a model the test-field annotation, and both optimise conditions get the same image."""
+        assets = {p.name for p in (REPO_ROOT / "fig3/round2/assets").iterdir()}
+        self.assertFalse([a for a in assets if a.startswith("test_") and "annotation" in a])
+        rows = list(csv.DictReader(open(REPO_ROOT / "fig3/round2/scenarios.csv")))
+        for r in rows:
+            self.assertNotIn("test_" + r["task"] + "_annotation", r["attach"] + r["agent_folder"])
+            if r["row"] == "optimise":
+                self.assertIn(f"image.tif <- dev_{r['task']}_image.tif", r["agent_folder"])
 
 
 if __name__ == "__main__":

@@ -20,31 +20,31 @@ mode, API, sub-agent), the date and time, and whether web search was available a
 ## 3. Per row
 **advice** — send the prompt; no attachment. Save the conversation. Nothing is run.
 
-**code_python / code_fiji** — attach a copy of `assets/<task>_image.tif` named `image.tif` (the prompt refers to
+**code_python / code_fiji** — attach a copy of `assets/dev_<task>_image.tif` (field 104) named `image.tif` (the prompt refers to
 this name; if refused, `<task>_image.png` named `image.png`, and record it). When the
 conversation ends:
 1. Save the final code exactly as returned (`code_as_returned.py` / `.ijm`).
 2. Copy it to `code_run.*`, changing **only** input/output paths so it reads `image.tif` (a copy of
-   `assets/<task>_image.tif`) and writes `labels.tif`; save the diff as `EDITS.md`. Install packages the reply asks
+   `assets/test_<task>_image.tif`, the TEST field 209) and writes `labels.tif`; save the diff as `EDITS.md`. Install packages the reply asks
    for (record versions). Python: CPU, 1 h limit. Fiji: plain Fiji; install update sites/plugins only if the reply
    explicitly says so (record). Save stdout/stderr as `run.log`.
-3. If the reply includes a test against an annotated example, run it as instructed with `assets/<task>_annotation_left.tif`
-   (and the left half of the image if it needs a matching image); save its output as `test_output.txt`.
+3. If the reply includes a test against an annotated example, run it as instructed on the development image and its annotation (`assets/dev_<task>_image.tif`,
+   `assets/dev_<task>_annotation.tif`); save its output as `test_output.txt`.
 4. If the app executed code itself (e.g. ChatGPT's code tool), record it; still do steps 1–3.
 
 **optimise** (Claude Code; ChatGPT agent optional) — create a fresh folder containing only the files in `agent_folder`
-(generic: `image.tif`; box1: `image_left.tif`, `annotation_left.tif`). Give the subject shell access to that folder only.
+(generic: `image.tif`; box1: `image.tif` and `annotation.tif`, all from field 104). Give the subject shell access to that folder only.
 When it finishes, save its whole folder (`agent_folder/`) and a list of any file it touched outside it. Then run its
 `pipeline.py` unchanged on the whole field (`assets/<task>_image.tif`) → `labels.tif` (generic runs: use its own
-`labels.tif` if `pipeline.py` fails, and record it). The right half is the held-out test.
+its own `labels.tif`). Field 209 is the test field.
 
-**direct** — attach `assets/<task>_image.png`. Generic: write the number it gives in `stated_count.txt` (if it gives a
+**direct** — attach `assets/test_<task>_image.png` (field 209) named `image.png`. Generic: write the number it gives in `stated_count.txt` (if it gives a
 range, the midpoint; record the text). Box1: save its JSON as `reply.json` (if it does not give JSON, record that; no
 outlines = F1 0).
 
 ## 4. Follow-up questions
 Answer only what is asked, quoting `answer_sheet.md` verbatim. At most 3 replies; then say "Thanks, that is all I need."
-If the model asks for the image or an annotation, upload the file named in the answer sheet (left half only).
+If the model asks for the image or an annotation, upload the file named in the answer sheet (field 104 only; never a field-209 annotation).
 Never steer, hint, praise, correct or report errors. Do not ask for revisions.
 
 ## 5. After each scenario
@@ -66,5 +66,5 @@ You are an AI assistant chatting with a user. [Tools: web search is available (W
 ```
 
 ## 7. Spot-check and audit
-A person reads a random 10 % of transcripts (`python -c "import csv,random; r=[x['scenario_id'] for x in csv.DictReader(open('fig3/round2/scenarios.csv'))]; print(sorted(random.Random(20261017).sample(r, len(r)//10)))"`) and checks that only the prompt, answer-sheet
+A person reads every deviation, failure and follow-up exchange, and a random 20 % of the other transcripts (`python -c "import csv,random; r=[x['scenario_id'] for x in csv.DictReader(open('fig3/round2/scenarios.csv'))]; print(sorted(random.Random(20261017).sample(r, len(r)//5)))"`) and checks that only the prompt, answer-sheet
 quotes and listed files reached the subject. Any problem goes in `deviations.md` and the scenario is rerun.

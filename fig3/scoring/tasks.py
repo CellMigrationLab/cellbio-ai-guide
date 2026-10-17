@@ -1,11 +1,11 @@
-"""The three Figure 3 tasks: references and scoring conventions (same rules as the code that produced the figure).
+"""The three Figure 3 tasks: references and scoring conventions, for field 104 (development) and field 209 (test).
 
-* nuclei      reference: all 441 manually annotated endothelial nuclei (DAPI). Predictions are matched to the full
+* nuclei      reference: all manually annotated endothelial nuclei (DAPI; 441 in field 104, 473 in field 209). Predictions are matched to the full
               manual reference first; only predicted objects left UNMATCHED and lying >30 % on annotated cancer cells
               are then ignored, because cancer-cell nuclei were not annotated (rule "match_first", used from round 2).
               Round 1 used rule "drop_first" (drop such objects before matching), which also discarded correct
               predictions of the 17 annotated nuclei under cancer cells (best F1 0.98); kept only to reproduce round 1.
-* cancer      reference: 124 manually annotated cancer cells (brightfield).
+* cancer      reference: manually annotated cancer cells (brightfield; 124 in field 104, 163 in field 209).
 * endo        reference: endothelial cells from annotator 1's junction lines (lines_to_cells); objects touching the image
               border are removed from reference and prediction.
 All: object F1 at IoU >= 0.5, greedy one-to-one matching (common.matching).
@@ -16,43 +16,37 @@ from functools import lru_cache
 
 import numpy as np
 import tifffile
-from skimage.measure import label
-from skimage.segmentation import clear_border, expand_labels
+from skimage.segmentation import clear_border
 
+from common.annotations import lines_to_cells
 from common.matching import match
 from common.paths import raw_file
 
 TASKS = ("nuclei", "cancer", "endo")
-HALF_X = 512  # development half x < 512, held-out half x >= 512 (row c)
+FIELDS = (104, 209)  # 104: development field (round 1 and figures); 209: test field (round 2)
+HALF_X = 512  # round 1 only: development half x < 512, held-out half x >= 512 of field 104 (row c)
 CANCER_OVERLAP_MAX = 0.3
-SLIVER_PX = 150
-
-
-def lines_to_cells(lines: np.ndarray) -> np.ndarray:
-    """Convert drawn junction lines (True on lines) to a label image of complete cells."""
-    lab = expand_labels(label(~lines, connectivity=1), 2)
-    lab = clear_border(lab)
-    sizes = np.bincount(lab.ravel())
-    lab[np.isin(lab, np.where(sizes < SLIVER_PX)[0])] = 0
-    return lab
 
 
 @lru_cache(maxsize=None)
-def reference(task: str) -> np.ndarray:
-    """Manual reference label image for a task (whole field)."""
+def reference(task: str, field: int = 104) -> np.ndarray:
+    """Manual reference label image for a task and field (whole field), read from the authors' annotations."""
+    if field not in FIELDS:
+        raise ValueError(f"Unknown field {field!r}; expected one of {FIELDS}")
+    f = f"field{field}"
     if task == "nuclei":
-        return tifffile.imread(raw_file("field104_endothelial_nuclei_manual_labels.tif")).astype(int)
+        return tifffile.imread(raw_file(f"{f}_endothelial_nuclei_manual_labels.tif")).astype(int)
     if task == "cancer":
-        return tifffile.imread(raw_file("field104_cancer_cells_manual_labels.tif")).astype(int)
+        return tifffile.imread(raw_file(f"{f}_cancer_cells_manual_labels.tif")).astype(int)
     if task == "endo":
-        return lines_to_cells(tifffile.imread(raw_file("field104_endothelial_junctions_annotator1.tif")) > 0)
+        return lines_to_cells(tifffile.imread(raw_file(f"{f}_endothelial_junctions_annotator1.tif")) > 0)
     raise ValueError(f"Unknown task {task!r}; expected one of {TASKS}")
 
 
 @lru_cache(maxsize=None)
-def cancer_mask() -> np.ndarray:
-    """Boolean mask of the annotated cancer cells (used to ignore cancer-cell nuclei)."""
-    return reference("cancer") > 0
+def cancer_mask(field: int = 104) -> np.ndarray:
+    """Boolean mask of the annotated cancer cells of a field (used to ignore cancer-cell nuclei)."""
+    return reference("cancer", field) > 0
 
 
 def drop_objects_on_cancer_cells(pred: np.ndarray, mask: np.ndarray) -> np.ndarray:
@@ -94,16 +88,16 @@ def _counts(gt: np.ndarray, pred: np.ndarray, ignore_unmatched_on: np.ndarray | 
     return out
 
 
-def score(task: str, pred: np.ndarray, nuclei_rule: str = "match_first") -> dict:
-    """Whole-field score of a predicted label image for one task (nuclei_rule: see module docstring)."""
+def score(task: str, pred: np.ndarray, nuclei_rule: str = "match_first", field: int = 104) -> dict:
+    """Whole-field score of a predicted label image for one task and field (nuclei_rule: see module docstring)."""
     pred = np.squeeze(pred).astype(int)
-    gt = reference(task)
+    gt = reference(task, field)
     if pred.shape != gt.shape:
         raise ValueError(f"{task}: prediction shape {pred.shape} differs from reference {gt.shape}")
     if task == "endo":
         pred = clear_border(pred)
     if task == "nuclei":
-        return _nuclei_counts(gt, pred, cancer_mask(), nuclei_rule)
+        return _nuclei_counts(gt, pred, cancer_mask(field), nuclei_rule)
     return _counts(gt, pred)
 
 

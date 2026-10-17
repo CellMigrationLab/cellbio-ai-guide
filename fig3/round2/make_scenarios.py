@@ -56,7 +56,8 @@ def fill_box1(task: str, row: str) -> str:
         "[software and version]": SOFTWARE[row], "[hardware]": "a laptop CPU (no GPU)",
         "[measurement/output]": t["output"],
         "[representative images/annotations/reference measurements / expected outputs]":
-            "a manually annotated example (a label image of part of the field)",
+            ("a manually annotated example image (a label image)" if row == "advice"
+             else "a manual annotation of this image (a label image)"),
     }
     for key, value in replacements.items():
         if key not in box:
@@ -64,8 +65,8 @@ def fill_box1(task: str, row: str) -> str:
         box = box.replace(key, value)
     if row == "optimise":
         opt = "If you are allowed to optimise" + optimisation
-        opt = (opt.replace("[development data]", "image_left.tif and its annotation annotation_left.tif in this folder")
-                  .replace("[held-out data]", "any other image (the rest of the field is held out and not in this folder)")
+        opt = (opt.replace("[development data]", "image.tif and its annotation annotation.tif in this folder")
+                  .replace("[held-out data]", "any other image (my other images are held out and not in this folder)")
                   .replace("[working folder]", "this folder"))
         box += ("\n\n" + opt + "\nYou are allowed to optimise the workflow. When you are done, save the final script as "
                 "pipeline.py so that it runs unchanged as `python pipeline.py <input.tif> <output_labels.tif>`, keep a "
@@ -110,10 +111,14 @@ def build_prompts() -> dict:
     return prompts
 
 
-ATTACH = {"advice": "", "code_python": "image.tif <- {t}_image.tif (fallback image.png <- {t}_image.png)",
-          "code_fiji": "image.tif <- {t}_image.tif (fallback image.png <- {t}_image.png)",
-          "optimise": "", "direct": "{t}_image.png"}
-FOLDER = {"generic": "image.tif <- {t}_image.tif", "box1": "image_left.tif <- {t}_image_left.tif; annotation_left.tif <- {t}_annotation_left.tif"}
+# Field 104 = development image (may be shown, with its annotation if asked); field 209 = test image (assets/README).
+ATTACH = {"advice": "", "code_python": "image.tif <- dev_{t}_image.tif (fallback image.png <- dev_{t}_image.png)",
+          "code_fiji": "image.tif <- dev_{t}_image.tif (fallback image.png <- dev_{t}_image.png)",
+          "optimise": "", "direct": "image.png <- test_{t}_image.png"}
+FOLDER = {"generic": "image.tif <- dev_{t}_image.tif",
+          "box1": "image.tif <- dev_{t}_image.tif; annotation.tif <- dev_{t}_annotation.tif"}
+RUN_ON = {"code_python": "test_{t}_image.tif", "code_fiji": "test_{t}_image.tif", "optimise": "test_{t}_image.tif",
+          "advice": "", "direct": ""}
 
 
 def main() -> None:
@@ -133,6 +138,7 @@ def main() -> None:
                              "condition": condition, "task": task, "replicate": k, "prompt_file": f"prompts/{prompt_id}.txt",
                              "attach": ATTACH[row].format(t=task),
                              "agent_folder": FOLDER[condition].format(t=task) if row == "optimise" else "",
+                             "run_final_code_on": RUN_ON[row].format(t=task),
                              "subject_tools": {"advice": "web", "code_python": "web; view attachment",
                                                "code_fiji": "web; view attachment", "direct": "view attachment",
                                                "optimise": "web; run code in its folder only"}[row]})
