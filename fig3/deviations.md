@@ -36,9 +36,12 @@
   them); the advice run that spotted the inconsistency received the correction, the code pilot did not.
 
 ## Scoring conventions
-- Nuclei: predicted objects lying > 30 % on annotated cancer cells are ignored (cancer-cell nuclei are not annotated).
-  Consequence found by the tests: 17 annotated endothelial nuclei (8 in the held-out half) lie under cancer cells, so
-  the best achievable nuclei F1 is 0.98 (held-out 0.983), not 1. It affects all conditions equally.
+- Nuclei, round 1 (draft figure): predicted objects lying > 30 % on annotated cancer cells were ignored before
+  matching (cancer-cell nuclei are not annotated). This also discarded correct predictions of the 17 annotated
+  endothelial nuclei under cancer cells (best achievable F1 0.98). Found by the tests on 17 Oct 2026.
+- Nuclei, from round 2: predictions are matched to the full manual annotation (441 nuclei) first; only unmatched
+  objects lying > 30 % on cancer cells are ignored. Round-1 nuclei scores under this rule (for comparison): Python
+  Box 1 0.94 → 0.96, Cellpose default 0.94 → 0.96, other runs change by < 0.01.
 - Endothelial cells: objects touching the image border are removed from reference and prediction; reference cells come
   from annotator 1's junction lines (`lines_to_cells`, slivers < 150 px removed).
 - Code that crashed or wrote no label image: F1 0, drawn as ×.

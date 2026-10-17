@@ -11,7 +11,7 @@ import tifffile
 from skimage.segmentation import clear_border
 
 from common.paths import REPO_ROOT
-from fig3.scoring.tasks import HALF_X, _counts, cancer_mask, drop_objects_on_cancer_cells, reference
+from fig3.scoring.tasks import HALF_X, _counts, cancer_mask, drop_objects_on_cancer_cells, reference  # round-1 rule
 
 RUNS = REPO_ROOT / "fig3" / "optimise" / "runs"
 DEV_OUTPUTS = {  # final development-half label image written by each agent

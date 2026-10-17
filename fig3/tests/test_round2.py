@@ -20,11 +20,25 @@ class TaskScorerTests(unittest.TestCase):
             self.assertEqual(score(task, reference(task))["f1"], 1.0)
             self.assertEqual(score_heldout(task, reference(task))["f1"], 1.0)
 
-    def test_nuclei_ceiling(self):
-        """17 annotated endothelial nuclei (8 in the held-out half) lie >30 % under cancer cells; the convention ignores
-        such predicted objects, so even a perfect prediction scores F1 0.98 (held-out 0.983). Documented in deviations.md."""
-        whole, held = score("nuclei", reference("nuclei")), score_heldout("nuclei", reference("nuclei"))
-        self.assertEqual((whole["fn"], whole["f1"], held["fn"], held["f1"]), (17, 0.98, 8, 0.983))
+    def test_nuclei_perfect_prediction_scores_one(self):
+        """Round-2 rule: the full manual reference (441 nuclei, incl. 17 under cancer cells) is always used; a perfect
+        prediction scores F1 1 on the whole field and on the held-out half."""
+        self.assertEqual(score("nuclei", reference("nuclei"))["f1"], 1.0)
+        self.assertEqual(score_heldout("nuclei", reference("nuclei"))["f1"], 1.0)
+
+    def test_nuclei_round1_rule_ceiling(self):
+        """Round-1 rule (drop before matching) loses the 17 annotated nuclei under cancer cells: F1 0.98."""
+        result = score("nuclei", reference("nuclei"), nuclei_rule="drop_first")
+        self.assertEqual((result["fn"], result["f1"]), (17, 0.98))
+
+    def test_unmatched_cancer_nuclei_are_not_false_positives(self):
+        """An extra predicted object inside a cancer cell (an unannotated cancer-cell nucleus) is ignored."""
+        pred = reference("nuclei").copy()
+        ys, xs = np.nonzero(reference("cancer") > 0)
+        free = (reference("nuclei")[ys, xs] == 0)
+        y, x = ys[free][0], xs[free][0]
+        pred[y, x] = pred.max() + 1
+        self.assertEqual(score("nuclei", pred)["fp"], 0)
 
     def test_heldout_counts_match_strategy(self):
         """Held-out reference counts stated in STRATEGY.md: 233 nuclei, 51 cancer cells, 181 endothelial cells."""

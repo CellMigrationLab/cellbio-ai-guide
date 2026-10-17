@@ -19,7 +19,9 @@ The figure illustrates differences; it is not a benchmark. We report every run, 
 
 ## 2. Tasks, data and scoring (unchanged from round 1)
 Three tasks on one field (0.65 µm/px): **nuclei** (DAPI), **cancer cells** (brightfield), **endothelial cells**
-(brightfield). References and scorers: `fig3/scoring/tasks.py` (object F1 at IoU ≥ 0.5, one-to-one).
+(brightfield). References and scorers: `fig3/scoring/tasks.py` (object F1 at IoU ≥ 0.5, one-to-one). **Every score is computed
+against the authors' manual annotations in `data/raw/` (checksummed).** Nuclei: matched against all 441 manual
+nuclei first; only unmatched predictions lying mostly on cancer cells (unannotated cancer-cell nuclei) are ignored.
 
 **Development / held-out split for every row (audit fix A1).** If a model is given an annotation, it only ever gets the
 **left half** (x < 512). All segmentation scores are computed on the **right half** (233 nuclei, 51 cancer cells,

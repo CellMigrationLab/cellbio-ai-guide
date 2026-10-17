@@ -39,6 +39,9 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
   original coordinate system and physical units.
 - **Small functions, clear names, validated inputs, informative errors, no silent fallbacks.** New code imports paths
   from `common.paths` and scoring from `common.matching`; never hard-code absolute paths.
+- **Always score against the authors' manual annotations** in `data/raw/` (never against a model output or a derived
+  copy you cannot trace to them). If you are unsure which file is the manual annotation, or it seems wrong or
+  incomplete, stop and ask the authors to provide it again.
 - **Test against reference data.** Any change must keep `make check` passing, or the change must explain, in the same
   commit, why a number changed.
 - **Record deviations** (anything that departed from the stated protocol) in the relevant `deviations.md`.

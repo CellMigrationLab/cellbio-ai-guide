@@ -10,7 +10,11 @@ import numpy as np
 import tifffile
 
 from common.paths import REPO_ROOT
-from fig3.scoring.tasks import score
+from functools import partial
+
+from fig3.scoring import tasks
+
+score = partial(tasks.score, nuclei_rule="drop_first")  # round-1 runs: the rule used for the draft figure
 
 FIG3 = REPO_ROOT / "fig3"
 TASK_WORDS = {"nuclei": "nuclei", "cancer": "cancer", "endothelial": "endo"}

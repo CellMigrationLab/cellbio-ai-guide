@@ -4,6 +4,7 @@ Usage (from the repository root):
   PYTHONPATH=. python fig3/scoring/build_scores.py OUTPUT.json            write the scores
   PYTHONPATH=. python fig3/scoring/build_scores.py --check                compare with the file the figure was built from
 
+Round 1 is scored with the nuclei rule it was published with ("drop_first", see fig3/scoring/tasks.py).
 Conventions: median of runs is taken by the figure builder; here each run is listed. A run whose code crashed or wrote
 no label image is recorded as -1 (drawn as x, counted as F1 0). Row c is scored on the held-out half for both conditions.
 """
@@ -16,7 +17,13 @@ from pathlib import Path
 import tifffile
 
 from common.paths import REPO_ROOT
-from fig3.scoring.tasks import TASKS, score, score_heldout
+from functools import partial
+
+from fig3.scoring import tasks
+
+TASKS = tasks.TASKS
+score = partial(tasks.score, nuclei_rule="drop_first")  # round-1 rule (reproduces the draft figure)
+score_heldout = partial(tasks.score_heldout, nuclei_rule="drop_first")
 
 FIG3 = REPO_ROOT / "fig3"
 FIGURE_SCORES = FIG3 / "figure" / "source_data" / "bf3" / "fig_scores.json"
