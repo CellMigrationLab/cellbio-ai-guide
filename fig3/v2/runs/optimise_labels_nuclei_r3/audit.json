@@ -1,0 +1,22 @@
+{
+ "session_id": "abcefcc5-12be-4f13-b9e3-81abe6e5d2db",
+ "n_tool_calls": 14,
+ "flags": [
+  "Bash refers to paths outside the subject folder ['/root']: cd /home/user/sessions_v2/v008; python -W ignore -c \"\nimport tifffile as t,numpy as np\nfrom skimage import segmentation,io\na=t.imread('image.tif').astype(float);l=t.imread('labels.tif')\ng=np.clip(a/20"
+ ],
+ "notes": [
+  "Bash in the subject's own scratchpad (archived)",
+  "Read in the subject's own scratchpad (archived)"
+ ],
+ "scratchpad_archived": [
+  "subject_tmp/scratchpad/ann.png",
+  "subject_tmp/scratchpad/cp.py",
+  "subject_tmp/scratchpad/cp_23.tif",
+  "subject_tmp/scratchpad/cp_None.tif",
+  "subject_tmp/scratchpad/err.png",
+  "subject_tmp/scratchpad/raw.png",
+  "subject_tmp/tasks/bhrvcivi1.output"
+ ],
+ "tmp_files_named": [],
+ "tmp_files_archived": []
+}

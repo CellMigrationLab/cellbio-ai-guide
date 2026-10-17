@@ -1,0 +1,4 @@
+1. Inspected image.tif/annotation.tif: 1022x1024 uint16 (max 4095), 441 annotated nuclei, median 170 um2, AR 1.48. Annotation covers only dim elliptical endothelial nuclei; bright round cancer nuclei are NOT annotated.
+2. Cellpose-SAM (cpsam), percentile 1-99.8 normalisation, native scale: diameter=None gave 597 objects, recall 0.998, area error ~0; diameter=23 no better (611 objects, 2x slower) -> kept diameter=None.
+3. Excess objects = cancer nuclei + debris. Added filter: object median intensity < 1.45 x image median of object medians (relative, not absolute counts; absolute 675 on this image ~ same), plus min area 90 um2. Chosen on image.tif only (threshold sweep; median beat mean/p25 slightly).
+4. Final on image.tif: 444 vs 441 annotated, precision 0.955, recall 0.961, F1 0.958 @IoU0.5; area median 170.5 vs 171.5 um2; AR median 1.54 vs 1.48 (r=0.85).
