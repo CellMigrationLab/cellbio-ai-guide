@@ -1,49 +1,38 @@
-# Figure 3: Using an LLM for image analysis, from advice to delegation
+# Figure 3: how much analysis should an LLM do?
 
-**Status: round-1 draft, to be replaced.** The figure is being redone under `PROTOCOL_V2.md` (harness in `v2/`); this
-README, `deviations.md` and the folders below describe **round 1**, which produced the current draft
-(`figure/output/fig3_preview.png`, legend `figure/legend.md`). Builder `figure/code/make_fig3.py` (reads `figure/source_data/round1/`)
-(= `fig3_head.py` + `fig3_helpers.py` + `fig3_v9.py`, see `figure/code/build_parts/`).
+Figure 3 examines four ways a cell biologist might use an LLM: ask for advice, ask it to write code, let an agent run and optimise an analysis, or ask for a measurement directly.
 
-## Round-1 design
-Three tasks on one field of view (cancer cells on an endothelial monolayer; 0.65 µm/px), easy to hard:
-**nuclei** (DAPI, 441 endothelial nuclei), **cancer cells** (brightfield, 124), **endothelial cells** (brightfield, 382,
-two annotators agree F1 0.90). Each row compares a common request ("before") with the request recommended in the text
-and Box 1 ("after"). Model: Claude Sonnet (claude-sonnet-5-5), run as Claude Code sub-agents, 16–17 Oct 2026; three
-runs per condition unless stated. Scores: object F1 at IoU ≥ 0.5 (`scoring/tasks.py`).
+**Current status:** the [figure preview](figure/output/fig3_preview.png) and [legend](figure/legend.md) show **round 1**, a draft that will be replaced. The current design is [protocol v2](PROTOCOL_V2.md), implemented in [v2/](v2/README.md). Do not cite the round-1 results as the final study.
 
-| Folder | Row | Before → after | What is stored |
-|---|---|---|---|
-| `advice/` | a | advice from memory → after reading the documentation | 4 runs (cancer, endothelial); our implementation of each piece of advice (`advice/code/advise_impl.py`, not shown); the `cyto3` silent-fallback test |
-| `code/` | b1, b2 | generic request → Box 1 (v2, `box1/box1_v2_used_in_figure3.md`); Fiji macro and Python | 36 runs: code as returned and as run, run log, label image, score |
-| `optimise/` | c | agent judging by eye → agent scored against annotation of the left half, frozen, run on the held-out right half | 6 runs (full agent transcripts, every file they wrote), held-out split, frozen-pipeline outputs, `dev_rescored.json` |
-| `direct_answers/` | d | "How many … ?" → "Draw around every … and count them" | 18 runs; rasterised outlines and scores; counts as stated |
+## What was tested in round 1?
 
-Every run folder (`<section>/runs/<run_id>/`) has `prompt.md` (exact first message, **including our wrapper text**),
-`conversation.md` (all turns verbatim, tool calls listed; harness notes marked as such), `meta.json` (model, times,
-tools used, web searches, files read) and `artifacts/` (files from the run's working folder; TIFFs re-saved with
-lossless compression, pixel values verified). `runs_index.csv` maps each run to its section and original agent;
-`all_runs.csv` lists every run with its score.
+All three tasks used one field of cancer cells on an endothelial monolayer, with a pixel size of approximately 0.65 µm: 441 endothelial nuclei (DAPI), 124 cancer cells (brightfield) and 382 complete endothelial cells (brightfield). The model was Claude Sonnet through Claude Code sub-agents, tested on 16–17 October 2026, usually three conversations per condition.
 
-Other folders: `figure/` (builder, source data, output), `scoring/` (task definitions, `build_scores.py`,
-`rescore_dev.py`, `all_runs_table.py`), `baselines/` (Cellpose default on DAPI), `harness/` (scripts that queued, ran,
-collected and scored the runs, as used), `v2/` (assets and scorer for protocol v2, `PROTOCOL_V2.md`), `pilots/` (Box 1 draft v3 tests, not in the figure), `superseded/` (all earlier rounds, kept for audit).
+| Row | Request | Where to find the records |
+|---|---|---|
+| A | Ask for advice, with or without checking documentation | [advice/](advice/README.md) |
+| B | Ask for a Fiji macro or Python script, with a generic prompt or Box 1 | [code/](code/README.md) |
+| C | Let an agent optimise by eye or against annotations | [optimise/](optimise/README.md) |
+| D | Ask for a count directly or ask the model to draw and count objects | [direct_answers/](direct_answers/README.md) |
 
-## Reproduce the numbers
+The run folders contain the prompts, verbatim conversations, metadata, code and outputs. [runs_index.csv](runs_index.csv) maps run IDs to records; [all_runs.csv](all_runs.csv) contains the draft scores. The [historical harness](harness/README.md), [deviations](deviations.md) and [superseded rounds](superseded/README.md) document how this first study was carried out.
+
+## Recheck the draft scores
+
+From the repository root:
+
+```bash
+PYTHONPATH=. python fig3/scoring/build_scores.py --check
+PYTHONPATH=. python fig3/scoring/rescore_dev.py
+make fig3
 ```
-PYTHONPATH=. python fig3/scoring/build_scores.py --check   # every score in the figure, from the stored outputs
-PYTHONPATH=. python fig3/scoring/rescore_dev.py            # agents' reported development F1 re-scored with our scorer
-make fig3                                                  # figure from figure/source_data (byte-identical)
-```
-Re-running the code itself: Python runs need Cellpose 4.2.1.1 (`environment/`), run as `python script.py` in a folder
-containing `bf.tif` or `dapi.tif` (copies of `data/raw/field104_brightfield.tif` / `field104_dapi.tif`); Fiji macros as
-in `harness/queue_runner.sh`. LLM replies themselves are not reproducible bit-for-bit.
 
-## Caveats (read before citing a number)
-- Illustration, not a benchmark: one field, one model, three runs per condition.
-- The sub-agent harness differs from the chat apps: our wrapper text, a fixed output format (`labels.tif`), a setup line
-  (software available) not in Box 1, and web tools that must be loaded before use (most runs never loaded them). See
-  `deviations.md`. The next round follows `PROTOCOL_V2.md`.
-- Row c "reported" scores came from scoring code written by each agent; with our scorer they are 0.927, 0.930, 0.706
-  (nuclei, cancer, endothelial) instead of 0.927, 0.930, 0.695 (`optimise/dev_rescored.json`).
-- Three of six agent runs read or wrote files outside the folder they were told to use (`deviations.md`).
+These commands rescore stored outputs and rebuild the draft figure. They do **not** recreate the LLM conversations. Running the returned scripts also requires the software listed in [environment/](../environment/README.md).
+
+## Limitations of round 1
+
+This is an illustration, not a model benchmark. It used one field, one model and few runs. The sub-agent harness differed from consumer chat interfaces: it added wrapper text, prescribed output files and controlled tool access. Some runs never loaded their available web tools. See [deviations.md](deviations.md).
+
+The agents' reported development F1 values also did not always match independent rescoring: the endothelial score changed from 0.695 to 0.706 in [dev_rescored.json](optimise/dev_rescored.json). Three of six agent runs accessed files outside their assigned folders. These are reasons to inspect the records, not to draw general conclusions from the draft.
+
+The replacement protocol uses two fields, a revised scoring design and more explicit controls. Its [README](v2/README.md) is the starting point for that experiment.
