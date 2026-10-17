@@ -23,4 +23,4 @@ if __name__ == "__main__":
         print(thr, errors(postfilter(L, thr))[0])
     if len(sys.argv) > 1:
         thr = float(sys.argv[1])
-        tifffile.imwrite("panels/cp_postfilter.tif", postfilter(L, thr).astype(np.uint16))
+        tifffile.imwrite("panels/cp_postfilter.tif", postfilter(L, thr).astype(np.uint16), compression="zlib")  # lossless, as stored

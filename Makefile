@@ -2,10 +2,13 @@
 PY ?= python3
 export PYTHONPATH := $(CURDIR)
 
-.PHONY: check test data fig1 fig2 fig3 pdf scores
+.PHONY: check full test data fig1 fig2 fig3 pdf scores
 
 check:            ## tests + checksums + rebuild all figures and scores in a temporary copy (no files changed)
 	$(PY) tools/check_all.py
+
+full:             ## regenerate Fig 1-2 source data from data/raw, then rebuild the figures (no files changed)
+	$(PY) tools/check_full.py
 
 test:             ## all unit tests
 	$(PY) -m unittest discover -s . -p 'test_*.py' -t .

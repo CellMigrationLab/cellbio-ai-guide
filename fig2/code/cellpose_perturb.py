@@ -35,5 +35,5 @@ for r in runs:
         m, _, _ = model.eval(bf, flow_threshold=float(r[4:]))
     elif r.startswith("cellprob"):
         m, _, _ = model.eval(bf, cellprob_threshold=float(r[8:]))
-    tifffile.imwrite(f"panels/cp_{r}.tif", m.astype(np.uint16))
+    tifffile.imwrite(f"panels/cp_{r}.tif", m.astype(np.uint16), compression="zlib")  # lossless, as stored
     print(f"cellpose {version('cellpose')} {r}: {m.max()} objects in {time.time()-t0:.0f}s", flush=True)

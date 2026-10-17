@@ -3,7 +3,10 @@
 Matching rule (identical to the code that produced the published scores):
 every pair of overlapping objects (one reference, one predicted) is scored by intersection-over-union (IoU);
 pairs are accepted greedily from the highest IoU downwards, one-to-one, keeping only IoU >= threshold.
-F1 = 2 TP / (2 TP + FP + FN).
+F1 = 2 TP / (2 TP + FP + FN); F1 is 0 when there are no matches (including two empty images).
+An IoU exactly equal to the threshold counts as a match. Labels do not overlap within an image, so for thresholds above
+0.5 each object has at most one candidate partner and greedy matching equals optimal matching
+(tests/test_matching_edge_cases.py).
 """
 from __future__ import annotations
 

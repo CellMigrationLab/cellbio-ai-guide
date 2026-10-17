@@ -25,7 +25,7 @@ mt, fn, fp = match(ref, lab)
 tp = len(mt); f1 = 2 * tp / (2 * tp + len(fn) + len(fp))
 print("classical: objects", lab.max(), "TP", tp, "FN", len(fn), "FP", len(fp), "F1", round(f1, 3))
 tifffile.imwrite(THRESHOLD_LABELS, lab.astype(np.uint16), compression="zlib")  # lossless, as stored
-sc = json.load(open("panel_c_step3/A_scores.json")); sc["classical"] = round(f1, 3); json.dump(sc, open("panel_c_step3/A_scores.json", "w"))
+# F1 printed only; panel_c_step3/A_scores.json is written by f1_scores.py
 X, Y, W, H = 240, 40, 240, 260
 sub = lab[Y:Y + H, X:X + W]; out = []
 for l in np.unique(sub[sub > 0]):

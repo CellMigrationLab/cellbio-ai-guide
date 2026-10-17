@@ -24,6 +24,8 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 ## Current status (17 Oct 2026)
 - Figures 1 and 2 are final; Figure 3 is a late draft (`fig3/figure/output/fig3_preview.png`).
 - `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data.
+- `make full` passes: the Figure 1 and 2 source data regenerate from `data/raw` and rebuild both figures byte-identical
+  (files it cannot regenerate are listed with the reason).
 - Next steps:
   1. An independent session checks that the figures can be rebuilt from a fresh clone.
   2. An independent model (ChatGPT) adversarially audits the repository; findings go to `docs/audit_findings.md`.

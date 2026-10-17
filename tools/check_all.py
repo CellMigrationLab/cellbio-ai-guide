@@ -1,4 +1,5 @@
-"""Check that everything in this repository reproduces: tests, raw-data checksums, figures and scores.
+"""Fast check: tests, raw-data checksums, and figures and scores rebuilt from the committed source data.
+(The full check from data/raw is tools/check_full.py.)
 
 Usage (from the repository root):  python tools/check_all.py [--with-squirrel]
 Each step prints PASS/FAIL; the exit code is non-zero if any step fails. Figures and scores are rebuilt in a temporary
@@ -6,7 +7,6 @@ copy, so the committed files are never modified.
 """
 from __future__ import annotations
 
-import ast
 import hashlib
 import json
 import os
@@ -66,13 +66,14 @@ def check_figures(tmp: Path) -> list[bool]:
 
 
 def check_fig1_scores(tmp: Path) -> bool:
-    """Recompute the Fig 1c F1 scores and compare with the file the figure reads."""
-    proc = run([sys.executable, "../code/f1_scores.py"], cwd=tmp / "fig1" / "source_data")
+    """Recompute the Fig 1c F1 scores and compare the rewritten A_scores.json with the committed one."""
+    src = tmp / "fig1" / "source_data"
+    proc = run([sys.executable, "../code/f1_scores.py"], cwd=src)
     if proc.returncode:
         return report("fig1: F1 scores", False, proc.stderr[-300:])
-    recomputed = ast.literal_eval(proc.stdout.strip().splitlines()[-1])  # the script prints a dict literal
-    published = json.loads((REPO / "fig1/source_data/panel_c_step3/A_scores.json").read_text())
-    return report("fig1: F1 scores recomputed from label images", recomputed == published, f"{recomputed}")
+    rel = "panel_c_step3/A_scores.json"
+    same = md5(src / rel) == md5(REPO / "fig1/source_data" / rel)
+    return report("fig1: F1 scores recomputed from label images", same, (src / rel).read_text())
 
 
 def check_fig1_step4(tmp: Path) -> bool:

@@ -7,12 +7,20 @@ Every pixel and every number in the three figures can be traced to a file here, 
 
 ```
 python3 -m pip install -r environment/requirements.txt   # numpy, scipy, scikit-image, tifffile, pillow
-make check                                                # ~1 min; changes no files
+make check                                                # fast check, ~1 min; changes no files
+make full                                                 # full check from raw data, ~2 min; changes no files
 ```
 
-`make check` runs the unit tests, verifies the SHA-256 of every raw file, rebuilds the three figure SVGs in a temporary
-folder and checks that they are **byte-identical** to the committed ones, re-runs the Figure 1 and Figure 2 scoring,
-and recomputes **every Figure 3 score** from the stored LLM outputs.
+Two checks, both run in a temporary copy:
+- **`make check` (fast)** starts from the committed source data: unit tests, the SHA-256 of every raw file, the three
+  figure SVGs rebuilt **byte-identical**, the Figure 1 and Figure 2 scoring re-run, and **every Figure 3 score**
+  recomputed from the stored LLM outputs.
+- **`make full`** starts from `data/raw`: it deletes the Figure 1 and Figure 2 source data, regenerates it script by
+  script in dependency order (a missing input stops it), compares every regenerated file with the committed one, and
+  rebuilds both figures byte-identical from the regenerated files. It also lists every file it did **not** regenerate
+  and why: Cellpose-SAM outputs (re-run with `--with-models`, needs cellpose and torch), SQUIRREL (`--with-squirrel`,
+  NanoPyx environment), and a few crops whose producer exists only as a recovered inline command or was not recovered.
+  Figure 3 depends on LLM conversations, which cannot be regenerated; its scores are recomputed by the fast check.
 
 ## What is where
 
@@ -24,7 +32,7 @@ and recomputes **every Figure 3 score** from the stored LLM outputs.
 | `fig2/` | Figure 2: as above, including SQUIRREL (NanoPyx) for panel e |
 | `fig3/` | Figure 3, split by use: `advice/`, `code/`, `optimise/`, `direct_answers/`; plus `figure/`, `scoring/`, `harness/`, `prompt_pack/`, `pilots/`, `superseded/` |
 | `box1/` | Box 1 versions (the one used in Fig. 3 and the current draft) |
-| `tools/` | porting and checking tools (how this repository was assembled, and `check_all.py`) |
+| `tools/` | porting and checking tools (how this repository was assembled; `check_all.py` fast check, `check_full.py` full check, `svg_to_pdf.py`) |
 | `docs/` | adversarial audit, our response (`audit_response.md`) and repository plan |
 | `AGENTS.md` | purpose, status and working rules for anyone (human or AI) working in this repository |
 
