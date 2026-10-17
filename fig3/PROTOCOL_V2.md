@@ -220,4 +220,9 @@ affected runs.
 - Row A example: chosen after the runs, as an illustration (not by a rule); all replies are available.
 - Runner for rows B and C: scripted runner.
 - Row D: full field.
+- Row A item check: done by the operator, one table per reply with the source of each classification (installed
+  version or documentation link), reviewed by the authors before use.
+- Preflight: one run per row × task (12 runs), not used in the figure.
+- Rows A, B and D use the `subject-chat` sub-agent (Read and web tools only), defined in the project's
+  `.claude/agents/subject-chat.md`; it loads after a session restart (authors will restart before the preflight).
 - Open: annotator names, tool and dates for both fields (needed for the methods, not for the runs).
