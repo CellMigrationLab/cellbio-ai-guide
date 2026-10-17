@@ -1,16 +1,17 @@
-# Exploratory analyses (not in the final Figure 2)
+# Exploratory CARE intensity analysis
 
-## CARE intensity linearity against the high-SNR acquisition (`care_linearity.py`, 17 Oct 2026)
-Per-nucleus background-subtracted mean intensity in the noisy input, the CARE output and the high-SNR acquisition of
-the same field (`data/raw/care_denoising_*.tif`). Results: `care_linearity.json`, plot `care_linearity.png`.
+**Not included in the final Figure 2.** This analysis asks whether CARE restoration changes the relation between measured nuclear intensities and an acquired higher-SNR reference.
 
-- **Noisy vs restored** (the Fig 2c comparison): proportional (log-log slope 1.03, CI 0.98–1.09; gain 1.55, no trend
-  with intensity), whichever image the nuclei are segmented on. CARE behaves as a near-linear rescaling of its input.
-- **Against the high-SNR acquisition**, noisy and restored behave the same way (r 0.945 vs 0.942). Neither is
-  proportional: dim nuclei keep a floor of ≈ 2,500–3,000 counts in the high-SNR image while they approach zero in the
-  noisy and restored images (an offset, not a power law). So CARE does not add a new non-linearity here, but the
-  comparison with acquired high-SNR data shows a mismatch that the input-vs-output comparison cannot reveal.
-- **Not robust yet**: the log-log slopes against high-SNR change with the nuclear mask (0.90/0.74 with nuclei segmented
-  on the high-SNR image, 1.32/1.31 with the Fig 2c mask from the restored image), because the offset dominates the dim
-  nuclei. Before using this in a figure: a reviewed nuclear mask and a local (per-nucleus ring) background, and a check
-  of acquisition settings (exposure, offset) between the low- and high-SNR images.
+[care_linearity.py](care_linearity.py) measures background-subtracted mean intensity per nucleus in the low-SNR input, CARE output and higher-SNR acquisition of the same field. Results are saved in `care_linearity.json` and `care_linearity.png`.
+
+## What the comparison found
+
+The low-SNR and restored measurements were nearly proportional (log–log slope 1.03, confidence interval 0.98–1.09; gain 1.55), regardless of which of the tested images supplied the nuclear masks.
+
+Against the higher-SNR acquisition, correlations were similar for low-SNR and restored images (r = 0.945 and 0.942). Both differed from the higher-SNR values for dim nuclei, where an offset of roughly 2,500–3,000 counts was apparent. Comparing only input with restoration would not reveal that discrepancy.
+
+## Why this is still exploratory
+
+The slope against the higher-SNR acquisition depends strongly on the nuclear masks: 0.90/0.74 with masks from the higher-SNR image versus 1.32/1.31 with the Figure 2c masks. Before using these results in a figure, review the masks, test local per-nucleus background estimates and verify acquisition exposure and offset settings.
+
+This analysis does **not** establish that CARE intensities can be substituted for acquired intensities in quantitative measurements.
