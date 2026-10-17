@@ -1,0 +1,93 @@
+name: Audit Figures 1 and 2
+
+on:
+  push:
+    branches:
+      - audit/chatgpt-20261017
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - name: Install figure and scoring dependencies
+        run: |
+          python -m pip install --upgrade pip
+          grep -v -E '^(cellpose|torch)' environment/requirements.txt > /tmp/requirements-audit.txt
+          python -m pip install -r /tmp/requirements-audit.txt
+          python -m pip install ruff
+      - name: Record environment
+        run: |
+          python --version | tee audit_python.txt
+          python -m pip freeze | sort > audit_pip_freeze.txt
+      - name: Compile production Python
+        run: |
+          python -m compileall -q common data tools fig1/code fig2/code fig3/scoring fig3/round2
+      - name: Run unit tests and verify raw-data manifest
+        run: |
+          python -m unittest discover -s . -p 'test_*.py' -t . |& tee audit_tests.log
+          python data/make_manifest.py --verify |& tee audit_manifest.log
+      - name: Rebuild Figure 1 and Figure 2
+        run: |
+          cp fig1/figure/fig1.svg /tmp/fig1_committed.svg
+          cp fig2/figure/fig2.svg /tmp/fig2_committed.svg
+          make fig1 |& tee audit_fig1_build.log
+          make fig2 |& tee audit_fig2_build.log
+          cmp /tmp/fig1_committed.svg fig1/figure/fig1.svg
+          cmp /tmp/fig2_committed.svg fig2/figure/fig2.svg
+          sha256sum /tmp/fig1_committed.svg fig1/figure/fig1.svg /tmp/fig2_committed.svg fig2/figure/fig2.svg | tee audit_figure_hashes.txt
+      - name: Recompute Figure 1 and Figure 2 non-SQUIRREL scores
+        run: |
+          (cd fig1/source_data && PYTHONPATH="$GITHUB_WORKSPACE" python ../code/f1_scores.py) |& tee audit_fig1_scores.log
+          (cd fig2/source_data && PYTHONPATH="$GITHUB_WORKSPACE" python ../code/errors.py && PYTHONPATH="$GITHUB_WORKSPACE" python ../code/score_perturb.py && PYTHONPATH="$GITHUB_WORKSPACE" python ../code/annot_agree.py && PYTHONPATH="$GITHUB_WORKSPACE" python ../code/bio_result.py && PYTHONPATH="$GITHUB_WORKSPACE" python ../code/al_intensity.py && PYTHONPATH="$GITHUB_WORKSPACE" python ../code/tubule_width.py) |& tee audit_fig2_scores.log
+      - name: Static audit with Ruff
+        if: always()
+        run: |
+          set +e
+          ruff check common data tools fig1/code fig2/code fig3/scoring fig3/round2 --exclude '*/superseded/*' --exclude '*/runs/*' --output-format=concise | tee audit_ruff.log
+          echo ${PIPESTATUS[0]} > audit_ruff_status.txt
+          exit 0
+      - name: Upload audit outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: figure-audit-output
+          path: |
+            fig1/figure/fig1.svg
+            fig1/figure/fig1.pdf
+            fig2/figure/fig2.svg
+            fig2/figure/fig2.pdf
+            audit_*.txt
+            audit_*.log
+          if-no-files-found: warn
+
+  documented-install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test documented installation command
+        run: |
+          set +e
+          python -m pip install --upgrade pip
+          python -m pip install -r environment/requirements.txt > documented_install.log 2>&1
+          status=$?
+          echo "$status" > documented_install_status.txt
+          tail -n 100 documented_install.log
+          exit 0
+      - name: Upload installation log
+        uses: actions/upload-artifact@v4
+        with:
+          name: documented-install-log
+          path: |
+            documented_install.log
+            documented_install_status.txt
