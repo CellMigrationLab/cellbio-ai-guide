@@ -1,0 +1,104 @@
+{
+ "primary": {
+  "mask_from": "high_snr",
+  "n_nuclei": 336,
+  "pairs": {
+   "noisy_vs_high_snr": {
+    "n": 336,
+    "pearson_r": 0.945,
+    "spearman_rho": 0.853,
+    "slope": 15.354,
+    "intercept": -58.4,
+    "r2": 0.894,
+    "loglog_slope": 0.898,
+    "loglog_slope_ci95": [
+     0.851,
+     0.946
+    ],
+    "gain_median": 15.242,
+    "gain_vs_intensity_rho": -0.114
+   },
+   "restored_vs_high_snr": {
+    "n": 336,
+    "pearson_r": 0.942,
+    "spearman_rho": 0.876,
+    "slope": 9.325,
+    "intercept": 308.0,
+    "r2": 0.888,
+    "loglog_slope": 0.739,
+    "loglog_slope_ci95": [
+     0.689,
+     0.79
+    ],
+    "gain_median": 9.841,
+    "gain_vs_intensity_rho": -0.202
+   },
+   "noisy_vs_restored": {
+    "n": 336,
+    "pearson_r": 0.968,
+    "spearman_rho": 0.938,
+    "slope": 1.588,
+    "intercept": -21.2,
+    "r2": 0.937,
+    "loglog_slope": 1.035,
+    "loglog_slope_ci95": [
+     0.982,
+     1.088
+    ],
+    "gain_median": 1.553,
+    "gain_vs_intensity_rho": 0.058
+   }
+  }
+ },
+ "sensitivity_mask_from_restored": {
+  "mask_from": "restored",
+  "n_nuclei": 312,
+  "pairs": {
+   "noisy_vs_high_snr": {
+    "n": 312,
+    "pearson_r": 0.939,
+    "spearman_rho": 0.887,
+    "slope": 17.408,
+    "intercept": -1120.0,
+    "r2": 0.882,
+    "loglog_slope": 1.323,
+    "loglog_slope_ci95": [
+     1.235,
+     1.411
+    ],
+    "gain_median": 14.21,
+    "gain_vs_intensity_rho": 0.479
+   },
+   "restored_vs_high_snr": {
+    "n": 312,
+    "pearson_r": 0.958,
+    "spearman_rho": 0.942,
+    "slope": 10.723,
+    "intercept": -784.9,
+    "r2": 0.917,
+    "loglog_slope": 1.306,
+    "loglog_slope_ci95": [
+     1.241,
+     1.371
+    ],
+    "gain_median": 9.257,
+    "gain_vs_intensity_rho": 0.521
+   },
+   "noisy_vs_restored": {
+    "n": 312,
+    "pearson_r": 0.973,
+    "spearman_rho": 0.921,
+    "slope": 1.61,
+    "intercept": -27.0,
+    "r2": 0.946,
+    "loglog_slope": 1.03,
+    "loglog_slope_ci95": [
+     0.994,
+     1.065
+    ],
+    "gain_median": 1.549,
+    "gain_vs_intensity_rho": 0.142
+   }
+  }
+ }
+}

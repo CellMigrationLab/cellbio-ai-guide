@@ -34,3 +34,4 @@ e1d886a0-209_DAPI_fake_image_by_pix2pix.tif,field209_pix2pix_predicted_dapi.tif,
 764caf77-209_HUVEC_mask_from_pix2pix_images.tif,field209_pix2pix_pecam1_cellpose_cell_labels.tif,follain2026,"1024 x 1024 px, uint16, 500 objects"
 4ab8a570-209_HUVEC_junctions_cellpose_from_pix2pix.tif,field209_pix2pix_pecam1_cellpose_cell_outlines.tif,follain2026,"1024 x 1024 px, uint16"
 d65d3989-209_HUVEC_nuclei_prediction_after_pix2pix.tif,field209_pix2pix_dapi_stardist_nuclei_labels.tif,follain2026;stardist2018;zerocostdl4mic2021,"1024 x 1024 px, int32, 437 objects"
+13f9199a-cell_migration_high_and_low_-_Position_2_-_1_XY1562738054_Z0_GT.tif,care_denoising_highsnr_reference.tif,authors_unpublished;care2018,"1024 x 1024 px, uint16"
