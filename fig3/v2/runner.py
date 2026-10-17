@@ -9,11 +9,12 @@ RUN_DIR (fig3/v2/runs/<scenario_id>/ or fig3/v2/runs_preflight/<scenario_id>/) m
                     pipeline_run.py (paths edited only; diff in EDITS.md)
   packages.txt (optional): packages the reply asked to install, one pip requirement per line (recorded as given)
 Per field it writes execution_fF.json (command, exit code, timeout, runtime, status), run_fF.log, and on success
-labels_fF.tif and measurements_fF.csv. Status: ok | crashed | timeout | no_output | install_failed. A script that
+labels_fF.tif.gz (the label image as written, gzip-compressed) and measurements_fF.csv. Status: ok | crashed | timeout | no_output | install_failed. A script that
 exits non-zero or times out is never 'ok', even if it wrote a file.
 """
 from __future__ import annotations
 
+import gzip
 import json
 import os
 import shutil
@@ -137,10 +138,14 @@ def run_field(run_dir: Path, field: int) -> dict:
             record["status"] = "no_output"
         else:
             record["status"] = "ok"
-    for name, target in (("labels.tif", f"labels_f{field}.tif"), ("measurements.csv", f"measurements_f{field}.csv")):
+    for name, target in (("labels.tif", f"labels_f{field}.tif.gz"), ("measurements.csv", f"measurements_f{field}.csv")):
         (run_dir / target).unlink(missing_ok=True)
         if record["status"] == "ok" and (work / name).is_file():
-            shutil.copyfile(work / name, run_dir / target)
+            if target.endswith(".gz"):          # the label image as written, gzip-compressed (lossless, ~250x smaller)
+                with (work / name).open("rb") as src, gzip.open(run_dir / target, "wb") as dst:
+                    shutil.copyfileobj(src, dst)
+            else:
+                shutil.copyfile(work / name, run_dir / target)
     (run_dir / f"run_f{field}.log").write_text("\n\n".join(log))
     (run_dir / f"execution_f{field}.json").write_text(json.dumps(record, indent=1))
     return record

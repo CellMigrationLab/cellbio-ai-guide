@@ -1,6 +1,7 @@
 """Operator helper for Figure 3 protocol v2 (fig3/PROTOCOL_V2.md). Implements the protocol; does not change it.
 
 Usage (repository root, PYTHONPATH=., V2_STAGE=preflight|main, SUBJECT_SCRATCHPAD=<operator scratchpad>):
+  python fig3/v2/run_operator.py status                          complete / partial / next scenario (resuming)
   python fig3/v2/run_operator.py prepare SCENARIO_ID             subject folder + framed first message (subject_message.txt)
   python fig3/v2/run_operator.py start SCENARIO_ID               fresh headless subject session, first message
   python fig3/v2/run_operator.py answer SCENARIO_ID TEXT         reply to a follow-up question (answer sheet, verbatim)
@@ -11,7 +12,7 @@ Usage (repository root, PYTHONPATH=., V2_STAGE=preflight|main, SUBJECT_SCRATCHPA
   python fig3/v2/run_operator.py collect SCENARIO_ID             code_as_returned.py / agent_folder/ / direct_answers.json
   python fig3/v2/run_operator.py reject SCENARIO_ID REASON       move a failed attempt aside (never deleted)
 
-Subjects are headless Claude Code sessions (`claude -p --restricted`), each started in its own folder
+Subjects are headless Claude Code sessions (`claude -p --restricted`, model claude-sonnet-5-5), each started in its own folder
 SUBJECT_ROOT/vNNN (run order only, so the name reveals neither condition nor task) with a fresh session ID and only
 the tools in the cli_tools column of rows.csv. A sub-agent cannot be used: it inherits the operator session's project
 instructions (AGENTS.md) and working directory (the repository).
@@ -19,12 +20,15 @@ instructions (AGENTS.md) and working directory (the repository).
 from __future__ import annotations
 
 import csv
+import gzip
+import hashlib
 import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import uuid
 from pathlib import Path
 
@@ -38,7 +42,8 @@ STAGES = {  # stage: (runs folder, rejected-attempts folder, subject folders)
 }
 TRANSCRIPTS = Path("/root/.claude/projects")      # <folder slug>/<session id>.jsonl
 SUBJECT_TMP = Path("/tmp/claude-0")               # <folder slug>/<session id>/scratchpad (the subject's own)
-MODEL = "sonnet"
+MODEL = "claude-sonnet-5-5"                       # full model ID (not an alias), for reproducibility
+FREEZE = V2 / "FREEZE.json"
 CLI_TIMEOUT_S = {"optimise": 6 * 3600}            # per subject turn; chat rows below
 CHAT_TIMEOUT_S = 1800
 MAX_ANSWERS = 3
@@ -155,7 +160,9 @@ def send(scenario_id: str, message: str, kind: str) -> None:
     if kind == "first":
         session = str(uuid.uuid4())
         version = subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip()
-        session_file.write_text(json.dumps({"session_id": session, "cli_version": version, "model_alias": MODEL,
+        if FREEZE.is_file() and version != json.loads(FREEZE.read_text())["cli_version"]:
+            print(f"WARNING: Claude Code CLI {version!r} differs from the frozen one; record a deviation for this run")
+        session_file.write_text(json.dumps({"session_id": session, "cli_version": version, "model_requested": MODEL,
                                             "cli_tools": row_spec(sc["row"])["cli_tools"],
                                             "env_stripped": list(STRIP_ENV)}, indent=1))
     session = json.loads(session_file.read_text())["session_id"]
@@ -253,6 +260,26 @@ def transcript(session: str) -> list[dict]:
 def subject_tmp(session: str) -> Path:
     """The session's own temporary folder (scratchpad, background-task output): same folder slug as its transcript."""
     return SUBJECT_TMP / transcript_path(session).parent.name / session
+
+
+def strip_images(value):
+    """Image payloads (base64) replaced by their SHA-256 and size; everything else unchanged."""
+    if isinstance(value, dict):
+        if value.get("type") == "base64" and isinstance(value.get("data"), str):
+            raw = value["data"].encode()
+            return {**value, "data": None, "sha256_of_base64": hashlib.sha256(raw).hexdigest(), "base64_chars": len(raw)}
+        return {k: strip_images(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [strip_images(v) for v in value]
+    return value
+
+
+def store_transcript(source: Path, target: Path) -> None:
+    """The session transcript kept with the run: every event, gzip-compressed, image payloads replaced by hashes."""
+    events = [json.loads(line) for line in source.read_text().splitlines() if line.strip()]
+    with gzip.open(target, "wt", encoding="utf-8") as handle:
+        for ev in events:
+            handle.write(json.dumps(strip_images(ev), ensure_ascii=False) + "\n")
 
 
 def outside(path_text: str, folder: Path) -> bool:
@@ -368,13 +395,19 @@ def audit(scenario_id: str) -> None:
                             for b in text]
                 text = text if isinstance(text, str) else json.dumps(text)
                 lines.append(f"## tool result\n\n```\n{text[:3000]}\n```\n")
-    target = run_dir / "subject_scratchpad"
+    target = run_dir / "subject_scratchpad.tar.gz"
     tmp = subject_tmp(session)                        # the session's own temporary folder, archived then removed
     if tmp.exists():
         if any(p.is_file() for p in tmp.rglob("*")):
-            shutil.copytree(tmp, target, dirs_exist_ok=True)
+            if target.exists():
+                raise FileExistsError(f"{target} exists and the session folder has files again: check by hand")
+            with tarfile.open(target, "w:gz") as tar:
+                tar.add(tmp, arcname="subject_tmp")
         shutil.rmtree(tmp)
-    archived = sorted(str(p.relative_to(target)) for p in target.rglob("*") if p.is_file()) if target.exists() else []
+    archived = []
+    if target.exists():
+        with tarfile.open(target) as tar:
+            archived = sorted(m.name for m in tar.getmembers() if m.isfile())
     kept = [f for f in sorted(tmp_files) if Path(f).is_file()]
     for f in kept:                                    # /tmp files the subject left behind
         (run_dir / "subject_tmp_files").mkdir(exist_ok=True)
@@ -385,6 +418,7 @@ def audit(scenario_id: str) -> None:
     result = {"session_id": session, "n_tool_calls": len(calls), "flags": flags,
               "notes": sorted(set(notes)), "scratchpad_archived": archived,
               "tmp_files_named": sorted(tmp_files), "tmp_files_archived": kept}
+    store_transcript(transcript_path(session), run_dir / "transcript.jsonl.gz")
     (run_dir / "conversation.md").write_text("\n".join(lines))
     (run_dir / "tool_calls.json").write_text(json.dumps(calls, indent=1))
     (run_dir / "audit.json").write_text(json.dumps(result, indent=1))
@@ -412,7 +446,8 @@ def write_meta(scenario_id: str, notes: str = "") -> None:
             "condition": sc["condition"], "task": sc["task"], "field": sc["field"], "replicate": int(sc["replicate"]),
             "interface": f"Claude Code headless session (claude -p --restricted, {session['cli_version']}), "
                          "fresh per scenario, started in its own folder",
-            "model": models, "model_alias": session["model_alias"], "session_id": session["session_id"],
+            "model": models, "model_requested": session.get("model_requested", session.get("model_alias")),
+            "session_id": session["session_id"],
             "models_billed": sorted({m for t in history for m in (t.get("modelUsage") or {})}),
             "datetime_start": min(stamps), "datetime_end": max(stamps),
             "tools_offered": row_spec(sc["row"])["tools"], "cli_tools": session["cli_tools"],
@@ -530,9 +565,34 @@ def reject(scenario_id: str, reason: str) -> None:
     print("moved to", target)
 
 
+def is_complete(sc: dict, run_dir: Path) -> bool:
+    """A scenario is complete when its last step is done: meta.json (row A; the item table follows) or score.json."""
+    return (run_dir / ("meta.json" if sc["row"] == "advice" else "score.json")).is_file()
+
+
+def status(*_: str) -> None:
+    """Completed, partial and next scenarios of the current stage (for resuming after an interruption)."""
+    runs, attic, _ = stage()
+    done, partial, todo = [], [], []
+    for sc in table("scenarios.csv"):
+        run_dir = runs / sc["scenario_id"]
+        (done if is_complete(sc, run_dir) else partial if run_dir.exists() else todo).append(sc)
+    print(f"stage {os.environ['V2_STAGE']}: {len(done)} complete, {len(partial)} partial, {len(todo)} not started; "
+          f"{len(list(attic.glob('*_attempt*')))} rejected attempts")
+    for sc in partial:
+        files = sorted(p.name for p in (runs / sc["scenario_id"]).iterdir())
+        print(f"PARTIAL {sc['run_order']} {sc['scenario_id']}: {files}")
+    if todo:
+        print(f"NEXT {todo[0]['run_order']} {todo[0]['scenario_id']}")
+    version = subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip()
+    if FREEZE.is_file():
+        frozen = json.loads(FREEZE.read_text())["cli_version"]
+        print(f"CLI {version!r}" + ("" if version == frozen else f" DIFFERS from frozen {frozen!r}: record a deviation"))
+
+
 if __name__ == "__main__":
-    commands = {"prepare": prepare, "start": start, "answer": answer, "turn": turn, "give_dev_files": give_dev_files,
+    commands = {"status": status, "prepare": prepare, "start": start, "answer": answer, "turn": turn, "give_dev_files": give_dev_files,
                 "audit": audit, "meta": write_meta, "collect": collect, "reject": reject}
-    if len(sys.argv) < 3 or sys.argv[1] not in commands:
+    if len(sys.argv) < 2 or sys.argv[1] not in commands or (sys.argv[1] != "status" and len(sys.argv) < 3):
         raise SystemExit(__doc__)
     commands[sys.argv[1]](*sys.argv[2:])

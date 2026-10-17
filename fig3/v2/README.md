@@ -11,7 +11,8 @@ This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2
 | [scenarios.csv](scenarios.csv) | Lists the 72 planned runs in seeded random order. |
 | [answer_sheet.md](answer_sheet.md) | Approved replies to model follow-up questions. |
 | [assets/](assets/) | Field-104 development images and annotations, plus the field-209 test image, prepared by `make_assets.py`. |
-| [run_operator.py](run_operator.py) | Prepares, audits and records each model conversation. |
+| [run_operator.py](run_operator.py) | Prepares, runs (headless subject sessions), audits and records each model conversation. |
+| [FREEZE.json](FREEZE.json) | SHA-256 of every file that defines the protocol, model ID and CLI version; `fig3/tests/test_v2_freeze.py` fails if any changes. |
 | [runner.py](runner.py) | Executes returned code on fields 104 and 209 in clean environments (rows B and C). |
 | [score.py](score.py) | Scores outputs from rows B, C and D. |
 | `runs/`, `runs_rejected/` | Accepted runs and rejected attempts, with reasons. |
@@ -43,6 +44,7 @@ All commands need `V2_STAGE=preflight` (runs in `runs_preflight/`, not used in t
 6. Execute code for rows B and C: `PYTHONPATH=. python fig3/v2/runner.py fig3/v2/<runs folder>/<id>`.
 7. Score: `PYTHONPATH=. python fig3/v2/score.py fig3/v2/<runs folder>/<id>`. Row A uses the item check defined in
    protocol section 5.
-8. Commit records after every ten scenarios.
+8. Commit and push after every scenario, so that an interrupted session loses nothing. To resume in a new session,
+   use [RESUME_PROMPT.md](RESUME_PROMPT.md); `run_operator.py status` lists complete, partial and next scenarios.
 
 Keep the field-209 annotations away from the subject model. Do not alter the generated prompts, answer sheet or scoring rules during the experiment; changes require a documented protocol revision.

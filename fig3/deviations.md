@@ -121,3 +121,14 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   `meta.json` records whether the subject found it (`authors_public_material.found`) and whether the code that was run
   uses it (`in_code_run`); such row B or C runs are marked in the figure. Found by preflight `advice_box1_cancer_r1`
   through task-based searches.
+- **Model ID pinned** (before the freeze, authors' request for reproducibility): subjects are started with the full
+  model ID `claude-sonnet-5-5` instead of the alias `sonnet` (the alias resolved to the same model in all preflight
+  runs, recorded in each `meta.json`). The Claude Code CLI version is recorded in `FREEZE.json` and in each run's
+  `session.json`; a run with a different CLI version is recorded here.
+- **Commits**: after every scenario (authors' request), so that an interrupted session can resume from the last pushed
+  state (`v2/RESUME_PROMPT.md`).
+- **Storage of run records** (before the freeze, to keep 72 runs within a git repository): the session transcript is kept
+  with each run as `transcript.jsonl.gz` (every event; base64 image payloads replaced by their SHA-256 and length;
+  the images are the attachments or files archived with the run); label images written by scripts are stored
+  gzip-compressed with their exact bytes (`labels_fF.tif.gz`); the subject's temporary folder is one
+  `subject_scratchpad.tar.gz`. Preflight records were converted the same way; their scores are unchanged.

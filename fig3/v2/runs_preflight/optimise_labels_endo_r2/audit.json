@@ -13,17 +13,17 @@
   "temporary files in /tmp ['/tmp/x.csv', '/tmp/x.tif'] (recorded, not rerun)"
  ],
  "scratchpad_archived": [
-  "scratchpad/__pycache__/ev.cpython-313.pyc",
-  "scratchpad/ann.png",
-  "scratchpad/ev.py",
-  "scratchpad/grid.py",
-  "scratchpad/lab50.npy",
-  "scratchpad/lab70.npy",
-  "scratchpad/ov70.png",
-  "scratchpad/r2.py",
-  "scratchpad/raw.png",
-  "scratchpad/run1.py",
-  "tasks/bcdgjdhbx.output"
+  "subject_tmp/scratchpad/__pycache__/ev.cpython-313.pyc",
+  "subject_tmp/scratchpad/ann.png",
+  "subject_tmp/scratchpad/ev.py",
+  "subject_tmp/scratchpad/grid.py",
+  "subject_tmp/scratchpad/lab50.npy",
+  "subject_tmp/scratchpad/lab70.npy",
+  "subject_tmp/scratchpad/ov70.png",
+  "subject_tmp/scratchpad/r2.py",
+  "subject_tmp/scratchpad/raw.png",
+  "subject_tmp/scratchpad/run1.py",
+  "subject_tmp/tasks/bcdgjdhbx.output"
  ],
  "tmp_files_named": [
   "/tmp/x.csv",

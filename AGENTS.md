@@ -27,9 +27,11 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 - `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data.
 - `make full` passes: the Figure 1 and 2 source data regenerate from `data/raw` and rebuild both figures byte-identical
   (files it cannot regenerate are listed with the reason).
-- Next step: Figure 3 under **`fig3/PROTOCOL_V2.md`** (the only current plan; earlier plans and the round-2 pilot are
-  in git history): preflight, freeze, 72 runs. A new operator session starts from
-  `fig3/v2/NEW_SESSION_PROMPT.md`. If you run scenarios, never show this repository to the model being tested.
+- Figure 3, protocol v2: preflight done (12 runs, `fig3/v2/runs_preflight/`, not used in the figure); protocol frozen on
+  17 Oct 2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless Claude Code sessions); the 72 main
+  runs go to `fig3/v2/runs/`, one commit per scenario. To resume an interrupted main run, start from
+  `fig3/v2/RESUME_PROMPT.md`. If you run scenarios, never show this repository to the model being tested (subjects
+  are started only by `fig3/v2/run_operator.py start`, never as sub-agents, which would receive this file).
 
 ## Working rules (the same practices Box 1 asks of an LLM)
 - **Never modify `data/raw/`.** Checksums are in `data/manifest.csv`; `make data` verifies them.

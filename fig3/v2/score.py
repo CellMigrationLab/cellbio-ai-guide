@@ -4,7 +4,7 @@ Usage: PYTHONPATH=. python fig3/v2/score.py RUN_DIR      (writes RUN_DIR/score.j
 
 RUN_DIR/meta.json gives "row" and "task". Inputs per row:
   code, optimise : for each field F in (104, 209): execution_fF.json (from runner.py) and, if the run succeeded,
-                   labels_fF.tif and measurements_fF.csv
+                   labels_fF.tif.gz and measurements_fF.csv
   direct         : direct_answers.json, written by the operator from the conversation:
                    {"field": F, "turn1_text": "...", "turn2_text": "...", "turn2_median_area_um2": x | null,
                     "turn2_median_aspect_ratio": y | null, "turn3_json": {...} | null}
@@ -17,16 +17,19 @@ excluded from area and aspect-ratio statistics. The same functions measure the m
 from __future__ import annotations
 
 import csv
+import gzip
+import io
 import json
 import re
 import sys
 from pathlib import Path
 
 import numpy as np
+import tifffile
 from skimage.measure import regionprops
 from skimage.segmentation import clear_border
 
-from common.labels import InvalidLabels, read_labels
+from common.labels import InvalidLabels, validate_labels
 from common.matching import match
 from common.metadata import FOLLAIN_FIELD_SHAPE, FOLLAIN_PX_UM
 from fig3.scoring.tasks import TASKS, reference, score as f1_score_task
@@ -122,7 +125,7 @@ def score_field(run_dir: Path, task: str, field: int) -> dict:
     if execution["status"] != "ok":
         return {"status": execution["status"], "f1": 0.0}           # crashed / timeout / no_output: F1 0, drawn as x
     try:
-        pred = read_labels(run_dir / f"labels_f{field}.tif", expected_shape=FOLLAIN_FIELD_SHAPE, squeeze=True)
+        pred = run_labels(run_dir, field)
     except InvalidLabels as exc:
         return {"status": "invalid_labels", "error": str(exc), "f1": 0.0}
     out = {"status": "ok", **f1_score_task(task, pred, field=field)}
@@ -136,6 +139,19 @@ def score_field(run_dir: Path, task: str, field: int) -> dict:
     out.update(matched_shape_errors(task, pred, field))
     out["measurements_csv"] = check_measurements_csv(run_dir / f"measurements_f{field}.csv", pred)
     return out
+
+
+def run_labels(run_dir: Path, field: int) -> np.ndarray:
+    """The label image a script wrote (runner.py stores it gzip-compressed), validated strictly."""
+    path = run_dir / f"labels_f{field}.tif.gz"
+    if not path.is_file():
+        raise FileNotFoundError(f"label image not found: {path}")
+    with gzip.open(path, "rb") as handle:
+        try:
+            image = tifffile.imread(io.BytesIO(handle.read()))
+        except Exception as exc:                 # not a readable TIFF: the script's output is invalid
+            raise InvalidLabels(f"{path.name}: unreadable TIFF ({exc})") from exc
+    return validate_labels(image, name=path.name, expected_shape=FOLLAIN_FIELD_SHAPE, squeeze=True)
 
 
 # ---------------------------------------------------------------- row D

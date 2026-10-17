@@ -10,18 +10,18 @@
   "Read in the subject's own scratchpad (archived)"
  ],
  "scratchpad_archived": [
-  "scratchpad/ann.png",
-  "scratchpad/err.png",
-  "scratchpad/exp.py",
-  "scratchpad/flat_0.66.tif",
-  "scratchpad/flat_0.66_prob.npy",
-  "scratchpad/flat_1.0.tif",
-  "scratchpad/flat_1.0_prob.npy",
-  "scratchpad/raw.png",
-  "scratchpad/raw_0.66.tif",
-  "scratchpad/raw_0.66_prob.npy",
-  "scratchpad/raw_1.0.tif",
-  "scratchpad/raw_1.0_prob.npy"
+  "subject_tmp/scratchpad/ann.png",
+  "subject_tmp/scratchpad/err.png",
+  "subject_tmp/scratchpad/exp.py",
+  "subject_tmp/scratchpad/flat_0.66.tif",
+  "subject_tmp/scratchpad/flat_0.66_prob.npy",
+  "subject_tmp/scratchpad/flat_1.0.tif",
+  "subject_tmp/scratchpad/flat_1.0_prob.npy",
+  "subject_tmp/scratchpad/raw.png",
+  "subject_tmp/scratchpad/raw_0.66.tif",
+  "subject_tmp/scratchpad/raw_0.66_prob.npy",
+  "subject_tmp/scratchpad/raw_1.0.tif",
+  "subject_tmp/scratchpad/raw_1.0_prob.npy"
  ],
  "tmp_files_named": [],
  "tmp_files_archived": []

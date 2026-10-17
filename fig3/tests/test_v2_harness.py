@@ -59,7 +59,7 @@ class Runner(unittest.TestCase):
         tifffile.imwrite(ref, reference("cancer", 209).astype(np.uint16))
         run = make_run(self.tmp, f"import shutil, sys\nshutil.copyfile({str(ref)!r}, 'labels.tif')\nsys.exit(1)\n")
         self.assertEqual(runner.run_field(run, 209)["status"], "crashed")
-        self.assertFalse((run / "labels_f209.tif").exists())
+        self.assertFalse((run / "labels_f209.tif.gz").exists())
         self.assertEqual(score.score_field(run, "cancer", 209), {"status": "crashed", "f1": 0.0})
 
     def test_no_output_and_timeout(self):
@@ -70,7 +70,7 @@ class Runner(unittest.TestCase):
         try:
             run2 = make_run(self.tmp / "", "import time\nopen('labels.tif', 'w').write('x')\ntime.sleep(30)\n", task="nuclei")
             self.assertEqual(runner.run_field(run2, 104)["status"], "timeout")
-            self.assertFalse((run2 / "labels_f104.tif").exists())
+            self.assertFalse((run2 / "labels_f104.tif.gz").exists())
         finally:
             runner.TIMEOUT_S = old
 
