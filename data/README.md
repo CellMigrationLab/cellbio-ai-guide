@@ -34,12 +34,12 @@ Same file set and naming as field 104 (1022 × 1024 px, 0.6496 µm/px from the T
 `_dapi.tif`, `_pecam1.tif`; manual `_cancer_cells_manual_labels.tif` (163 cells), `_endothelial_nuclei_manual_labels.tif`
 (473 nuclei), `_endothelial_junctions_annotator1.tif` (388 complete cells) and `_annotator2.tif` (345); model outputs
 `_cancer_cells_stardist_custom_labels.tif` (149), `_pix2pix_predicted_{dapi,pecam1}.tif` (1024 × 1024, same one-row offset),
-`_pix2pix_pecam1_cellpose_cell_{labels,outlines}.tif` (500), `_pix2pix_dapi_nuclei_labels.tif` (437). Alignment checked
-visually on 17 Oct 2026. Open points: the annotator-2 file has two non-zero values (65535 and, on 1,293 px, 38052; both
-treated as lines); source key `follain2026` assumed.
+`_pix2pix_pecam1_cellpose_cell_{labels,outlines}.tif` (500), `_pix2pix_dapi_stardist_nuclei_labels.tif` (437; StarDist on the predicted DAPI). Alignment checked
+visually on 17 Oct 2026. Confirmed by the authors (17 Oct 2026): same experiment as field 104 (Follain et al. 2026); the annotator-2 file has two
+non-zero values (65535 and, on 1,293 px, 38052), both are junction lines.
 
 ## Other images
-`care_denoising_{acquired,restored}.tif` (Fig. 1a, 2c), `biosr_er_{lowres_input,rcan_prediction,highres_reference}.tif`
+`care_denoising_{acquired,restored}.tif` (Fig. 1a, 2c; acquired = uint16 `…_Z0_1.tif`, restored = float32 `…_Z0.tif`, confirmed by the authors), `biosr_er_{lowres_input,rcan_prediction,highres_reference}.tif`
 (Fig. 1a, 2e), `hpmec_nuclei_max_projection.tif` (Fig. 1b), `trackmate_capture_tracks.tif` (Fig. 1c). Two TrackMate PDF
 reports were explored for Fig. 1 and are not shown.
 
@@ -62,4 +62,4 @@ annotation (BioSR is compared with its high-resolution acquisition).
 Send files under any name; `python data/add_raw_files.py` copies them unchanged to `raw/` with standard names
 (`field<N>_<role>.tif`, e.g. `field105_brightfield.tif`, `field105_cancer_cells_manual_labels.tif`; or
 `<prefix>_<role>.tif`, e.g. `care_denoising_highsnr_reference.tif`), checks shapes and label types, and updates
-`raw_name_map.csv` and `manifest.csv`. Pending: a ground truth for the CARE example (field 209 received 17 Oct 2026).
+`raw_name_map.csv` and `manifest.csv`. Pending: a high-SNR acquisition of the CARE field as its ground truth (to be named `care_denoising_highsnr_reference.tif`).

@@ -135,7 +135,7 @@ def questions() -> list[Question]:
         Question("5. Denoising (CARE)", "Fig 1a, Fig 2c", [
             Tile(gray(read("care_denoising_acquired.tif")), "image", "Acquired (low SNR)", "0.6337 um/px"),
             Tile(gray(read("care_denoising_restored.tif")), "image", "CARE restored", "model output"),
-            Tile(None, "none", "Ground truth: pending", "requested 17 Oct 2026")]),
+            Tile(None, "none", "Ground truth: pending", "high-SNR acquisition to come")]),
         Question("6. Super-resolution (RCAN, BioSR endoplasmic reticulum)", "Fig 1a, Fig 2e", [
             Tile(gray(read("biosr_er_lowres_input.tif")), "image", "Low-resolution input", ""),
             Tile(gray(read("biosr_er_rcan_prediction.tif")), "image", "RCAN prediction", "model output"),
