@@ -2,14 +2,15 @@
  "session_id": "e87ee74b-7a0c-4d9a-9fa4-25ce888c2151",
  "n_tool_calls": 20,
  "flags": [
-  "Bash refers to paths outside the subject folder ['/root', '/tmp/x.tif', '/tmp/x.csv']: cd /home/user/sessions_v2_preflight/v004; cat > pipeline.py <<'E'\n\"\"\"Segment endothelial cells in a brightfield monolayer and measure area / aspect ratio.\n\nUsage: python pipeline.py <input.tif> <label",
-  "Bash refers to paths outside the subject folder ['/tmp/x.tif', '/tmp/x.csv', '/tmp/x_overlay.png']: cd /home/user/sessions_v2_preflight/v004; rm -f /tmp/x.tif /tmp/x.csv /tmp/x_overlay.png; python pipeline.py image.tif labels.tif measurements.csv 2>&1 | tail -3; python evaluate.py labels.tif annotat"
+  "Bash refers to paths outside the subject folder ['/root']: cd /home/user/sessions_v2_preflight/v004; cat > pipeline.py <<'E'\n\"\"\"Segment endothelial cells in a brightfield monolayer and measure area / aspect ratio.\n\nUsage: python pipeline.py <input.tif> <label"
  ],
  "notes": [
   "Bash in the subject's own scratchpad (archived)",
   "Bash refers to environment paths ['/root/.cellpose/models']",
   "Bash refers to environment paths ['/root/.cellpose/models/cpsam_v2']",
-  "Read in the subject's own scratchpad (archived)"
+  "Read in the subject's own scratchpad (archived)",
+  "temporary files in /tmp ['/tmp/x.csv', '/tmp/x.tif', '/tmp/x_overlay.png'] (recorded, not rerun)",
+  "temporary files in /tmp ['/tmp/x.csv', '/tmp/x.tif'] (recorded, not rerun)"
  ],
  "scratchpad_archived": [
   "scratchpad/__pycache__/ev.cpython-313.pyc",
@@ -23,5 +24,11 @@
   "scratchpad/raw.png",
   "scratchpad/run1.py",
   "tasks/bcdgjdhbx.output"
- ]
+ ],
+ "tmp_files_named": [
+  "/tmp/x.csv",
+  "/tmp/x.tif",
+  "/tmp/x_overlay.png"
+ ],
+ "tmp_files_archived": []
 }

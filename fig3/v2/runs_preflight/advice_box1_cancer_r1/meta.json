@@ -39,6 +39,10 @@
   "I don't have an example image to share in this conversation. I don't have the objective details to hand; the pixel size is 0.65 µm. I don't know."
  ],
  "follow_ups": 1,
+ "authors_public_material": {
+  "found": true,
+  "in_code_run": false
+ },
  "cost_usd": 0.3512,
  "notes": "preflight; subject found the authors' published StarDist model and dataset by web search (task-based queries)"
 }

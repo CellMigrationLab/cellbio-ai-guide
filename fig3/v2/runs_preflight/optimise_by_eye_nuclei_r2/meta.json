@@ -30,6 +30,10 @@
  ],
  "answers_given": [],
  "follow_ups": 0,
+ "authors_public_material": {
+  "found": false,
+  "in_code_run": false
+ },
  "cost_usd": 0.1899,
  "notes": "preflight"
 }

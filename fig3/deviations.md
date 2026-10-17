@@ -106,3 +106,18 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
 - **Answers**: `run_operator.py answer` refuses text that is not a sequence of answer-sheet sentences, verbatim.
 - **Images shown to the subject**: the CLI re-encodes the attached PNG as JPEG at full size (1024 × 1022) before the
   model sees it; coordinates are unchanged.
+
+### Authors' decisions after the preflight (17 Oct 2026; PROTOCOL_V2 sections 3, 5, 6 and 13 updated before the freeze)
+- **Row C, reads decide**: reading or listing anything outside the folder that could carry information is a
+  violation (rerun); the subject's own temporary files in `/tmp` are recorded in `audit.json`
+  (`tmp_files_named`), archived to `subject_tmp_files/` if still present, and not rerun. Preflight
+  `optimise_labels_endo_r2` wrote and deleted test outputs in `/tmp`.
+- **Row B**: the latest complete script is run; later partial edits are not applied (`code_selection.json`).
+  Preflight `code_box1_nuclei_r3`.
+- **Follow-ups**: only explicit questions are answered; conditional offers get no reply. In the preflight the offer in
+  `advice_simple_endo_r2` was answered and the one in `direct_three_turns_endo_f209_r3` was not (the inconsistency that
+  led to the rule).
+- **Authors' public dataset and model** (Zenodo 10572122; research.abo.fi; bioRxiv 10.1101/2024.09.30.615654): allowed;
+  `meta.json` records whether the subject found it (`authors_public_material.found`) and whether the code that was run
+  uses it (`in_code_run`); such row B or C runs are marked in the figure. Found by preflight `advice_box1_cancer_r1`
+  through task-based searches.

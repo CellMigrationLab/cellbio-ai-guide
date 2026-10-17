@@ -32,6 +32,10 @@
  ],
  "answers_given": [],
  "follow_ups": 0,
+ "authors_public_material": {
+  "found": false,
+  "in_code_run": false
+ },
  "cost_usd": 0.0842,
  "notes": "preflight; turn 3 refused to draw"
 }

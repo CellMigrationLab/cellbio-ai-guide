@@ -31,6 +31,10 @@
   "I don't have the objective details to hand; the pixel size is 0.65 µm. 0.65 µm per pixel, from the metadata. I have more fields of the same kind, from the same microscope and settings. Only this channel will be available for the analysis. The cancer cells are not fluorescently labelled."
  ],
  "follow_ups": 1,
+ "authors_public_material": {
+  "found": false,
+  "in_code_run": false
+ },
  "cost_usd": 0.0643,
  "notes": "preflight"
 }

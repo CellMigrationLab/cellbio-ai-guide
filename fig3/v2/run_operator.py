@@ -282,6 +282,15 @@ def shell_paths_outside(command: str, folder: Path) -> list[str]:
     return hits
 
 
+# the authors' public cancer-cell dataset and StarDist model (allowed; recorded per run, PROTOCOL_V2 section 13)
+AUTHORS_PUBLIC = ("research.abo.fi", "10572122", "2024.09.30.615654", "stardistbfcancercell", "stardist_cancercells")
+
+
+def temporary_path(path: str) -> bool:
+    """A file in /tmp that is not another session's folder (the subject's own temporary files: recorded, not rerun)."""
+    return path.startswith("/tmp/") and not path.startswith(str(SUBJECT_TMP) + "/")
+
+
 def environment_path(path: str) -> bool:
     return path.startswith(ENVIRONMENT_PATHS)
 
@@ -294,6 +303,7 @@ def audit(scenario_id: str) -> None:
     own_tmp = [str(subject_tmp(session))]
     operator_scratch = str(scratchpad())
     calls, flags, notes, lines = [], [], [], [f"# {scenario_id}\n"]
+    tmp_files: set[str] = set()
     events = transcript(session)
     refused = {block.get("tool_use_id") for ev in events for block in ((ev.get("message") or {}).get("content") or [])
                if isinstance(block, dict) and block.get("type") == "tool_result"
@@ -319,6 +329,8 @@ def audit(scenario_id: str) -> None:
                 text = json.dumps(inp, ensure_ascii=False).lower()
                 if operator_scratch.lower() in text:
                     flags.append(f"{name} refers to the operator's scratchpad")
+                if any(t in text for t in AUTHORS_PUBLIC):
+                    notes.append(f"{name} refers to the authors' public dataset or model (allowed, recorded)")
                 for term in FORBIDDEN_TERMS:
                     if term in text:
                         flags.append(f"{name} input contains {term!r}")
@@ -326,6 +338,9 @@ def audit(scenario_id: str) -> None:
                     if isinstance(inp.get(key), str):
                         if any(inp[key].startswith(t) for t in own_tmp):
                             notes.append(f"{name} in the subject's own scratchpad (archived)")
+                        elif temporary_path(inp[key]) and name != "Read":
+                            notes.append(f"{name} of a temporary file in /tmp: {inp[key]} (recorded, not rerun)")
+                            tmp_files.add(inp[key])
                         elif outside(inp[key], folder) and environment_path(inp[key]):
                             notes.append(f"{name} of an environment path: {inp[key]}")
                         elif outside(inp[key], folder):
@@ -335,9 +350,13 @@ def audit(scenario_id: str) -> None:
                     outside_paths = [p for p in shell_paths_outside(cmd, folder)
                                      if not any(p.startswith(t) for t in own_tmp)]
                     env_paths = [p for p in outside_paths if environment_path(p)]
-                    bad = [p for p in outside_paths if p not in env_paths]
+                    tmp_paths = [p for p in outside_paths if temporary_path(p)]
+                    bad = [p for p in outside_paths if p not in env_paths and p not in tmp_paths]
                     if env_paths:
                         notes.append(f"Bash refers to environment paths {sorted(set(env_paths))[:5]}")
+                    if tmp_paths:
+                        notes.append(f"temporary files in /tmp {sorted(set(tmp_paths))[:5]} (recorded, not rerun)")
+                        tmp_files.update(tmp_paths)
                     if bad:
                         flags.append(f"Bash refers to paths outside the subject folder {bad[:5]}: {cmd[:200]}")
                     if any(t in cmd for t in own_tmp):
@@ -356,15 +375,28 @@ def audit(scenario_id: str) -> None:
             shutil.copytree(tmp, target, dirs_exist_ok=True)
         shutil.rmtree(tmp)
     archived = sorted(str(p.relative_to(target)) for p in target.rglob("*") if p.is_file()) if target.exists() else []
+    kept = [f for f in sorted(tmp_files) if Path(f).is_file()]
+    for f in kept:                                    # /tmp files the subject left behind
+        (run_dir / "subject_tmp_files").mkdir(exist_ok=True)
+        shutil.copy2(f, run_dir / "subject_tmp_files" / Path(f).name)
     scratch = scratchpad()
     if scratch.exists() and any(scratch.iterdir()):
         flags.append(f"operator scratchpad not empty after the run: {sorted(p.name for p in scratch.iterdir())}")
     result = {"session_id": session, "n_tool_calls": len(calls), "flags": flags,
-              "notes": sorted(set(notes)), "scratchpad_archived": archived}
+              "notes": sorted(set(notes)), "scratchpad_archived": archived,
+              "tmp_files_named": sorted(tmp_files), "tmp_files_archived": kept}
     (run_dir / "conversation.md").write_text("\n".join(lines))
     (run_dir / "tool_calls.json").write_text(json.dumps(calls, indent=1))
     (run_dir / "audit.json").write_text(json.dumps(result, indent=1))
     print(json.dumps({k: result[k] for k in ("n_tool_calls", "flags", "notes", "scratchpad_archived")}, indent=1))
+
+
+def authors_public_use(run_dir: Path, calls: list[dict], history: list[dict]) -> dict:
+    """Did the subject find (tool inputs, replies) or use (code to be run) the authors' public dataset or model?"""
+    hit = lambda text: any(t in text.lower() for t in AUTHORS_PUBLIC)   # noqa: E731
+    code = [run_dir / "code_as_returned.py", *sorted((run_dir / "agent_folder").glob("*.py"))]
+    return {"found": hit(json.dumps([c["input"] for c in calls])) or any(hit(t.get("reply") or "") for t in history),
+            "in_code_run": any(hit(f.read_text(errors="replace")) for f in code if f.is_file())}
 
 
 def write_meta(scenario_id: str, notes: str = "") -> None:
@@ -391,6 +423,7 @@ def write_meta(scenario_id: str, notes: str = "") -> None:
             "messages_sent": [t["sent"] for t in history],
             "answers_given": [t["sent"] for t in history if t["kind"] == "answer"],
             "follow_ups": sum(t["kind"] == "answer" for t in history),
+            "authors_public_material": authors_public_use(run_dir, calls, history),
             "cost_usd": round(sum(t.get("total_cost_usd") or 0 for t in history), 4), "notes": notes}
     (run_dir / "meta.json").write_text(json.dumps(meta, indent=1, ensure_ascii=False))
     print({k: meta[k] for k in ("model", "follow_ups", "code_executed_by_subject", "web_used")})

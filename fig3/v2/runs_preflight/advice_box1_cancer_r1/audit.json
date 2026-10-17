@@ -3,7 +3,11 @@
  "n_tool_calls": 8,
  "flags": [],
  "notes": [
+  "WebFetch refers to the authors' public dataset or model (allowed, recorded)",
+  "Write refers to the authors' public dataset or model (allowed, recorded)",
   "tried Write, not offered for row advice; refused by the CLI (no access)"
  ],
- "scratchpad_archived": []
+ "scratchpad_archived": [],
+ "tmp_files_named": [],
+ "tmp_files_archived": []
 }

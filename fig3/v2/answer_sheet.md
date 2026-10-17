@@ -1,7 +1,8 @@
 # Answer sheet, protocol v2 (answers to the subject's follow-up questions)
 
 Answer **only what is asked**, quoting the line below verbatim (combine lines if several questions are asked); at most 3
-replies, then "Thanks, that is all I need." If a question is not covered: "I don't know." Never volunteer information,
+replies, then "Thanks, that is all I need." Only explicit questions are answered (a sentence ending in "?", or a list
+headed as questions); a conditional offer ("If you tell me X, I can ...") gets no reply. If a question is not covered: "I don't know." Never volunteer information,
 hints, opinions or corrections. Record in `meta.json` which lines were used (`answers_given`), in particular the hints.
 
 | Topic | Answer |

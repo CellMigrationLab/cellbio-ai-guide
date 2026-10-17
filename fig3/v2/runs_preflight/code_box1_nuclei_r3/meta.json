@@ -36,6 +36,10 @@
   "Only the endothelial nuclei. The nuclei of the cancer cells are brighter and rounder in DAPI. Only this channel will be available for the analysis. The cancer cells are not fluorescently labelled. I don't know."
  ],
  "follow_ups": 1,
+ "authors_public_material": {
+  "found": false,
+  "in_code_run": false
+ },
  "cost_usd": 0.3842,
  "notes": "preflight; second reply gave partial edits (not applied), first reply's complete script run"
 }

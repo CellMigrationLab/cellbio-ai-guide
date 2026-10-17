@@ -73,8 +73,11 @@ No statistical tests (3 replicates); every run is shown.
 - **Enforcement**: each session is given only its row's tools (`--tools`, column `cli_tools` of `rows.csv`): A web
   search and fetch; B the same plus Read (to view the attachment); C Read, Write, Edit, Bash, Glob, Grep and web;
   D Read only (no web is possible). `--restricted` ignores user and project settings and confines the file tools to the
-  subject folder. Row C's shell cannot be confined by the CLI: the framing sentence and the audit apply, and any access
-  outside the folder (other than the session's own scratchpad, archived) is a protocol violation → rerun.
+  subject folder. Row C's shell cannot be confined by the CLI: the framing sentence and the audit apply. Reads decide
+  (authors' decision after the preflight): reading or listing anything outside the folder that could carry information
+  (the repository, other subject folders, `/home/user`, data) is a protocol violation → rerun; reading installed
+  software and the shared model cache is allowed; the subject's own temporary files (its session scratchpad, or files
+  it writes and deletes in `/tmp`) are recorded in `audit.json` and archived where they still exist, not rerun.
 - **Audit of every run** (`audit.json`): all tool calls; resolved paths checked with `Path.is_relative_to` against the
   subject folder; shell commands checked for paths outside it; any tool input that names this study, its authors or the repository
   is flagged (→ rerun). Each session has its own scratchpad; anything the subject leaves there is archived with the
@@ -137,7 +140,9 @@ item counts over all 18 runs and every reply are given (supplement and repositor
 **B — code.** 2 conditions × 3 tasks × 3 replicates = **18 runs**. The subject sees image.png (preview of field 104;
 image.tif is named in the prompt as the user's file). If it asks for the image or an annotation **before it has given
 code**, it receives field 104 (image TIFF/PNG, annotation PNG) with the answer-sheet sentence; requests after the code
-are answered "I don't know". The final script is saved as returned. The **scripted runner** (`v2/runner.py`; authors' decision) runs it twice, unchanged except input/output paths (diff stored):
+are answered "I don't know". The final script is saved as returned: the latest complete script (the latest Python
+block naming both `labels.tif` and `measurements.csv`); partial edits sent after it are not applied (recorded per
+run, authors' decision after the preflight). The **scripted runner** (`v2/runner.py`; authors' decision) runs it twice, unchanged except input/output paths (diff stored):
 on field 104 and on field 209, in a fresh per-run environment, installing only packages the reply names, 1 h limit.
 
 **C — optimise.** 2 arms × 3 tasks × 3 replicates = **18 runs**. Working folder with image.tif (field 104), plus
@@ -157,7 +162,9 @@ consistent across two images.
 **Total: 72 subject runs** (+ 72 runner executions: 36 for row B and 36 for row C, each script or pipeline on fields 104 and 209). Run order randomised with a fixed seed; all within 3 days.
 
 ## 6. Answers to follow-up questions (answer sheet v2)
-Answer only what is asked, verbatim, at most 3 replies; "I don't know" otherwise. New or changed lines:
+Answer only what is asked, verbatim, at most 3 replies; "I don't know" otherwise. Only explicit questions are answered
+(a sentence ending in "?", or a list headed as questions); conditional offers ("If you tell me X, I can ...") get no
+reply (authors' decision after the preflight). New or changed lines:
 - Cancer cells: "They are rounded and sit on top of the endothelial monolayer; touching cells should be counted
   individually."
 - Endothelial nuclei: "Only the endothelial nuclei. The nuclei of the cancer cells are brighter and rounder in DAPI."
@@ -236,4 +243,8 @@ affected runs.
   preflight, after a probe showed that sub-agents receive AGENTS.md and the repository as working directory); row D
   is given Read only; row C is confined by framing and audit; the account email and attribution lines in the
   subject's context are accepted and recorded, and web searches naming the study or its authors are flagged.
+- After the preflight: row C reads decide (section 3); row B runs the latest complete script (section 5); only explicit
+  questions are answered (section 6); the authors' public cancer-cell dataset and StarDist model (Zenodo 10572122,
+  found by a preflight subject through ordinary searches) may be used; each run records whether the subject found or
+  used it, and a row B or C script that uses it is marked in the figure.
 - Open: annotator names, tool and dates for both fields (needed for the methods, not for the runs).
