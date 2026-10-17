@@ -55,3 +55,9 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 ## Layout conventions
 `figX/code/` scripts are run with the working directory `figX/source_data/` and `PYTHONPATH` set to the repository root
 (the Makefile does this). Builders write to `figX/figure/` (Fig. 3: `fig3/figure/output/`).
+
+## Path placeholders in records
+Transcripts, logs and record-only scripts (`*/code/recovered_inline/`, `fig3/harness/`, superseded code) keep their
+original commands; local folder prefixes were replaced by placeholders: `<work>` and `<work2>` (the two working folders;
+`<fig3-work>` = `<work>/fig3`), `<uploads>` (the raw files, now `data/raw/` under the names in `data/raw_name_map.csv`),
+`<tasks>`, `<transcript>`, `<transcript2>` (session records, not included).

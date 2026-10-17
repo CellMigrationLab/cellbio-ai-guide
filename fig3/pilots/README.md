@@ -1,8 +1,10 @@
-# Pilots with Box 1 draft v3 (17 Oct 2026; not in the figure)
+# Figure 3 pilot runs with Box 1 draft v3
 
-Tests of Box 1 draft v3 (file removed by the authors; the exact text used is in each pilot's prompt), filled in by `make_prompts.py`, before the planned round in
-the chat apps (an earlier plan, removed; see git history).
-- `runs/advice_{generic,box1}v3_*`: advice; generic = first sentence only ("… Help me choose an analysis approach.").
-- `runs/code_box1v3_*`: code; turn 1 script in `artifacts/`; after the models' questions were answered
-  (`answer_sheet_pilot.md`) they returned revised scripts (see `conversation.md`). Scores to be added.
-Follow-up questions were answered only from the answer sheet; the full exchange is in each `conversation.md`.
+These runs, made on 17 October 2026, were exploratory and are **not included in the figure**. They tested Box 1 draft v3 (the exact text is in each run's prompt; the draft file was removed), with task-specific prompts assembled by [make_prompts.py](make_prompts.py).
+
+- `runs/advice_{generic,box1}v3_*`: advice requests; the generic condition used only the first sentence.
+- `runs/code_box1v3_*`: code-generation requests. Initial scripts are stored in `artifacts/`; revised scripts, after the model asked follow-up questions, are recorded in `conversation.md`.
+
+Answers to follow-up questions came only from [answer_sheet_pilot.md](answer_sheet_pilot.md). The full exchanges are retained in each `conversation.md`. Scores had not been added when this README was written.
+
+An earlier plan to run these prompts in chat apps was dropped. The current design is [protocol v2](../PROTOCOL_V2.md).
