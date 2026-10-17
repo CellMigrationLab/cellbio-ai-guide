@@ -17,7 +17,7 @@ measure the shape (area and aspect ratio)** of three object types of increasing 
 
 | Row | Use | Compared | Shown in the figure |
 |---|---|---|---|
-| A | Ask for advice | simple prompt vs Box 1 prompt | one reply per condition (chosen by a fixed rule), with every named tool, function and parameter marked current / outdated / does not exist; counts of such items over all runs |
+| A | Ask for advice | simple prompt vs Box 1 prompt | one illustrative reply per condition (chosen by the authors after the runs, stated as illustrative), with every named tool, function and parameter marked current / outdated / does not exist; counts of such items over all runs |
 | B | Ask for code (the model writes, a separate runner runs) | simple prompt vs Box 1 prompt | the score of every script on field 104 (development) and field 209 (test), all tasks; crashed scripts as ×; one code excerpt (fixed rule) |
 | C | Let an agent write, run and optimise on field 104 | by eye vs with labels (Box 1 in both) | score of every frozen pipeline re-run by the runner on field 104 and field 209, all tasks; the score the agent reported vs ours |
 | D | Ask for the answer directly | count → size and shape → ellipses drawn, count and shape from the drawing (one conversation per image), on field 104 and field 209 | stated vs manual count, stated vs measured size and shape, on both fields, one drawing (fixed rule) |
@@ -122,13 +122,13 @@ No statistical tests (3 replicates); every run is shown.
 function, parameter and installation step in the reply is checked against the installed version or its current
 documentation and classified: *current* / *outdated or renamed* / *does not exist* / *not possible in the stated setup*
 (e.g. needs a GPU, a second channel); checks recorded per item with the source. The displayed example per condition
-is the replicate of the **cancer-cell** task with the median number of non-current items (ties: lowest replicate).
+is chosen by the authors after the runs as the most useful illustration; the legend says it is illustrative, and the
+item counts over all 18 runs and every reply are given (supplement and repository).
 
 **B — code.** 2 conditions × 3 tasks × 3 replicates = **18 runs**. The subject sees image.png (preview of field 104;
 image.tif is named in the prompt as the user's file). If it asks for the image or an annotation **before it has given
 code**, it receives field 104 (image TIFF/PNG, annotation PNG) with the answer-sheet sentence; requests after the code
-are answered "I don't know". The final script is saved as returned. The **runner** (a separate sub-agent with a fixed
-checklist, or the scripted runner, see open point 2) runs it twice, unchanged except input/output paths (diff stored):
+are answered "I don't know". The final script is saved as returned. The **scripted runner** (`v2/runner.py`; authors' decision) runs it twice, unchanged except input/output paths (diff stored):
 on field 104 and on field 209, in a fresh per-run environment, installing only packages the reply names, 1 h limit.
 
 **C — optimise.** 2 arms × 3 tasks × 3 replicates = **18 runs**. Working folder with image.tif (field 104), plus
@@ -179,8 +179,8 @@ integer-valued, within uint16/uint32 range; otherwise status `invalid_labels` (s
 or times out is `crashed` even if it wrote a file (that file may be scored only as a labelled secondary diagnostic).
 
 ## 8. Figure layout (fixed before the runs)
-- Row A: two reply excerpts (simple, Box 1) for cancer cells with items colour-coded; bar or table of item classes
-  over all 18 runs.
+- Row A: two reply excerpts (simple, Box 1), chosen after the runs as illustrations, with items colour-coded; bar or
+  table of item classes over all 18 runs.
 - Row B: per task, two columns of dots per condition (field 104, field 209), 3 runs each, × for crashes; one code
   excerpt: the Box 1 cancer-cell script with the median field-209 F1 among those that ran.
 - Row C: per task, F1 per run on field 104 and field 209 for by eye vs with labels; marker for the agent's own claim.
@@ -216,10 +216,8 @@ affected runs.
 - Code-audit P0 items and inexpensive P1 items for Figs. 1–2, keeping `make check` and `make full` green and
   documenting any number that changes.
 
-## 13. Open points for the authors
-1. Row A displayed task: cancer cells (proposed) or another.
-2. Row B runner: a runner **agent** with a fixed checklist (closer to "another agent runs it", as proposed) or a
-   **scripted** runner (deterministic). Proposed: scripted runner; the agent alternative adds variability without
-   adding information, because the runner may not edit code anyway.
-3. Row D image: full field (proposed; counts are about the whole image) or a fixed crop (smaller JSON for 473 nuclei).
-4. Annotator names, tool and dates for both fields (for the methods).
+## 13. Decisions (authors, 17 Oct 2026) and open items
+- Row A example: chosen after the runs, as an illustration (not by a rule); all replies are available.
+- Runner for rows B and C: scripted runner.
+- Row D: full field.
+- Open: annotator names, tool and dates for both fields (needed for the methods, not for the runs).
