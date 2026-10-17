@@ -45,3 +45,18 @@
 - Endothelial cells: objects touching the image border are removed from reference and prediction; reference cells come
   from annotator 1's junction lines (`lines_to_cells`, slivers < 150 px removed).
 - Code that crashed or wrote no label image: F1 0, drawn as ×.
+
+## Round 2 (Claude side; operator: Claude Code, 17 Oct 2026 onwards)
+Operator conventions applied to every Claude scenario, decided before or at the first scenario and not changed after:
+- Subjects are fresh Claude Code sub-agents (general-purpose, `sonnet` = claude-sonnet-5-5), started from a neutral
+  working directory `/home/user/sessions/sNNN` (named by run order only). The harness adds its own reminder that the
+  reply is delivered with `SubagentHandback`; it is visible in every `conversation.md`.
+- Isolation is checked, not enforced: a hook confining sub-agents to their folder was blocked by the session's
+  permission policy, so `run_operator.py audit` lists every tool call of the subject and flags any tool or path outside
+  the row's allowance. A flagged access to the repository or another scenario means the scenario is rerun.
+- Code rows: Claude cannot display a TIFF, so the subject's folder holds `image.tif` (the user's file) and the PNG
+  preview `image.png`, and the framing names `image.png` as the viewable attachment (OPERATOR.md section 3 fallback).
+- Advice rows send no image. A request to send the image or a crop is not covered for this row by the answer sheet, so
+  it is answered "I don't know". The image-size line is quoted verbatim even though it mentions the PNG preview
+  (first seen in `claude_advice_generic_nuclei_r3`).
+- A conversation is closed without a further message when the subject's only remaining request is one already answered.
