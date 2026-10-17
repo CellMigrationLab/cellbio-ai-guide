@@ -31,7 +31,7 @@ Two checks, both run in a temporary copy:
 | `fig1/` | Figure 1: builder, the exact source data it draws, processing and scoring scripts, legend |
 | `fig2/` | Figure 2: as above, including SQUIRREL (NanoPyx) for panel e |
 | `fig3/` | Figure 3. Plan `PROTOCOL_V2.md` and its harness `v2/`; the round-1 draft split by use (`advice/`, `code/`, `optimise/`, `direct_answers/`) with `figure/`, `scoring/`, `harness/`, `pilots/`; earlier rounds in `superseded/` |
-| `box1/` | Box 1: the final version (used by protocol v2) and earlier versions (v2 used in the round-1 draft, draft v3) |
+| `box1/` | Box 1, final version (used by protocol v2); earlier versions are in the prompts of the runs that used them and in git history |
 | `tools/` | porting and checking tools (how this repository was assembled; `check_all.py` fast check, `check_full.py` full check, `svg_to_pdf.py`) |
 | `AGENTS.md` | purpose, status and working rules for anyone (human or AI) working in this repository |
 

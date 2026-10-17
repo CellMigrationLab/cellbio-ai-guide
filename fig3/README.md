@@ -15,7 +15,7 @@ runs per condition unless stated. Scores: object F1 at IoU ≥ 0.5 (`scoring/tas
 | Folder | Row | Before → after | What is stored |
 |---|---|---|---|
 | `advice/` | a | advice from memory → after reading the documentation | 4 runs (cancer, endothelial); our implementation of each piece of advice (`advice/code/advise_impl.py`, not shown); the `cyto3` silent-fallback test |
-| `code/` | b1, b2 | generic request → Box 1 (v2, `box1/box1_v2_used_in_figure3.md`); Fiji macro and Python | 36 runs: code as returned and as run, run log, label image, score |
+| `code/` | b1, b2 | generic request → Box 1 v2 (exact text in each run's `prompt.md`); Fiji macro and Python | 36 runs: code as returned and as run, run log, label image, score |
 | `optimise/` | c | agent judging by eye → agent scored against annotation of the left half, frozen, run on the held-out right half | 6 runs (full agent transcripts, every file they wrote), held-out split, frozen-pipeline outputs, `dev_rescored.json` |
 | `direct_answers/` | d | "How many … ?" → "Draw around every … and count them" | 18 runs; rasterised outlines and scores; counts as stated |
 

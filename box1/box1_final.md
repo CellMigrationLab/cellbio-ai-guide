@@ -1,6 +1,6 @@
 # Box 1 (final; used by Figure 3 protocol v2): reusable prompt for LLM-assisted image analysis
 
-Draft v3 (`box1_draft_v3.md`) plus four edits from the pilots, marked ➕ here (remove the marks in the manuscript):
+Draft v3 plus four edits from the pilots, marked ➕ here (remove the marks in the manuscript):
 software/version slot; a test the user can run and its failure criterion; work only in a given folder; masks behind any
 count. Filled-in prompts used in the round-2 pilot: `fig3/superseded/round2_pilot/prompts/`; protocol v2 fills it as in `fig3/PROTOCOL_V2.md`, section 4.
 
