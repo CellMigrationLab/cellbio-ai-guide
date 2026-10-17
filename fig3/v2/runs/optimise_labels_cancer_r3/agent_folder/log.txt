@@ -1,0 +1,6 @@
+v1: flat-field (gaussian sigma 50 px) + 1-99 percentile norm; cpsam_v2 default diameter (no rescale), flow 0.4, cellprob 0; filter area 100-700 um2, solidity>=0.85.
+    image.tif vs annotation: 179 pred, recall 0.944, precision 0.654, F1@0.5 0.772 (FPs = endothelial cells / debris).
+v2: added texture filter (object SD of flat-fielded intensity / robust bg SD >= 2.5; TPs >=3.1, FP median 1.3) and solidity>=0.90.
+    133 pred, P 0.880, R 0.944, F1 0.911, mean IoU 0.824, area median err +1%, aspect median abs err 0.056.
+v3 (rejected): per-object opening r=3 px. F1 0.903, no gain; reverted.
+Not tried: cellprob/flow threshold sweeps, diameter rescaling, fine-tuning (single image; overfitting risk).

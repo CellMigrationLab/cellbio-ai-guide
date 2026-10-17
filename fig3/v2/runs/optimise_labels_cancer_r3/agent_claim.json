@@ -1,0 +1,3 @@
+{"field": 104, "f1_iou_0.5": 0.911, "count": 133,
+ "scope": "agent's own evaluation against annotation.tif (field 104)",
+ "source": "final reply of turn 1 and log.txt (copied by the operator, numbers as stated)"}
