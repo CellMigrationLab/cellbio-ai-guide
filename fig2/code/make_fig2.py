@@ -510,6 +510,7 @@ GAPR = 10
 SEGX, SEGY, SEGW, SEGH = 240, 40, 240, 260          # troubleshooting window (full-field px), as Fig. 1c step 3
 cA, cB = C["A"], C["B"]
 PS = json.load(open("panels/perturb_scores.json"))
+PSF = json.load(open("panels/perturb_scores_fields.json"))   # F1 per variant on fields 104 and 209 and their mean
 
 
 def f1bar(x, y, w, v, lbl=None, colr=None):
@@ -546,20 +547,24 @@ TH = TW * SEGH / SEGW
 R1 = round(66 + 64 + TH + 26 + 14)
 bb = [frame(28, YO, 1784, R1, "a", "When a pre-trained model performs poorly, find the mismatch first", "A")]
 bb.append(key_item(1812 - 330, YO + 42, MODEL, "model") + key_item(1812 - 230, YO + 42, REF, "manual annotation", DASH))
+bb.append(f'<circle cx="{1812 - 640}" cy="{YO + 38}" r="4.5" fill="{INK}"/>' + t(1812 - 630, YO + 43, "field 1", 13.5, fill=BODY)
+          + f'<circle cx="{1812 - 560}" cy="{YO + 38}" r="4.5" fill="#fff" stroke="{INK}" stroke-width="1.4"/>' + t(1812 - 550, YO + 43, "field 2 (F1 per field)", 13.5, fill=BODY))
 ty0 = YO + 66 + 64
 DEFC = "#9aa4b2"                          # default settings: grey baseline bar in every group
 
 
 def minibars(x, y, w, items, hl):
-    g = [t(x, y, "F1", 13.5, "bold", INK)]
-    for i, (lbl, v, is_def) in enumerate(items):
+    """Bars: mean F1 of fields 104 and 209; filled dot = field 104, open dot = field 209."""
+    g = [t(x, y, "F1 (mean of 2 fields)", 13.5, "bold", INK)]
+    for i, (lbl, key, is_def) in enumerate(items):
         yy = y + 22 + i * 37
         g.append(t(x, yy, lbl, 13.5, "bold" if lbl == hl else "normal", INK if lbl == hl else BODY))
-        if v is None:
-            g.append(t(x, yy + 17, "running…", 13, "bold", "#7a8699"))
-            continue
-        g.append(f'<rect x="{x}" y="{yy+6}" width="{w-44}" height="9" rx="3" fill="#e4e8ee"/>'
-                 f'<rect x="{x}" y="{yy+6}" width="{(w-44)*v:.1f}" height="9" rx="3" fill="{DEFC if is_def else F1C}"/>'
+        v, f104, f209 = PSF[key]["mean"], PSF[key]["104"], PSF[key]["209"]
+        L = w - 44
+        g.append(f'<rect x="{x}" y="{yy+6}" width="{L}" height="9" rx="3" fill="#e4e8ee"/>'
+                 f'<rect x="{x}" y="{yy+6}" width="{L*v:.1f}" height="9" rx="3" fill="{DEFC if is_def else F1C}"/>'
+                 f'<circle cx="{x+L*f104:.1f}" cy="{yy+10.5}" r="3.6" fill="{INK}" stroke="#fff" stroke-width="1"/>'
+                 f'<circle cx="{x+L*f209:.1f}" cy="{yy+10.5}" r="3.6" fill="#fff" stroke="{INK}" stroke-width="1.4"/>'
                  + t(x + w - 38, yy + 15, f"{v:.2f}", 13.5, "bold", INK))
     return "".join(g)
 
@@ -580,14 +585,14 @@ def header(x, n, ttl, sub):
 
 D = PS["default"]
 groups = [(1, "Check the normalisation", "tile: forgot to normalise", "nonorm", "forgot to normalise",
-           [("forgot to normalise", PS["nonorm"], False), ("percentile (default)", D, True), ("min–max", PS.get("file_minmax"), False),
-            ("histogram equalisation", PS.get("file_histeq"), False), ("CLAHE", PS.get("file_clahe"), False)]),
+           [("forgot to normalise", "nonorm", False), ("percentile (default)", "default", True), ("min–max", "file_minmax", False),
+            ("histogram equalisation", "file_histeq", False), ("CLAHE", "file_clahe", False)]),
           (2, "Check the object scale", "tile: input downsampled 4×", "down4", "downsampled 4×",
-           [("downsampled 4×", PS["down4"], False), ("downsampled 2×", PS["down2"], False), ("native (default)", D, True),
-            ("upsampled 2×", PS.get("up2"), False)]),
+           [("downsampled 4×", "down4", False), ("downsampled 2×", "down2", False), ("native (default)", "default", True),
+            ("upsampled 2×", "up2", False)]),
           (3, "Check the post-processing", "tile: low-contrast objects removed", "postfilter", "low-contrast objects removed",
-           [("none (default)", D, True), ("stricter probability threshold", PS["cellprob2"], False), ("looser flow threshold", PS.get("flow0.8"), False),
-            ("low-contrast objects removed", PS["postfilter"], False)])]
+           [("none (default)", "default", True), ("stricter probability threshold", "cellprob2", False), ("looser flow threshold", "flow0.8", False),
+            ("low-contrast objects removed", "postfilter", False)])]
 x = 42
 for n, ttl, sub, key, hl, items in groups:
     if n > 1:

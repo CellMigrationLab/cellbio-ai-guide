@@ -19,7 +19,7 @@ python ../code/squirrel_run.py        # NanoPyx environment (environment/require
 ## Panels, scripts and source data
 | Panel | What | Script(s) in `code/` | Files in `source_data/` |
 |---|---|---|---|
-| a | Cellpose-SAM on brightfield, one setting changed at a time (normalisation, scale, thresholds, post-filter) | `norm_inputs.py` (normalised inputs), `cellpose_perturb.py` (Cellpose 4.2.1.1 runs, CPU), `postfilter.py`, `errors.py` → `score_perturb.py` (F1), `export_window.py` + recovered `data_ts_cp_.sh` (tile outlines) | `panels/cp_*.tif` (labels per variant), `panels/perturb_scores.json`, `panels/error_summary.json`, `panels/ts_cp_*.json`, `from_fig1_panel_c/B_rep_*` (window and reference, from Fig. 1) |
+| a | Cellpose-SAM on brightfield, one setting changed at a time (normalisation, scale, thresholds, post-filter) | `norm_inputs.py` (normalised inputs), `cellpose_perturb.py` (Cellpose 4.2.1.1 runs, CPU), `postfilter.py`, `errors.py` → `score_perturb.py` (F1, field 104), `score_fields.py` (F1 on fields 104 and 209, mean), `export_window.py` + recovered `data_ts_cp_.sh` (tile outlines) | `panels/cp_*.tif` and `panels/field209/cp_*.tif` (labels per variant), `panels/perturb_scores.json`, `panels/perturb_scores_fields.json`, `panels/error_summary.json`, `panels/ts_cp_*.json`, `from_fig1_panel_c/B_rep_*` (window and reference, from Fig. 1) |
 | a | error types (StarDist vs Cellpose) | `errors.py`, `export_errors_window.py`, recovered `data_err_ids_.sh` | `panels/err_*.json`, `panels/err_bf.png` |
 | a | reference agreement between two annotators | `annot_agree.py` | `panels/annot_agree.json`, `panels/pecam_tile.png` |
 | b | decision scheme | (drawn in the builder) | — |
@@ -33,7 +33,8 @@ Inputs that are regenerated rather than stored: `panels/in_{minmax,histeq,clahe}
 Default Cellpose labels are shared with Fig. 1: `../fig1/source_data/full_field_labels/cellpose_sam_labels.tif`.
 
 ## Caveats and notes for auditors
-- One field of view and one annotator for the cancer cells (124 cells); the endothelial reference has two annotators.
+- Panel a: two fields of one experiment (field 104, 124 cancer cells; field 209, 163), one annotator for the cancer
+  cells; the endothelial reference (panel d) has two annotators. Panels b–e use one field or one image each.
 - `panels/al_intensity.json` in this repository contains an extra field `r_pixel` (whole-field pixel correlation) that
   `al_intensity.py` does not write: it was added by a recovered inline command
   (`code/recovered_inline/add_r_pixel_to_al_intensity.sh`), shown briefly and then removed from the figure. It is not
@@ -42,8 +43,11 @@ Default Cellpose labels are shared with Fig. 1: `../fig1/source_data/full_field_
   row) over-weighted horizontal tubules and dropped failed locations silently (2,450 locations, −12.6 nm). Now: reference
   skeleton, minimum spacing 12 px in all directions, exclusions counted (`summary.sampling` in `tubule_width.json`):
   1,301 locations, −9.4 nm, noise floor 11.7 vs 20.4 nm. Tested in `tests/test_tubule_sampling.py`.
-- Panel a on a second field: `analysis/second_field_check.py` (Cellpose-SAM default and the post-filter with the
-  threshold chosen on field 104, applied to field 209): F1 0.40 and 0.81 (`analysis/second_field_check.json`).
+- Panel a on two fields (17 Oct 2026): every variant was re-run on field 209 (`norm_inputs.py`, `cellpose_perturb.py`
+  and `postfilter.py` with `--field 209`; outputs in `panels/field209/`) and scored by `score_fields.py`, which also
+  checks that the field-104 values equal `perturb_scores.json`. The bars show the mean of the two fields, dots each
+  field (`panels/perturb_scores_fields.json`). The post-filter threshold (50) was chosen on field 104 only.
+  `analysis/second_field_check.py` is the first, default/post-filter-only version of this check (same numbers).
 - `panels/squirrel.json` contains the runtime of each SQUIRREL call (`"s"`), which `squirrel_run.py` now prints instead
   of storing (it is not a result and varies between runs); the checks ignore that key.
 - `panels/pecam_annotator{1,2}.json`, `panels/perturb*.log` and some `ts_cp_*.json` variants are intermediate files not drawn
