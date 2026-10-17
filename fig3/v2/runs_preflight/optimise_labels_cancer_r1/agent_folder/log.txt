@@ -1,0 +1,5 @@
+1. Baseline: Cellpose-SAM (cpsam_v2), raw image, percentile 1-99 normalisation, flow 0.4, cellprob 0. 192 objects; recall 122/124 but 70 FP (endothelial cells/debris). F1@0.5 = 0.77.
+2. Tried background (Gaussian sigma 40) subtraction before Cellpose: worse (274 objects, F1 0.61). Rejected. Cellpose 'rescale' with diameter=None gave identical output, so no resizing is used.
+3. Added post-filter: intensity std (background-subtracted) >= 90 and area 80-700 um2. F1 0.91 (137 objects, 18 FP, 5 FN).
+4. Raised min area to 113 um2 (12 um diameter, from stated 15-25 um size, not tuned on data). F1 0.925, 129 objects vs 124 annotated; area median error -4.4%, AR median error +0.007.
+Thresholds in step 3 were chosen by looking at this one image only; further feature gating was rejected as overfitting.
