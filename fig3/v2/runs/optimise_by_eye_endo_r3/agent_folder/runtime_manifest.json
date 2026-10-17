@@ -1,0 +1,8 @@
+{
+  "entry_point": "pipeline.py",
+  "command": "python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
+  "files_needed": ["pipeline.py"],
+  "external_model": "Cellpose 4.2.1 built-in 'cpsam_v2' weights, loaded by default from ~/.cellpose/models/cpsam_v2 (downloaded automatically by Cellpose if missing; needs network once)",
+  "python_packages": ["numpy", "scipy", "scikit-image", "tifffile", "pandas", "cellpose==4.2.*"],
+  "extra_outputs": "<labels stem>_overlay.png (QC overlay: red = kept endothelial, blue = rejected cancer/debris)"
+}
