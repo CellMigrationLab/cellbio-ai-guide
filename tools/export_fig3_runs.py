@@ -12,7 +12,6 @@ Usage: python tools/export_fig3_runs.py SUBAGENT_DIR WORK_ROOT
 """
 import csv
 import json
-import re
 import shutil
 import sys
 from pathlib import Path
@@ -37,6 +36,7 @@ TEXT_SUFFIXES = {".md", ".txt", ".py", ".ijm", ".log", ".json", ".csv", ".sh"}
 
 
 def scrub(text: str) -> str:
+    """Replace local folder prefixes by the placeholders listed in SCRUB."""
     for local, placeholder in SCRUB:
         text = text.replace(local, placeholder)
     return text
@@ -111,6 +111,7 @@ def copy_artifacts(src: Path, dst: Path) -> list[str]:
 
 
 def main(subagent_dir: str, work_root: str) -> None:
+    """Export every run listed in fig3/runs_index.csv."""
     rows = list(csv.DictReader(open(FIG3 / "runs_index.csv")))
     for row in rows:
         transcript = Path(subagent_dir) / f"agent-{row['agent_id']}.jsonl"

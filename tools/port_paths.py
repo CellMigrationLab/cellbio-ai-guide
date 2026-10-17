@@ -33,6 +33,7 @@ def port(path: Path) -> list[str]:
 
 
 def main(files: list[str]) -> None:
+    """Port each file in place and report any absolute path left in it."""
     if not files:
         raise SystemExit(__doc__)
     for name in files:

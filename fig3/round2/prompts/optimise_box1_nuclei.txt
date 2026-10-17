@@ -1,4 +1,4 @@
-I want to count the endothelial nuclei and measure their area from widefield fluorescence images of a DAPI-stained endothelial monolayer (cancer cells sit on top). Help me Help me run and optimise the workflow.
+I want to count the endothelial nuclei and measure their area from widefield fluorescence images of a DAPI-stained endothelial monolayer (cancer cells sit on top). Help me run and optimise the workflow.
 My images are 2D, with axes Y, X, channels 1 (DAPI), data type uint16 (12-bit values), pixel/voxel size 0.65 µm, and objects of interest approximately 13–17 µm in size. I use Python 3.13 with numpy, scipy, scikit-image, tifffile and Cellpose 4.2 on a laptop CPU (no GPU). The output I need is a label image with one integer per endothelial nucleus (0 = background) and a table of nuclear areas in µm². I can provide a manually annotated example (a label image of part of the field).
 Please:
 

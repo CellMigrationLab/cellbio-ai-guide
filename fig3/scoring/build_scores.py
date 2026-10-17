@@ -25,6 +25,7 @@ CRASHED = -1
 
 
 def _labels(run_dir: Path) -> Path:
+    """Label image written by a run."""
     return run_dir / "artifacts" / "labels.tif"
 
 
@@ -40,6 +41,7 @@ def code_run(name: str, task: str) -> tuple[float, int | None]:
 
 
 def code_condition(prefix: str, task: str) -> dict:
+    """F1 and object counts of the three runs of one code condition."""
     runs = [code_run(f"{prefix}_{TASK_DIR_NAME[task]}_r{k}", task) for k in (1, 2, 3)]
     return {"f1": [r[0] for r in runs], "n": [r[1] for r in runs]}
 
@@ -80,6 +82,7 @@ def default_cellpose(task: str) -> float:
 
 
 def build() -> dict:
+    """All Figure 3 scores, per task and row."""
     out = {}
     for task in TASKS:
         out[task] = {"python": {"generic": code_condition("python_generic", task), "box1": code_condition("python_box1", task)},
@@ -93,7 +96,8 @@ def check(scores: dict) -> list[str]:
     fig = json.loads(FIGURE_SCORES.read_text())["tasks"]
     problems = []
 
-    def same(what, a, b):
+    def same(what: str, a: object, b: object) -> None:
+        """Record a difference between a recomputed and a published value."""
         if a != b:
             problems.append(f"{what}: recomputed {a} vs figure {b}")
 
@@ -113,6 +117,7 @@ def check(scores: dict) -> list[str]:
 
 
 def main(argv: list[str]) -> None:
+    """Write the scores, or check them against the figure (exit 1 on any difference)."""
     if len(argv) != 2:
         raise SystemExit(__doc__)
     scores = build()

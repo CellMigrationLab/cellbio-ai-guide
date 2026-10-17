@@ -17,24 +17,27 @@ import numpy as np
 import tifffile
 from skimage.draw import polygon
 
-from fig3.scoring.tasks import reference, score_heldout
+from fig3.scoring.tasks import score_heldout
 
 FIELD_SHAPE = (1022, 1024)
 MANUAL_WHOLE_FIELD = {"nuclei": 441, "cancer": 124, "endo": 382}
 
 
-def rasterise(cells: list[dict]) -> np.ndarray:
-    labels = np.zeros(FIELD_SHAPE, np.int32)
+def rasterise(cells: list[dict]) -> tuple[np.ndarray, int]:
+    """Label image from the model's polygons (later polygons overwrite earlier ones) and the number of invalid outlines."""
+    labels, invalid = np.zeros(FIELD_SHAPE, np.int32), 0
     for k, cell in enumerate(cells, start=1):
-        points = np.asarray(cell["points"], float)
-        if points.ndim != 2 or points.shape[0] < 3:
-            continue  # not a polygon; counted in n_invalid
+        points = np.asarray(cell.get("points", []), float) if isinstance(cell, dict) else np.empty((0, 2))
+        if points.ndim != 2 or points.shape[1] != 2 or points.shape[0] < 3:
+            invalid += 1  # not a polygon
+            continue
         rr, cc = polygon(points[:, 1], points[:, 0], FIELD_SHAPE)
         labels[rr, cc] = k
-    return labels
+    return labels, invalid
 
 
 def score_run(run_dir: Path) -> dict:
+    """Score one run folder according to its row (see module docstring)."""
     meta = json.loads((run_dir / "meta.json").read_text())
     row, task, condition = meta["row"], meta["task"], meta.get("condition", "")
     if task not in MANUAL_WHOLE_FIELD:
@@ -55,16 +58,18 @@ def score_run(run_dir: Path) -> dict:
             stated = int((run_dir / "stated_count.txt").read_text().strip())
             return {"stated_count": stated, "manual_count": manual, "count_error": stated - manual}
         reply = json.loads((run_dir / "reply.json").read_text())
-        labels = rasterise(reply.get("cells", []))
+        labels, invalid = rasterise(reply.get("cells", []))
         s = score_heldout(task, labels)
-        return {"stated_count": reply.get("count"), "n_outlines": len(reply.get("cells", [])), "manual_count": manual,
-                "count_error": (reply.get("count") or 0) - manual, "f1_heldout": s["f1"]}
+        stated = reply.get("count")
+        return {"stated_count": stated, "n_outlines": len(reply.get("cells", [])), "n_invalid_outlines": invalid,
+                "manual_count": manual, "count_error": None if stated is None else stated - manual, "f1_heldout": s["f1"]}
     if row == "advice":
         return {"note": "advice is scored with the rubric (STRATEGY 6.1), not here"}
     raise ValueError(f"Unknown row {row!r}")
 
 
 def main(argv: list[str]) -> None:
+    """Score the run folder given on the command line and write its score.json."""
     if len(argv) != 2:
         raise SystemExit(__doc__)
     run_dir = Path(argv[1])

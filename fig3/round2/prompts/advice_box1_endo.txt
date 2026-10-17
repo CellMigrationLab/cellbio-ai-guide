@@ -1,4 +1,4 @@
-I want to count the endothelial cells and measure their area from brightfield images of a confluent endothelial monolayer (some cancer cells sit on top). Help me Help me choose an analysis approach.
+I want to count the endothelial cells and measure their area from brightfield images of a confluent endothelial monolayer (some cancer cells sit on top). Help me choose an analysis approach.
 My images are 2D, with axes Y, X, channels 1 (brightfield), data type uint16 (12-bit values), pixel/voxel size 0.65 µm, and objects of interest approximately 25–50 µm in size. I use Python 3 and a current Fiji on a laptop CPU (no GPU). The output I need is a label image with one integer per endothelial cell (0 = background) and a table of endothelial-cell areas in µm². I can provide a manually annotated example (a label image of part of the field).
 Please:
 

@@ -9,12 +9,13 @@ Usage: python tools/recover_inline.py OUT_DIR TRANSCRIPT.jsonl [TRANSCRIPT ...] 
 import json
 import re
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 WRITE_HINT = re.compile(r"(\.save\(|imwrite\(|json\.dump\(|open\([^)]*['\"]w['\"]|savefig\(|>\s*\S)")
 
 
-def commands(transcripts: list[str]):
+def commands(transcripts: list[str]) -> Iterator[tuple[str, str]]:
     """Yield (timestamp, command text) for every shell tool call in the transcripts, in order."""
     for transcript in transcripts:
         for line in open(transcript):
@@ -30,6 +31,7 @@ def commands(transcripts: list[str]):
 
 
 def main(argv: list[str]) -> None:
+    """Find, for each target, the last shell command that wrote it, and save it verbatim."""
     if "--" not in argv or len(argv) < 5:
         raise SystemExit(__doc__)
     split = argv.index("--")

@@ -27,20 +27,24 @@ FIG2_KNOWN_EXTRA_KEYS = {("data/al_intensity.json", "r_pixel")}  # added by a re
 
 
 def md5(path: Path) -> str:
+    """MD5 of a file (used only to compare rebuilt and committed files)."""
     return hashlib.md5(path.read_bytes()).hexdigest()
 
 
 def run(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess:
+    """Run a command with the repository root on PYTHONPATH and capture its output."""
     env = dict(os.environ, PYTHONPATH=str(REPO))
     return subprocess.run(cmd, cwd=cwd, env=env, capture_output=True, text=True)
 
 
 def report(name: str, ok: bool, detail: str = "") -> bool:
+    """Print one PASS/FAIL line and return ok."""
     print(f"{'PASS' if ok else 'FAIL'}  {name}{('  ' + detail) if detail else ''}", flush=True)
     return ok
 
 
-def strip_known_extras(rel: str, data):
+def strip_known_extras(rel: str, data: object) -> object:
+    """Remove documented extra keys (FIG2_KNOWN_EXTRA_KEYS) before comparing JSON outputs."""
     for path, key in FIG2_KNOWN_EXTRA_KEYS:
         if rel == path and isinstance(data, dict):
             for value in data.values():
@@ -50,6 +54,7 @@ def strip_known_extras(rel: str, data):
 
 
 def check_figures(tmp: Path) -> list[bool]:
+    """Rebuild each figure in a temporary copy and compare its SVG with the committed one."""
     results = []
     for folder, (builder, output) in FIGURES.items():
         work = tmp / folder
@@ -61,6 +66,7 @@ def check_figures(tmp: Path) -> list[bool]:
 
 
 def check_fig1_scores(tmp: Path) -> bool:
+    """Recompute the Fig 1c F1 scores and compare with the file the figure reads."""
     proc = run([sys.executable, "../code/f1_scores.py"], cwd=tmp / "fig1" / "source_data")
     if proc.returncode:
         return report("fig1: F1 scores", False, proc.stderr[-300:])
@@ -70,6 +76,7 @@ def check_fig1_scores(tmp: Path) -> bool:
 
 
 def check_fig2_scores(tmp: Path, with_squirrel: bool) -> list[bool]:
+    """Re-run the Fig 2 scoring scripts (in their required order) and compare every JSON output."""
     results, src = [], tmp / "fig2" / "source_data"
     scripts = FIG2_SCORING_ORDER + (["squirrel_run"] if with_squirrel else [])
     for script in scripts:
@@ -86,9 +93,10 @@ def check_fig2_scores(tmp: Path, with_squirrel: bool) -> list[bool]:
 
 
 def main(with_squirrel: bool) -> None:
+    """Run all checks; exit 1 if any fails."""
     results = []
-    proc = run([sys.executable, "-m", "unittest", "discover", "-s", "common", "-t", "."], cwd=REPO)
-    results.append(report("unit tests (common/)", proc.returncode == 0, proc.stderr.strip().splitlines()[-1]))
+    proc = run([sys.executable, "-m", "unittest", "discover", "-s", ".", "-p", "test_*.py", "-t", "."], cwd=REPO)
+    results.append(report("unit tests (common/, fig3/)", proc.returncode == 0, proc.stderr.strip().splitlines()[-1]))
     proc = run([sys.executable, "data/make_manifest.py", "--verify"], cwd=REPO)
     results.append(report("raw data checksums", proc.returncode == 0, proc.stdout.strip().splitlines()[-1]))
     with tempfile.TemporaryDirectory() as tmp_name:

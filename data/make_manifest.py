@@ -16,6 +16,7 @@ THIRD_PARTY_SOURCES = {"deepbacs_ecoli_growth_stage": "deepbacs_growth_stage;dee
 
 
 def sha256(path: Path) -> str:
+    """SHA-256 hex digest of a file, read in 1 MiB blocks."""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for block in iter(lambda: handle.read(1 << 20), b""):
@@ -24,6 +25,7 @@ def sha256(path: Path) -> str:
 
 
 def source_of(rel: Path, names: dict) -> str:
+    """Source key(s) of a raw file (path relative to data/raw); raises if the file is not documented."""
     if rel.parts[0] == "third_party":
         return THIRD_PARTY_SOURCES[rel.parts[1]]
     if rel.name not in names:
@@ -32,6 +34,7 @@ def source_of(rel: Path, names: dict) -> str:
 
 
 def main(verify: bool) -> None:
+    """Write the manifest, or verify every file against it."""
     names = {r["repo_name"]: r["source_key"] for r in csv.DictReader(open(DATA / "raw_name_map.csv"))}
     files = sorted(p for p in RAW.rglob("*") if p.is_file())
     if verify:

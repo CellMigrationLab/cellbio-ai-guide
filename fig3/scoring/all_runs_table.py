@@ -17,10 +17,12 @@ TASK_WORDS = {"nuclei": "nuclei", "cancer": "cancer", "endothelial": "endo"}
 
 
 def task_of(run_id: str) -> str | None:
+    """Task scored for a run, inferred from its id (None for runs without a task, e.g. sycophancy tests)."""
     return next((task for word, task in TASK_WORDS.items() if word in run_id), None)
 
 
 def main() -> None:
+    """Write fig3/all_runs.csv."""
     rows = []
     for entry in csv.DictReader(open(FIG3 / "runs_index.csv")):
         run_dir = FIG3 / entry["section"] / "runs" / entry["run_id"]

@@ -24,6 +24,7 @@ def _is_data_file(path: str) -> bool:
 
 
 def main(argv: list[str]) -> None:
+    """Run the script given in argv with an audit hook and write the list of files it opened for reading."""
     if len(argv) < 3:
         raise SystemExit(__doc__)
     output, script, args = argv[1], argv[2], argv[3:]
@@ -31,6 +32,7 @@ def main(argv: list[str]) -> None:
     script_abs = os.path.abspath(script)
 
     def hook(event: str, event_args: tuple) -> None:
+        """Audit hook: record files opened read-only (ignores writes and non-path arguments)."""
         if event != "open" or not isinstance(event_args[0], (str, bytes, os.PathLike)):
             return
         path = os.fsdecode(event_args[0])

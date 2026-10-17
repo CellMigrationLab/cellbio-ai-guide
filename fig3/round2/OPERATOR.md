@@ -20,7 +20,8 @@ mode, API, sub-agent), the date and time, and whether web search was available a
 ## 3. Per row
 **advice** — send the prompt; no attachment. Save the conversation. Nothing is run.
 
-**code_python / code_fiji** — attach `assets/<task>_image.tif` (if refused, `<task>_image.png`, and record it). When the
+**code_python / code_fiji** — attach a copy of `assets/<task>_image.tif` named `image.tif` (the prompt refers to
+this name; if refused, `<task>_image.png` named `image.png`, and record it). When the
 conversation ends:
 1. Save the final code exactly as returned (`code_as_returned.py` / `.ijm`).
 2. Copy it to `code_run.*`, changing **only** input/output paths so it reads `image.tif` (a copy of
@@ -61,7 +62,7 @@ Commit after every 10 scenarios with the message `round2: <assistant> scenarios 
 ## 6. Fixed framing for sub-agent or API subjects
 Use this text, and nothing else, before the prompt (fill the bracket from `subject_tools`):
 ```text
-You are an AI assistant chatting with a user. [Tools: web search is available. | The user attached a file, which you can view: <path>. | You can run shell commands in the folder <path> only.] Reply to the user as you normally would.
+You are an AI assistant chatting with a user. [Tools: web search is available (WebSearch and WebFetch; load them with ToolSearch if they are not listed). | The user attached a file, which you can view: <path>. | You can run shell commands in the folder <path> only.] Reply to the user as you normally would.
 ```
 
 ## 7. Spot-check and audit

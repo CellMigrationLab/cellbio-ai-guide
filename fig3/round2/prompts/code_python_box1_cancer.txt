@@ -1,4 +1,4 @@
-I want to count the cancer cells attached to an endothelial monolayer and measure their area from brightfield images of cancer cells sitting on top of a confluent endothelial monolayer. Help me Help me write the analysis as a Python script.
+I want to count the cancer cells attached to an endothelial monolayer and measure their area from brightfield images of cancer cells sitting on top of a confluent endothelial monolayer. Help me write the analysis as a Python script.
 My images are 2D, with axes Y, X, channels 1 (brightfield), data type uint16 (12-bit values), pixel/voxel size 0.65 µm, and objects of interest approximately 15–25 µm in size. I use Python 3.13 on a laptop CPU (no GPU). The output I need is a label image with one integer per cancer cell (0 = background; the endothelial cells underneath are not labelled) and a table of cancer-cell areas in µm². I can provide a manually annotated example (a label image of part of the field).
 Please:
 

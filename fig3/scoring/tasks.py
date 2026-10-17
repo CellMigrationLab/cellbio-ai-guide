@@ -1,7 +1,8 @@
 """The three Figure 3 tasks: references and scoring conventions (same rules as the code that produced the figure).
 
 * nuclei      reference: 441 manually annotated endothelial nuclei (DAPI). Predicted objects lying >30 % on annotated
-              cancer cells are ignored, because cancer-cell nuclei are not annotated.
+              cancer cells are ignored, because cancer-cell nuclei are not annotated. This also drops the 17 annotated
+              nuclei lying under cancer cells, so the best achievable F1 is 0.98 (held-out half 0.983).
 * cancer      reference: 124 manually annotated cancer cells (brightfield).
 * endo        reference: endothelial cells from annotator 1's junction lines (lines_to_cells); objects touching the image
               border are removed from reference and prediction.
@@ -48,6 +49,7 @@ def reference(task: str) -> np.ndarray:
 
 @lru_cache(maxsize=None)
 def cancer_mask() -> np.ndarray:
+    """Boolean mask of the annotated cancer cells (used to ignore cancer-cell nuclei)."""
     return reference("cancer") > 0
 
 
@@ -61,6 +63,7 @@ def drop_objects_on_cancer_cells(pred: np.ndarray, mask: np.ndarray) -> np.ndarr
 
 
 def _counts(gt: np.ndarray, pred: np.ndarray) -> dict:
+    """Counts, F1 and median matched area ratio (prediction / reference) for two prepared label images."""
     matched, fn, fp = match(gt, pred, 0.5)
     tp = len(matched)
     out = {"n_pred": int(len(np.unique(pred[pred > 0]))), "n_ref": int(len(np.unique(gt[gt > 0]))),

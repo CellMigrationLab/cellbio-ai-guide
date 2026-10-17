@@ -22,6 +22,7 @@ DEV_OUTPUTS = {  # final development-half label image written by each agent
 
 
 def score_dev(task: str, pred: np.ndarray) -> dict:
+    """Score a prediction on the development (left) half with the same conventions as the held-out scorer."""
     gt = reference(task)[:, :HALF_X].copy()
     pred = np.squeeze(pred).astype(int)[:, :HALF_X]
     if task == "endo":
@@ -32,6 +33,7 @@ def score_dev(task: str, pred: np.ndarray) -> dict:
 
 
 def main() -> None:
+    """Re-score each agent's final development output and write optimise/dev_rescored.json."""
     out = {}
     for task, path in DEV_OUTPUTS.items():
         artifacts = next(parent for parent in path.parents if parent.name == "artifacts")

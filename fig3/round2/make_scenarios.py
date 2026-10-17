@@ -37,16 +37,20 @@ CODE_IO = "The attached image is {file}. Read it from the working directory and 
 
 
 def box1_template() -> str:
+    """Box 1 text from box1/box1_final.md, without the edit marks."""
     text = (ROOT / "box1" / "box1_final.md").read_text()
     return re.search(r"```text\n(.*?)```", text, re.S).group(1).replace("➕", "").strip()
 
 
 def fill_box1(task: str, row: str) -> str:
+    """Box 1 filled in for a task and row; raises if a placeholder is missing or left unfilled."""
     t, box = TASKS[task], box1_template()
+    if "\n\nIf you are allowed to optimise" not in box:
+        raise ValueError("Optimisation paragraph not found in box1_final.md")
     box, optimisation = box.split("\n\nIf you are allowed to optimise")
     replacements = {
         "[biological question or measurement]": t["question"], "[type of microscopy images]": t["images"],
-        "[choose an analysis approach / write the analysis / run or optimise the workflow].": HELP[row],
+        "[choose an analysis approach / write the analysis / run or optimise the workflow].": HELP[row].removeprefix("Help me "),
         "[2D/3D/time series]": "2D", "[e.g. T, Z, C, Y, X]": "Y, X", "[channels]": t["channels"],
         "[dtype]": "uint16 (12-bit values)", "[X µm]": "0.65 µm", "[X–Y µm]": t["size"],
         "[software and version]": SOFTWARE[row], "[hardware]": "a laptop CPU (no GPU)",
@@ -72,6 +76,7 @@ def fill_box1(task: str, row: str) -> str:
 
 
 def generic(task: str, row: str) -> str:
+    """Generic request: the first sentence of Box 1 (row c: the 'run, assess, improve' request)."""
     t = TASKS[task]
     first = f"I want to {t['question']} from {t['images']}."
     if row == "optimise":
@@ -82,6 +87,7 @@ def generic(task: str, row: str) -> str:
 
 
 def direct(task: str, condition: str) -> str:
+    """Row d: count only (generic) or draw outlines and count, with a fixed JSON format (box1)."""
     if condition == "generic":
         return f"How many {TASKS[task]['objects']} are in this image?"
     return (f"Please draw around every {TASKS[task]['one']} in this image and count them. "
@@ -90,6 +96,7 @@ def direct(task: str, condition: str) -> str:
 
 
 def build_prompts() -> dict:
+    """All 30 prompts, keyed by prompt id <row>_<condition>_<task>."""
     prompts = {}
     for task in TASKS:
         for row in ("advice", "code_python", "code_fiji", "optimise"):
@@ -103,12 +110,14 @@ def build_prompts() -> dict:
     return prompts
 
 
-ATTACH = {"advice": "", "code_python": "{t}_image.tif (fallback {t}_image.png)", "code_fiji": "{t}_image.tif (fallback {t}_image.png)",
+ATTACH = {"advice": "", "code_python": "image.tif <- {t}_image.tif (fallback image.png <- {t}_image.png)",
+          "code_fiji": "image.tif <- {t}_image.tif (fallback image.png <- {t}_image.png)",
           "optimise": "", "direct": "{t}_image.png"}
 FOLDER = {"generic": "image.tif <- {t}_image.tif", "box1": "image_left.tif <- {t}_image_left.tif; annotation_left.tif <- {t}_annotation_left.tif"}
 
 
 def main() -> None:
+    """Write the prompt files and scenarios.csv (randomised order, fixed SEED)."""
     prompts = build_prompts()
     (OUT / "prompts").mkdir(parents=True, exist_ok=True)
     for prompt_id, text in prompts.items():
