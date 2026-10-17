@@ -29,6 +29,15 @@ field (Follain et al. 2026, EMBO J; 1022 × 1024 px, 0.649614 µm/px, written 0.
 
 To confirm before release: annotator names, annotation tool and dates (add to this table).
 
+## Second annotated field (field 209, added 17 Oct 2026; test field for Figure 3 round 2)
+Same file set and naming as field 104 (1022 × 1024 px, 0.6496 µm/px from the TIFF metadata): `field209_brightfield.tif`,
+`_dapi.tif`, `_pecam1.tif`; manual `_cancer_cells_manual_labels.tif` (163 cells), `_endothelial_nuclei_manual_labels.tif`
+(473 nuclei), `_endothelial_junctions_annotator1.tif` (388 complete cells) and `_annotator2.tif` (345); model outputs
+`_cancer_cells_stardist_custom_labels.tif` (149), `_pix2pix_predicted_{dapi,pecam1}.tif` (1024 × 1024, same one-row offset),
+`_pix2pix_pecam1_cellpose_cell_{labels,outlines}.tif` (500), `_pix2pix_dapi_nuclei_labels.tif` (437). Alignment checked
+visually on 17 Oct 2026. Open points: the annotator-2 file has two non-zero values (65535 and, on 1,293 px, 38052; both
+treated as lines); source key `follain2026` assumed.
+
 ## Other images
 `care_denoising_{acquired,restored}.tif` (Fig. 1a, 2c), `biosr_er_{lowres_input,rcan_prediction,highres_reference}.tif`
 (Fig. 1a, 2e), `hpmec_nuclei_max_projection.tif` (Fig. 1b), `trackmate_capture_tracks.tif` (Fig. 1c). Two TrackMate PDF
@@ -44,7 +53,8 @@ listed for Cellpose-SAM and NanoPyx.
 `overview.png` (made by `PYTHONPATH=. python data/make_overview.py`) is organised by question (one row each): the
 images (grey bar) and, separately, the annotations or references (green bar), with object counts read from the
 annotation files. Manual annotations exist
-for **one field** (field 104: 124 cancer cells, 382 / 369 endothelial cells by two annotators, 441 endothelial nuclei)
+for **two fields** (field 104: 124 cancer cells, 382 / 369 endothelial cells by two annotators, 441 endothelial nuclei;
+field 209: 163, 388 / 345, 473)
 and for the DeepBacs examples (dataset ground truth). The CARE, BioSR, HPMEC and TrackMate images have no manual
 annotation (BioSR is compared with its high-resolution acquisition).
 
@@ -52,5 +62,4 @@ annotation (BioSR is compared with its high-resolution acquisition).
 Send files under any name; `python data/add_raw_files.py` copies them unchanged to `raw/` with standard names
 (`field<N>_<role>.tif`, e.g. `field105_brightfield.tif`, `field105_cancer_cells_manual_labels.tif`; or
 `<prefix>_<role>.tif`, e.g. `care_denoising_highsnr_reference.tif`), checks shapes and label types, and updates
-`raw_name_map.csv` and `manifest.csv`. Pending (requested 17 Oct 2026): one more annotated field (Fig 3 test image) and
-a ground truth for the CARE example.
+`raw_name_map.csv` and `manifest.csv`. Pending: a ground truth for the CARE example (field 209 received 17 Oct 2026).

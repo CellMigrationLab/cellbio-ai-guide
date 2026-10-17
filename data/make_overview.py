@@ -89,13 +89,36 @@ def n_objects(labels: np.ndarray) -> int:
     return int(len(np.unique(labels[labels > 0])))
 
 
+def field_tiles(field: int) -> dict[str, list[Tile]]:
+    """Image and annotation tiles of one annotated field, per question."""
+    f = f"field{field}"
+    bf, dapi, pecam = read(f"{f}_brightfield.tif"), read(f"{f}_dapi.tif"), read(f"{f}_pecam1.tif")
+    cancer = read(f"{f}_cancer_cells_manual_labels.tif").astype(int)
+    nuclei = read(f"{f}_endothelial_nuclei_manual_labels.tif").astype(int)
+    lines1 = read(f"{f}_endothelial_junctions_annotator1.tif")
+    lines2 = read(f"{f}_endothelial_junctions_annotator2.tif")
+    tag = f"field {field}"
+    return {
+        "cancer": [Tile(gray(bf), "image", f"Brightfield, {tag}", "1022 x 1024 px, 0.65 um/px"),
+                   Tile(labels_picture(cancer), "annotation", f"Manual cancer cells: {n_objects(cancer)}", tag)],
+        "endo": [Tile(gray(bf), "image", f"Brightfield, {tag}", "image analysed"),
+                 Tile(gray(pecam), "image", f"PECAM-1, {tag}", "image the outlines were drawn on"),
+                 Tile(lines_picture(lines1), "annotation", f"Annotator 1: {n_objects(lines_to_cells(lines1 > 0))} cells",
+                      f"{tag}, junction lines (reference)"),
+                 Tile(lines_picture(lines2), "annotation", f"Annotator 2: {n_objects(lines_to_cells(lines2 > 0))} cells",
+                      f"{tag}, junction lines (agreement)")],
+        "nuclei": [Tile(gray(dapi), "image", f"DAPI, {tag}", ""),
+                   Tile(labels_picture(nuclei), "annotation", f"Manual endothelial nuclei: {n_objects(nuclei)}", tag)],
+        "pix2pix": [Tile(gray(read(f"{f}_pix2pix_predicted_dapi.tif")[1:1023]), "image", f"Predicted DAPI, {tag}", "pix2pix output"),
+                    Tile(gray(read(f"{f}_pix2pix_predicted_pecam1.tif")[1:1023]), "image", f"Predicted PECAM-1, {tag}", "pix2pix output"),
+                    Tile(gray(dapi), "annotation", f"Acquired DAPI, {tag}", "+ manual nuclei"),
+                    Tile(gray(pecam), "annotation", f"Acquired PECAM-1, {tag}", "+ manual cells")],
+    }
+
+
 def questions() -> list[Question]:
-    """The sheet's rows."""
-    bf, dapi, pecam = read("field104_brightfield.tif"), read("field104_dapi.tif"), read("field104_pecam1.tif")
-    cancer = read("field104_cancer_cells_manual_labels.tif").astype(int)
-    nuclei = read("field104_endothelial_nuclei_manual_labels.tif").astype(int)
-    lines1 = read("field104_endothelial_junctions_annotator1.tif")
-    lines2 = read("field104_endothelial_junctions_annotator2.tif")
+    """The sheet's rows: annotated fields (104 = development/figures, 209 = test field) then the other examples."""
+    a, b = field_tiles(104), field_tiles(209)
     det_png = THIRD / "deepbacs_ecoli_growth_stage/test_images/pos_8_frame_80_2.png"
     det_boxes, n_det, det_classes = boxes_picture(THIRD / "deepbacs_ecoli_growth_stage/test_annotations/pos_8_frame_80_2.xml",
                                                   Image.open(det_png).size)
@@ -104,30 +127,15 @@ def questions() -> list[Question]:
     abx_boxes, n_abx, abx_classes = boxes_picture(abx / "annotations/synthetic_image_23.xml", Image.open(abx_png).size)
     fmt = lambda d: ", ".join(f"{k} {v}" for k, v in d.items())  # noqa: E731
     return [
-        Question("1. Cancer cells in brightfield", "Fig 1c, Fig 2a, Fig 3", [
-            Tile(gray(bf), "image", "Brightfield, field 104", "1022 x 1024 px, 0.65 um/px"),
-            Tile(labels_picture(cancer), "annotation", f"Manual cancer cells: {n_objects(cancer)}", "label image")]),
-        Question("2. Endothelial cells in brightfield (annotated on PECAM-1)", "Fig 2a, Fig 3", [
-            Tile(gray(bf), "image", "Brightfield, field 104", "image analysed"),
-            Tile(gray(pecam), "image", "PECAM-1, field 104", "image the outlines were drawn on"),
-            Tile(lines_picture(lines1), "annotation", f"Annotator 1: {n_objects(lines_to_cells(lines1 > 0))} complete cells",
-                 "junction lines as drawn (reference)"),
-            Tile(lines_picture(lines2), "annotation", f"Annotator 2: {n_objects(lines_to_cells(lines2 > 0))} complete cells",
-                 "junction lines as drawn (agreement)")]),
-        Question("3. Endothelial nuclei in DAPI", "Fig 2d, Fig 3", [
-            Tile(gray(dapi), "image", "DAPI, field 104", "same field"),
-            Tile(labels_picture(nuclei), "annotation", f"Manual endothelial nuclei: {n_objects(nuclei)}",
-                 "cancer-cell nuclei not annotated")]),
-        Question("4. Artificial labelling: DAPI and PECAM-1 predicted from brightfield", "Fig 1a, Fig 2d", [
-            Tile(gray(bf), "image", "Input: brightfield", ""),
-            Tile(gray(read("field104_pix2pix_predicted_dapi.tif")[1:1023]), "image", "pix2pix: predicted DAPI", "model output"),
-            Tile(gray(read("field104_pix2pix_predicted_pecam1.tif")[1:1023]), "image", "pix2pix: predicted PECAM-1", "model output"),
-            Tile(gray(dapi), "annotation", "Reference: acquired DAPI", "+ manual nuclei (row 3)"),
-            Tile(gray(pecam), "annotation", "Reference: acquired PECAM-1", "+ manual cells (row 2)")]),
+        Question("1. Cancer cells in brightfield (fields 104 and 209)", "Fig 1c, Fig 2a, Fig 3", a["cancer"] + b["cancer"]),
+        Question("2. Endothelial cells in brightfield, annotated on PECAM-1 (fields 104 and 209)", "Fig 2a, Fig 3", a["endo"] + b["endo"]),
+        Question("3. Endothelial nuclei in DAPI (fields 104 and 209)", "Fig 2d, Fig 3", a["nuclei"] + b["nuclei"]),
+        Question("4. Artificial labelling: DAPI and PECAM-1 predicted from brightfield (fields 104 and 209)", "Fig 1a, Fig 2d",
+                 a["pix2pix"] + b["pix2pix"]),
         Question("5. Denoising (CARE)", "Fig 1a, Fig 2c", [
             Tile(gray(read("care_denoising_acquired.tif")), "image", "Acquired (low SNR)", "0.6337 um/px"),
             Tile(gray(read("care_denoising_restored.tif")), "image", "CARE restored", "model output"),
-            Tile(None, "none", "No manual annotation", "no high-SNR acquisition either")]),
+            Tile(None, "none", "Ground truth: pending", "requested 17 Oct 2026")]),
         Question("6. Super-resolution (RCAN, BioSR endoplasmic reticulum)", "Fig 1a, Fig 2e", [
             Tile(gray(read("biosr_er_lowres_input.tif")), "image", "Low-resolution input", ""),
             Tile(gray(read("biosr_er_rcan_prediction.tif")), "image", "RCAN prediction", "model output"),
@@ -174,7 +182,7 @@ def main() -> None:
         y = GAP + r * row_h
         draw.line([GAP, y - GAP // 2, sheet.width - GAP, y - GAP // 2], fill="#d0d7de", width=1)
         draw.text((GAP, y + 6), question.title, fill="black", font=fonts[0])
-        draw.text((GAP + 640, y + 9), f"used in {question.figures}", fill="#555555", font=fonts[1])
+        draw.text((GAP + 900, y + 9), f"used in {question.figures}", fill="#555555", font=fonts[1])
         for c, tile in enumerate(question.tiles):
             draw_tile(sheet, GAP + c * (TILE + GAP), y + ROW_HEAD, tile, fonts)
         print(f"{question.title} | {question.figures} | " + " ; ".join(f"{t.kind}: {t.title}" for t in question.tiles))
