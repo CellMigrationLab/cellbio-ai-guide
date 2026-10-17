@@ -4,9 +4,10 @@ import numpy as np
 import tifffile
 from scipy import ndimage as ndi
 from skimage import filters, morphology, segmentation, measure, feature
-from compare_cancer_gt_lib import match
+from common.matching import match
 
 from common.paths import RAW as U
+from fig1_paths import THRESHOLD_LABELS
 bf = tifffile.imread(U + "field104_brightfield.tif").astype(float)
 ref = tifffile.imread(U + "field104_cancer_cells_manual_labels.tif").astype(int)
 g = filters.gaussian(bf, 1)
@@ -23,7 +24,7 @@ lab = segmentation.watershed(-d, mk, mask=m)
 mt, fn, fp = match(ref, lab)
 tp = len(mt); f1 = 2 * tp / (2 * tp + len(fn) + len(fp))
 print("classical: objects", lab.max(), "TP", tp, "FN", len(fn), "FP", len(fp), "F1", round(f1, 3))
-tifffile.imwrite("panel_c_steps2_4/classical_labels.tif", lab.astype(np.uint16))
+tifffile.imwrite(THRESHOLD_LABELS, lab.astype(np.uint16), compression="zlib")  # lossless, as stored
 sc = json.load(open("panel_c_step3/A_scores.json")); sc["classical"] = round(f1, 3); json.dump(sc, open("panel_c_step3/A_scores.json", "w"))
 X, Y, W, H = 240, 40, 240, 260
 sub = lab[Y:Y + H, X:X + W]; out = []

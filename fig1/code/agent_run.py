@@ -8,7 +8,7 @@ import numpy as np
 import tifffile
 from cellpose import models
 from importlib.metadata import version
-from compare_cancer_gt_lib import match
+from common.matching import match
 
 from common.paths import RAW as U
 dapi = tifffile.imread(U + "field104_dapi.tif")

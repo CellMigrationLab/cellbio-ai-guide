@@ -6,9 +6,10 @@ from importlib.metadata import version
 from cellpose import models
 
 from common.paths import RAW as U
+from fig1_paths import CELLPOSE_LABELS
 bf = tifffile.imread(U + "field104_brightfield.tif")
 model = models.CellposeModel(gpu=False)          # default Cellpose-SAM weights (cpsam), no retraining
 t0 = time.time()
 masks, _, _ = model.eval(bf)                     # default settings
 print(f"cellpose {version('cellpose')}: {masks.max()} objects in {time.time()-t0:.0f}s")
-tifffile.imwrite("panel_c_step3/BF_cellpose_sam_labels.tif", masks.astype(np.uint16))
+tifffile.imwrite(CELLPOSE_LABELS, masks.astype(np.uint16), compression="zlib")  # lossless, as stored

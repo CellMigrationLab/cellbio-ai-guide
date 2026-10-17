@@ -3,12 +3,13 @@ import json
 import numpy as np
 import tifffile
 from skimage.measure import regionprops
-from compare_cancer_gt_lib import match
+from common.matching import match
 
 from common.paths import RAW as U
+from fig1_paths import CELLPOSE_LABELS
 ref = tifffile.imread(U + "field104_cancer_cells_manual_labels.tif").astype(int)
 sd = tifffile.imread(U + "field104_cancer_cells_stardist_custom_labels.tif").astype(int)
-cp = tifffile.imread("panel_c_step3/BF_cellpose_sam_labels.tif").astype(int)
+cp = tifffile.imread(CELLPOSE_LABELS).astype(int)
 cent = lambda L: {r.label: r.centroid for r in regionprops(L)}
 cr, cs, cc = cent(ref), cent(sd), cent(cp)
 ms, fn_s, fp_s = match(ref, sd)

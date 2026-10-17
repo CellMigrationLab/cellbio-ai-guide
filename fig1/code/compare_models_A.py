@@ -3,12 +3,13 @@ import json
 import numpy as np
 import tifffile
 from skimage.measure import find_contours, approximate_polygon
-from compare_cancer_gt_lib import match
+from common.matching import match
 
 from common.paths import RAW as U
+from fig1_paths import CELLPOSE_LABELS
 ref = tifffile.imread(U + "field104_cancer_cells_manual_labels.tif").astype(int)
 models_ = {"stardist": tifffile.imread(U + "field104_cancer_cells_stardist_custom_labels.tif").astype(int),
-           "cellpose": tifffile.imread("panel_c_step3/BF_cellpose_sam_labels.tif").astype(int)}
+           "cellpose": tifffile.imread(CELLPOSE_LABELS).astype(int)}
 scores = {}
 for k, L in models_.items():
     m, fn, fp = match(ref, L)

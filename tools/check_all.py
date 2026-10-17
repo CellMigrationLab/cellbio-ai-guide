@@ -96,7 +96,7 @@ def main(with_squirrel: bool) -> None:
     """Run all checks; exit 1 if any fails."""
     results = []
     proc = run([sys.executable, "-m", "unittest", "discover", "-s", ".", "-p", "test_*.py", "-t", "."], cwd=REPO)
-    results.append(report("unit tests (common/, fig3/)", proc.returncode == 0, proc.stderr.strip().splitlines()[-1]))
+    results.append(report("unit tests (common/, fig2/, fig3/)", proc.returncode == 0, proc.stderr.strip().splitlines()[-1]))
     proc = run([sys.executable, "data/make_manifest.py", "--verify"], cwd=REPO)
     results.append(report("raw data checksums", proc.returncode == 0, proc.stdout.strip().splitlines()[-1]))
     with tempfile.TemporaryDirectory() as tmp_name:

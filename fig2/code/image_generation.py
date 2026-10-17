@@ -43,7 +43,8 @@ json.dump({"n_nuclei": int(lab.max()), "acquired": ir.round(1).tolist(), "restor
           open("panels/dn_intensity.json", "w"))
 print("denoise nuclei", lab.max(), "r", np.corrcoef(ir, idn)[0, 1], "bg", bg_r, bg_d)
 
-# ---- super-resolution: same region as Fig. 1a (HR px 62.6 nm; LR = HR / 2)
+# ---- super-resolution: same region as Fig. 1a. BioSR pixel sizes (Qiao et al. 2021; not in the TIFF metadata):
+# low-res input 62.6 nm/px (502 x 502); prediction and high-res reference on the 2x grid, 31.3 nm/px (1004 x 1004)
 lr = tifffile.imread(U + "biosr_er_lowres_input.tif").astype(float)
 pr = tifffile.imread(U + "biosr_er_rcan_prediction.tif").astype(float)
 hr = tifffile.imread(U + "biosr_er_highres_reference.tif").astype(float)
@@ -62,5 +63,5 @@ nz = lambda a: (a - a.min()) / (a.max() - a.min())
 P = nz(pr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 Hh = nz(hr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 L = nz(np.repeat(lr[(y + ROW) // 2, x // 2:x // 2 + n // 2], 2))
-json.dump({"row": ROW, "px_nm": 62.6, "predicted": P.round(3).tolist(), "high_res": Hh.round(3).tolist(), "low_res": L.round(3).tolist(),
+json.dump({"row": ROW, "px_nm": 31.3, "lowres_px_nm": 62.6, "predicted": P.round(3).tolist(), "high_res": Hh.round(3).tolist(), "low_res": L.round(3).tolist(),
            "r_pred_hr": round(float(np.corrcoef(P, Hh)[0, 1]), 3)}, open("panels/sr_profile.json", "w"))

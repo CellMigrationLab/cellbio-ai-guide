@@ -2,7 +2,7 @@
 import numpy as np
 import tifffile
 from skimage.segmentation import clear_border
-from compare_cancer_gt_lib import match
+from common.matching import match
 
 from common.paths import RAW as U
 gt = tifffile.imread(U + "field104_endothelial_nuclei_manual_labels.tif").astype(int)
