@@ -21,7 +21,7 @@ mode, API, sub-agent), the date and time, and whether web search was available a
 **advice** — send the prompt; no attachment. Save the conversation. Nothing is run.
 
 **code_python / code_fiji** — attach a copy of `assets/dev_<task>_image.tif` (field 104) named `image.tif` (the prompt refers to
-this name; if refused, `<task>_image.png` named `image.png`, and record it). When the
+this name; if refused, `assets/dev_<task>_image.png` named `image.png`, and record it). When the
 conversation ends:
 1. Save the final code exactly as returned (`code_as_returned.py` / `.ijm`).
 2. Copy it to `code_run.*`, changing **only** input/output paths so it reads `image.tif` (a copy of
@@ -35,8 +35,11 @@ conversation ends:
 **optimise** (Claude Code; ChatGPT agent optional) — create a fresh folder containing only the files in `agent_folder`
 (generic: `image.tif`; box1: `image.tif` and `annotation.tif`, all from field 104). Give the subject shell access to that folder only.
 When it finishes, save its whole folder (`agent_folder/`) and a list of any file it touched outside it. Then run its
-`pipeline.py` unchanged on the whole field (`assets/<task>_image.tif`) → `labels.tif` (generic runs: use its own
-its own `labels.tif`). Field 209 is the test field.
+`pipeline.py` on the TEST field 209 (a copy of `assets/test_<task>_image.tif` named `image.tif`) → `labels.tif`:
+box1 runs exactly as the prompt specifies (`python pipeline.py image.tif labels.tif`, unchanged); generic runs (the
+prompt fixes no command line) with only input/output paths changed, as for the code rows (diff in `EDITS.md`). No
+`pipeline.py`, or a pipeline that fails: score as is (crashed / missing output = F1 0); never score the agent's own
+field-104 `labels.tif` as the test result (it is kept in `agent_folder/` and re-scored on field 104 separately).
 
 **direct** — attach `assets/test_<task>_image.png` (field 209) named `image.png`. Generic: write the number it gives in `stated_count.txt` (if it gives a
 range, the midpoint; record the text). Box1: save its JSON as `reply.json` (if it does not give JSON, record that; no

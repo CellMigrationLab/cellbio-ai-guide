@@ -76,7 +76,7 @@ rather than the chat app, this is recorded and stated in the legend (A15).
 1. Paste the prompt file unchanged. Attach: code and direct-answer rows, the image (TIFF; if refused, the PNG preview,
    recorded). Advice row: nothing.
 2. Answer follow-up questions **only from `answer_sheet.md`**, only what is asked, at most 3 replies. If the model asks
-   for the image or an annotation, upload the PNG preview / the **left-half** annotation. Never hint, steer or mention errors.
+   for the image or an annotation, upload the PNG preview / the field-104 annotation (never field 209's). Never hint, steer or mention errors.
 3. If the app runs code itself (e.g. ChatGPT's code tool) let it, and record it; for row b we still run the final script
    ourselves (A4).
 4. Save: share link, exported text (`conversation.md`), the final code unedited (`code_as_returned.*`), `meta.json`
