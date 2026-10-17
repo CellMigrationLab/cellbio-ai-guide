@@ -1,7 +1,11 @@
-# Row a: ask for advice
+# Figure 3 round 1: asking for advice
 
-`runs/from_memory_*` (generic advice request) and `runs/after_docs_*` (asked to check the current documentation first),
-cancer and endothelial cells. The figure shows quotes from these replies. `artifacts/labels.tif` is our implementation
-of each piece of advice (`code/advise_impl.py`); it is not shown, because running it does not test the advice (see below).
-`cyto3_silent_fallback/`: in Cellpose 4.2.1.1, `CellposeModel(pretrained_model='cyto3')` loads `cpsam_v2` without a
-message (`output.txt`), so outdated advice runs without error.
+This folder holds the **round-1 draft** results for the advice comparison. The replacement experiment is described in [protocol v2](../PROTOCOL_V2.md).
+
+The model was asked how to analyse cancer or endothelial cells, either from memory (`runs/from_memory_*`) or after being asked to check current documentation (`runs/after_docs_*`). The draft figure quotes parts of these replies.
+
+The `artifacts/labels.tif` files are **our implementation** of the advice, using [advise_impl.py](code/advise_impl.py). They are not the LLM's own analysis and are not shown in the draft figure.
+
+## An instructive failure
+
+The [cyto3 test](cyto3_silent_fallback/) shows that Cellpose 4.2.1.1 accepts `CellposeModel(pretrained_model='cyto3')` but loads `cpsam_v2` without warning. A recommendation can therefore be outdated even when the resulting code runs. See `output.txt` for the recorded result.
