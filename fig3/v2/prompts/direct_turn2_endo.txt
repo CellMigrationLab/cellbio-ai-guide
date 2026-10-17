@@ -1,0 +1,1 @@
+What are their typical size and shape? Give the median area in µm² and the median aspect ratio. The pixel size is 0.65 µm.

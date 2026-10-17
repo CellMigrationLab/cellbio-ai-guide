@@ -1,135 +1,236 @@
-"""Score one round-2 run folder and write score.json next to it.
+"""Scoring for Figure 3, protocol v2 (fig3/PROTOCOL_V2.md, sections 2 and 7).
 
-  PYTHONPATH=. python fig3/v2/score.py RUN_DIR
+Usage: PYTHONPATH=. python fig3/v2/score.py RUN_DIR      (writes RUN_DIR/score.json)
 
-Everything is scored on the TEST field (209) against the authors' manual annotation, whole field
-(fig3/PROTOCOL_V2.md, section 2; to be extended to the v2 measures, section 7). RUN_DIR must contain meta.json with "row", "task" and "condition"; then:
-  code_python, code_fiji, optimise : labels.tif = output of the final script / frozen pipeline run on the test image
-  direct, condition "box1"         : reply.json  {"count": n, "cells": [{"points": [[x, y], ...]}, ...]}
-  direct, condition "generic"      : stated_count.txt (the number the model gave)
-Nothing is guessed: a missing or malformed output gives an explicit status ("crashed", "missing_output",
-"invalid_json", "invalid_count", "wrong_shape") with F1 0 or no count, never an exception or a silent default.
+RUN_DIR/meta.json gives "row" and "task". Inputs per row:
+  code, optimise : for each field F in (104, 209): execution_fF.json (from runner.py) and, if the run succeeded,
+                   labels_fF.tif and measurements_fF.csv
+  direct         : direct_answers.json, written by the operator from the conversation:
+                   {"field": F, "turn1_text": "...", "turn2_text": "...", "turn2_median_area_um2": x | null,
+                    "turn2_median_aspect_ratio": y | null, "turn3_json": {...} | null}
+  advice         : not scored here (item check, PROTOCOL_V2 section 5)
+
+Measures (frozen definitions): count = objects in the label image; area = pixels x 0.649614^2 µm²; aspect ratio =
+major / minor axis of the moment ellipse (objects with minor axis < 2 px excluded); objects touching the border are
+excluded from area and aspect-ratio statistics. The same functions measure the manual references.
 """
 from __future__ import annotations
 
+import csv
 import json
 import re
 import sys
 from pathlib import Path
 
 import numpy as np
-import tifffile
-from skimage.draw import polygon
+from skimage.measure import regionprops
+from skimage.segmentation import clear_border
 
-from fig3.scoring.tasks import TASKS, reference, score
+from common.labels import InvalidLabels, read_labels
+from common.matching import match
+from common.metadata import FOLLAIN_FIELD_SHAPE, FOLLAIN_PX_UM
+from fig3.scoring.tasks import TASKS, reference, score as f1_score_task
 
-TEST_FIELD = 209
-SEGMENTATION_ROWS = ("code_python", "code_fiji", "optimise")
-
-
-def manual_count(task: str) -> int:
-    """Number of objects in the manual annotation of the test field (read from the label image, not hard-coded)."""
-    ref = reference(task, TEST_FIELD)
-    return int(len(np.unique(ref[ref > 0])))
-
-
-def field_shape(task: str) -> tuple[int, int]:
-    """Shape (rows, columns) of the test field."""
-    return reference(task, TEST_FIELD).shape
+FIELDS = (104, 209)
+MIN_MINOR_PX = 2.0
+AREA_TOL = 0.02        # measurements.csv area must agree with the label image within 2 %
+AR_TOL = 0.05          # and aspect ratio within 0.05
 
 
-def rasterise(cells: list, shape: tuple[int, int]) -> tuple[np.ndarray, dict]:
-    """Label image from the model's polygons plus an audit of the outlines (invalid, empty, overlapping pixels)."""
-    labels, coverage = np.zeros(shape, np.int32), np.zeros(shape, np.int16)
-    audit = {"n_outlines": len(cells), "n_invalid": 0, "n_empty_or_outside": 0}
-    for k, cell in enumerate(cells, start=1):
-        points = np.asarray(cell.get("points", []) if isinstance(cell, dict) else [], float)
-        if points.ndim != 2 or points.shape[1] != 2 or points.shape[0] < 3 or not np.isfinite(points).all():
-            audit["n_invalid"] += 1
+# ---------------------------------------------------------------- measures
+def object_measures(labels: np.ndarray) -> dict[int, dict]:
+    """Per object: area (µm²), aspect ratio (None if the minor axis < 2 px) and whether it touches the border."""
+    out = {}
+    h, w = labels.shape
+    for r in regionprops(labels):
+        y0, x0, y1, x1 = r.bbox
+        minor = r.axis_minor_length
+        out[int(r.label)] = {"area_um2": float(r.area * FOLLAIN_PX_UM ** 2),
+                             "aspect_ratio": float(r.axis_major_length / minor) if minor >= MIN_MINOR_PX else None,
+                             "border": bool(y0 == 0 or x0 == 0 or y1 == h or x1 == w)}
+    return out
+
+
+def summary_measures(labels: np.ndarray) -> dict:
+    m = object_measures(labels)
+    inner = [v for v in m.values() if not v["border"]]
+    ars = [v["aspect_ratio"] for v in inner if v["aspect_ratio"] is not None]
+    return {"count": len(m),
+            "median_area_um2": round(float(np.median([v["area_um2"] for v in inner])), 1) if inner else None,
+            "median_aspect_ratio": round(float(np.median(ars)), 3) if ars else None}
+
+
+def reference_summary(task: str, field: int) -> dict:
+    return summary_measures(reference(task, field))
+
+
+def matched_shape_errors(task: str, pred: np.ndarray, field: int) -> dict:
+    """Median absolute relative area error and absolute aspect-ratio error over matched, non-border objects."""
+    gt = reference(task, field)
+    p = clear_border(pred) if task == "endo" else pred
+    pairs, _, _ = match(gt, p, 0.5)
+    mg, mp = object_measures(gt), object_measures(p)
+    area_err, ar_err = [], []
+    for g, q, _ in pairs:
+        if mg[g]["border"] or mp[q]["border"]:
             continue
-        rr, cc = polygon(points[:, 1], points[:, 0], shape)
-        if rr.size == 0:
-            audit["n_empty_or_outside"] += 1
-            continue
-        coverage[rr, cc] += 1
-        labels[rr, cc] = k  # where outlines overlap, the later one wins; overlap is reported below
-    audit["overlap_px"] = int((coverage > 1).sum())
-    audit["n_valid"] = audit["n_outlines"] - audit["n_invalid"] - audit["n_empty_or_outside"]
-    return labels, audit
+        area_err.append(abs(mp[q]["area_um2"] / mg[g]["area_um2"] - 1))
+        if mg[g]["aspect_ratio"] is not None and mp[q]["aspect_ratio"] is not None:
+            ar_err.append(abs(mp[q]["aspect_ratio"] - mg[g]["aspect_ratio"]))
+    return {"n_matched_inner": len(area_err),
+            "median_abs_area_error_pct": round(100 * float(np.median(area_err)), 1) if area_err else None,
+            "median_abs_aspect_ratio_error": round(float(np.median(ar_err)), 3) if ar_err else None}
 
 
-def parse_count(text: str) -> int | None:
-    """An integer count from the text the operator saved; a range 'a-b' gives its midpoint; anything else None."""
-    text = text.strip().replace(",", "")
-    if re.fullmatch(r"\d+", text):
-        return int(text)
-    match = re.fullmatch(r"(\d+)\s*[-–]\s*(\d+)", text)
-    return round((int(match[1]) + int(match[2])) / 2) if match else None
-
-
-def score_segmentation(run_dir: Path, task: str) -> dict:
-    """Score labels.tif (output on the test image) against the test-field annotation."""
-    labels_path = run_dir / "labels.tif"
-    if not labels_path.is_file():
-        return {"status": "crashed", "f1": 0.0}
-    labels = np.squeeze(tifffile.imread(labels_path))
-    if labels.shape != field_shape(task):
-        return {"status": "wrong_shape", "shape": list(labels.shape), "f1": 0.0}
-    s = score(task, labels, field=TEST_FIELD)
-    return {"status": "ok", **s}
-
-
-def score_direct(run_dir: Path, task: str, condition: str) -> dict:
-    """Count error (both conditions) and, for drawn outlines, F1 of the rasterised outlines on the test field."""
-    manual = manual_count(task)
-    if condition == "generic":
-        path = run_dir / "stated_count.txt"
-        if not path.is_file():
-            return {"status": "missing_output", "manual_count": manual}
-        stated = parse_count(path.read_text())
-        if stated is None:
-            return {"status": "invalid_count", "raw": path.read_text().strip()[:200], "manual_count": manual}
-        return {"status": "ok", "stated_count": stated, "manual_count": manual, "count_error": stated - manual}
-    path = run_dir / "reply.json"
+def check_measurements_csv(path: Path, labels: np.ndarray) -> dict:
+    """Does the table have one row per label, with area and aspect ratio agreeing with the label image?"""
     if not path.is_file():
-        return {"status": "missing_output", "manual_count": manual, "f1": 0.0}
+        return {"status": "missing"}
     try:
-        reply = json.loads(path.read_text())
-    except json.JSONDecodeError as error:
-        return {"status": "invalid_json", "error": str(error)[:200], "manual_count": manual, "f1": 0.0}
-    cells = reply.get("cells", []) if isinstance(reply, dict) else []
-    labels, audit = rasterise(cells if isinstance(cells, list) else [], field_shape(task))
-    stated = reply.get("count") if isinstance(reply, dict) and isinstance(reply.get("count"), int) else None
-    s = score(task, labels, field=TEST_FIELD)
-    return {"status": "ok", "stated_count": stated, "manual_count": manual,
-            "count_error": None if stated is None else stated - manual,
-            "stated_minus_valid_outlines": None if stated is None else stated - audit["n_valid"],
-            **audit, "f1": s["f1"], "tp": s["tp"], "fp": s["fp"], "fn": s["fn"]}
+        with path.open(newline="") as handle:
+            rows = list(csv.DictReader(handle))
+    except (csv.Error, UnicodeDecodeError) as exc:
+        return {"status": "unreadable", "error": str(exc)[:200]}
+    if not rows:
+        return {"status": "empty"}
+    cols = {c.lower(): c for c in rows[0]}
+    find = lambda *keys: next((cols[c] for c in cols if any(k in c for k in keys)), None)   # noqa: E731
+    c_label, c_area, c_ar = find("label", "id"), find("area"), find("aspect", "ratio")
+    if not (c_label and c_area and c_ar):
+        return {"status": "columns_not_found", "columns": list(rows[0])}
+    truth = object_measures(labels)
+    try:
+        table = {int(float(r[c_label])): (float(r[c_area]), float(r[c_ar])) for r in rows}
+    except ValueError as exc:
+        return {"status": "non_numeric", "error": str(exc)[:200]}
+    missing, extra = sorted(set(truth) - set(table)), sorted(set(table) - set(truth))
+    bad_area = [k for k in set(truth) & set(table) if abs(table[k][0] / truth[k]["area_um2"] - 1) > AREA_TOL]
+    bad_ar = [k for k in set(truth) & set(table)
+              if truth[k]["aspect_ratio"] is not None and abs(table[k][1] - truth[k]["aspect_ratio"]) > AR_TOL]
+    ok = not (missing or extra or bad_area or bad_ar)
+    return {"status": "consistent" if ok else "inconsistent", "n_rows": len(table), "labels_missing": len(missing),
+            "rows_without_label": len(extra), "area_disagrees": len(bad_area), "aspect_ratio_disagrees": len(bad_ar),
+            "area_column": c_area, "aspect_ratio_column": c_ar}
+
+
+# ---------------------------------------------------------------- rows B and C
+def score_field(run_dir: Path, task: str, field: int) -> dict:
+    exec_path = run_dir / f"execution_f{field}.json"
+    if not exec_path.is_file():
+        raise FileNotFoundError(f"{exec_path} missing: run fig3/v2/runner.py first")
+    execution = json.loads(exec_path.read_text())
+    if execution["status"] != "ok":
+        return {"status": execution["status"], "f1": 0.0}           # crashed / timeout / no_output: F1 0, drawn as x
+    try:
+        pred = read_labels(run_dir / f"labels_f{field}.tif", expected_shape=FOLLAIN_FIELD_SHAPE, squeeze=True)
+    except InvalidLabels as exc:
+        return {"status": "invalid_labels", "error": str(exc), "f1": 0.0}
+    out = {"status": "ok", **f1_score_task(task, pred, field=field)}
+    pred_sum, ref_sum = summary_measures(pred), reference_summary(task, field)
+    out["measures"] = pred_sum
+    out["reference"] = ref_sum
+    out["count_error"] = pred_sum["count"] - ref_sum["count"]
+    for key in ("median_area_um2", "median_aspect_ratio"):
+        out[f"{key}_error"] = (round(pred_sum[key] - ref_sum[key], 3)
+                               if pred_sum[key] is not None and ref_sum[key] is not None else None)
+    out.update(matched_shape_errors(task, pred, field))
+    out["measurements_csv"] = check_measurements_csv(run_dir / f"measurements_f{field}.csv", pred)
+    return out
+
+
+# ---------------------------------------------------------------- row D
+def parse_count(text: str) -> dict:
+    """First number in the reply (a range 'a-b' or 'a to b' gives its midpoint; the range is kept)."""
+    t = text.replace(",", "")
+    rng = re.search(r"(\d+)\s*(?:-|–|to)\s*(\d+)", t)
+    if rng:
+        lo, hi = int(rng.group(1)), int(rng.group(2))
+        return {"count": (lo + hi) / 2, "range": [lo, hi]}
+    one = re.search(r"\d+", t)
+    return {"count": int(one.group()), "range": None} if one else {"count": None, "range": None}
+
+
+def match_centres(task: str, field: int, centres: list[tuple[float, float]]) -> dict:
+    """One-to-one matching of ellipse centres to reference objects: a centre matches the object it falls in; if several
+    centres fall in one object, the one closest to its centroid is the match and the others are false positives."""
+    gt = reference(task, field)
+    h, w = gt.shape
+    cents = {r.label: r.centroid for r in regionprops(gt)}
+    best: dict[int, float] = {}
+    fp = 0
+    for x, y in centres:
+        xi, yi = int(round(x)), int(round(y))
+        lab = int(gt[yi, xi]) if 0 <= yi < h and 0 <= xi < w else 0
+        if lab == 0:
+            fp += 1
+            continue
+        d = float(np.hypot(y - cents[lab][0], x - cents[lab][1]))
+        if lab in best:
+            fp += 1
+            best[lab] = min(best[lab], d)
+        else:
+            best[lab] = d
+    tp, fn = len(best), len(cents) - len(best)
+    f1 = 2 * tp / (2 * tp + fp + fn) if (tp + fp + fn) else 0.0
+    return {"n_ref": len(cents), "n_drawn": len(centres), "tp": tp, "fp": fp, "fn": fn, "f1": round(f1, 3)}
+
+
+def score_direct(run_dir: Path, task: str) -> dict:
+    ans = json.loads((run_dir / "direct_answers.json").read_text())
+    field = int(ans["field"])
+    ref = reference_summary(task, field)
+    out = {"field": field, "reference": ref, "turn1": parse_count(ans["turn1_text"])}
+    if out["turn1"]["count"] is not None:
+        out["turn1"]["count_error"] = out["turn1"]["count"] - ref["count"]
+        if out["turn1"]["range"]:
+            out["turn1"]["reference_in_range"] = out["turn1"]["range"][0] <= ref["count"] <= out["turn1"]["range"][1]
+    out["turn2"] = {k: ans.get(k) for k in ("turn2_median_area_um2", "turn2_median_aspect_ratio")}
+    j = ans.get("turn3_json")
+    if not isinstance(j, dict) or not isinstance(j.get("ellipses"), list):
+        out["turn3"] = {"status": "no_valid_json", "f1": 0.0}
+        return out
+    centres, areas, ars, invalid = [], [], [], 0
+    for e in j["ellipses"]:
+        try:
+            x, y, a, b = (float(e[k]) for k in ("x", "y", "major", "minor"))
+        except (KeyError, TypeError, ValueError):
+            invalid += 1
+            continue
+        if not (a > 0 and b > 0):
+            invalid += 1
+            continue
+        centres.append((x, y))
+        areas.append(np.pi * a * b / 4 * FOLLAIN_PX_UM ** 2)
+        ars.append(max(a, b) / min(a, b))
+    out["turn3"] = {"status": "ok", "stated_count": j.get("count"), "n_ellipses": len(centres), "n_invalid": invalid,
+                    "stated_median_area_um2": j.get("median_area_um2"), "stated_median_aspect_ratio": j.get("median_aspect_ratio"),
+                    "drawn_median_area_um2": round(float(np.median(areas)), 1) if areas else None,
+                    "drawn_median_aspect_ratio": round(float(np.median(ars)), 3) if ars else None,
+                    **match_centres(task, field, centres)}
+    return out
 
 
 def score_run(run_dir: Path) -> dict:
-    """Score one run folder according to its row (see module docstring)."""
     meta = json.loads((run_dir / "meta.json").read_text())
-    row, task, condition = meta["row"], meta["task"], meta.get("condition", "")
+    row, task = meta["row"], meta["task"]
     if task not in TASKS:
-        raise ValueError(f"Unknown task {task!r} in {run_dir / 'meta.json'}")
-    if row in SEGMENTATION_ROWS:
-        return score_segmentation(run_dir, task)
+        raise ValueError(f"unknown task {task!r}")
+    if row in ("code", "optimise"):
+        return {f"f{f}": score_field(run_dir, task, f) for f in FIELDS}
     if row == "direct":
-        return score_direct(run_dir, task, condition)
+        return score_direct(run_dir, task)
     if row == "advice":
-        return {"status": "not_scored_here", "note": "advice is scored with the item check (PROTOCOL_V2 section 5)"}
-    raise ValueError(f"Unknown row {row!r}")
+        return {"status": "not_scored_here", "note": "item check, PROTOCOL_V2 section 5"}
+    raise ValueError(f"unknown row {row!r}")
 
 
 def main(argv: list[str]) -> None:
-    """Score the run folder given on the command line and write its score.json."""
     if len(argv) != 2:
         raise SystemExit(__doc__)
     run_dir = Path(argv[1])
     result = score_run(run_dir)
-    (run_dir / "score.json").write_text(json.dumps(result, indent=1))
-    print(run_dir.name, result)
+    (run_dir / "score.json").write_text(json.dumps(result, indent=1, allow_nan=False))
+    print(run_dir.name, json.dumps(result)[:600])
 
 
 if __name__ == "__main__":

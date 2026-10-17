@@ -1,0 +1,73 @@
+run_order,scenario_id,row,condition,task,field,replicate,prompt,folder_files
+1,direct_three_turns_cancer_f104_r1,direct,three_turns,cancer,104,1,direct_turn1_cancer,image.png <- dev_cancer_image.png
+2,code_simple_endo_r3,code,simple,endo,,3,code_simple_endo,image.tif <- dev_endo_image.tif; image.png <- dev_endo_image.png
+3,direct_three_turns_cancer_f209_r3,direct,three_turns,cancer,209,3,direct_turn1_cancer,image.png <- test_cancer_image.png
+4,optimise_labels_endo_r2,optimise,labels,endo,,2,optimise_labels_endo,image.tif <- dev_endo_image.tif; annotation.tif <- dev_endo_annotation.tif
+5,direct_three_turns_nuclei_f209_r3,direct,three_turns,nuclei,209,3,direct_turn1_nuclei,image.png <- test_nuclei_image.png
+6,optimise_by_eye_nuclei_r2,optimise,by_eye,nuclei,,2,optimise_by_eye_nuclei,image.tif <- dev_nuclei_image.tif
+7,code_simple_cancer_r2,code,simple,cancer,,2,code_simple_cancer,image.tif <- dev_cancer_image.tif; image.png <- dev_cancer_image.png
+8,optimise_labels_nuclei_r3,optimise,labels,nuclei,,3,optimise_labels_nuclei,image.tif <- dev_nuclei_image.tif; annotation.tif <- dev_nuclei_annotation.tif
+9,optimise_labels_cancer_r1,optimise,labels,cancer,,1,optimise_labels_cancer,image.tif <- dev_cancer_image.tif; annotation.tif <- dev_cancer_annotation.tif
+10,advice_box1_cancer_r1,advice,box1,cancer,,1,advice_box1_cancer,
+11,code_box1_nuclei_r3,code,box1,nuclei,,3,code_box1_nuclei,image.tif <- dev_nuclei_image.tif; image.png <- dev_nuclei_image.png
+12,optimise_by_eye_endo_r3,optimise,by_eye,endo,,3,optimise_by_eye_endo,image.tif <- dev_endo_image.tif
+13,optimise_labels_cancer_r3,optimise,labels,cancer,,3,optimise_labels_cancer,image.tif <- dev_cancer_image.tif; annotation.tif <- dev_cancer_annotation.tif
+14,direct_three_turns_endo_f209_r3,direct,three_turns,endo,209,3,direct_turn1_endo,image.png <- test_endo_image.png
+15,optimise_by_eye_endo_r1,optimise,by_eye,endo,,1,optimise_by_eye_endo,image.tif <- dev_endo_image.tif
+16,optimise_by_eye_cancer_r3,optimise,by_eye,cancer,,3,optimise_by_eye_cancer,image.tif <- dev_cancer_image.tif
+17,optimise_by_eye_nuclei_r3,optimise,by_eye,nuclei,,3,optimise_by_eye_nuclei,image.tif <- dev_nuclei_image.tif
+18,advice_simple_cancer_r1,advice,simple,cancer,,1,advice_simple_cancer,
+19,optimise_labels_endo_r1,optimise,labels,endo,,1,optimise_labels_endo,image.tif <- dev_endo_image.tif; annotation.tif <- dev_endo_annotation.tif
+20,code_simple_endo_r1,code,simple,endo,,1,code_simple_endo,image.tif <- dev_endo_image.tif; image.png <- dev_endo_image.png
+21,direct_three_turns_endo_f104_r2,direct,three_turns,endo,104,2,direct_turn1_endo,image.png <- dev_endo_image.png
+22,code_simple_endo_r2,code,simple,endo,,2,code_simple_endo,image.tif <- dev_endo_image.tif; image.png <- dev_endo_image.png
+23,direct_three_turns_cancer_f209_r2,direct,three_turns,cancer,209,2,direct_turn1_cancer,image.png <- test_cancer_image.png
+24,code_simple_nuclei_r1,code,simple,nuclei,,1,code_simple_nuclei,image.tif <- dev_nuclei_image.tif; image.png <- dev_nuclei_image.png
+25,advice_box1_nuclei_r3,advice,box1,nuclei,,3,advice_box1_nuclei,
+26,code_box1_cancer_r1,code,box1,cancer,,1,code_box1_cancer,image.tif <- dev_cancer_image.tif; image.png <- dev_cancer_image.png
+27,code_simple_nuclei_r2,code,simple,nuclei,,2,code_simple_nuclei,image.tif <- dev_nuclei_image.tif; image.png <- dev_nuclei_image.png
+28,optimise_by_eye_endo_r2,optimise,by_eye,endo,,2,optimise_by_eye_endo,image.tif <- dev_endo_image.tif
+29,direct_three_turns_nuclei_f104_r3,direct,three_turns,nuclei,104,3,direct_turn1_nuclei,image.png <- dev_nuclei_image.png
+30,code_simple_nuclei_r3,code,simple,nuclei,,3,code_simple_nuclei,image.tif <- dev_nuclei_image.tif; image.png <- dev_nuclei_image.png
+31,advice_simple_endo_r2,advice,simple,endo,,2,advice_simple_endo,
+32,direct_three_turns_endo_f104_r3,direct,three_turns,endo,104,3,direct_turn1_endo,image.png <- dev_endo_image.png
+33,advice_box1_nuclei_r1,advice,box1,nuclei,,1,advice_box1_nuclei,
+34,optimise_labels_nuclei_r1,optimise,labels,nuclei,,1,optimise_labels_nuclei,image.tif <- dev_nuclei_image.tif; annotation.tif <- dev_nuclei_annotation.tif
+35,advice_box1_nuclei_r2,advice,box1,nuclei,,2,advice_box1_nuclei,
+36,advice_box1_endo_r1,advice,box1,endo,,1,advice_box1_endo,
+37,code_box1_cancer_r3,code,box1,cancer,,3,code_box1_cancer,image.tif <- dev_cancer_image.tif; image.png <- dev_cancer_image.png
+38,code_simple_cancer_r3,code,simple,cancer,,3,code_simple_cancer,image.tif <- dev_cancer_image.tif; image.png <- dev_cancer_image.png
+39,advice_simple_nuclei_r1,advice,simple,nuclei,,1,advice_simple_nuclei,
+40,direct_three_turns_cancer_f209_r1,direct,three_turns,cancer,209,1,direct_turn1_cancer,image.png <- test_cancer_image.png
+41,direct_three_turns_nuclei_f104_r1,direct,three_turns,nuclei,104,1,direct_turn1_nuclei,image.png <- dev_nuclei_image.png
+42,advice_simple_endo_r1,advice,simple,endo,,1,advice_simple_endo,
+43,direct_three_turns_endo_f209_r1,direct,three_turns,endo,209,1,direct_turn1_endo,image.png <- test_endo_image.png
+44,code_box1_cancer_r2,code,box1,cancer,,2,code_box1_cancer,image.tif <- dev_cancer_image.tif; image.png <- dev_cancer_image.png
+45,optimise_labels_nuclei_r2,optimise,labels,nuclei,,2,optimise_labels_nuclei,image.tif <- dev_nuclei_image.tif; annotation.tif <- dev_nuclei_annotation.tif
+46,direct_three_turns_cancer_f104_r2,direct,three_turns,cancer,104,2,direct_turn1_cancer,image.png <- dev_cancer_image.png
+47,advice_box1_endo_r3,advice,box1,endo,,3,advice_box1_endo,
+48,optimise_labels_cancer_r2,optimise,labels,cancer,,2,optimise_labels_cancer,image.tif <- dev_cancer_image.tif; annotation.tif <- dev_cancer_annotation.tif
+49,optimise_by_eye_nuclei_r1,optimise,by_eye,nuclei,,1,optimise_by_eye_nuclei,image.tif <- dev_nuclei_image.tif
+50,code_box1_endo_r3,code,box1,endo,,3,code_box1_endo,image.tif <- dev_endo_image.tif; image.png <- dev_endo_image.png
+51,advice_simple_cancer_r3,advice,simple,cancer,,3,advice_simple_cancer,
+52,optimise_labels_endo_r3,optimise,labels,endo,,3,optimise_labels_endo,image.tif <- dev_endo_image.tif; annotation.tif <- dev_endo_annotation.tif
+53,code_box1_endo_r1,code,box1,endo,,1,code_box1_endo,image.tif <- dev_endo_image.tif; image.png <- dev_endo_image.png
+54,direct_three_turns_nuclei_f209_r2,direct,three_turns,nuclei,209,2,direct_turn1_nuclei,image.png <- test_nuclei_image.png
+55,code_box1_nuclei_r1,code,box1,nuclei,,1,code_box1_nuclei,image.tif <- dev_nuclei_image.tif; image.png <- dev_nuclei_image.png
+56,advice_simple_cancer_r2,advice,simple,cancer,,2,advice_simple_cancer,
+57,direct_three_turns_endo_f209_r2,direct,three_turns,endo,209,2,direct_turn1_endo,image.png <- test_endo_image.png
+58,direct_three_turns_cancer_f104_r3,direct,three_turns,cancer,104,3,direct_turn1_cancer,image.png <- dev_cancer_image.png
+59,code_box1_nuclei_r2,code,box1,nuclei,,2,code_box1_nuclei,image.tif <- dev_nuclei_image.tif; image.png <- dev_nuclei_image.png
+60,code_box1_endo_r2,code,box1,endo,,2,code_box1_endo,image.tif <- dev_endo_image.tif; image.png <- dev_endo_image.png
+61,direct_three_turns_endo_f104_r1,direct,three_turns,endo,104,1,direct_turn1_endo,image.png <- dev_endo_image.png
+62,optimise_by_eye_cancer_r2,optimise,by_eye,cancer,,2,optimise_by_eye_cancer,image.tif <- dev_cancer_image.tif
+63,advice_simple_nuclei_r3,advice,simple,nuclei,,3,advice_simple_nuclei,
+64,advice_box1_cancer_r2,advice,box1,cancer,,2,advice_box1_cancer,
+65,direct_three_turns_nuclei_f209_r1,direct,three_turns,nuclei,209,1,direct_turn1_nuclei,image.png <- test_nuclei_image.png
+66,optimise_by_eye_cancer_r1,optimise,by_eye,cancer,,1,optimise_by_eye_cancer,image.tif <- dev_cancer_image.tif
+67,direct_three_turns_nuclei_f104_r2,direct,three_turns,nuclei,104,2,direct_turn1_nuclei,image.png <- dev_nuclei_image.png
+68,advice_simple_endo_r3,advice,simple,endo,,3,advice_simple_endo,
+69,advice_box1_endo_r2,advice,box1,endo,,2,advice_box1_endo,
+70,advice_simple_nuclei_r2,advice,simple,nuclei,,2,advice_simple_nuclei,
+71,advice_box1_cancer_r3,advice,box1,cancer,,3,advice_box1_cancer,
+72,code_simple_cancer_r1,code,simple,cancer,,1,code_simple_cancer,image.tif <- dev_cancer_image.tif; image.png <- dev_cancer_image.png

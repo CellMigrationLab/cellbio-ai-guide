@@ -1,0 +1,2 @@
+I want to segment and count the cancer cells and measure their shape (area and aspect ratio) from brightfield images of cancer cells sitting on top of a confluent endothelial monolayer. Help me write the analysis as a Python script.
+The image is image.tif; the script should read it from the working directory and save the label image as labels.tif and a table with one row per object (label, area in µm², aspect ratio) as measurements.csv.
