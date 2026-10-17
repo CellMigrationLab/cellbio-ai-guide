@@ -1,0 +1,18 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [],
+ "start": "2026-10-16T17:20:15.279Z",
+ "end": "2026-10-16T17:20:23.503Z",
+ "agent_id": "a29a9965cd470e066",
+ "description": "Code vague prompt",
+ "section": "superseded",
+ "status": "superseded",
+ "note": "earlier exploratory round (see superseded/README.md)",
+ "workdir": ""
+}

@@ -1,0 +1,26 @@
+{
+ "reference": {
+  "count": 124,
+  "mean_area_um2": 287.8,
+  "count_vs_ref_pct": 0.0,
+  "area_vs_ref_pct": 0.0
+ },
+ "custom_trained": {
+  "count": 102,
+  "mean_area_um2": 246.8,
+  "count_vs_ref_pct": -17.7,
+  "area_vs_ref_pct": -14.2
+ },
+ "generalist_default": {
+  "count": 191,
+  "mean_area_um2": 419.5,
+  "count_vs_ref_pct": 54.0,
+  "area_vs_ref_pct": 45.8
+ },
+ "generalist_postfilter": {
+  "count": 142,
+  "mean_area_um2": 260.2,
+  "count_vs_ref_pct": 14.5,
+  "area_vs_ref_pct": -9.6
+ }
+}

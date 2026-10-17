@@ -1,0 +1,9 @@
+Scoring: object F1 at IoU>=0.5, one-to-one (Hungarian) matching, vs annot_dev.tif (76 cells). Score format F1 (TP/FP/FN).
+v1  Classical: local-std texture map -> Otsu -> fill/open -> distance-transform watershed. F1 0.49 (45/62/31).
+v2  Same, grid-tuned (sigma, threshold factor, min_distance): best F1 0.55. Classical abandoned (texture of endothelium/debris too similar).
+v3  Cellpose-SAM, diameter=30, default thresholds, raw image: F1 0.844 (76/28/0). All cells found; FPs are debris and large flat endothelial cells.
+v4  v3 + area filter <=1300 px (removes endothelial): F1 0.899 (76/17/0).
+v5  v3 + area filter 280-1300 px (also removes debris/fragments): F1 0.930 (73/8/3).  <- FINAL
+    (tried lower bounds 250: 0.914; 350: 0.916; 100-1250: 0.904.)
+Final pipeline.py re-run from scratch (~9 min CPU): 81 objects, F1 0.930. Mean area 662 px = 280 um2.
+Caveat: area bounds were chosen on the single dev image (mild overfit risk); the cellpose flow/cellprob variant run was not completed.

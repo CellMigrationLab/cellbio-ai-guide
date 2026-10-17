@@ -1,0 +1,8 @@
+The image shows two cell types.
+
+- Cancer cells: small, round, bright-rimmed cells sitting on top of the monolayer, many in clusters of 2 to 7 and some overlapping. I counted them by region and got about 125. I left out dark debris specks and the very bright out-of-focus blobs.
+- Endothelial cells: large, faint, polygonal cells forming the flat monolayer in the background. Their borders are low-contrast and often hidden under the cancer cells, so I estimated the count from typical cell size (about 55 to 65 px across) and the field area, and got about 200.
+
+Both numbers are visual estimates, and the endothelial count is the less certain one.
+
+{"cancer_cells": 125, "endothelial_cells": 200}

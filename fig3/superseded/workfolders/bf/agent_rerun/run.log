@@ -1,0 +1,11 @@
+<work2>/cpenv/lib/python3.13/site-packages/cellpose/dynamics.py:541: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+  coo = torch.sparse_coo_tensor(pt, torch.ones(pt.shape[1], device=pt.device, dtype=torch.int),
+138 count    138.000000
+mean     303.731576
+std      107.976225
+min       88.302500
+25%      243.676875
+50%      293.637500
+75%      359.653125
+max      609.245000
+Name: area_um2, dtype: float64

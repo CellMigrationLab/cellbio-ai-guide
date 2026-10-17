@@ -1,0 +1,22 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [],
+ "start": "2026-10-17T04:32:23.246Z",
+ "end": "2026-10-17T04:32:41.552Z",
+ "agent_id": "ad0b01b9bc2aaa987",
+ "description": "Advice generic endothelial",
+ "section": "advice",
+ "status": "in_figure",
+ "note": "row a shows quotes; labels = our implementation of the advice (not shown)",
+ "workdir": "bf2/adviceG_endo",
+ "artifacts": [
+  "labels.tif",
+  "score.json"
+ ]
+}

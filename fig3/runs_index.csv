@@ -1,0 +1,136 @@
+agent_id,description,section,run_id,workdir,status,note
+a9581022e95d6e6b5,Advice specific cancer,advice,after_docs_cancer,bf2/adviceS_cancer,in_figure,row a shows quotes; labels = our implementation of the advice (not shown)
+a84b834174944af48,Advice specific endothelial,advice,after_docs_endothelial,bf2/adviceS_endo,in_figure,row a shows quotes; labels = our implementation of the advice (not shown)
+a36efb0d1cd1155fb,Advice generic cancer,advice,from_memory_cancer,bf2/adviceG_cancer,in_figure,row a shows quotes; labels = our implementation of the advice (not shown)
+ad0b01b9bc2aaa987,Advice generic endothelial,advice,from_memory_endothelial,bf2/adviceG_endo,in_figure,row a shows quotes; labels = our implementation of the advice (not shown)
+aecec525416a7cd8f,Fiji Box1 cancer r1,code,fiji_box1_cancer_r1,bf3/fj_box1_cancer_r1,in_figure,
+a2e23e5b55cfa2923,Fiji Box1 cancer r2,code,fiji_box1_cancer_r2,bf3/fj_box1_cancer_r2,in_figure,
+a19ff9c34b0991f2f,Fiji Box1 cancer r3,code,fiji_box1_cancer_r3,bf3/fj_box1_cancer_r3,in_figure,
+af4cf194dee1f9ebf,Fiji Box1 endo r1,code,fiji_box1_endothelial_r1,bf3/fj_box1_endo_r1,in_figure,
+a0ef470815694ce1e,Fiji Box1 endo r2,code,fiji_box1_endothelial_r2,bf3/fj_box1_endo_r2,in_figure,
+af1014a8dc55bd316,Fiji Box1 endo r3,code,fiji_box1_endothelial_r3,bf3/fj_box1_endo_r3,in_figure,
+ac3e28f45fcaa3e5f,Fiji Box1 nuclei r1,code,fiji_box1_nuclei_r1,bf3/fj_box1_nuclei_r1,in_figure,
+a74d2b68e20f58920,Fiji Box1 nuclei r2,code,fiji_box1_nuclei_r2,bf3/fj_box1_nuclei_r2,in_figure,
+a410e37bbd7b766b4,Fiji Box1 nuclei r3,code,fiji_box1_nuclei_r3,bf3/fj_box1_nuclei_r3,in_figure,
+a2067077d82cf318a,Fiji generic cancer r1,code,fiji_generic_cancer_r1,bf3/fj_gen_cancer_r1,in_figure,
+aac5eaaefde04cbeb,Fiji generic cancer r2,code,fiji_generic_cancer_r2,bf3/fj_gen_cancer_r2,in_figure,
+a201ce16820e3fa7a,Fiji generic cancer r3,code,fiji_generic_cancer_r3,bf3/fj_gen_cancer_r3,in_figure,
+a173a3ade584a3e3a,Fiji generic endo r1,code,fiji_generic_endothelial_r1,bf3/fj_gen_endo_r1,in_figure,
+a1bbdc892968c3d5e,Fiji generic endo r2,code,fiji_generic_endothelial_r2,bf3/fj_gen_endo_r2,in_figure,
+a05b30c32e4d12086,Fiji generic endo r3,code,fiji_generic_endothelial_r3,bf3/fj_gen_endo_r3,in_figure,
+ae8f519cc0cbe8910,Fiji generic nuclei r1,code,fiji_generic_nuclei_r1,bf3/fj_gen_nuclei_r1,in_figure,
+a4c00e731c340f5a9,Fiji generic nuclei r2,code,fiji_generic_nuclei_r2,bf3/fj_gen_nuclei_r2,in_figure,
+a4b314f2feb23149d,Fiji generic nuclei r3,code,fiji_generic_nuclei_r3,bf3/fj_gen_nuclei_r3,in_figure,
+aaef96b0fe405e427,PyBox1 cancer r1,code,python_box1_cancer_r1,bf3/py_box1_cancer_r1,in_figure,
+a2f97b5b3511c11f8,PyBox1 cancer r2,code,python_box1_cancer_r2,bf3/py_box1_cancer_r2,in_figure,
+a8bcb028d4a1b940c,PyBox1 cancer r3,code,python_box1_cancer_r3,bf3/py_box1_cancer_r3,in_figure,
+a251556593fab1879,PyBox1 endo r1,code,python_box1_endothelial_r1,bf3/py_box1_endo_r1,in_figure,
+a4b82b5ed8c6194bd,PyBox1 endo r2,code,python_box1_endothelial_r2,bf3/py_box1_endo_r2,in_figure,
+a21406805db20da7b,PyBox1 endo r3,code,python_box1_endothelial_r3,bf3/py_box1_endo_r3,in_figure,
+ae7b60f0cd521c71e,PyBox1 nuclei r1,code,python_box1_nuclei_r1,bf3/py_box1_nuclei_r1,in_figure,
+a42505085523dd4d1,PyBox1 nuclei r2,code,python_box1_nuclei_r2,bf3/py_box1_nuclei_r2,in_figure,
+acfe5a5fd508e71a6,PyBox1 nuclei r3,code,python_box1_nuclei_r3,bf3/py_box1_nuclei_r3,in_figure,
+a4a51152f08ccda0e,Code generic cancer,code,python_generic_cancer_r1,bf2/codeG_cancer,in_figure,
+ac41690749f1344ae,Generic code cancer run 2,code,python_generic_cancer_r2,bf3/gen_cancer_r2,in_figure,
+a10dfa034c6cd19a9,Generic code cancer run 3,code,python_generic_cancer_r3,bf3/gen_cancer_r3,in_figure,
+a0df8cddf3998e75a,Code generic endothelial,code,python_generic_endothelial_r1,bf2/codeG_endo,in_figure,
+a45cdf8cf3645ff03,Generic code endothelial run 2,code,python_generic_endothelial_r2,bf3/gen_endo_r2,in_figure,
+a4d431a04e304a282,Generic code endothelial run 3,code,python_generic_endothelial_r3,bf3/gen_endo_r3,in_figure,
+a91d248945f02c7b9,PyGeneric nuclei r1,code,python_generic_nuclei_r1,bf3/gen_nuclei_r1,in_figure,
+ab7562c5bdefea05b,PyGeneric nuclei r2,code,python_generic_nuclei_r2,bf3/gen_nuclei_r2,in_figure,
+a9bf5923eb919b384,PyGeneric nuclei r3,code,python_generic_nuclei_r3,bf3/gen_nuclei_r3,in_figure,
+a06d67134458f8a1f,Count cancer run 1,direct_answers,count_cancer_r1,,in_figure,
+a432374a8338b927e,Count cancer run 2,direct_answers,count_cancer_r2,,in_figure,
+a4be0bfd5692dc6ec,Count cancer run 3,direct_answers,count_cancer_r3,,in_figure,
+aacc2453ccc03ce94,Count endothelial run 1,direct_answers,count_endothelial_r1,,in_figure,
+a5c41f3397144f020,Count endothelial run 2,direct_answers,count_endothelial_r2,,in_figure,
+a248163b838f513e5,Count endothelial run 3,direct_answers,count_endothelial_r3,,in_figure,
+a512e26a77c4ca980,Count nuclei run 1,direct_answers,count_nuclei_r1,,in_figure,
+ad34e15498e09c03d,Count nuclei run 2,direct_answers,count_nuclei_r2,,in_figure,
+a7135c001d717c8f8,Count nuclei run 3,direct_answers,count_nuclei_r3,,in_figure,
+ada82ae3749dcf6f4,Draw cancer run 1,direct_answers,draw_cancer_r1,bf2/draw,in_figure,
+abaedbfcb3defb76e,Draw cancer run 2,direct_answers,draw_cancer_r2,bf2/draw,in_figure,
+ab9ac8fa45d10ff4a,Draw cancer run 3,direct_answers,draw_cancer_r3,bf2/draw,in_figure,
+aa7cb569f961b2a0a,Draw endothelial run 1,direct_answers,draw_endothelial_r1,bf2/draw,in_figure,
+a74f60ce92084166f,Draw endothelial run 2,direct_answers,draw_endothelial_r2,bf2/draw,in_figure,
+ad4430d2e06eb34c0,Draw endothelial run 3,direct_answers,draw_endothelial_r3,bf2/draw,in_figure,
+a90957809a308aba9,Draw nuclei run 1,direct_answers,draw_nuclei_r1,bf3/draw,in_figure,
+a90e7be63c369a75b,Draw nuclei run 2,direct_answers,draw_nuclei_r2,bf3/draw,in_figure,
+a578b0e51e4bfbd18,Draw nuclei run 3,direct_answers,draw_nuclei_r3,bf3/draw,in_figure,
+ac9091d229ef3ddc5,Agent cancer cells,optimise,by_eye_cancer,bf2/agent_cancer,in_figure,
+af26a632c1a99f051,Agent endothelial cells,optimise,by_eye_endothelial,bf2/agent_endo,in_figure,
+aeba03bff4883e8cc,"Agent by eye, nuclei",optimise,by_eye_nuclei,bf3/agent_nuclei,in_figure,
+a257cc6accbc25314,"Agent with reference, cancer (rerun)",optimise,with_annotation_cancer,bf3/ref_cancer,in_figure,
+a139b877ce8371e53,"Agent with reference, endothelial (rerun)",optimise,with_annotation_endothelial,bf3/ref_endo,in_figure,
+a57d25becc12a96b8,"Agent with reference, nuclei",optimise,with_annotation_nuclei,bf3/ref_nuclei,in_figure,
+a8adf6925429befc0,"Advice Box1, cancer",pilots,advice_box1v3_cancer,,pilot,Box 1 draft v3 advice test
+af9f8186f9c93edd3,"Advice Box1, endothelial",pilots,advice_box1v3_endothelial,,pilot,Box 1 draft v3 advice test
+a144b91b59a7cfbb7,"Advice Box1, nuclei",pilots,advice_box1v3_nuclei,,pilot,Box 1 draft v3 advice test
+ac91ba3000f7543dc,"Advice generic, cancer",pilots,advice_genericv3_cancer,,pilot,Box 1 draft v3 advice test
+a9a0dfc57b18269f6,"Advice generic, endothelial",pilots,advice_genericv3_endothelial,,pilot,Box 1 draft v3 advice test
+ade852b757c1d6105,"Advice generic, nuclei",pilots,advice_genericv3_nuclei,,pilot,Box 1 draft v3 advice test
+a3e19cec74f698711,"Box1 v3 pilot, cancer",pilots,code_box1v3_cancer,bf3/pb3_cancer_r1,pilot,Box 1 draft v3; turn-2 script in pb3t2_*
+ad3a0814bbb4b28cb,"Box1 v3 pilot, endothelial",pilots,code_box1v3_endothelial,bf3/pb3_endo_r1,pilot,Box 1 draft v3; turn-2 script in pb3t2_*
+a0b70679eda0731e2,"Box1 v3 pilot, nuclei",pilots,code_box1v3_nuclei,bf3/pb3_nuclei_r1,pilot,Box 1 draft v3; turn-2 script in pb3t2_*
+a7a5a011b8322afda,Advice only run1,superseded,advice_only_run1,,superseded,earlier exploratory round (see superseded/README.md)
+aa8a3dc70bfe8d6c4,Advice only run2,superseded,advice_only_run2,,superseded,earlier exploratory round (see superseded/README.md)
+a52afc34293bf56ea,Advice only run3,superseded,advice_only_run3,,superseded,earlier exploratory round (see superseded/README.md)
+a922b30f211d176f3,Agent trap optimisation run,superseded,agent_trap_optimisation_run,,superseded,earlier exploratory round (see superseded/README.md)
+a7c93ba60b273f95f,BF advice (no code),superseded,bf_advice_no_code,,superseded,earlier exploratory round (see superseded/README.md)
+ac755993bf9dc1c2c,BF code generic prompt,superseded,bf_code_generic_prompt,,superseded,earlier exploratory round (see superseded/README.md)
+a202d2f969a36d5ba,BF code specific prompt,superseded,bf_code_specific_prompt,,superseded,earlier exploratory round (see superseded/README.md)
+ad6b049c04c047b3b,BF realistic agent,superseded,bf_realistic_agent,,superseded,earlier exploratory round (see superseded/README.md)
+a623fd69a3e6cbdf2,Cellpose advice run1,superseded,cellpose_advice_run1,,superseded,earlier exploratory round (see superseded/README.md)
+a1f211cdb08c679bf,Cellpose advice run2,superseded,cellpose_advice_run2,,superseded,earlier exploratory round (see superseded/README.md)
+affe6eda757b992b9,Cellpose advice run3,superseded,cellpose_advice_run3,,superseded,earlier exploratory round (see superseded/README.md)
+a8b396cf540e9edda,Code Box1 prompt,superseded,code_box1_prompt,,superseded,earlier exploratory round (see superseded/README.md)
+a7e6618dc871406de,Code generic prompt,superseded,code_generic_prompt,,superseded,earlier exploratory round (see superseded/README.md)
+a4934a862ad844bfd,Code specific cancer,superseded,code_specific_cancer,,superseded,earlier exploratory round (see superseded/README.md)
+a1a3cc1d6216416e8,Code specific endothelial,superseded,code_specific_endothelial,,superseded,earlier exploratory round (see superseded/README.md)
+a4acb27410eed4e6d,Code specific prompt,superseded,code_specific_prompt,,superseded,earlier exploratory round (see superseded/README.md)
+a29a9965cd470e066,Code vague prompt,superseded,code_vague_prompt,,superseded,earlier exploratory round (see superseded/README.md)
+a8f465a5dfe6c5c1c,Count cells sonnet run 1,superseded,count_cells_sonnet_run_1,,superseded,earlier exploratory round (see superseded/README.md)
+ae81c6e6489996c64,Count cells sonnet run 2,superseded,count_cells_sonnet_run_2,,superseded,earlier exploratory round (see superseded/README.md)
+afd1ac6ed8e5b6363,Count cells sonnet run 3,superseded,count_cells_sonnet_run_3,,superseded,earlier exploratory round (see superseded/README.md)
+ad3239f85a2a10b83,Count objects haiku run1,superseded,count_objects_haiku_run1,,superseded,earlier exploratory round (see superseded/README.md)
+a60a7908230b792a7,Count objects haiku run2,superseded,count_objects_haiku_run2,,superseded,earlier exploratory round (see superseded/README.md)
+a5882a7ee44918741,Count objects haiku run3,superseded,count_objects_haiku_run3,,superseded,earlier exploratory round (see superseded/README.md)
+a16d23e942ffb7f7b,Count objects opus run1,superseded,count_objects_opus_run1,,superseded,earlier exploratory round (see superseded/README.md)
+a85185dc60bdde1e8,Count objects opus run2,superseded,count_objects_opus_run2,,superseded,earlier exploratory round (see superseded/README.md)
+a62be06e97c1133bc,Count objects opus run3,superseded,count_objects_opus_run3,,superseded,earlier exploratory round (see superseded/README.md)
+abc6645ab2c308389,Count objects sonnet run1,superseded,count_objects_sonnet_run1,,superseded,earlier exploratory round (see superseded/README.md)
+ae440d3082e719498,Count objects sonnet run2,superseded,count_objects_sonnet_run2,,superseded,earlier exploratory round (see superseded/README.md)
+a7e3c494c8e9fb255,Count objects sonnet run3,superseded,count_objects_sonnet_run3,,superseded,earlier exploratory round (see superseded/README.md)
+a8ad27f8a28d38263,Draw cancer cells haiku,superseded,draw_cancer_cells_haiku,,superseded,earlier exploratory round (see superseded/README.md)
+ae6ec5e56eef5c13d,Draw cancer cells opus,superseded,draw_cancer_cells_opus,,superseded,earlier exploratory round (see superseded/README.md)
+ad45fde7b99871e11,Draw cancer cells sonnet,superseded,draw_cancer_cells_sonnet,,superseded,earlier exploratory round (see superseded/README.md)
+aa37e562465f85f0f,Draw cancer cells sonnet run 2,superseded,draw_cancer_cells_sonnet_run_2,,superseded,earlier exploratory round (see superseded/README.md)
+a5e7e394c5d9f274c,Draw cancer cells sonnet run 3,superseded,draw_cancer_cells_sonnet_run_3,,superseded,earlier exploratory round (see superseded/README.md)
+a903c0f096f3f864b,Draw nuclei from BF haiku,superseded,draw_nuclei_from_bf_haiku,,superseded,earlier exploratory round (see superseded/README.md)
+a9a8986ceeee78e30,Draw nuclei from BF opus,superseded,draw_nuclei_from_bf_opus,,superseded,earlier exploratory round (see superseded/README.md)
+a274642fa15b33acc,Draw nuclei from BF sonnet,superseded,draw_nuclei_from_bf_sonnet,,superseded,earlier exploratory round (see superseded/README.md)
+ad366fad6abba222c,Full FOV counts haiku r1,superseded,full_fov_counts_haiku_r1,,superseded,earlier exploratory round (see superseded/README.md)
+ae9526fdcf90f1222,Full FOV counts haiku r2,superseded,full_fov_counts_haiku_r2,,superseded,earlier exploratory round (see superseded/README.md)
+a5f5e45a43a08e259,Full FOV counts haiku r3,superseded,full_fov_counts_haiku_r3,,superseded,earlier exploratory round (see superseded/README.md)
+a210f618e8450af9d,Full FOV counts opus r1,superseded,full_fov_counts_opus_r1,,superseded,earlier exploratory round (see superseded/README.md)
+ac3b14e5e4ab9594b,Full FOV counts opus r2,superseded,full_fov_counts_opus_r2,,superseded,earlier exploratory round (see superseded/README.md)
+a30a0fb676077eb16,Full FOV counts opus r3,superseded,full_fov_counts_opus_r3,,superseded,earlier exploratory round (see superseded/README.md)
+a51e21785303faf17,Full FOV counts sonnet r1,superseded,full_fov_counts_sonnet_r1,,superseded,earlier exploratory round (see superseded/README.md)
+aedd2518915ec1bcd,Full FOV counts sonnet r2,superseded,full_fov_counts_sonnet_r2,,superseded,earlier exploratory round (see superseded/README.md)
+abd14c8c3583eb47f,Full FOV counts sonnet r3,superseded,full_fov_counts_sonnet_r3,,superseded,earlier exploratory round (see superseded/README.md)
+ad28295cdad98f91c,"Agent with reference, cancer",superseded,optimise_with_annotation_cancer_interrupted,bf3/ref_cancer_interrupted,superseded,interrupted by a session restart; rerun from a clean folder
+a51d724c008728c1f,"Agent with reference, endothelial",superseded,optimise_with_annotation_endothelial_interrupted,bf3/ref_endo_interrupted,superseded,interrupted by a session restart; rerun from a clean folder
+a413f6ada934e92b1,Box1 code cancer run 1,superseded,python_box1_v1wording_cancer_r1,bf3/box1_cancer_r1,superseded,"earlier, stricter Box 1 wording"
+a7d9da00c25820ec4,Box1 code cancer run 2,superseded,python_box1_v1wording_cancer_r2,bf3/box1_cancer_r2,superseded,"earlier, stricter Box 1 wording"
+ae0484aed3104025f,Box1 code cancer run 3,superseded,python_box1_v1wording_cancer_r3,bf3/box1_cancer_r3,superseded,"earlier, stricter Box 1 wording"
+a0151de57e1a2ed01,Box1 code endothelial run 1,superseded,python_box1_v1wording_endothelial_r1,bf3/box1_endo_r1,superseded,"earlier, stricter Box 1 wording"
+af0ebbfb3b080914b,Box1 code endothelial run 2,superseded,python_box1_v1wording_endothelial_r2,bf3/box1_endo_r2,superseded,"earlier, stricter Box 1 wording"
+ab87ea111a4d20d97,Box1 code endothelial run 3,superseded,python_box1_v1wording_endothelial_r3,bf3/box1_endo_r3,superseded,"earlier, stricter Box 1 wording"
+af6f20cb410248254,Realistic analysis agent,superseded,realistic_analysis_agent,,superseded,earlier exploratory round (see superseded/README.md)
+a2670aa78a4fd7317,Sandboxed segmentation agent,superseded,sandboxed_segmentation_agent,,superseded,earlier exploratory round (see superseded/README.md)
+a5274487b1b9b2dfe,Sycophancy leading run1,superseded,sycophancy_leading_run1,,superseded,earlier exploratory round (see superseded/README.md)
+ae69c212c08a023ea,Sycophancy leading run2,superseded,sycophancy_leading_run2,,superseded,earlier exploratory round (see superseded/README.md)
+afe7e4cf41cbc91f2,Sycophancy leading run3,superseded,sycophancy_leading_run3,,superseded,earlier exploratory round (see superseded/README.md)
+aa1341d858b803fa1,Sycophancy neutral run1,superseded,sycophancy_neutral_run1,,superseded,earlier exploratory round (see superseded/README.md)
+adaffc78fd68a215a,Sycophancy neutral run2,superseded,sycophancy_neutral_run2,,superseded,earlier exploratory round (see superseded/README.md)
+a0ae17ba627e2f62e,Sycophancy neutral run3,superseded,sycophancy_neutral_run3,,superseded,earlier exploratory round (see superseded/README.md)

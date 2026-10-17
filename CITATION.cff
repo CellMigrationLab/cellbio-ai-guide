@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this material, please cite the article and the data sources listed in data/sources.csv."
+title: "Data, code and prompts for 'The cell biologist's guide to AI-assisted image analysis'"
+authors:
+  - family-names: Gómez-de-Mariscal
+    given-names: Estibaliz
+  - family-names: Henriques
+    given-names: Ricardo
+  - family-names: Jacquemet
+    given-names: Guillaume
+license: MIT
+repository-code: "https://github.com/CellMigrationLab/cellbio-ai-guide"
+date-released: 2026-10-17

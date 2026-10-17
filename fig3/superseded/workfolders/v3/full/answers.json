@@ -1,0 +1,53 @@
+{
+ "haiku": [
+  {
+   "cells_pecam": 470,
+   "nuclei_dapi": 300,
+   "cancer_bf": 85
+  },
+  {
+   "cells_pecam": 380,
+   "nuclei_dapi": 300,
+   "cancer_bf": 120
+  },
+  {
+   "cells_pecam": 420,
+   "nuclei_dapi": 310,
+   "cancer_bf": 95
+  }
+ ],
+ "sonnet": [
+  {
+   "cells_pecam": 330,
+   "nuclei_dapi": 420,
+   "cancer_bf": 110
+  },
+  {
+   "cells_pecam": 420,
+   "nuclei_dapi": 480,
+   "cancer_bf": 110
+  },
+  {
+   "cells_pecam": 300,
+   "nuclei_dapi": 420,
+   "cancer_bf": 110
+  }
+ ],
+ "opus": [
+  {
+   "cells_pecam": 480,
+   "nuclei_dapi": 650,
+   "cancer_bf": 190
+  },
+  {
+   "cells_pecam": 480,
+   "nuclei_dapi": 620,
+   "cancer_bf": 180
+  },
+  {
+   "cells_pecam": 480,
+   "nuclei_dapi": 600,
+   "cancer_bf": 150
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "Bash": 13,
+  "Read": 2,
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [
+  "<fig3-work>/agent_sandbox/v.png",
+  "<fig3-work>/agent_sandbox/v.png"
+ ],
+ "start": "2026-10-16T17:20:15.327Z",
+ "end": "2026-10-16T17:21:44.851Z",
+ "agent_id": "a2670aa78a4fd7317",
+ "description": "Sandboxed segmentation agent",
+ "section": "superseded",
+ "status": "superseded",
+ "note": "earlier exploratory round (see superseded/README.md)",
+ "workdir": ""
+}

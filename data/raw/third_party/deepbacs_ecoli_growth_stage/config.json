@@ -1,0 +1,36 @@
+{
+    "model" : {
+        "backend":              "Full Yolo",
+        "input_size":           416,
+        "anchors":              [0.86,1.27, 1.19,0.70, 1.73,1.27, 1.79,0.70, 3.40,2.70],
+        "max_box_per_image":    30,        
+        "labels":               ["Rod", "Dividing", "Microcolony"]
+    },
+
+    "train": {
+        "train_image_folder":   "/content/gdrive/MyDrive/Deep_Learning_Bacteria_EMBO/20210507_NEW_YOLO_ANNOTATIONS_prelim_folder/Cell_cycle/Data/Quartered_images/train_images_augmentation/",
+        "train_annot_folder":   "/content/gdrive/MyDrive/Deep_Learning_Bacteria_EMBO/20210507_NEW_YOLO_ANNOTATIONS_prelim_folder/Cell_cycle/Data/Quartered_images/train_annotations_augmentation/",     
+          
+        "train_times":          4,
+        "pretrained_weights":   "$h5_file_path",
+        "batch_size":           8,
+        "learning_rate":        0.0001,
+        "nb_epochs":            97,
+        "warmup_epochs":        3,
+
+        "object_scale":         5.0,
+        "no_object_scale":      1.0,
+        "coord_scale":          3.0,
+        "class_scale":          3.0,
+
+        "saved_weights_name":   "/content/gdrive/MyDrive/Deep_Learning_Bacteria_EMBO/20210507_NEW_YOLO_ANNOTATIONS_prelim_folder/Cell_cycle/Models/Quartered_M3_100ep_30box_4xaug_FNP5_FPP_1_PSP_3_FCP3_train4_batch_8_LR_1E-4_val20/best_weights.h5",
+        "debug":                true
+    },
+
+    "valid": {
+        "valid_image_folder":   "",
+        "valid_annot_folder":   "",
+
+        "valid_times":          1
+    }
+}

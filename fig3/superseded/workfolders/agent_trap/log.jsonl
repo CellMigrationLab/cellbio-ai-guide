@@ -1,0 +1,6 @@
+{"iteration": 0, "change": "baseline, no change", "SCORE": 0.747}
+{"iteration": 1, "change": "segment.py: BLOCK 51, SEED_SIGMA 2, MIN_DIST 5, seed map = normalized distance + 0.5*normalized smoothed intensity", "SCORE": 0.742}
+{"iteration": 2, "change": "segment.py: added TOFF=0.2 offset on global Otsu log threshold (foreground was ~2x ref area); 0.4->0.736, 0.6->0.634", "SCORE": 0.761}
+{"iteration": 3, "change": "segment.py: MIN_DIST 5->9 (fewer split seeds)", "SCORE": 0.767}
+{"iteration": 4, "change": "segment.py: TOFF 0.25, intensity weight in seed map 0 (distance only)", "SCORE": 0.773}
+{"iteration": 5, "change": "tried SIGMA 1.5 (0.768, worse) and reverted to 1.0; final config same as iteration 4", "SCORE": 0.773}

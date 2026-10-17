@@ -1,0 +1,35 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "Bash": 15,
+  "Read": 1,
+  "Monitor": 1,
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [
+  "<fig3-work>/bf3/ref_endo/view.png"
+ ],
+ "start": "2026-10-17T07:07:26.001Z",
+ "end": "2026-10-17T07:47:59.084Z",
+ "agent_id": "a139b877ce8371e53",
+ "description": "Agent with reference, endothelial (rerun)",
+ "section": "optimise",
+ "status": "in_figure",
+ "note": "",
+ "workdir": "bf3/ref_endo",
+ "artifacts": [
+  "exp.out",
+  "exp.py",
+  "final.score",
+  "final.tif",
+  "log.txt",
+  "pipeline.py",
+  "reported.json",
+  "score.py",
+  "v1.tif",
+  "view.png"
+ ]
+}

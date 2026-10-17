@@ -1,0 +1,136 @@
+section,run_id,status,task,model,start,web_calls,f1,n_pred,labels_written,note
+advice,after_docs_cancer,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:23.304Z,2,0.783,162,True,row a shows quotes; labels = our implementation of the advice (not shown)
+advice,after_docs_endothelial,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:23.371Z,2,0.035,16,True,row a shows quotes; labels = our implementation of the advice (not shown)
+advice,from_memory_cancer,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:23.188Z,0,0.82,154,True,row a shows quotes; labels = our implementation of the advice (not shown)
+advice,from_memory_endothelial,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:23.246Z,0,0.721,298,True,row a shows quotes; labels = our implementation of the advice (not shown)
+code,fiji_box1_cancer_r1,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:32:12.705Z,2,0.369,82,True,
+code,fiji_box1_cancer_r2,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:32:12.729Z,2,0.637,168,True,
+code,fiji_box1_cancer_r3,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:32:12.754Z,2,0.072,71,True,
+code,fiji_box1_endothelial_r1,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:32:12.778Z,1,0.0,0,True,
+code,fiji_box1_endothelial_r2,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:32:12.805Z,3,0.365,210,True,
+code,fiji_box1_endothelial_r3,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:32:12.828Z,2,0.0,58,True,
+code,fiji_box1_nuclei_r1,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:32:12.611Z,2,0.871,432,True,
+code,fiji_box1_nuclei_r2,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:32:12.645Z,2,,,False,
+code,fiji_box1_nuclei_r3,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:32:12.679Z,2,0.875,414,True,
+code,fiji_generic_cancer_r1,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:32:12.458Z,0,0.23,145,True,
+code,fiji_generic_cancer_r2,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:32:12.487Z,0,0.384,272,True,
+code,fiji_generic_cancer_r3,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:32:12.511Z,0,,,False,
+code,fiji_generic_endothelial_r1,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:32:12.532Z,0,0.0,1,True,
+code,fiji_generic_endothelial_r2,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:32:12.555Z,0,0.0,242,True,
+code,fiji_generic_endothelial_r3,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:32:12.580Z,0,0.0,0,True,
+code,fiji_generic_nuclei_r1,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:32:12.391Z,0,0.838,406,True,
+code,fiji_generic_nuclei_r2,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:32:12.414Z,0,0.856,414,True,
+code,fiji_generic_nuclei_r3,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:32:12.435Z,0,0.248,462,True,
+code,python_box1_cancer_r1,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:30:57.216Z,2,0.793,181,True,
+code,python_box1_cancer_r2,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:30:57.250Z,2,0.81,170,True,
+code,python_box1_cancer_r3,in_figure,cancer,claude-sonnet-5-5,2026-10-17T06:30:57.280Z,2,0.856,154,True,
+code,python_box1_endothelial_r1,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:30:57.306Z,2,0.701,443,True,
+code,python_box1_endothelial_r2,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:30:57.335Z,2,0.722,410,True,
+code,python_box1_endothelial_r3,in_figure,endo,claude-sonnet-5-5,2026-10-17T06:30:57.361Z,2,0.556,344,True,
+code,python_box1_nuclei_r1,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:30:57.126Z,2,0.94,465,True,
+code,python_box1_nuclei_r2,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:30:57.160Z,2,0.94,465,True,
+code,python_box1_nuclei_r3,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:30:57.188Z,2,0.945,461,True,
+code,python_generic_cancer_r1,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:23.420Z,0,0.517,166,True,
+code,python_generic_cancer_r2,in_figure,cancer,claude-sonnet-5-5,2026-10-17T05:57:40.264Z,0,0.519,161,True,
+code,python_generic_cancer_r3,in_figure,cancer,claude-sonnet-5-5,2026-10-17T05:57:40.295Z,0,0.367,170,True,
+code,python_generic_endothelial_r1,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:23.467Z,0,0.713,319,True,
+code,python_generic_endothelial_r2,in_figure,endo,claude-sonnet-5-5,2026-10-17T05:57:40.325Z,0,0.759,335,True,
+code,python_generic_endothelial_r3,in_figure,endo,claude-sonnet-5-5,2026-10-17T05:57:40.354Z,0,0.652,308,True,
+code,python_generic_nuclei_r1,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:30:57.384Z,0,0.616,844,True,
+code,python_generic_nuclei_r2,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:30:57.406Z,0,0.818,552,True,
+code,python_generic_nuclei_r3,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:30:57.426Z,0,0.836,549,True,
+direct_answers,count_cancer_r1,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:58.567Z,0,,,False,
+direct_answers,count_cancer_r2,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:58.621Z,0,,,False,
+direct_answers,count_cancer_r3,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:58.672Z,0,,,False,
+direct_answers,count_endothelial_r1,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:58.749Z,0,,,False,
+direct_answers,count_endothelial_r2,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:58.818Z,0,,,False,
+direct_answers,count_endothelial_r3,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:58.901Z,0,,,False,
+direct_answers,count_nuclei_r1,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:33:18.632Z,0,,,False,
+direct_answers,count_nuclei_r2,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:33:18.649Z,0,,,False,
+direct_answers,count_nuclei_r3,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:33:18.664Z,0,,,False,
+direct_answers,draw_cancer_r1,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:58.153Z,0,0.558,48,True,
+direct_answers,draw_cancer_r2,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:58.227Z,0,0.898,112,True,
+direct_answers,draw_cancer_r3,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:58.294Z,0,0.81,86,True,
+direct_answers,draw_endothelial_r1,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:58.380Z,0,0.005,12,True,
+direct_answers,draw_endothelial_r2,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:58.426Z,0,0.029,30,True,
+direct_answers,draw_endothelial_r3,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:58.491Z,0,0.005,20,True,
+direct_answers,draw_nuclei_r1,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:33:18.577Z,0,0.042,39,True,
+direct_answers,draw_nuclei_r2,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:33:18.596Z,0,0.074,98,True,
+direct_answers,draw_nuclei_r3,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:33:18.614Z,0,0.078,96,True,
+optimise,by_eye_cancer,in_figure,cancer,claude-sonnet-5-5,2026-10-17T04:32:23.582Z,0,0.903,133,True,
+optimise,by_eye_endothelial,in_figure,endo,claude-sonnet-5-5,2026-10-17T04:32:23.616Z,0,0.535,317,True,
+optimise,by_eye_nuclei,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:33:18.518Z,0,0.874,495,True,
+optimise,with_annotation_cancer,in_figure,cancer,claude-sonnet-5-5,2026-10-17T07:07:25.972Z,0,,,False,
+optimise,with_annotation_endothelial,in_figure,endo,claude-sonnet-5-5,2026-10-17T07:07:26.001Z,0,,,False,
+optimise,with_annotation_nuclei,in_figure,nuclei,claude-sonnet-5-5,2026-10-17T06:33:18.553Z,0,,,False,
+pilots,advice_box1v3_cancer,pilot,cancer,claude-sonnet-5-5,2026-10-17T09:22:01.129Z,2,,,False,Box 1 draft v3 advice test
+pilots,advice_box1v3_endothelial,pilot,endo,claude-sonnet-5-5,2026-10-17T09:22:01.166Z,0,,,False,Box 1 draft v3 advice test
+pilots,advice_box1v3_nuclei,pilot,nuclei,claude-sonnet-5-5,2026-10-17T09:22:01.098Z,0,,,False,Box 1 draft v3 advice test
+pilots,advice_genericv3_cancer,pilot,cancer,claude-sonnet-5-5,2026-10-17T09:22:01.012Z,0,,,False,Box 1 draft v3 advice test
+pilots,advice_genericv3_endothelial,pilot,endo,claude-sonnet-5-5,2026-10-17T09:22:01.062Z,0,,,False,Box 1 draft v3 advice test
+pilots,advice_genericv3_nuclei,pilot,nuclei,claude-sonnet-5-5,2026-10-17T09:22:00.981Z,0,,,False,Box 1 draft v3 advice test
+pilots,code_box1v3_cancer,pilot,cancer,claude-sonnet-5-5,2026-10-17T09:09:55.415Z,1,,,False,Box 1 draft v3; turn-2 script in pb3t2_*
+pilots,code_box1v3_endothelial,pilot,endo,claude-sonnet-5-5,2026-10-17T09:09:55.434Z,2,,,False,Box 1 draft v3; turn-2 script in pb3t2_*
+pilots,code_box1v3_nuclei,pilot,nuclei,claude-sonnet-5-5,2026-10-17T09:09:55.379Z,2,,,False,Box 1 draft v3; turn-2 script in pb3t2_*
+superseded,advice_only_run1,superseded,,claude-sonnet-5-5,2026-10-16T18:00:46.795Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,advice_only_run2,superseded,,claude-sonnet-5-5,2026-10-16T18:00:46.821Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,advice_only_run3,superseded,,claude-sonnet-5-5,2026-10-16T18:00:46.841Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,agent_trap_optimisation_run,superseded,,claude-sonnet-5-5,2026-10-16T17:34:00.963Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,bf_advice_no_code,superseded,,claude-sonnet-5-5,2026-10-16T18:37:26.346Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,bf_code_generic_prompt,superseded,,claude-sonnet-5-5,2026-10-16T18:37:26.372Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,bf_code_specific_prompt,superseded,,claude-sonnet-5-5,2026-10-16T18:37:26.390Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,bf_realistic_agent,superseded,,claude-sonnet-5-5,2026-10-16T18:37:26.421Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,cellpose_advice_run1,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.214Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,cellpose_advice_run2,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.232Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,cellpose_advice_run3,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.256Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,code_box1_prompt,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.302Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,code_generic_prompt,superseded,,claude-sonnet-5-5,2026-10-16T18:00:46.865Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,code_specific_cancer,superseded,cancer,claude-sonnet-5-5,2026-10-17T04:32:23.508Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,code_specific_endothelial,superseded,endo,claude-sonnet-5-5,2026-10-17T04:32:23.549Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,code_specific_prompt,superseded,,claude-sonnet-5-5,2026-10-16T18:00:46.882Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,code_vague_prompt,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.279Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_cells_sonnet_run_1,superseded,,claude-sonnet-5-5,2026-10-16T18:56:03.668Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_cells_sonnet_run_2,superseded,,claude-sonnet-5-5,2026-10-16T18:56:03.694Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_cells_sonnet_run_3,superseded,,claude-sonnet-5-5,2026-10-16T18:56:03.717Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_haiku_run1,superseded,,claude-haiku-5-5,2026-10-16T17:18:07.800Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_haiku_run2,superseded,,claude-haiku-5-5,2026-10-16T17:18:07.825Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_haiku_run3,superseded,,claude-haiku-5-5,2026-10-16T17:18:07.842Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_opus_run1,superseded,,claude-opus-5-5,2026-10-16T17:18:07.929Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_opus_run2,superseded,,claude-opus-5-5,2026-10-16T17:18:07.950Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_opus_run3,superseded,,claude-opus-5-5,2026-10-16T17:18:07.969Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_sonnet_run1,superseded,,claude-sonnet-5-5,2026-10-16T17:18:07.865Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_sonnet_run2,superseded,,claude-sonnet-5-5,2026-10-16T17:18:07.885Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,count_objects_sonnet_run3,superseded,,claude-sonnet-5-5,2026-10-16T17:18:07.910Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,draw_cancer_cells_haiku,superseded,cancer,claude-haiku-5-5,2026-10-16T18:37:26.440Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,draw_cancer_cells_opus,superseded,cancer,claude-opus-5-5,2026-10-16T18:37:26.474Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,draw_cancer_cells_sonnet,superseded,cancer,claude-sonnet-5-5,2026-10-16T18:37:26.458Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,draw_cancer_cells_sonnet_run_2,superseded,cancer,claude-sonnet-5-5,2026-10-16T18:56:03.606Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,draw_cancer_cells_sonnet_run_3,superseded,cancer,claude-sonnet-5-5,2026-10-16T18:56:03.643Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,draw_nuclei_from_bf_haiku,superseded,nuclei,claude-haiku-5-5,2026-10-16T18:01:35.644Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,draw_nuclei_from_bf_opus,superseded,nuclei,claude-opus-5-5,2026-10-16T18:01:35.692Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,draw_nuclei_from_bf_sonnet,superseded,nuclei,claude-sonnet-5-5,2026-10-16T18:01:35.667Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_haiku_r1,superseded,,claude-haiku-5-5,2026-10-16T18:01:35.438Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_haiku_r2,superseded,,claude-haiku-5-5,2026-10-16T18:01:35.461Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_haiku_r3,superseded,,claude-haiku-5-5,2026-10-16T18:01:35.479Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_opus_r1,superseded,,claude-opus-5-5,2026-10-16T18:01:35.563Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_opus_r2,superseded,,claude-opus-5-5,2026-10-16T18:01:35.595Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_opus_r3,superseded,,claude-opus-5-5,2026-10-16T18:01:35.620Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_sonnet_r1,superseded,,claude-sonnet-5-5,2026-10-16T18:01:35.500Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_sonnet_r2,superseded,,claude-sonnet-5-5,2026-10-16T18:01:35.522Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,full_fov_counts_sonnet_r3,superseded,,claude-sonnet-5-5,2026-10-16T18:01:35.543Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,optimise_with_annotation_cancer_interrupted,superseded,cancer,claude-sonnet-5-5,2026-10-17T05:57:40.381Z,0,,,False,interrupted by a session restart; rerun from a clean folder
+superseded,optimise_with_annotation_endothelial_interrupted,superseded,endo,claude-sonnet-5-5,2026-10-17T05:57:40.405Z,0,,,False,interrupted by a session restart; rerun from a clean folder
+superseded,python_box1_v1wording_cancer_r1,superseded,cancer,claude-sonnet-5-5,2026-10-17T05:57:40.075Z,2,,,False,"earlier, stricter Box 1 wording"
+superseded,python_box1_v1wording_cancer_r2,superseded,cancer,claude-sonnet-5-5,2026-10-17T05:57:40.103Z,3,0.844,158,True,"earlier, stricter Box 1 wording"
+superseded,python_box1_v1wording_cancer_r3,superseded,cancer,claude-sonnet-5-5,2026-10-17T05:57:40.151Z,2,0.81,170,True,"earlier, stricter Box 1 wording"
+superseded,python_box1_v1wording_endothelial_r1,superseded,endo,claude-sonnet-5-5,2026-10-17T05:57:40.183Z,2,,,False,"earlier, stricter Box 1 wording"
+superseded,python_box1_v1wording_endothelial_r2,superseded,endo,claude-sonnet-5-5,2026-10-17T05:57:40.210Z,2,,,False,"earlier, stricter Box 1 wording"
+superseded,python_box1_v1wording_endothelial_r3,superseded,endo,claude-sonnet-5-5,2026-10-17T05:57:40.237Z,3,,,False,"earlier, stricter Box 1 wording"
+superseded,realistic_analysis_agent,superseded,,claude-sonnet-5-5,2026-10-16T18:00:46.900Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,sandboxed_segmentation_agent,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.327Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,sycophancy_leading_run1,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.101Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,sycophancy_leading_run2,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.122Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,sycophancy_leading_run3,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.138Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,sycophancy_neutral_run1,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.155Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,sycophancy_neutral_run2,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.172Z,0,,,False,earlier exploratory round (see superseded/README.md)
+superseded,sycophancy_neutral_run3,superseded,,claude-sonnet-5-5,2026-10-16T17:20:15.195Z,0,,,False,earlier exploratory round (see superseded/README.md)

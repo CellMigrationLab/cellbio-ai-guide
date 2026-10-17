@@ -1,0 +1,152 @@
+{
+ "cells_pecam": [
+  {
+   "file": "counts/cells_pecam_1.png",
+   "y": 456,
+   "x": 475,
+   "size_px": 130,
+   "truth_centroid": 6,
+   "truth_any20": 10
+  },
+  {
+   "file": "counts/cells_pecam_2.png",
+   "y": 32,
+   "x": 256,
+   "size_px": 185,
+   "truth_centroid": 14,
+   "truth_any20": 17
+  },
+  {
+   "file": "counts/cells_pecam_3.png",
+   "y": 87,
+   "x": 208,
+   "size_px": 262,
+   "truth_centroid": 24,
+   "truth_any20": 27
+  },
+  {
+   "file": "counts/cells_pecam_4.png",
+   "y": 63,
+   "x": 141,
+   "size_px": 310,
+   "truth_centroid": 37,
+   "truth_any20": 41
+  },
+  {
+   "file": "counts/cells_pecam_5.png",
+   "y": 87,
+   "x": 86,
+   "size_px": 374,
+   "truth_centroid": 51,
+   "truth_any20": 60
+  },
+  {
+   "file": "counts/cells_pecam_6.png",
+   "y": 178,
+   "x": 507,
+   "size_px": 400,
+   "truth_centroid": 69,
+   "truth_any20": 82
+  }
+ ],
+ "nuclei_dapi": [
+  {
+   "file": "counts/nuclei_dapi_1.png",
+   "y": 485,
+   "x": 10,
+   "size_px": 113,
+   "truth_centroid": 4,
+   "truth_any20": 5
+  },
+  {
+   "file": "counts/nuclei_dapi_2.png",
+   "y": 708,
+   "x": 569,
+   "size_px": 130,
+   "truth_centroid": 5,
+   "truth_any20": 7
+  },
+  {
+   "file": "counts/nuclei_dapi_3.png",
+   "y": 169,
+   "x": 412,
+   "size_px": 135,
+   "truth_centroid": 7,
+   "truth_any20": 7
+  },
+  {
+   "file": "counts/nuclei_dapi_4.png",
+   "y": 228,
+   "x": 521,
+   "size_px": 135,
+   "truth_centroid": 8,
+   "truth_any20": 9
+  },
+  {
+   "file": "counts/nuclei_dapi_5.png",
+   "y": 193,
+   "x": 464,
+   "size_px": 145,
+   "truth_centroid": 11,
+   "truth_any20": 12
+  },
+  {
+   "file": "counts/nuclei_dapi_6.png",
+   "y": 637,
+   "x": 500,
+   "size_px": 185,
+   "truth_centroid": 14,
+   "truth_any20": 14
+  }
+ ],
+ "cancer_bf": [
+  {
+   "file": "counts/cancer_bf_1.png",
+   "y": 195,
+   "x": 529,
+   "size_px": 192,
+   "truth_centroid": 1,
+   "truth_any20": 2
+  },
+  {
+   "file": "counts/cancer_bf_2.png",
+   "y": 469,
+   "x": 701,
+   "size_px": 206,
+   "truth_centroid": 3,
+   "truth_any20": 5
+  },
+  {
+   "file": "counts/cancer_bf_3.png",
+   "y": 437,
+   "x": 629,
+   "size_px": 268,
+   "truth_centroid": 6,
+   "truth_any20": 6
+  },
+  {
+   "file": "counts/cancer_bf_4.png",
+   "y": 697,
+   "x": 516,
+   "size_px": 266,
+   "truth_centroid": 8,
+   "truth_any20": 9
+  },
+  {
+   "file": "counts/cancer_bf_5.png",
+   "y": 266,
+   "x": 614,
+   "size_px": 377,
+   "truth_centroid": 12,
+   "truth_any20": 12
+  },
+  {
+   "file": "counts/cancer_bf_6.png",
+   "y": 88,
+   "x": 224,
+   "size_px": 322,
+   "truth_centroid": 19,
+   "truth_any20": 20
+  }
+ ]
+}

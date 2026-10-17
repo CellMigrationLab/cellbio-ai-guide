@@ -1,0 +1,13 @@
+{
+ "default": 0.775,
+ "down4": 0.33,
+ "down2": 0.399,
+ "nonorm": 0.0,
+ "cellprob2": 0.786,
+ "postfilter": 0.917,
+ "up2": 0.72,
+ "file_minmax": 0.807,
+ "file_histeq": 0.549,
+ "file_clahe": 0.598,
+ "flow0.8": 0.75
+}

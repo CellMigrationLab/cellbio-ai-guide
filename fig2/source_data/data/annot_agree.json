@@ -1,0 +1,15 @@
+{
+ "pairs": {
+  "annotator 1 vs annotator 2": 0.897
+ },
+ "bio": {
+  "annotator 1": {
+   "count": 382,
+   "mean_area_um2": 1015.6
+  },
+  "annotator 2": {
+   "count": 369,
+   "mean_area_um2": 1041.9
+  }
+ }
+}

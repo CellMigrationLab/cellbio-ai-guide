@@ -1,0 +1,27 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "Read": 1,
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [
+  "<fig3-work>/bf2/codeG_endo/bf_preview.png"
+ ],
+ "start": "2026-10-17T04:32:23.467Z",
+ "end": "2026-10-17T04:33:04.540Z",
+ "agent_id": "a0df8cddf3998e75a",
+ "description": "Code generic endothelial",
+ "section": "code",
+ "status": "in_figure",
+ "note": "",
+ "workdir": "bf2/codeG_endo",
+ "artifacts": [
+  "labels.tif",
+  "run.log",
+  "score.json",
+  "script.py"
+ ]
+}

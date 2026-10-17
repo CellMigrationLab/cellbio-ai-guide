@@ -1,0 +1,23 @@
+{
+ "models": [
+  "claude-haiku-5-5"
+ ],
+ "tool_calls": {
+  "Read": 3,
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [
+  "<fig3-work>/v3/full/pecam_full.png",
+  "<fig3-work>/v3/full/dapi_full.png",
+  "<fig3-work>/v3/full/bf_full.png"
+ ],
+ "start": "2026-10-16T18:01:35.479Z",
+ "end": "2026-10-16T18:01:42.361Z",
+ "agent_id": "a5f5e45a43a08e259",
+ "description": "Full FOV counts haiku r3",
+ "section": "superseded",
+ "status": "superseded",
+ "note": "earlier exploratory round (see superseded/README.md)",
+ "workdir": ""
+}

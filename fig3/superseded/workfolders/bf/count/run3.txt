@@ -1,0 +1,6 @@
+I can't give exact counts, so these are estimates from a single view of the image.
+
+- **Cancer cells:** I counted about 115 round, bright-rimmed cells. Many sit in small clusters, so the touching ones are the least certain. A few bright, blurry blobs and some debris may or may not be cells, and I didn't count those.
+- **Endothelial cells:** The monolayer is faint and low-contrast, and the cell borders are hard to see. I estimated about 160 from the field area and a typical cell size of roughly 60 to 80 px. This number is much less reliable than the cancer cell count.
+
+{"cancer_cells": 115, "endothelial_cells": 160}

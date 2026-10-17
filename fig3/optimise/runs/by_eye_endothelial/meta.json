@@ -1,0 +1,35 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "Bash": 5,
+  "Read": 4,
+  "Monitor": 3,
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [
+  "<fig3-work>/bf2/agent_endo/view.png",
+  "<fig3-work>/bf2/agent_endo/ov.png",
+  "<fig3-work>/bf2/agent_endo/ov.png",
+  "<fig3-work>/bf2/agent_endo/ov.png"
+ ],
+ "start": "2026-10-17T04:32:23.616Z",
+ "end": "2026-10-17T04:44:07.722Z",
+ "agent_id": "af26a632c1a99f051",
+ "description": "Agent endothelial cells",
+ "section": "optimise",
+ "status": "in_figure",
+ "note": "",
+ "workdir": "bf2/agent_endo",
+ "artifacts": [
+  "areas.csv",
+  "labels.tif",
+  "ov.png",
+  "pipeline.py",
+  "raw_lab.npy",
+  "score.json",
+  "view.png"
+ ]
+}

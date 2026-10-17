@@ -1,0 +1,30 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "Read": 2,
+  "ToolSearch": 1,
+  "WebFetch": 2,
+  "SubagentHandback": 2
+ },
+ "web": [
+  "https://cellpose.readthedocs.io/en/latest/api.html",
+  "https://cellpose.readthedocs.io/en/latest/settings.html"
+ ],
+ "files_read": [
+  "<fig3-work>/bf3/pb3_endo_r1/bf_preview.png",
+  "<fig3-work>/bf3/box3/assets/endo_annotation.png"
+ ],
+ "start": "2026-10-17T09:09:55.434Z",
+ "end": "2026-10-17T09:24:35.505Z",
+ "agent_id": "ad3a0814bbb4b28cb",
+ "description": "Box1 v3 pilot, endothelial",
+ "section": "pilots",
+ "status": "pilot",
+ "note": "Box 1 draft v3; turn-2 script in pb3t2_*",
+ "workdir": "bf3/pb3_endo_r1",
+ "artifacts": [
+  "script.py"
+ ]
+}

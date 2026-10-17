@@ -1,0 +1,32 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "Read": 1,
+  "ToolSearch": 1,
+  "WebFetch": 2,
+  "SubagentHandback": 1
+ },
+ "web": [
+  "https://cellpose.readthedocs.io/en/latest/api.html",
+  "https://cellpose.readthedocs.io/en/latest/settings.html"
+ ],
+ "files_read": [
+  "<fig3-work>/bf3/py_box1_cancer_r2/bf_preview.png"
+ ],
+ "start": "2026-10-17T06:30:57.250Z",
+ "end": "2026-10-17T06:31:55.875Z",
+ "agent_id": "a2f97b5b3511c11f8",
+ "description": "PyBox1 cancer r2",
+ "section": "code",
+ "status": "in_figure",
+ "note": "",
+ "workdir": "bf3/py_box1_cancer_r2",
+ "artifacts": [
+  "labels.tif",
+  "run.log",
+  "score.json",
+  "script.py"
+ ]
+}

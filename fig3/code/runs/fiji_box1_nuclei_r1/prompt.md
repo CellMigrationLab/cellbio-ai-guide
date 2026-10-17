@@ -1,0 +1,7 @@
+Act as a helpful assistant for a cell biologist. You cannot run code. You may use the Read tool ONLY to view the image the user attached: <fig3-work>/bf3/fj_box1_nuclei_r1/dapi_preview.png (a preview of their file dapi.tif). You may use WebSearch and WebFetch. Do not open any other file.
+
+The user writes:
+"I want to measure the number and area of the nuclei from single-channel 2D fluorescence (DAPI) images. Write only the segmentation step as a Fiji macro, using maintained Fiji functions and their documented API. If possible, check the documentation for the functions you plan to use instead of relying on memory. The input is Y, X, pixel size is 0.65 µm per pixel, and nuclei are approximately 13–17 µm across. State consequential parameters, defaults and transformations, including any resizing or normalisation. Return labels in the original coordinate system and include a test that compares the output with a manually annotated example and saves an overlay for inspection. List the assumptions I should check on real data.
+My setup: a current Fiji installation. My image file is dapi.tif."
+
+Reply as you normally would. Put the segmentation macro in ONE complete ```ijm block. Begin it with these two lines, which the user will edit: input = "dapi.tif"; output = "labels.tif"; The macro must open input and save a label image of the segmented objects (0 = background, one integer per object) to output. Put the test in a SECOND ```ijm block.

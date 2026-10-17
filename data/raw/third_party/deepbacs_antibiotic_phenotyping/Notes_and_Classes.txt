@@ -1,0 +1,12 @@
+This dataset is used to train a YOLOv2 model to detect and classify drug treated E. coli cells.
+
+To test the trained model(s), we added two different test datasets:
+	1) Images with only one treatment (as usually acquired in drug screening)
+	2) Images including multiple treatments, created by randomly stitching small image patches together
+
+For test dataset 2 we additionally provided the masks showing the particular treatment of each image quarter.
+
+
+The classes used for training are the following:
+
+Rifampicin, Oblique, Nalidixate, Mecillinam, CAM, Vesicle, Control, MP265

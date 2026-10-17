@@ -1,0 +1,18 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [],
+ "start": "2026-10-16T18:37:26.390Z",
+ "end": "2026-10-16T18:37:47.115Z",
+ "agent_id": "a202d2f969a36d5ba",
+ "description": "BF code specific prompt",
+ "section": "superseded",
+ "status": "superseded",
+ "note": "earlier exploratory round (see superseded/README.md)",
+ "workdir": ""
+}

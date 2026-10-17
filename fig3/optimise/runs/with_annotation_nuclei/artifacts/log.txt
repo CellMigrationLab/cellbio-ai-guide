@@ -1,0 +1,9 @@
+Score = object F1 @ IoU>=0.5, one-to-one, predictions >30% on cancer mask ignored. Dev image: 216 annotated nuclei.
+v1 classical: log-intensity, gaussian s1.5, local threshold (block 71) AND global Otsu*0.9, opening, distance-transform watershed (min_dist 7), min area 80 -> F1 0.834 (TP189 FP48 FN27)
+v2 one-at-a-time sweep: block 41 -> 0.849; offset -0.05 -> 0.855; minarea 150 -> 0.843; mind 10 -> 0.840; sigma 2/1, block 121, hsmooth: no gain
+v3 combined classical (block 41, offset -0.05, minarea 150, mind 10, hsmooth 2.5) -> 0.888 (TP198 FP32 FN18)
+v4 Cellpose-SAM, diameter 23 (=median annotated nucleus area 414 px), flow 0.4, cellprob 0, no filtering -> 0.912 (TP206 FP30 FN10)
+v5 v4 + remove objects < 60 px -> 0.916; <100 -> 0.919; <150 -> 0.927 (TP202 FP18 FN14); <200 -> 0.939
+FINAL: v5 with MIN_AREA=150 (kept below the 200 optimum, ~1/3 of median nucleus, to limit overfitting to the single dev image). Cellpose params not tuned (only one run, ~15 min CPU).
+Final dev score F1 0.927. Note: min-area was chosen on the dev image; held-out performance may be somewhat lower.
+Verified: pipeline.py run from scratch reproduces F1 0.927.

@@ -1,0 +1,12 @@
+{
+ "name": "vague",
+ "returncode": 0,
+ "stdout_tail": "Measured 428 nuclei. Median area: 236.5 px. Saved to areas.csv\n",
+ "stderr_tail": "<fig3-work>/codetest/vague/script.py:28: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.\n  mask = morphology.remove_small_objects(mask, MIN_AREA_PX)\n",
+ "n_objects": 428,
+ "n_ref": 441,
+ "f1": 0.364,
+ "matched": 158,
+ "area_ratio_median": 0.662,
+ "areas_csv_head": "nucleus_id,area_px\n1,144\n2,138\n3,1310\n4,540\n5,391\n6,337\n7,436\n8,355\n9,299\n10,189\n11,657\n12,464\n13,399\n14,79\n15,129\n16,458\n17,307\n18,121\n19,383\n20,696\n21,275\n22,523\n23,33\n24,297\n25,58\n26,548\n27,753\n28,70\n29,36\n30,436\n31,358\n32,340\n33,140\n34,422\n35,405\n36,48\n37,171\n38,309\n39,741\n40,61\n41,1149\n42,400\n43,522\n44,32\n45,147\n46,47\n47,445\n48,180\n49,59\n50,459\n51,753\n52,176\n53,69\n54,39\n55,194\n56,152\n57,229\n5"
+}

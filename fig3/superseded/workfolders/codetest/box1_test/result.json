@@ -1,0 +1,6 @@
+{
+ "name": "box1_test",
+ "returncode": 0,
+ "stdout_tail": "2 nuclei; median area 173.4 um2\ntest passed\n",
+ "stderr_tail": ""
+}

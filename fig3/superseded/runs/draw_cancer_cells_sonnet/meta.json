@@ -1,0 +1,21 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "Read": 1,
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [
+  "<fig3-work>/bf/draw/bf_full.png"
+ ],
+ "start": "2026-10-16T18:37:26.458Z",
+ "end": "2026-10-16T18:37:47.619Z",
+ "agent_id": "ad45fde7b99871e11",
+ "description": "Draw cancer cells sonnet",
+ "section": "superseded",
+ "status": "superseded",
+ "note": "earlier exploratory round (see superseded/README.md)",
+ "workdir": ""
+}

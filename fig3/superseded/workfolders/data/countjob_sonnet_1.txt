@@ -1,0 +1,18 @@
+1. <fig3-work>/counts/nuclei_dapi_5.png  ->  This is a fluorescence microscopy image of cell nuclei stained with DAPI. How many nuclei are in this image?
+2. <fig3-work>/counts/cells_pecam_5.png  ->  This is a fluorescence microscopy image of an endothelial cell monolayer stained for the cell-junction marker PECAM-1. How many cells are in this image?
+3. <fig3-work>/counts/cancer_bf_3.png  ->  This is a brightfield microscopy image of cancer cells (round, refractile cells) sitting on top of a flat endothelial cell monolayer. How many cancer cells are in this image?
+4. <fig3-work>/counts/cancer_bf_6.png  ->  This is a brightfield microscopy image of cancer cells (round, refractile cells) sitting on top of a flat endothelial cell monolayer. How many cancer cells are in this image?
+5. <fig3-work>/counts/cells_pecam_2.png  ->  This is a fluorescence microscopy image of an endothelial cell monolayer stained for the cell-junction marker PECAM-1. How many cells are in this image?
+6. <fig3-work>/counts/cells_pecam_1.png  ->  This is a fluorescence microscopy image of an endothelial cell monolayer stained for the cell-junction marker PECAM-1. How many cells are in this image?
+7. <fig3-work>/counts/nuclei_dapi_1.png  ->  This is a fluorescence microscopy image of cell nuclei stained with DAPI. How many nuclei are in this image?
+8. <fig3-work>/counts/cancer_bf_4.png  ->  This is a brightfield microscopy image of cancer cells (round, refractile cells) sitting on top of a flat endothelial cell monolayer. How many cancer cells are in this image?
+9. <fig3-work>/counts/cancer_bf_5.png  ->  This is a brightfield microscopy image of cancer cells (round, refractile cells) sitting on top of a flat endothelial cell monolayer. How many cancer cells are in this image?
+10. <fig3-work>/counts/nuclei_dapi_6.png  ->  This is a fluorescence microscopy image of cell nuclei stained with DAPI. How many nuclei are in this image?
+11. <fig3-work>/counts/nuclei_dapi_3.png  ->  This is a fluorescence microscopy image of cell nuclei stained with DAPI. How many nuclei are in this image?
+12. <fig3-work>/counts/cancer_bf_2.png  ->  This is a brightfield microscopy image of cancer cells (round, refractile cells) sitting on top of a flat endothelial cell monolayer. How many cancer cells are in this image?
+13. <fig3-work>/counts/cells_pecam_4.png  ->  This is a fluorescence microscopy image of an endothelial cell monolayer stained for the cell-junction marker PECAM-1. How many cells are in this image?
+14. <fig3-work>/counts/cancer_bf_1.png  ->  This is a brightfield microscopy image of cancer cells (round, refractile cells) sitting on top of a flat endothelial cell monolayer. How many cancer cells are in this image?
+15. <fig3-work>/counts/nuclei_dapi_2.png  ->  This is a fluorescence microscopy image of cell nuclei stained with DAPI. How many nuclei are in this image?
+16. <fig3-work>/counts/cells_pecam_3.png  ->  This is a fluorescence microscopy image of an endothelial cell monolayer stained for the cell-junction marker PECAM-1. How many cells are in this image?
+17. <fig3-work>/counts/nuclei_dapi_4.png  ->  This is a fluorescence microscopy image of cell nuclei stained with DAPI. How many nuclei are in this image?
+18. <fig3-work>/counts/cells_pecam_6.png  ->  This is a fluorescence microscopy image of an endothelial cell monolayer stained for the cell-junction marker PECAM-1. How many cells are in this image?

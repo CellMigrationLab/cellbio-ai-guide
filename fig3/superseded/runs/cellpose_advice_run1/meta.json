@@ -1,0 +1,18 @@
+{
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "tool_calls": {
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [],
+ "start": "2026-10-16T17:20:15.214Z",
+ "end": "2026-10-16T17:20:28.133Z",
+ "agent_id": "a623fd69a3e6cbdf2",
+ "description": "Cellpose advice run1",
+ "section": "superseded",
+ "status": "superseded",
+ "note": "earlier exploratory round (see superseded/README.md)",
+ "workdir": ""
+}

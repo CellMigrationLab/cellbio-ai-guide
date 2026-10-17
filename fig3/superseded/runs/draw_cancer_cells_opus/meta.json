@@ -1,0 +1,21 @@
+{
+ "models": [
+  "claude-opus-5-5"
+ ],
+ "tool_calls": {
+  "Read": 1,
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [
+  "<fig3-work>/bf/draw/bf_full.png"
+ ],
+ "start": "2026-10-16T18:37:26.474Z",
+ "end": "2026-10-16T18:38:08.825Z",
+ "agent_id": "ae6ec5e56eef5c13d",
+ "description": "Draw cancer cells opus",
+ "section": "superseded",
+ "status": "superseded",
+ "note": "earlier exploratory round (see superseded/README.md)",
+ "workdir": ""
+}

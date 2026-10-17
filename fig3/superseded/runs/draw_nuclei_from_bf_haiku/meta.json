@@ -1,0 +1,21 @@
+{
+ "models": [
+  "claude-haiku-5-5"
+ ],
+ "tool_calls": {
+  "Read": 1,
+  "SubagentHandback": 1
+ },
+ "web": [],
+ "files_read": [
+  "<fig3-work>/v3/draw/bf_roi.png"
+ ],
+ "start": "2026-10-16T18:01:35.644Z",
+ "end": "2026-10-16T18:01:42.468Z",
+ "agent_id": "a903c0f096f3f864b",
+ "description": "Draw nuclei from BF haiku",
+ "section": "superseded",
+ "status": "superseded",
+ "note": "earlier exploratory round (see superseded/README.md)",
+ "workdir": ""
+}

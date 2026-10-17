@@ -1,0 +1,36 @@
+{
+    "model" : {
+        "backend":              "Full Yolo",
+        "input_size":           416,
+        "anchors":              [0.43,0.44, 0.87,1.55, 0.90,0.92, 1.53,0.86, 1.66,1.57],
+        "max_box_per_image":    10,        
+        "labels":               ["Rifampicin", "Oblique", "Nalidixate", "Mecillinam", "CAM", "Vesicle", "Control", "MP265"]
+    },
+
+    "train": {
+        "train_image_folder":   "/content/gdrive/MyDrive/Deep_Learning_Bacteria_EMBO/Datasets/YOLOv2/antibiotic_MoA/split_FOV/TRAINING_DATA_augmentation/",
+        "train_annot_folder":   "/content/gdrive/MyDrive/Deep_Learning_Bacteria_EMBO/Datasets/YOLOv2/antibiotic_MoA/split_FOV/TRAINING_ANNOTATION_NEW_augmentation/",     
+          
+        "train_times":          4,
+        "pretrained_weights":   "/best_weights.h5",
+        "batch_size":           16,
+        "learning_rate":        0.001,
+        "nb_epochs":            97,
+        "warmup_epochs":        3,
+
+        "object_scale":         4.0,
+        "no_object_scale":      2.0,
+        "coord_scale":          1.0,
+        "class_scale":          2.0,
+
+        "saved_weights_name":   "/content/gdrive/MyDrive/Deep_Learning_Bacteria_EMBO/Datasets/YOLOv2/antibiotic_MoA/split_FOV/new_models_20210217/M2_new_DNA_membr_100ep_batch_16_train_4_aug_8_LR_0.001_val_20_FPP2_FNP4_FCP_2_full_YOLO/best_weights.h5",
+        "debug":                true
+    },
+
+    "valid": {
+        "valid_image_folder":   "",
+        "valid_annot_folder":   "",
+
+        "valid_times":          1
+    }
+}
