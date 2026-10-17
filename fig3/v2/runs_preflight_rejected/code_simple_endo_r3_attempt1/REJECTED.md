@@ -1,0 +1,1 @@
+Attempt 1 of code_simple_endo_r3 rejected: harness fault: image.tif given to the subject (and to the runner) lacked the pixel-size calibration of the raw file (make_assets.py dropped it), contradicting the answer sheet's 'from the metadata'; the script stopped asking for the pixel size. Fixed in make_assets.py; reason written before attempt 2.

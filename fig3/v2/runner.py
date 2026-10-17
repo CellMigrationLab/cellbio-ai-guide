@@ -3,7 +3,7 @@ field 104 and field 209, each in a clean folder and a fresh virtual environment.
 
 Usage: PYTHONPATH=. python fig3/v2/runner.py RUN_DIR [--field 104|209]
 
-RUN_DIR (fig3/v2/runs/<scenario_id>/) must contain meta.json and:
+RUN_DIR (fig3/v2/runs/<scenario_id>/ or fig3/v2/runs_preflight/<scenario_id>/) must contain meta.json and:
   row B (code):     code_as_returned.py, optionally code_run.py (input/output paths edited only; diff in EDITS.md)
   row C (optimise): agent_folder/ with pipeline.py and runtime_manifest.json (files the pipeline needs), optionally
                     pipeline_run.py (paths edited only; diff in EDITS.md)
@@ -33,22 +33,38 @@ FIELD_ASSET = {104: "dev_{task}_image.tif", 209: "test_{task}_image.tif"}
 NEVER_COPY = ("annotation", "image.tif", "image.png")   # development data must not reach the test run
 
 
-def runtime_files(agent_folder: Path) -> list[Path]:
-    """Files listed in runtime_manifest.json (row C); development images and annotations are refused."""
+def manifest_names(agent_folder: Path) -> list[str]:
+    """Every string in runtime_manifest.json (any layout: the prompt fixes no format) that names a file in the agent
+    folder, in order of appearance."""
     manifest = agent_folder / "runtime_manifest.json"
     if not manifest.is_file():
         return []
-    data = json.loads(manifest.read_text())
-    names = data if isinstance(data, list) else data.get("files", [])
+    found: list[str] = []
+
+    def walk(value) -> None:
+        if isinstance(value, dict):
+            for v in value.values():
+                walk(v)
+        elif isinstance(value, list):
+            for v in value:
+                walk(v)
+        elif isinstance(value, str) and value not in found and (agent_folder / value).is_file():
+            found.append(value)
+
+    walk(json.loads(manifest.read_text()))
+    return found
+
+
+def runtime_files(agent_folder: Path) -> list[Path]:
+    """Files named in runtime_manifest.json (row C); development images and annotations are refused."""
     out = []
-    for name in names:
-        path = (agent_folder / str(name)).resolve()
+    for name in manifest_names(agent_folder):
+        path = (agent_folder / name).resolve()
         if not path.is_relative_to(agent_folder.resolve()):
             raise ValueError(f"runtime file outside the agent folder: {name}")
-        if any(k in path.name for k in NEVER_COPY):
-            continue          # recorded in execution.json as refused
-        if path.is_file():
-            out.append(path)
+        if any(k in path.name for k in NEVER_COPY) or path.name == "pipeline.py":
+            continue          # refused ones are recorded in execution.json
+        out.append(path)
     return out
 
 
@@ -68,13 +84,13 @@ def make_env(env_dir: Path, packages: list[str], log: list[str]) -> Path | None:
 def run_field(run_dir: Path, field: int) -> dict:
     meta = json.loads((run_dir / "meta.json").read_text())
     row, task = meta["row"], meta["task"]
-    exec_dir = EXEC_ROOT / run_dir.name / f"f{field}"
+    exec_dir = EXEC_ROOT / run_dir.parent.name / run_dir.name / f"f{field}"   # runs/ and runs_preflight/ apart
     if exec_dir.exists():
         shutil.rmtree(exec_dir)
     work = exec_dir / "work"
     work.mkdir(parents=True)
     shutil.copyfile(ASSETS / FIELD_ASSET[field].format(task=task), work / "image.tif")
-    refused = []
+    refused, copied = [], []
     if row == "code":
         script = run_dir / ("code_run.py" if (run_dir / "code_run.py").is_file() else "code_as_returned.py")
         shutil.copyfile(script, work / "script.py")
@@ -85,11 +101,8 @@ def run_field(run_dir: Path, field: int) -> dict:
         shutil.copyfile(script, work / "pipeline.py")
         for f in runtime_files(folder):
             shutil.copyfile(f, work / f.name)
-        manifest = folder / "runtime_manifest.json"
-        if manifest.is_file():
-            data = json.loads(manifest.read_text())
-            names = data if isinstance(data, list) else data.get("files", [])
-            refused = [n for n in names if any(k in Path(str(n)).name for k in NEVER_COPY)]
+        refused = [n for n in manifest_names(folder) if any(k in Path(n).name for k in NEVER_COPY)]
+        copied = [f.name for f in runtime_files(folder)]
         args = ["pipeline.py", "image.tif", "labels.tif", "measurements.csv"]
     else:
         raise ValueError(f"row {row!r} has nothing to run")
@@ -98,6 +111,7 @@ def run_field(run_dir: Path, field: int) -> dict:
     log: list[str] = []
     python = make_env(exec_dir / "venv", packages, log)
     record = {"field": field, "script": script.name, "packages": packages, "runtime_files_refused": refused,
+              "runtime_files_copied": copied if row == "optimise" else [],
               "command": None, "exit_code": None, "timeout": False, "runtime_s": None}
     if python is None:
         record["status"] = "install_failed"

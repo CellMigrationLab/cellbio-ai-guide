@@ -5,7 +5,8 @@ annotation); field 209 is the TEST image (only its image is ever given, to run a
 direct-answer row, to answer about; its annotation is never given to a model).
 
 Writes fig3/v2/assets/:
-  dev_<task>_image.tif / .png         field 104 image (uint16 as acquired; 8-bit preview, 1st-99.7th percentile)
+  dev_<task>_image.tif / .png         field 104 image (uint16 and pixel size as acquired; 8-bit preview, 1st-99.7th
+                                      percentile)
   dev_<task>_annotation.tif / .png    field 104 manual annotation (label image; coloured preview)
   test_<task>_image.tif / .png        field 209 image (never its annotation)
 Usage: PYTHONPATH=. python fig3/v2/make_assets.py
@@ -41,8 +42,14 @@ def label_colours(labels: np.ndarray, seed: int = 3) -> Image.Image:
 
 def write_image(prefix: str, field: int, task: str) -> None:
     """Write a field's image for a task as TIFF (unchanged values) and PNG preview."""
-    image = tifffile.imread(raw_file(f"field{field}_{IMAGE_ROLE[task]}.tif"))
-    tifffile.imwrite(OUT / f"{prefix}_{task}_image.tif", image, compression="zlib")
+    with tifffile.TiffFile(raw_file(f"field{field}_{IMAGE_ROLE[task]}.tif")) as tif:
+        image = tif.asarray()
+        x_res, y_res = (tif.pages[0].tags[k].value for k in ("XResolution", "YResolution"))
+        unit = tif.imagej_metadata["unit"]
+    # the pixel size as acquired (ImageJ calibration, as in data/raw); other ImageJ fields, such as the channel label
+    # with the source file name, are not copied
+    tifffile.imwrite(OUT / f"{prefix}_{task}_image.tif", image, imagej=True, resolution=(x_res, y_res),
+                     metadata={"unit": unit}, compression="zlib")
     preview(image.astype(float)).save(OUT / f"{prefix}_{task}_image.png")
 
 

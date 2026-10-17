@@ -91,6 +91,8 @@ class Direct(unittest.TestCase):
     def test_parse_count_keeps_range(self):
         self.assertEqual(score.parse_count("between 300 and 340, roughly 300-340"), {"count": 320.0, "range": [300, 340]})
         self.assertEqual(score.parse_count("about 1,250 cells")["count"], 1250)
+        self.assertEqual(score.parse_count("I count roughly **110 cells**; the 2-3 clumps are hard.")["count"], 110)
+        self.assertEqual(score.parse_count("1. **Count:** about 95 to 105 nuclei"), {"count": 100.0, "range": [95, 105]})
 
 
 class Protocol(unittest.TestCase):
@@ -110,6 +112,48 @@ class Protocol(unittest.TestCase):
             self.assertNotIn("test_" + s["task"] + "_annotation", s["folder_files"])
             if s["row"] in ("code", "optimise"):
                 self.assertIn(f"dev_{s['task']}_image.tif", s["folder_files"])
+
+
+class Operator(unittest.TestCase):
+    def test_answers_must_come_from_the_sheet(self):
+        from fig3.v2.run_operator import from_answer_sheet
+        self.assertTrue(from_answer_sheet("0.65 µm per pixel, from the metadata. I don't know."))
+        self.assertFalse(from_answer_sheet("0.65 µm per pixel, from the metadata. Use Cellpose."))
+
+    def test_script_selection_prefers_the_latest_complete_script(self):
+        from fig3.v2.run_operator import analysis_block
+        full = "```python\nsave('labels.tif'); save('measurements.csv')\n```"
+        patch = "```python\nx = 1\n```"
+        evaluation = "```python\nread('labels.tif')\n```"
+        self.assertEqual(analysis_block([full + evaluation, patch])[:2], (0, 0))
+        self.assertEqual(analysis_block([patch, evaluation])[:2], (1, 0))
+
+    def test_pip_packages(self):
+        from fig3.v2.run_operator import pip_packages
+        text = "Run `pip install -U cellpose tifffile` then\npip install stardist==0.9.2"
+        self.assertEqual(pip_packages(text), ["cellpose", "tifffile", "stardist==0.9.2"])
+
+    def test_shell_paths(self):
+        from fig3.v2.run_operator import environment_path, shell_paths_outside
+        folder = Path("/home/user/sessions_v2/v001")
+        self.assertEqual(shell_paths_outside("python a.py image.tif out.tif", folder), [])
+        self.assertEqual(shell_paths_outside("cat ../v002/x.tif", folder), ["../v002/x.tif"])
+        self.assertEqual(shell_paths_outside("ls ~/.cellpose/models", folder), [str(Path.home() / ".cellpose/models")])
+        self.assertTrue(environment_path(str(Path.home() / ".cellpose/models")))
+        self.assertEqual(shell_paths_outside("y = a / b + '/x.npy'", folder), [])
+        self.assertIn("/home/user", shell_paths_outside("ls /home/user", folder))
+
+
+class RuntimeManifest(unittest.TestCase):
+    def test_any_layout(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            for name in ("pipeline.py", "weights.npy", "annotation.tif", "image.tif"):
+                (folder / name).write_text("x")
+            (folder / "runtime_manifest.json").write_text(json.dumps(
+                {"required_files": ["pipeline.py", "weights.npy"], "note": "a sentence, not a file", "x": ["annotation.tif", "image.tif"]}))
+            self.assertEqual(runner.manifest_names(folder), ["pipeline.py", "weights.npy", "annotation.tif", "image.tif"])
+            self.assertEqual([p.name for p in runner.runtime_files(folder)], ["weights.npy"])
 
 
 if __name__ == "__main__":

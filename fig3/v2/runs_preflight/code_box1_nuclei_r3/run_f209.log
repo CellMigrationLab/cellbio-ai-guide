@@ -1,0 +1,13 @@
+$ script.py
+exit 0
+--- stdout
+WARNING: 28 saturated pixels (value 4095); intensity-based cancer-cell rejection is less reliable there.
+Reference (median) object intensity: 1418.5; cancer cut-off: 3546.3
+Candidates: 264; accepted endothelial nuclei: 180
+reject_reason
+accepted          180
+size               68
+touches_border      8
+low_solidity        8
+
+--- stderr

@@ -51,25 +51,34 @@ No statistical tests (3 replicates); every run is shown.
 
 ## 3. Subjects, isolation and environment
 
-- **Subject model**: Claude via Claude Code sub-agents, model `sonnet` (recorded per run as the resolved model ID).
-  The legend states that runs used Claude Code sub-agents, not the claude.ai app.
-- **Fresh sub-agent per scenario**, started from a neutral folder `/home/user/sessions/sNNN` (named by run order only),
-  which contains only the files listed for that scenario.
+- **Subject model**: Claude via headless Claude Code sessions (`claude -p --restricted`), model `sonnet` (recorded per
+  run as the resolved model ID). The legend states that runs used Claude Code sessions, not the claude.ai app.
+  (Changed from sub-agents before the preflight, authors' decision of 17 Oct 2026: a sub-agent inherits the operator
+  session's project instructions, AGENTS.md, which describe this study, and its working directory, the repository.)
+- **Fresh session per scenario** (new session ID), started in a neutral folder `/home/user/sessions_v2/vNNN` (named by
+  run order only; preflight: `/home/user/sessions_v2_preflight/vNNN`), which contains only the files listed for that
+  scenario. Follow-up turns resume the same session in the same folder. The operator session's environment variables
+  that identify it (session ID, extra directories, messaging, synced skills, effort setting) are not passed on.
+  The subject's context still contains the account's email address and commit-attribution lines, which come from the
+  account and cannot be removed here (recorded in `deviations.md`).
 - **Tools per row** (one machine-readable table, `v2/rows.csv`, used by the framing, the audit and the metadata):
 
   | Row | Tools offered | Framing sentence |
   |---|---|---|
-  | A | web search, view attachment | "You cannot run code." |
+  | A | web search | "You cannot run code." |
   | B | web search, view attachment | "You cannot run code; the user will run your script." |
   | C | web search, shell in its folder | "You can run shell commands in the folder <path> only." |
   | D | view attachment | "You cannot run code." (no web: the answer must come from the image) |
 
-- **Enforcement**: rows A, B and D use a custom sub-agent definition with only the tools above (no shell, no file
-  writing). If the session's permission policy blocks creating it, the authors are asked to allow it; the fallback is
-  the framing sentence plus the transcript audit, and any shell use in A, B or D is a protocol violation → rerun.
+- **Enforcement**: each session is given only its row's tools (`--tools`, column `cli_tools` of `rows.csv`): A web
+  search and fetch; B the same plus Read (to view the attachment); C Read, Write, Edit, Bash, Glob, Grep and web;
+  D Read only (no web is possible). `--restricted` ignores user and project settings and confines the file tools to the
+  subject folder. Row C's shell cannot be confined by the CLI: the framing sentence and the audit apply, and any access
+  outside the folder (other than the session's own scratchpad, archived) is a protocol violation → rerun.
 - **Audit of every run** (`audit.json`): all tool calls; resolved paths checked with `Path.is_relative_to` against the
-  subject folder; shell commands checked for paths outside it. The harness scratchpad is emptied before each subject
-  and anything the subject leaves there is archived with the run.
+  subject folder; shell commands checked for paths outside it; any tool input that names this study, its authors or the repository
+  is flagged (→ rerun). Each session has its own scratchpad; anything the subject leaves there is archived with the
+  run. The operator session's scratchpad must be empty before each subject and untouched by it.
 - **Environment**: Python 3.13, numpy/scipy/scikit-image/tifffile, torch 2.14.1+cpu, torchvision 0.29.1+cpu, Cellpose
   4.2.1.1 (cpsam_v2 weights pre-downloaded); `pip freeze` stored with the freeze. Packages a script needs are installed
   into a **per-run virtual environment** layered on the frozen base (`--system-site-packages`), so nothing persists
@@ -223,6 +232,8 @@ affected runs.
 - Row A item check: done by the operator, one table per reply with the source of each classification (installed
   version or documentation link), reviewed by the authors before use.
 - Preflight: one run per row × task (12 runs), not used in the figure.
-- Rows A, B and D use the `subject-chat` sub-agent (Read and web tools only), defined in the project's
-  `.claude/agents/subject-chat.md`; it loads after a session restart (authors will restart before the preflight).
+- Subjects are headless Claude Code sessions started in their own folders, not sub-agents (decided before the
+  preflight, after a probe showed that sub-agents receive AGENTS.md and the repository as working directory); row D
+  is given Read only; row C is confined by framing and audit; the account email and attribution lines in the
+  subject's context are accepted and recorded, and web searches naming the study or its authors are flagged.
 - Open: annotator names, tool and dates for both fields (needed for the methods, not for the runs).

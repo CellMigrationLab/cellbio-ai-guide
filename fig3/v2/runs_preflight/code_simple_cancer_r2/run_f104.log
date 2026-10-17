@@ -1,0 +1,19 @@
+$ script.py
+exit 0
+--- stdout
+Pixel size: 0.6496 µm/px
+156 cells; median area 163.3 µm², median aspect ratio 1.38
+
+--- stderr
+/home/user/r2exec_v2/runs_preflight/code_simple_cancer_r2/f104/work/script.py:64: FutureWarning: `binary_closing` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.closing` instead.
+  mask = morphology.binary_closing(edges, morphology.disk(3))
+/home/user/r2exec_v2/runs_preflight/code_simple_cancer_r2/f104/work/script.py:66: FutureWarning: `binary_opening` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.opening` instead.
+  mask = morphology.binary_opening(mask, morphology.disk(4))
+/home/user/r2exec_v2/runs_preflight/code_simple_cancer_r2/f104/work/script.py:67: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  mask = morphology.remove_small_objects(mask, min_area_px)
+/home/user/r2exec_v2/runs_preflight/code_simple_cancer_r2/f104/work/script.py:75: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  labels = morphology.remove_small_objects(labels, min_area_px)
+/home/user/r2exec_v2/runs_preflight/code_simple_cancer_r2/f104/work/script.py:83: FutureWarning: `RegionProperties.minor_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_minor_length` instead. 
+  minor = r.minor_axis_length
+/home/user/r2exec_v2/runs_preflight/code_simple_cancer_r2/f104/work/script.py:87: FutureWarning: `RegionProperties.major_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_major_length` instead. 
+  "aspect_ratio": r.major_axis_length / minor if minor > 0 else np.nan,

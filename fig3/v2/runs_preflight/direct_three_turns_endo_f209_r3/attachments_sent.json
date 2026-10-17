@@ -1,0 +1,7 @@
+{
+ "subject_folder": "/home/user/sessions_v2_preflight/v014",
+ "files": [
+  "image.png <- test_endo_image.png"
+ ],
+ "cli_tools": "Read"
+}

@@ -15,18 +15,34 @@ This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2
 | [runner.py](runner.py) | Executes returned code on fields 104 and 209 in clean environments (rows B and C). |
 | [score.py](score.py) | Scores outputs from rows B, C and D. |
 | `runs/`, `runs_rejected/` | Accepted runs and rejected attempts, with reasons. |
+| `runs_preflight/`, `runs_preflight_rejected/` | Preflight runs (section 11 of the protocol), not used in the figure. |
+| [environment_freeze.txt](environment_freeze.txt) | `pip freeze` of the environment that runs the code. |
 
 ## Running one scenario
 
-The commands below are for the **operator**, not the LLM being tested. Run them from the repository root. Replace `<id>` and `<agent_id>` with the actual identifiers.
+The commands below are for the **operator**, not the LLM being tested. Run them from the repository root. Replace `<id>` with the scenario ID.
 
-1. Prepare the run: `PYTHONPATH=. python fig3/v2/run_operator.py prepare <id>` (with `SUBJECT_SCRATCHPAD` set to the operator session's scratchpad directory). Preparation refuses a non-empty harness scratchpad.
-2. Start a fresh sub-agent using the type in `rows.csv`, from its assigned folder. Give it only `subject_message.txt`. Rows A, B and D use `subject-chat` (read/web, no shell); row C uses `general-purpose`.
-3. Answer at most three follow-up questions, using only `answer_sheet.md`. For row B, supply development files only when requested before code: `run_operator.py give_dev_files <id>`. For row D, send the prescribed second and third turns from `prompts/`.
-4. Audit the transcript: `run_operator.py audit <id> <agent_id>`. Record metadata with `run_operator.py meta <id> <agent_id> "<notes>"`. Follow the protocol's rerun rules if the audit finds a violation.
-5. Save returned artefacts. For row B, keep `code_as_returned.py`; any path-only edits go into `code_run.py` with `EDITS.md`, and requested packages into `packages.txt`. For row C, preserve `agent_folder/`. For row D, record `direct_answers.json`.
-6. Execute code for rows B and C: `PYTHONPATH=. python fig3/v2/runner.py fig3/v2/runs/<id>`.
-7. Score: `PYTHONPATH=. python fig3/v2/score.py fig3/v2/runs/<id>`. Row A uses the item check defined in protocol section 5.
+All commands need `V2_STAGE=preflight` (runs in `runs_preflight/`, not used in the figure) or `V2_STAGE=main`, and
+`SUBJECT_SCRATCHPAD` set to the operator session's scratchpad directory (it must stay empty).
+
+1. Prepare the run: `PYTHONPATH=. python fig3/v2/run_operator.py prepare <id>`. Preparation refuses a non-empty
+   operator scratchpad.
+2. Start the subject: `run_operator.py start <id>`. This starts a fresh headless Claude Code session
+   (`claude -p --restricted`, model `sonnet`, new session ID) in the subject folder, with only the tools in the
+   `cli_tools` column of `rows.csv`, and sends `subject_message.txt`. Never use a sub-agent: it would inherit this
+   repository's AGENTS.md and working directory.
+3. Answer at most three follow-up questions, using only `answer_sheet.md`: `run_operator.py answer <id> "<text>"`.
+   For row B, supply development files only when requested before code: `run_operator.py give_dev_files <id>` (it
+   refuses once code has been given), then answer with the answer-sheet sentence. For row D, send the prescribed
+   second and third turns: `run_operator.py turn <id> 2`, then `3`.
+4. Audit the transcript: `run_operator.py audit <id>`. Record metadata with `run_operator.py meta <id> "<notes>"`.
+   Follow the protocol's rerun rules if the audit finds a violation (`run_operator.py reject <id> "<reason>"`).
+5. Save returned artefacts: `run_operator.py collect <id>`. Row B: `code_as_returned.py` (the last Python block of the
+   last reply with code); any path-only edits go into `code_run.py` with `EDITS.md`, and requested packages into
+   `packages.txt`. Row C: `agent_folder/`. Row D: `direct_answers.json` (fill in the turn-2 medians from the reply).
+6. Execute code for rows B and C: `PYTHONPATH=. python fig3/v2/runner.py fig3/v2/<runs folder>/<id>`.
+7. Score: `PYTHONPATH=. python fig3/v2/score.py fig3/v2/<runs folder>/<id>`. Row A uses the item check defined in
+   protocol section 5.
 8. Commit records after every ten scenarios.
 
 Keep the field-209 annotations away from the subject model. Do not alter the generated prompts, answer sheet or scoring rules during the experiment; changes require a documented protocol revision.

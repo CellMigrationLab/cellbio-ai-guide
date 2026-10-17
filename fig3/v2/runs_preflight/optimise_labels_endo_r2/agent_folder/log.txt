@@ -1,0 +1,8 @@
+Optimisation used only image.tif + annotation.tif. Metric: F1@IoU0.5 inside convex hull of annotation (evaluate.py), plus count/median area/AR.
+1. Baseline: bg-subtract (gauss 50), p1-p99 norm, Cellpose (cpsam), diameter 50, flow 0.4, cellprob 0 -> F1 0.625, 437 pred vs 382 GT.
+2. Diameter sweep: 70 -> 0.677 (best), 90 -> 0.662. Kept 70.
+3. cellprob -2 (d50): 0.631 (no gain); extra Gaussian smoothing sigma 2: F1 0.30-0.56 (much worse) -> rejected; flow_threshold 0.8 (cp -2): 0.661, more FP -> kept 0.4/0.
+4. Post-filter: solidity filters hurt (F1 down) -> rejected. Min area filter removes cancer cells/debris segmented as small objects: 300->0.690, 400->0.725, 500->0.746. Chose 450 um2 from stated cell size (>=25 um), not tuned to the 500 optimum.
+5. Added removal of border-touching cells (truncated shapes bias area/AR).
+6. BUG FIX: skimage.segmentation.clear_border works on connected blobs of non-zero pixels, removing neighbours and leaving 1-px fragments (3 with NaN/inf aspect ratio). Replaced by per-label-id removal.
+Final: 327 cells, F1 0.764 (TP 271, FP 56, FN 111), median area 823 vs 894 um2 GT, median AR 1.52 vs 1.60.

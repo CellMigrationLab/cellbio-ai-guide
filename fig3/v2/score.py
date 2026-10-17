@@ -140,14 +140,18 @@ def score_field(run_dir: Path, task: str, field: int) -> dict:
 
 # ---------------------------------------------------------------- row D
 def parse_count(text: str) -> dict:
-    """First number in the reply (a range 'a-b' or 'a to b' gives its midpoint; the range is kept)."""
-    t = text.replace(",", "")
-    rng = re.search(r"(\d+)\s*(?:-|–|to)\s*(\d+)", t)
-    if rng:
-        lo, hi = int(rng.group(1)), int(rng.group(2))
+    """The first number in the reply (list markers such as '1.' at the start of a line are skipped). If that number
+    starts a range ('a-b', 'a to b', 'between a and b'), the midpoint is the count and the range is kept."""
+    t = re.sub(r"(?m)^\s*\d+[.)]\s", " ", text.replace(",", "").replace("*", ""))
+    patterns = (r"between\s+(\d+)\s+and\s+(\d+)", r"(\d+)\s*(?:-|–|to)\s*(\d+)", r"(\d+)")
+    hits = [m for m in (re.search(p, t) for p in patterns) if m]
+    if not hits:
+        return {"count": None, "range": None}
+    first = min(hits, key=lambda m: (m.start(), -len(m.groups())))
+    if len(first.groups()) == 2:
+        lo, hi = int(first.group(1)), int(first.group(2))
         return {"count": (lo + hi) / 2, "range": [lo, hi]}
-    one = re.search(r"\d+", t)
-    return {"count": int(one.group()), "range": None} if one else {"count": None, "range": None}
+    return {"count": int(first.group(1)), "range": None}
 
 
 def match_centres(task: str, field: int, centres: list[tuple[float, float]]) -> dict:

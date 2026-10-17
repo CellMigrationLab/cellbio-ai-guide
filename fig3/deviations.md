@@ -52,3 +52,57 @@ files that were not sent; a script that fails must never be scored as successful
 - Endothelial cells: objects touching the image border are removed from reference and prediction; reference cells come
   from annotator 1's junction lines (`lines_to_cells`, slivers < 150 px removed).
 - Code that crashed or wrote no label image: F1 0, drawn as ×.
+
+## Protocol v2 (operator: Claude Code, from 17 Oct 2026)
+Changes made before the preflight, decided by the authors on 17 Oct 2026 (PROTOCOL_V2 sections 3 and 13 updated):
+- **Subjects are headless Claude Code sessions, not sub-agents.** A probe of the `subject-chat` sub-agent (a harness
+  check, not a scenario) showed that a sub-agent receives the operator session's project instructions (the whole
+  AGENTS.md: the purpose of Figure 3, the four rows and the condition names) and its working directory (the
+  repository). Each subject is now a fresh `claude -p --restricted --strict-mcp-config --disable-slash-commands`
+  session, model `sonnet`, new session ID, started in its own folder, with only its row's tools (`cli_tools` in
+  `rows.csv`); follow-up turns resume the same session. A probe of this set-up reported no project instructions, no
+  git repository, its own scratchpad and only the tools given. The sub-agent definition (`.claude/agents/subject-chat.md`)
+  was removed. The command line and the environment variables not passed on are in `run_operator.py` and in each
+  run's `session.json`.
+- **Round-2 pilot**: its sub-agent subjects very likely had the same AGENTS.md in their context. The pilot is not used
+  in the figure.
+- **Account context**: each subject's context still contains the account's email address (one of the authors) and
+  commit-attribution lines; both come from the account, not the repository, and cannot be removed from the operator
+  session. Accepted by the authors. The audit flags any tool input that names the study, its authors or this
+  repository; such a run is rerun (subject access to forbidden material).
+- **Row D** is given the Read tool only, so the web cannot be used (section 3 says "no web").
+- **Row C** keeps a shell; the CLI cannot confine it to the folder (a shell could list `/home/user`). Isolation is the
+  framing sentence plus the audit, as the protocol states.
+- **Effort**: the operator session's effort setting is not passed on; subjects run at the CLI default. The CLI may use
+  a small model internally (e.g. for session titles or web-search summaries); models billed are recorded in `meta.json`
+  (`models_billed`), the model that wrote the replies in `model`.
+- Protocol section 3, row A's tools read "web search, view attachment"; row A has no attachment (section 5, `rows.csv`),
+  so the table now reads "web search".
+- **Environment**: the Cellpose `cpsam_v2` weights download was truncated twice by the network proxy; the file was
+  downloaded again with resume and checked against the SHA-256 published by Hugging Face (recorded at the top of
+  `v2/environment_freeze.txt`).
+
+### Preflight (12 runs, `v2/runs_preflight/`, not used in the figure): harness fixes
+Found in the preflight and fixed before the freeze (operator, runner, scorer, assets; no prompt changed):
+- **Assets**: `make_assets.py` wrote the subject TIFFs without the pixel size (the raw files carry an ImageJ calibration,
+  0.649614 µm/px, unit micron), although the answer sheet says "0.65 µm per pixel, from the metadata". A script that
+  read the pixel size from the file stopped. The TIFFs now keep the calibration (pixel values unchanged; other ImageJ
+  fields, such as a channel label naming the source file and cell line, are not copied). The first attempt of
+  `code_simple_endo_r3` was rejected for this (harness fault) and rerun.
+- **Script to run (row B)**: replies may hold several code blocks (e.g. the analysis and an evaluation script) and
+  later replies may hold only partial edits. Fixed rule: the latest Python block that names both outputs
+  (`labels.tif` and `measurements.csv`), searching the replies from the last; partial edits are not applied (that
+  would be editing beyond paths). The choice is recorded in `code_selection.json`.
+- **Packages (row B)**: `packages.txt` is written from the replies' `pip install` lines, as given.
+- **Runtime manifest (row C)**: the prompt fixes no format, so the runner copies every string in
+  `runtime_manifest.json` that names a file in the agent folder (development image and annotation refused, as before).
+- **Audit**: `~` paths are resolved; code fragments in heredocs (a bare `/`, `+ "/x.npy"`) are no longer read as
+  paths; installed software and the shared Cellpose model cache (`/usr`, `/opt`, `~/.cellpose`, ...) are noted, not
+  flagged; a call to a tool the session does not have, refused by the CLI, is noted ("no access"), not flagged; the
+  session's own temporary folder is archived to `subject_scratchpad/`.
+- **Row D count**: the count is the first number of the reply (list markers skipped); a range counts only if that
+  first number starts it (before, a range anywhere in the reply was taken). A turn-2 range is recorded as its midpoint,
+  with the text kept in `turn2_read_by_operator`.
+- **Answers**: `run_operator.py answer` refuses text that is not a sequence of answer-sheet sentences, verbatim.
+- **Images shown to the subject**: the CLI re-encodes the attached PNG as JPEG at full size (1024 × 1022) before the
+  model sees it; coordinates are unchanged.

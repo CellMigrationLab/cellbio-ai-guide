@@ -1,7 +1,7 @@
 # Prompt for a new session (operator of Figure 3, protocol v2)
 
 Paste the text below into a new Claude Code session started **in the repository `CellMigrationLab/cellbio-ai-guide`**
-(so that `.claude/agents/subject-chat.md` is loaded). Optional environment setup script (cloud environment settings),
+. Optional environment setup script (cloud environment settings),
 so the tools need not be reinstalled each time:
 
 ```bash
@@ -22,24 +22,24 @@ and fig3/deviations.md (including the lessons from the round-2 pilot).
    - `make check` and `make full` pass;
    - torch 2.14.1+cpu, torchvision 0.29.1+cpu and Cellpose 4.2.1.1 import, and `from cellpose import models` works
      (if not: pip install -r environment/requirements-models.txt --extra-index-url https://download.pytorch.org/whl/cpu);
-   - the sub-agent type `subject-chat` (Read, WebSearch, WebFetch only; no shell) is available. If it is not, stop
-     and tell me: rows A, B and D must not be run with an agent that has a shell.
+   - the `claude` CLI runs headless from an empty folder (`claude -p --restricted`): subjects are headless sessions
+     started by run_operator.py in their own folders, never sub-agents (a sub-agent sees this repository's AGENTS.md).
    - Record `pip freeze` in fig3/v2/environment_freeze.txt.
    - Export SUBJECT_SCRATCHPAD=<your session's scratchpad directory, from your system prompt> for every
-     run_operator.py call (prepare and audit use it to check and archive what subjects write there).
+     run_operator.py call (it must stay empty), and V2_STAGE=preflight or V2_STAGE=main.
 
 2. Preflight: one scenario per row x task (12 runs), following fig3/v2/README.md step by step, in
    fig3/v2/runs_preflight/ (not used in the figure). Fix harness problems only (operator, runner, scorer, framing),
    never the prompts' content without asking me. Show me a short report: what worked, what failed, what you changed.
 
 3. After I approve: freeze protocol v2 (SHA-256 of prompts, rows.csv, scenarios.csv, answer sheet, run_operator.py,
-   runner.py, score.py, make_protocol.py, PROTOCOL_V2.md, the agent definition and environment_freeze.txt, plus a
+   runner.py, score.py, make_protocol.py, PROTOCOL_V2.md, environment_freeze.txt, plus a
    test that fails if any changes), then run the 72 scenarios in scenarios.csv order.
 
 Rules that must never be broken:
 - The subject never sees this repository, the protocol, the answer sheet, the condition names or other runs. It gets
   only the framed first message from run_operator.py prepare and the files listed for its scenario. Start each
-  subject from its own subject folder, with the sub-agent type named in rows.csv, fresh for every scenario.
+  subject with run_operator.py start (a fresh headless session in its own folder, tools from rows.csv).
 - Answer follow-up questions only from the answer sheet, verbatim, at most 3 replies. Row B: the field-104 image and
   annotation only if asked before any code was given (run_operator.py give_dev_files). Never give a field-209
   annotation.

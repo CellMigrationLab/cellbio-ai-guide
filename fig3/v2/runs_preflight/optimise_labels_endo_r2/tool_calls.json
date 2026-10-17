@@ -1,0 +1,126 @@
+[
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; ls -la; python -c \"\nimport tifffile as t,numpy as np\nfor f in ['image.tif','annotation.tif']:\n    a=t.imread(f);print(f,a.shape,a.dtype,a.min(),a.max(),np.percentile(a,[1,50,99]))\nb=t.imread('annotation.tif');print(len(np.unique(b))-1)\n\"; pip list 2>/dev/null | grep -i -E \"cellpose|torch|scikit|pandas|numpy\""
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad; python -c \"\nimport tifffile as t,numpy as np\nfrom skimage import segmentation,exposure,io\na=t.imread('image.tif').astype(float);l=t.imread('annotation.tif')\nn=np.clip((a-np.percentile(a,0.5))/(np.percentile(a,99.5)-np.percentile(a,0.5)),0,1)\nio.imsave('$S/raw.png',(n*255).astype('uint8'))\no=segmentation.mark_boundaries(np.dstack([n]*3),l,color=(1,0,0))\nio.imsave('$S/ann.png',(o*255).astype('uint8'))\nfrom skimage.measure import regionprops\nar=np.array([r.area for r in regionprops(l)])*0.65**2;print(np.percentile(ar,[5,25,50,75,95]),(l==0).mean())\n\""
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad/raw.png"
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad/ann.png"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; ls ~/.cellpose/models 2>&1; python -c \"\nfrom cellpose import models\nm=models.CellposeModel(gpu=False);print(m.pretrained_model)\n\" 2>&1 | tail -5"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad; cat > $S/ev.py <<'E'\nimport numpy as np, tifffile as t\nfrom skimage.measure import regionprops\nfrom skimage.morphology import convex_hull_image, binary_closing, disk\ndef f1(gt,pr,thr=0.5):\n    # restrict to annotated region\n    roi=convex_hull_image(gt>0)\n    gl=np.unique(gt[gt>0]); \n    pr=pr*roi\n    pl=[p for p in np.unique(pr[pr>0])]\n    # IoU matrix via contingency\n    g=gt[roi];p=pr[roi]\n    gi=np.searchsorted(gl,g); \n    import scipy.sparse as sp\n    pm={v:i for i,v in enumerate(pl)}\n    mask=(g>0)&(p>0)\n    inter=sp.coo_matrix((np.ones(mask.sum()),(gi[mask],np.array([pm[v] for v in p[mask]]))),shape=(len(gl),len(pl))).tocsr()\n    ga=np.bincount(gi[g>0],minlength=len(gl)); pa=np.array([ (p==v).sum() for v in pl]) if pl else np.array([])\n    tp=0\n    for i in range(len(gl)):\n        row=inter.getrow(i)\n        for j,v in zip(row.indices,row.data):\n            if v/(ga[i]+pa[j]-v)>thr: tp+=1\n    fp=len(pl)-tp; fn=len(gl)-tp\n    return dict(f1=2*tp/(2*tp+fp+fn),tp=tp,fp=fp,fn=fn,ngt=len(gl),npred=len(pl))\ndef stats(l,roi=None):\n    r=regionprops(l); a=np.array([x.area for x in r])*0.65**2\n    ar=np.array([x.major_axis_length/max(x.minor_axis_length,1e-6) for x in r])\n    return np.median(a),np.median(ar)\nE\ncat > $S/run1.py <<'E'\nimport sys;sys.path.insert(0,'/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad')\nimport numpy as np,tifffile as t,time\nfrom scipy import ndimage as ndi\nfrom cellpose import models\nfrom ev import *\na=t.imread('image.tif').astype(np.float32);gt=t.imread('annotation.tif')\nbg=ndi.gaussian_filter(a,50);x=a-bg\nlo,hi=np.percentile(x,[1,99]);x=(x-lo)/(hi-lo)\nm=models.CellposeModel(gpu=False)\nfor d in [50]:\n    t0=time.time()\n    lab,_,_=m.eval(x,diameter=d,flow_threshold=0.4,cellprob_threshold=0.0)\n    print(d,time.time()-t0,f1(gt,lab),stats(lab),stats(gt))\n    np.save(f'/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad/lab{d}.npy',lab)\nE\npython $S/run1.py 2>&1 | tail"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad; sed -i 's/major_axis_length/axis_major_length/;s/minor_axis_length/axis_minor_length/' $S/ev.py\ncat > $S/grid.py <<'E'\nimport sys,warnings;warnings.filterwarnings('ignore');sys.path.insert(0,'/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad')\nimport numpy as np,tifffile as t\nfrom scipy import ndimage as ndi\nfrom cellpose import models\nfrom ev import *\na=t.imread('image.tif').astype(np.float32);gt=t.imread('annotation.tif')\ndef prep(sig_bg,smooth,lp):\n    x=a-ndi.gaussian_filter(a,sig_bg)\n    if smooth: x=ndi.gaussian_filter(x,smooth)\n    lo,hi=np.percentile(x,[lp,100-lp]);return (x-lo)/(hi-lo)\nm=models.CellposeModel(gpu=False)\nfor d,ft,cp,sm in [(70,0.4,0,0),(90,0.4,0,0),(50,0.4,-2,0),(50,0.4,0,2),(70,0.4,-2,2),(70,0.8,-2,0)]:\n    lab,_,_=m.eval(prep(50,sm,1),diameter=d,flow_threshold=ft,cellprob_threshold=cp)\n    print(d,ft,cp,sm,f1(gt,lab),stats(lab),flush=True)\nE\npython $S/grid.py 2>&1 | grep -v Warn"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "sleep 100; cat /tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/tasks/bcdgjdhbx.output | grep -v -i warn"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "until [ $(grep -c \"^[0-9]\" /tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/tasks/bcdgjdhbx.output) -ge 6 ]; do sleep 5; done; grep \"^[0-9]\" /tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/tasks/bcdgjdhbx.output",
+   "timeout": 500000
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad; cat > $S/r2.py <<'E'\nimport sys,warnings;warnings.filterwarnings('ignore');sys.path.insert(0,'/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad')\nimport numpy as np,tifffile as t\nfrom scipy import ndimage as ndi\nfrom cellpose import models\na=t.imread('image.tif').astype(np.float32)\nx=a-ndi.gaussian_filter(a,50);lo,hi=np.percentile(x,[1,99]);x=(x-lo)/(hi-lo)\nm=models.CellposeModel(gpu=False)\nlab,_,_=m.eval(x,diameter=70,flow_threshold=0.4,cellprob_threshold=0)\nnp.save(sys.argv[1],lab)\nE\npython $S/r2.py $S/lab70.npy 2>&1 | grep -i error\npython - <<E\nimport numpy as np,tifffile as t\nfrom skimage import segmentation,io,measure\nS='$S';lab=np.load(S+'/lab70.npy');gt=t.imread('annotation.tif');a=t.imread('image.tif').astype(float)\nn=np.clip((a-np.percentile(a,.5))/(np.percentile(a,99.5)-np.percentile(a,.5)),0,1)\no=segmentation.mark_boundaries(np.dstack([n]*3),lab,color=(0,1,0))\no=segmentation.mark_boundaries(o,gt,color=(1,0,0))\nio.imsave(S+'/ov70.png',(o*255).astype('uint8'))\nE"
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad/ov70.png"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; S=/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad; python - <<E 2>&1 | grep -v -i warn\nimport sys;sys.path.insert(0,'$S')\nimport numpy as np,tifffile as t\nfrom skimage.measure import regionprops\nfrom skimage.segmentation import clear_border\nfrom ev import *\nlab=np.load('$S/lab70.npy');gt=t.imread('annotation.tif')\nfor amin in [0,300,400,500]:\n  for sol in [0,0.85,0.9]:\n    o=lab.copy()\n    for r in regionprops(lab):\n        if r.area*0.65**2<amin or r.solidity<sol: o[lab==r.label]=0\n    print(amin,sol,f1(gt,o),stats(o))\nE"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; cat > pipeline.py <<'E'\n\"\"\"Segment endothelial cells in a brightfield monolayer and measure area / aspect ratio.\n\nUsage: python pipeline.py <input.tif> <labels.tif> <measurements.csv>\n\nSteps (all parameters are constants below):\n 1. Read 2D uint16 image (Y, X), validate.\n 2. Flat-field: subtract Gaussian-blurred background (sigma 50 px), rescale 1-99th percentile -> [0, 1].\n 3. Cellpose 4 (cpsam, pretrained, CPU) with diameter hint 70 px, native pixel size (no resampling).\n 4. Remove objects smaller than MIN_AREA_UM2 (cancer cells on top, debris) and objects touching the\n    image border (truncated cells bias area / aspect ratio).\n 5. Relabel consecutively, write label image (same Y, X grid as input) and CSV in physical units.\nAlso writes <labels>_overlay.png for visual checking.\n\"\"\"\nimport sys\nimport warnings\nfrom pathlib import Path\n\nimport numpy as np\nimport pandas as pd\nimport tifffile\nfrom scipy import ndimage as ndi\nfrom skimage import io, segmentation\nfrom skimage.measure import regionprops_table\n\nPIXEL_SIZE_UM = 0.65\nBACKGROUND_SIGMA_PX = 50\nNORM_PERCENTILES = (1, 99)\nCELLPOSE_DIAMETER_PX = 70          # ~45 um; chosen on image.tif (50: F1 .63, 70: .68, 90: .66)\nFLOW_THRESHOLD = 0.4\nCELLPROB_THRESHOLD = 0.0\nMIN_AREA_UM2 = 450.0               # ~ area of a 24 um circle; lower bound of stated cell size\nREMOVE_BORDER_OBJECTS = True\n\n\ndef read_image(path: Path) -> np.ndarray:\n    image = tifffile.imread(path)\n    if image.ndim != 2:\n        raise ValueError(f\"Expected a 2D (Y, X) image, got shape {image.shape}\")\n    if image.dtype != np.uint16:\n        raise ValueError(f\"Expected uint16 image, got {image.dtype}\")\n    if image.max() == image.min():\n        raise ValueError(\"Image is constant; nothing to segment\")\n    return image\n\n\ndef normalise(image: np.ndarray) -> np.ndarray:\n    \"\"\"Background-subtract and rescale to ~[0, 1] (float32).\"\"\"\n    flat = image.astype(np.float32)\n    flat -= ndi.gaussian_filter(flat, BACKGROUND_SIGMA_PX)\n    low, high = np.percentile(flat, NORM_PERCENTILES)\n    return (flat - low) / (high - low)\n\n\ndef run_cellpose(image: np.ndarray) -> np.ndarray:\n    from cellpose import models  # imported here: slow import, and needs model weights\n    model = models.CellposeModel(gpu=False)\n    labels, _, _ = model.eval(\n        image, diameter=CELLPOSE_DIAMETER_PX,\n        flow_threshold=FLOW_THRESHOLD, cellprob_threshold=CELLPROB_THRESHOLD)\n    return labels\n\n\ndef filter_objects(labels: np.ndarray) -> np.ndarray:\n    \"\"\"Drop small objects and (optionally) border-touching objects; relabel 1..N.\"\"\"\n    min_area_px = MIN_AREA_UM2 / PIXEL_SIZE_UM ** 2\n    areas = np.bincount(labels.ravel())\n    remove = areas < min_area_px\n    remove[0] = False\n    out = np.where(remove[labels], 0, labels)\n    if REMOVE_BORDER_OBJECTS:\n        out = segmentation.clear_border(out)\n    return segmentation.relabel_sequential(out)[0].astype(np.int32)\n\n\ndef measure(labels: np.ndarray) -> pd.DataFrame:\n    props = pd.DataFrame(regionprops_table(\n        labels, properties=(\"label\", \"area\", \"axis_major_length\", \"axis_minor_length\", \"centroid\")))\n    return pd.DataFrame({\n        \"label\": props[\"label\"],\n        \"centroid_y_um\": props[\"centroid-0\"] * PIXEL_SIZE_UM,\n        \"centroid_x_um\": props[\"centroid-1\"] * PIXEL_SIZE_UM,\n        \"area_um2\": props[\"area\"] * PIXEL_SIZE_UM ** 2,\n        \"aspect_ratio\": props[\"axis_major_length\"] / props[\"axis_minor_length\"],\n    })\n\n\ndef save_overlay(image: np.ndarray, labels: np.ndarray, path: Path) -> None:\n    low, high = np.percentile(image, (0.5, 99.5))\n    grey = np.clip((image.astype(float) - low) / (high - low), 0, 1)\n    overlay = segmentation.mark_boundaries(np.dstack([grey] * 3), labels, color=(0, 1, 0))\n    io.imsave(path, (overlay * 255).astype(np.uint8), check_contrast=False)\n\n\ndef main(input_path: str, labels_path: str, csv_path: str) -> None:\n    warnings.filterwarnings(\"ignore\", category=UserWarning, module=\"cellpose\")\n    image = read_image(Path(input_path))\n    labels = filter_objects(run_cellpose(normalise(image)))\n    if labels.max() == 0:\n        raise RuntimeError(\"No endothelial cells remained after segmentation/filtering\")\n    tifffile.imwrite(labels_path, labels, metadata=None)\n    table = measure(labels)\n    table.to_csv(csv_path, index=False)\n    save_overlay(image, labels, Path(labels_path).with_name(Path(labels_path).stem + \"_overlay.png\"))\n    print(f\"{labels.max()} cells; median area {table.area_um2.median():.0f} um2; \"\n          f\"median aspect ratio {table.aspect_ratio.median():.2f}\")\n\n\nif __name__ == \"__main__\":\n    if len(sys.argv) != 4:\n        sys.exit(__doc__)\n    main(*sys.argv[1:])\nE\ncat > evaluate.py <<'E'\n\"\"\"python evaluate.py <labels.tif> <annotation.tif>  -- F1@IoU0.5 (inside annotated hull), count, area, aspect ratio.\nFAIL criteria printed at the end.\"\"\"\nimport sys\nimport numpy as np, tifffile\nfrom skimage.measure import regionprops\nfrom skimage.morphology import convex_hull_image\nPX = 0.65\ndef match(gt, pr, thr=0.5):\n    roi = convex_hull_image(gt > 0); pr = np.where(roi, pr, 0)\n    pairs = np.stack([gt[roi], pr[roi]], 1); pairs = pairs[(pairs > 0).all(1)]\n    ids, n = np.unique(pairs, axis=0, return_counts=True)\n    ga, pa = np.bincount(gt[roi]), np.bincount(pr[roi])\n    iou = n / (ga[ids[:, 0]] + pa[ids[:, 1]] - n)\n    tp = int((iou > thr).sum())\n    ngt, npr = len(np.unique(gt[gt > 0])), len(np.unique(pr[pr > 0]))\n    return tp, ngt, npr, ids[iou > thr]\ndef med(l, ids=None):\n    r = [x for x in regionprops(l) if ids is None or x.label in ids]\n    return (np.array([x.area for x in r]) * PX**2, np.array([x.axis_major_length / x.axis_minor_length for x in r]))\npr = tifffile.imread(sys.argv[1]); gt = tifffile.imread(sys.argv[2])\ntp, ngt, npr, pairs = match(gt, pr)\nf1 = 2 * tp / (ngt + npr)\na_gt, r_gt = med(gt); a_pr, r_pr = med(pr)\nprint(f\"F1@0.5={f1:.3f} TP={tp} FP={npr-tp} FN={ngt-tp} | count pred/gt={npr}/{ngt}\")\nprint(f\"median area um2 pred/gt={np.median(a_pr):.0f}/{np.median(a_gt):.0f}; median AR pred/gt={np.median(r_pr):.2f}/{np.median(r_gt):.2f}\")\n# paired per-cell error on matched cells\nga = {x.label: (x.area*PX**2, x.axis_major_length/x.axis_minor_length) for x in regionprops(gt)}\npp = {x.label: (x.area*PX**2, x.axis_major_length/x.axis_minor_length) for x in regionprops(pr)}\nd = np.array([[pp[p][0]/ga[g][0]-1, pp[p][1]/ga[g][1]-1] for g, p in pairs])\nprint(f\"matched cells: median rel. area error={np.median(d[:,0]):+.2f}, median |area err|={np.median(abs(d[:,0])):.2f}, median |AR err|={np.median(abs(d[:,1])):.2f}\")\nfail = f1 < 0.6 or abs(npr/ngt-1) > 0.2 or abs(np.median(a_pr)/np.median(a_gt)-1) > 0.2\nprint(\"ANALYSIS FAILED (F1<0.6, count off >20%, or median area off >20%)\" if fail else \"passes minimal criteria\")\nE\npython pipeline.py image.tif /tmp/x.tif /tmp/x.csv 2>&1 | tail -3",
+   "timeout": 300000
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; rm -f /tmp/x.tif /tmp/x.csv /tmp/x_overlay.png; python pipeline.py image.tif labels.tif measurements.csv 2>&1 | tail -3; python evaluate.py labels.tif annotation.tif",
+   "timeout": 300000
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; python - <<'E'\nimport tifffile as t, numpy as np\nfrom skimage.measure import regionprops\nfor f in ['labels.tif','annotation.tif']:\n    l=t.imread(f)\n    bad=[(r.label,r.area) for r in regionprops(l) if r.axis_minor_length==0]\n    print(f,bad)\nE\npython -c \"\nimport pandas as pd;d=pd.read_csv('measurements.csv');print(d.describe().T)\""
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; python - <<'E'\nimport tifffile as t, numpy as np\nl=t.imread('labels.tif')\nfor i in (1,21,331): print(i,np.argwhere(l==i), (l==i).sum())\nprint(l.dtype, np.bincount(l.ravel())[:5])\nE"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; python - <<'E' 2>&1 | grep -v -i warn\nimport numpy as np, tifffile as t, pipeline as p\nlab=np.load('/tmp/claude-0/-home-user-sessions-v2-preflight-v004/e87ee74b-7a0c-4d9a-9fa4-25ce888c2151/scratchpad/lab70.npy')\nprint(lab.dtype,lab.max())\nf=p.filter_objects(lab)\nprint((np.bincount(f.ravel())[1:]==1).sum())\nfrom skimage.segmentation import clear_border\na=np.bincount(lab.ravel());print(a[a<10])\nimport inspect;print(inspect.getsource(clear_border)[-900:])\nE"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; python - <<'E'\ns=open('pipeline.py').read()\ns=s.replace(\"\"\"        out = segmentation.clear_border(out)\n\"\"\",\"\"\"        out = remove_border_labels(out)\n\"\"\")\ns=s.replace(\"def filter_objects(\",\"\"\"def remove_border_labels(labels: np.ndarray) -> np.ndarray:\n    \\\"\\\"\\\"Zero every label that touches the image edge (per label id, not per connected blob).\\\"\\\"\\\"\n    edge = np.concatenate([labels[0], labels[-1], labels[:, 0], labels[:, -1]])\n    touching = np.zeros(labels.max() + 1, dtype=bool)\n    touching[np.unique(edge)] = True\n    touching[0] = False\n    return np.where(touching[labels], 0, labels)\n\n\ndef filter_objects(\"\"\")\nopen('pipeline.py','w').write(s)\nE\npython pipeline.py image.tif labels.tif measurements.csv 2>&1 | tail -3; python evaluate.py labels.tif annotation.tif",
+   "timeout": 300000
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2_preflight/v004/labels_overlay.png"
+  }
+ },
+ {
+  "tool": "Bash",
+  "input": {
+   "command": "cd /home/user/sessions_v2_preflight/v004; cat > runtime_manifest.json <<'E'\n{\n  \"entrypoint\": \"pipeline.py\",\n  \"command\": \"python pipeline.py <input.tif> <labels.tif> <measurements.csv>\",\n  \"required_files\": [\"pipeline.py\"],\n  \"model_weights\": \"/root/.cellpose/models/cpsam_v2 (Cellpose default pretrained model; loaded implicitly by models.CellposeModel(gpu=False), must exist locally or be downloadable)\",\n  \"python_packages\": [\"numpy\", \"scipy\", \"scikit-image\", \"tifffile\", \"pandas\", \"cellpose==4.2.1.1\", \"torch\"],\n  \"extra_outputs\": \"<labels>_overlay.png\",\n  \"optional_validation\": [\"evaluate.py\"]\n}\nE\ncat > log.txt <<'E'\nOptimisation used only image.tif + annotation.tif. Metric: F1@IoU0.5 inside convex hull of annotation (evaluate.py), plus count/median area/AR.\n1. Baseline: bg-subtract (gauss 50), p1-p99 norm, Cellpose (cpsam), diameter 50, flow 0.4, cellprob 0 -> F1 0.625, 437 pred vs 382 GT.\n2. Diameter sweep: 70 -> 0.677 (best), 90 -> 0.662. Kept 70.\n3. cellprob -2 (d50): 0.631 (no gain); extra Gaussian smoothing sigma 2: F1 0.30-0.56 (much worse) -> rejected; flow_threshold 0.8 (cp -2): 0.661, more FP -> kept 0.4/0.\n4. Post-filter: solidity filters hurt (F1 down) -> rejected. Min area filter removes cancer cells/debris segmented as small objects: 300->0.690, 400->0.725, 500->0.746. Chose 450 um2 from stated cell size (>=25 um), not tuned to the 500 optimum.\n5. Added removal of border-touching cells (truncated shapes bias area/AR).\n6. BUG FIX: skimage.segmentation.clear_border works on connected blobs of non-zero pixels, removing neighbours and leaving 1-px fragments (3 with NaN/inf aspect ratio). Replaced by per-label-id removal.\nFinal: 327 cells, F1 0.764 (TP 271, FP 56, FN 111), median area 823 vs 894 um2 GT, median AR 1.52 vs 1.60.\nE\nls"
+  }
+ }
+]

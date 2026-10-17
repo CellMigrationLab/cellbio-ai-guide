@@ -1,0 +1,16 @@
+[
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/models.html",
+   "prompt": "Which models exist in current Cellpose (v4 cpsam, v3 nuclei)? Training data, recommended diameter handling, how to call CellposeModel.eval, python version support, GPU/CPU notes."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://github.com/stardist/stardist",
+   "prompt": "Python version/TensorFlow requirements, pretrained model 2D_versatile_fluo details (training data, normalization with csbdeep normalize percentiles), predict_instances API, scale guidance."
+  }
+ }
+]

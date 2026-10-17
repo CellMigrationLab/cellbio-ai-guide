@@ -1,0 +1,15 @@
+[
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2_preflight/v011/image.png"
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "scikit-image 0.26 remove_small_objects min_size deprecated max_size release notes",
+   "mode": "standard"
+  }
+ }
+]

@@ -2,7 +2,7 @@
 
 Single source of the Box 1 text: box1/box1_final.md. Writes, in fig3/v2/:
   prompts/<prompt_id>.txt   first message of every scenario type (without the framing, which depends on the folder)
-  rows.csv                  per row: subject agent, offered tools, framing sentence (used by framing, audit, metadata)
+  rows.csv                  per row: tools of the headless subject session, offered tools, framing sentence (used by framing, audit, metadata)
   scenarios.csv             one row per subject run, in a randomised order fixed by SEED
 Usage: PYTHONPATH=. python fig3/v2/make_protocol.py
 """
@@ -41,14 +41,14 @@ ANNOTATION_PHRASES = (" I can provide a manual annotation of this image (a label
                       " Include a test I can run on my annotated example and tell me what result would mean that the "
                       "analysis failed.")
 WEB = "You can search the web (WebSearch and WebFetch; load them with ToolSearch if they are not listed)."
-ROWS = {  # row: (subject agent, tools offered, framing sentence; {folder} is filled per scenario)
-    "advice": ("subject-chat", "web", f"{WEB} You cannot run code."),
-    "code": ("subject-chat", "web; view attachment",
+ROWS = {  # row: (tools given to the headless subject session, tools offered, framing; {folder} filled per scenario)
+    "advice": ("WebSearch,WebFetch", "web", f"{WEB} You cannot run code."),
+    "code": ("Read,WebSearch,WebFetch", "web; view attachment",
              f"{WEB} The user attached a file, which you can view: {{folder}}/image.png. You cannot run code; the user "
              "will run your script."),
-    "optimise": ("general-purpose", "web; shell in its folder",
+    "optimise": ("Read,Write,Edit,Bash,Glob,Grep,WebSearch,WebFetch", "web; shell in its folder",
                  f"{WEB} You can run shell commands in the folder {{folder}} only."),
-    "direct": ("subject-chat", "view attachment",
+    "direct": ("Read", "view attachment",
                "The user attached a file, which you can view: {folder}/image.png. You cannot run code."),
 }
 FRAMING = "You are an AI assistant chatting with a user. {tools} Reply to the user as you normally would."
@@ -160,9 +160,9 @@ def main() -> None:
         (OUT / "prompts" / f"{prompt_id}.txt").write_text(text + "\n")
     with (OUT / "rows.csv").open("w", newline="") as handle:
         w = csv.writer(handle, lineterminator="\n")
-        w.writerow(["row", "subject_agent", "tools", "framing"])
-        for row, (agent, tools, sentence) in ROWS.items():
-            w.writerow([row, agent, tools, FRAMING.format(tools=sentence)])
+        w.writerow(["row", "cli_tools", "tools", "framing"])
+        for row, (cli_tools, tools, sentence) in ROWS.items():
+            w.writerow([row, cli_tools, tools, FRAMING.format(tools=sentence)])
     scenarios = build_scenarios()
     fields = ["run_order", "scenario_id", "row", "condition", "task", "field", "replicate", "prompt", "folder_files"]
     with (OUT / "scenarios.csv").open("w", newline="") as handle:

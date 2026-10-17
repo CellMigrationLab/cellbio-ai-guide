@@ -1,0 +1,6 @@
+$ script.py
+exit 1
+--- stdout
+
+--- stderr
+No pixel size found in image.tif: set PIXEL_SIZE_UM at the top.
