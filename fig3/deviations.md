@@ -144,3 +144,7 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
 - **Operator convention (from run 10, `advice_box1_cancer_r1`)**: a conversation is closed without a further message
   when the only questions left are ones already answered (as in the round-2 pilot); the answer sheet does not cover
   repeated questions.
+- **Operator amendment (run 11, `code_box1_nuclei_r3`)**: the "latest complete script" rule selected a 16-line indented
+  patch from reply 2 that named both output files (it crashed with IndentationError). A complete script must now also
+  parse on its own and contain an import; the run was re-collected (reply 1, the full script) and re-run; the first
+  selection and its execution records are kept in `superseded_selection/`. Runs 2 and 7 re-checked: same selection.

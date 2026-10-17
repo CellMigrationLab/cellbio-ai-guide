@@ -19,6 +19,7 @@ instructions (AGENTS.md) and working directory (the repository).
 """
 from __future__ import annotations
 
+import ast
 import csv
 import gzip
 import hashlib
@@ -468,12 +469,22 @@ def python_blocks(text: str) -> list[str]:
     return re.findall(r"```\s*(?:python|py)\s*\n(.*?)```", text or "", flags=re.S)
 
 
+def standalone(block: str) -> bool:
+    """A whole script, not a fragment: it parses as a module and has at least one import statement."""
+    try:
+        tree = ast.parse(block)
+    except SyntaxError:
+        return False
+    return any(isinstance(node, (ast.Import, ast.ImportFrom)) for node in tree.body)
+
+
 def analysis_block(replies: list[str]) -> tuple[int, int, str, str]:
-    """The script to run (fixed rule): the last Python block, in the latest reply that has one, naming both outputs
-    (labels.tif and measurements.csv), i.e. the latest complete script; partial edits sent later are not applied.
+    """The script to run (fixed rule): the last Python block, in the latest reply that has one, that is a whole script
+    (standalone) naming both outputs (labels.tif and measurements.csv), i.e. the latest complete script; partial edits
+    sent later are not applied.
     Else the last block naming labels.tif; else the last block of the last reply with code."""
-    rules = (("complete script: names labels.tif and measurements.csv",
-              lambda b: "labels.tif" in b and "measurements.csv" in b),
+    rules = (("complete script: parses on its own, imports, names labels.tif and measurements.csv",
+              lambda b: standalone(b) and "labels.tif" in b and "measurements.csv" in b),
              ("names labels.tif", lambda b: "labels.tif" in b), ("last block", lambda b: True))
     for rule, test in rules:
         for r in range(len(replies) - 1, -1, -1):

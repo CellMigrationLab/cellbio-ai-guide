@@ -35,7 +35,7 @@
   "fig3/v2/rows.csv": "ef36f3517244868410732b2720ae89ac444829c8d7f25d61174db1134ea6468e",
   "fig3/v2/scenarios.csv": "c75938e85fe732dd36d3cb034918714c2eff9abc74b50e5da4f527ac7691db89",
   "fig3/v2/answer_sheet.md": "9e873f52d635d0d095a6b464e6f852e8bfca9fed7dd1300889d4aff9bc2f287a",
-  "fig3/v2/run_operator.py": "e39f57df96fc2b15b79d5b844cd6f1257492ae0477bbd78c203df01d99ebb16a",
+  "fig3/v2/run_operator.py": "ff3008ceaf7b68528a4a5acda2a625cf62f644ac438a7397d2a60555272e5b55",
   "fig3/v2/runner.py": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
   "fig3/v2/score.py": "c490937d38068dd0fb3ee012e83c9e49f3245eed3eadcbec868dfb0188488469",
   "fig3/v2/make_protocol.py": "679b14b6de5b75bb8a2682c10e74a9dbd08c6308ccf6ccea75e3be89565e00eb",
@@ -77,6 +77,14 @@
    "new_sha256": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
    "reason": "harness fault: an absolute path in runtime_manifest.json (shared model weights) was treated as a file in the agent folder and stopped the runner; absolute paths are now ignored (they are the environment)",
    "runs_affected": "main run 4 optimise_labels_endo_r2 (runner had not produced any result); no earlier run"
+  },
+  {
+   "date": "2026-10-17",
+   "file": "fig3/v2/run_operator.py",
+   "old_sha256": "e39f57df96fc2b15b79d5b844cd6f1257492ae0477bbd78c203df01d99ebb16a",
+   "new_sha256": "ff3008ceaf7b68528a4a5acda2a625cf62f644ac438a7397d2a60555272e5b55",
+   "reason": "harness fault: the 'latest complete script' rule (row B) selected an indented patch fragment that named both output files; a complete script must now also parse on its own and contain an import",
+   "runs_affected": "main run 11 code_box1_nuclei_r3 (re-collected and re-run; no subject rerun); runs 2 and 7 re-checked: same block selected"
   }
  ]
 }

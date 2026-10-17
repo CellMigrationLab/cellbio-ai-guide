@@ -122,11 +122,14 @@ class Operator(unittest.TestCase):
 
     def test_script_selection_prefers_the_latest_complete_script(self):
         from fig3.v2.run_operator import analysis_block
-        full = "```python\nsave('labels.tif'); save('measurements.csv')\n```"
+        full = "```python\nimport tifffile\nsave('labels.tif'); save('measurements.csv')\n```"
         patch = "```python\nx = 1\n```"
         evaluation = "```python\nread('labels.tif')\n```"
         self.assertEqual(analysis_block([full + evaluation, patch])[:2], (0, 0))
         self.assertEqual(analysis_block([patch, evaluation])[:2], (1, 0))
+        full_script = "```python\nimport tifffile\nsave('labels.tif'); save('measurements.csv')\n```"
+        indented_patch = "```python\n    save('labels.tif'); save('measurements.csv')\n```"
+        self.assertEqual(analysis_block([full_script, indented_patch])[:2], (0, 0))
 
     def test_pip_packages(self):
         from fig3.v2.run_operator import pip_packages

@@ -13,8 +13,8 @@
   "/home/user/r2exec_v2/runs/code_box1_nuclei_r3/f104/venv/bin/python",
   "script.py"
  ],
- "exit_code": 1,
+ "exit_code": 0,
  "timeout": false,
- "runtime_s": 0.0,
- "status": "crashed"
+ "runtime_s": 51.1,
+ "status": "ok"
 }
