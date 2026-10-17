@@ -1,107 +1,183 @@
-"""Sanity-check sheet: every image in data/raw with its manual annotation drawn on top (data/overview.png).
+"""Sanity-check sheet (data/overview.png): for each question the figures address, the images and, separately, the
+annotations used as reference, each drawn on its own (annotations are NOT overlaid on the images).
 
-Each tile shows one image (8-bit preview, 1st-99.7th percentile) and, where one exists, the annotation as outlines
-or boxes, with the number of annotated objects counted from the annotation file itself.
-Usage: PYTHONPATH=. python data/make_overview.py
+Image tiles: 8-bit preview (1st-99.7th percentile). Annotation tiles: each object in its own colour on black (label
+images), the lines as drawn (junction annotations), or the boxes on black (DeepBacs). Object counts are read from the
+annotation files themselves. Usage: PYTHONPATH=. python data/make_overview.py
 """
 from __future__ import annotations
 
 import xml.etree.ElementTree as ET
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
 import tifffile
 from PIL import Image, ImageDraw, ImageFont
-from skimage.segmentation import find_boundaries
 
 from common.paths import RAW_DIR
 from fig3.scoring.tasks import lines_to_cells
 
-TILE = 420
 OUT = Path(__file__).resolve().parent / "overview.png"
 THIRD = RAW_DIR / "third_party"
+TILE, LABEL_H, ROW_HEAD, GAP = 300, 46, 40, 12
+IMAGE_COLOUR, ANNOT_COLOUR, NONE_COLOUR = "#3b4a5c", "#1a7f37", "#9aa4b2"
 
 
-def gray(image: np.ndarray) -> np.ndarray:
-    """8-bit preview of a 2D image (linear stretch, 1st-99.7th percentile)."""
+@dataclass
+class Tile:
+    """One panel of the sheet: kind is 'image', 'annotation' or 'none'."""
+    picture: Image.Image | None
+    kind: str
+    title: str
+    detail: str = ""
+
+
+@dataclass
+class Question:
+    """One row of the sheet: the question, the figures that use it, its images and its annotations."""
+    title: str
+    figures: str
+    tiles: list[Tile] = field(default_factory=list)
+
+
+def read(name: str) -> np.ndarray:
+    return tifffile.imread(RAW_DIR / name)
+
+
+def gray(image: np.ndarray) -> Image.Image:
+    """8-bit preview of a 2D image (linear stretch, 1st-99.7th percentile); RGB images are passed through."""
+    if image.ndim == 3:
+        return Image.fromarray(image[..., :3].astype(np.uint8))
     image = np.asarray(image, float)
     lo, hi = np.percentile(image, (1, 99.7))
     if hi <= lo:
         raise ValueError("Image has no intensity range")
-    return (np.clip((image - lo) / (hi - lo), 0, 1) * 255).astype(np.uint8)
+    return Image.fromarray((np.clip((image - lo) / (hi - lo), 0, 1) * 255).astype(np.uint8))
 
 
-def overlay(image: np.ndarray, labels: np.ndarray | None, colour: tuple) -> Image.Image:
-    """RGB tile: grey image with the label outlines in one colour."""
-    rgb = np.stack([gray(image)] * 3, axis=-1) if image.ndim == 2 else image[..., :3].astype(np.uint8)
-    if labels is not None:
-        rgb[find_boundaries(labels, mode="inner")] = colour
-    return Image.fromarray(rgb)
+def labels_picture(labels: np.ndarray, seed: int = 3) -> Image.Image:
+    """Each object in its own random (fixed-seed) colour on black."""
+    rng = np.random.default_rng(seed)
+    lut = rng.integers(70, 256, size=(int(labels.max()) + 1, 3), dtype=np.uint8)
+    lut[0] = 0
+    return Image.fromarray(lut[labels])
 
 
-def boxes_tile(png: Path, xml: Path, colour: tuple) -> tuple[Image.Image, int]:
-    """RGB tile of a DeepBacs image with its ground-truth boxes; returns (tile, number of boxes)."""
-    image = Image.open(png).convert("RGB")
-    draw, n = ImageDraw.Draw(image), 0
+def lines_picture(lines: np.ndarray) -> Image.Image:
+    """Drawn junction lines, white on black, thickened for display."""
+    from scipy.ndimage import binary_dilation
+    return Image.fromarray((binary_dilation(lines > 0, iterations=1) * 255).astype(np.uint8))
+
+
+def boxes_picture(xml: Path, size: tuple[int, int]) -> tuple[Image.Image, int, dict]:
+    """Ground-truth boxes on black; returns (picture, number of boxes, count per class)."""
+    picture, classes = Image.new("RGB", size, "black"), {}
+    draw = ImageDraw.Draw(picture)
+    palette = [(255, 90, 90), (90, 200, 255), (255, 210, 60), (150, 255, 120), (230, 120, 255), (255, 255, 255)]
     for obj in ET.parse(xml).getroot().iter("object"):
-        b = obj.find("bndbox")
-        draw.rectangle([int(float(b.find(k).text)) for k in ("xmin", "ymin", "xmax", "ymax")], outline=colour, width=1)
-        n += 1
-    return image, n
+        name = obj.find("name").text
+        classes.setdefault(name, 0)
+        classes[name] += 1
+        box = obj.find("bndbox")
+        colour = palette[list(classes).index(name) % len(palette)]
+        draw.rectangle([int(float(box.find(k).text)) for k in ("xmin", "ymin", "xmax", "ymax")], outline=colour, width=2)
+    return picture, sum(classes.values()), classes
 
 
-def count(labels: np.ndarray) -> int:
+def n_objects(labels: np.ndarray) -> int:
     return int(len(np.unique(labels[labels > 0])))
 
 
-def tiles() -> list[tuple[Image.Image, str, str]]:
-    """(tile, title, figures using it) for every image."""
-    r = lambda name: tifffile.imread(RAW_DIR / name)  # noqa: E731 - short local reader
-    bf, dapi, pecam = r("field104_brightfield.tif"), r("field104_dapi.tif"), r("field104_pecam1.tif")
-    cancer = r("field104_cancer_cells_manual_labels.tif").astype(int)
-    nuclei = r("field104_endothelial_nuclei_manual_labels.tif").astype(int)
-    endo1 = lines_to_cells(r("field104_endothelial_junctions_annotator1.tif") > 0)
-    endo2 = lines_to_cells(r("field104_endothelial_junctions_annotator2.tif") > 0)
-    stardist = r("field104_cancer_cells_stardist_custom_labels.tif").astype(int)
-    out = [
-        (overlay(bf, cancer, (255, 0, 200)), f"Brightfield + MANUAL cancer cells (n={count(cancer)})", "Fig 1c, 2a, 3"),
-        (overlay(bf, endo1, (0, 220, 255)), f"Brightfield + MANUAL endothelial cells, annotator 1 (n={count(endo1)})", "Fig 2a, 3"),
-        (overlay(pecam, endo2, (255, 200, 0)), f"PECAM-1 + MANUAL endothelial cells, annotator 2 (n={count(endo2)})", "Fig 2a/d (agreement)"),
-        (overlay(dapi, nuclei, (0, 255, 0)), f"DAPI + MANUAL endothelial nuclei (n={count(nuclei)})", "Fig 2d, 3"),
-        (overlay(bf, stardist, (255, 140, 0)), f"Brightfield + custom StarDist (model, n={count(stardist)})", "Fig 1c, 2a (candidate)"),
-        (overlay(r("field104_pix2pix_predicted_pecam1.tif")[1:1023], endo1, (0, 220, 255)), "pix2pix PECAM-1 (predicted) + MANUAL annotator 1", "Fig 1a, 2d"),
-        (overlay(r("field104_pix2pix_predicted_dapi.tif")[1:1023], nuclei, (0, 255, 0)), "pix2pix DAPI (predicted) + MANUAL nuclei", "Fig 1a, 2d"),
-        (overlay(r("care_denoising_acquired.tif"), None, (0, 0, 0)), "CARE: acquired (no manual annotation)", "Fig 1a, 2c"),
-        (overlay(r("care_denoising_restored.tif"), None, (0, 0, 0)), "CARE: restored (no manual annotation)", "Fig 1a, 2c"),
-        (overlay(r("biosr_er_lowres_input.tif"), None, (0, 0, 0)), "BioSR ER: low-res input", "Fig 1a, 2e"),
-        (overlay(r("biosr_er_rcan_prediction.tif"), None, (0, 0, 0)), "BioSR ER: RCAN prediction", "Fig 1a, 2e"),
-        (overlay(r("biosr_er_highres_reference.tif"), None, (0, 0, 0)), "BioSR ER: high-res acquisition (reference)", "Fig 2e"),
-        (overlay(r("hpmec_nuclei_max_projection.tif"), None, (0, 0, 0)), "HPMEC nuclei (no annotation; illustration)", "Fig 1b"),
-        (Image.fromarray(r("trackmate_capture_tracks.tif")[..., :3]), "TrackMate capture (no annotation)", "Fig 1c"),
-    ]
-    det, n_det = boxes_tile(THIRD / "deepbacs_ecoli_growth_stage/test_images/pos_8_frame_80_2.png",
-                            THIRD / "deepbacs_ecoli_growth_stage/test_annotations/pos_8_frame_80_2.xml", (255, 60, 60))
-    out.append((det, f"DeepBacs detection + GROUND-TRUTH boxes (n={n_det})", "Fig 1a"))
+def questions() -> list[Question]:
+    """The sheet's rows."""
+    bf, dapi, pecam = read("field104_brightfield.tif"), read("field104_dapi.tif"), read("field104_pecam1.tif")
+    cancer = read("field104_cancer_cells_manual_labels.tif").astype(int)
+    nuclei = read("field104_endothelial_nuclei_manual_labels.tif").astype(int)
+    lines1 = read("field104_endothelial_junctions_annotator1.tif")
+    lines2 = read("field104_endothelial_junctions_annotator2.tif")
+    det_png = THIRD / "deepbacs_ecoli_growth_stage/test_images/pos_8_frame_80_2.png"
+    det_boxes, n_det, det_classes = boxes_picture(THIRD / "deepbacs_ecoli_growth_stage/test_annotations/pos_8_frame_80_2.xml",
+                                                  Image.open(det_png).size)
     abx = THIRD / "deepbacs_antibiotic_phenotyping/stitched_images"
-    cls, n_cls = boxes_tile(abx / "images/synthetic_image_23.png", abx / "annotations/synthetic_image_23.xml", (255, 60, 60))
-    out.append((cls, f"DeepBacs classification + GROUND-TRUTH boxes (n={n_cls})", "Fig 1a"))
-    return out
+    abx_png = abx / "images/synthetic_image_23.png"
+    abx_boxes, n_abx, abx_classes = boxes_picture(abx / "annotations/synthetic_image_23.xml", Image.open(abx_png).size)
+    fmt = lambda d: ", ".join(f"{k} {v}" for k, v in d.items())  # noqa: E731
+    return [
+        Question("1. Cancer cells in brightfield", "Fig 1c, Fig 2a, Fig 3", [
+            Tile(gray(bf), "image", "Brightfield, field 104", "1022 x 1024 px, 0.65 um/px"),
+            Tile(labels_picture(cancer), "annotation", f"Manual cancer cells: {n_objects(cancer)}", "label image")]),
+        Question("2. Endothelial cells in brightfield (annotated on PECAM-1)", "Fig 2a, Fig 3", [
+            Tile(gray(bf), "image", "Brightfield, field 104", "image analysed"),
+            Tile(gray(pecam), "image", "PECAM-1, field 104", "image the outlines were drawn on"),
+            Tile(lines_picture(lines1), "annotation", f"Annotator 1: {n_objects(lines_to_cells(lines1 > 0))} complete cells",
+                 "junction lines as drawn (reference)"),
+            Tile(lines_picture(lines2), "annotation", f"Annotator 2: {n_objects(lines_to_cells(lines2 > 0))} complete cells",
+                 "junction lines as drawn (agreement)")]),
+        Question("3. Endothelial nuclei in DAPI", "Fig 2d, Fig 3", [
+            Tile(gray(dapi), "image", "DAPI, field 104", "same field"),
+            Tile(labels_picture(nuclei), "annotation", f"Manual endothelial nuclei: {n_objects(nuclei)}",
+                 "cancer-cell nuclei not annotated")]),
+        Question("4. Artificial labelling: DAPI and PECAM-1 predicted from brightfield", "Fig 1a, Fig 2d", [
+            Tile(gray(bf), "image", "Input: brightfield", ""),
+            Tile(gray(read("field104_pix2pix_predicted_dapi.tif")[1:1023]), "image", "pix2pix: predicted DAPI", "model output"),
+            Tile(gray(read("field104_pix2pix_predicted_pecam1.tif")[1:1023]), "image", "pix2pix: predicted PECAM-1", "model output"),
+            Tile(gray(dapi), "annotation", "Reference: acquired DAPI", "+ manual nuclei (row 3)"),
+            Tile(gray(pecam), "annotation", "Reference: acquired PECAM-1", "+ manual cells (row 2)")]),
+        Question("5. Denoising (CARE)", "Fig 1a, Fig 2c", [
+            Tile(gray(read("care_denoising_acquired.tif")), "image", "Acquired (low SNR)", "0.6337 um/px"),
+            Tile(gray(read("care_denoising_restored.tif")), "image", "CARE restored", "model output"),
+            Tile(None, "none", "No manual annotation", "no high-SNR acquisition either")]),
+        Question("6. Super-resolution (RCAN, BioSR endoplasmic reticulum)", "Fig 1a, Fig 2e", [
+            Tile(gray(read("biosr_er_lowres_input.tif")), "image", "Low-resolution input", ""),
+            Tile(gray(read("biosr_er_rcan_prediction.tif")), "image", "RCAN prediction", "model output"),
+            Tile(gray(read("biosr_er_highres_reference.tif")), "annotation", "Reference: high-resolution acquisition", "no manual annotation")]),
+        Question("7. Detection of bacteria (DeepBacs growth stage)", "Fig 1a", [
+            Tile(Image.open(det_png).convert("RGB"), "image", "Test image pos_8_frame_80_2", "256 x 256 px"),
+            Tile(det_boxes, "annotation", f"Ground-truth boxes: {n_det}", fmt(det_classes))]),
+        Question("8. Classification of bacteria (DeepBacs antibiotics)", "Fig 1a", [
+            Tile(Image.open(abx_png).convert("RGB"), "image", "Test image synthetic_image_23", ""),
+            Tile(abx_boxes, "annotation", f"Ground-truth boxes: {n_abx}", fmt(abx_classes))]),
+        Question("9. Illustrations only (nothing measured)", "Fig 1b, Fig 1c", [
+            Tile(gray(read("hpmec_nuclei_max_projection.tif")), "image", "HPMEC nuclei (Fig 1b)", "no annotation"),
+            Tile(gray(read("trackmate_capture_tracks.tif")), "image", "TrackMate capture (Fig 1c)", "no annotation")]),
+    ]
+
+
+def draw_tile(sheet: Image.Image, x: int, y: int, tile: Tile, fonts: tuple) -> None:
+    """Draw one tile: coloured kind bar, title, detail, then the picture (or an empty box)."""
+    draw = ImageDraw.Draw(sheet)
+    colour = {"image": IMAGE_COLOUR, "annotation": ANNOT_COLOUR, "none": NONE_COLOUR}[tile.kind]
+    draw.rectangle([x, y, x + TILE, y + 18], fill=colour)
+    draw.text((x + 6, y + 2), {"image": "IMAGE", "annotation": "ANNOTATION / REFERENCE", "none": "ANNOTATION"}[tile.kind],
+              fill="white", font=fonts[1])
+    draw.text((x + 4, y + 21), tile.title, fill="black", font=fonts[1])
+    draw.text((x + 4, y + 35), tile.detail, fill="#555555", font=fonts[2])
+    top = y + LABEL_H + 4
+    if tile.picture is None:
+        draw.rectangle([x, top, x + TILE, top + TILE], outline=NONE_COLOUR, width=2)
+        return
+    picture = tile.picture.convert("RGB")
+    picture.thumbnail((TILE, TILE))
+    sheet.paste(picture, (x + (TILE - picture.width) // 2, top))
+    draw.rectangle([x, top, x + TILE, top + TILE], outline=colour, width=2)
 
 
 def main() -> None:
-    items = tiles()
-    cols, head = 4, 54
-    sheet = Image.new("RGB", (cols * TILE, ((len(items) + cols - 1) // cols) * (TILE + head)), "white")
+    rows = questions()
+    cols = max(len(q.tiles) for q in rows)
+    row_h = ROW_HEAD + LABEL_H + 4 + TILE + GAP
+    sheet = Image.new("RGB", (GAP + cols * (TILE + GAP), len(rows) * row_h + GAP), "white")
     draw = ImageDraw.Draw(sheet)
-    font = ImageFont.load_default(size=14)
-    for k, (tile, title, used) in enumerate(items):
-        x, y = (k % cols) * TILE, (k // cols) * (TILE + head)
-        tile = tile.copy()
-        tile.thumbnail((TILE - 10, TILE - 10))
-        sheet.paste(tile, (x + 5, y + head))
-        draw.text((x + 6, y + 6), title, fill="black", font=font)
-        draw.text((x + 6, y + 28), f"used in: {used}", fill="#555555", font=font)
-        print(f"{title} | {used}")
+    fonts = (ImageFont.load_default(size=19), ImageFont.load_default(size=13), ImageFont.load_default(size=12))
+    for r, question in enumerate(rows):
+        y = GAP + r * row_h
+        draw.line([GAP, y - GAP // 2, sheet.width - GAP, y - GAP // 2], fill="#d0d7de", width=1)
+        draw.text((GAP, y + 6), question.title, fill="black", font=fonts[0])
+        draw.text((GAP + 640, y + 9), f"used in {question.figures}", fill="#555555", font=fonts[1])
+        for c, tile in enumerate(question.tiles):
+            draw_tile(sheet, GAP + c * (TILE + GAP), y + ROW_HEAD, tile, fonts)
+        print(f"{question.title} | {question.figures} | " + " ; ".join(f"{t.kind}: {t.title}" for t in question.tiles))
     sheet.save(OUT)
     print(f"wrote {OUT}")
 

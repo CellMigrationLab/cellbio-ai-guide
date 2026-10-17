@@ -41,8 +41,9 @@ If you use the data, cite the sources in `sources.csv`. To double-check before r
 listed for Cellpose-SAM and NanoPyx.
 
 ## Sanity check: every image with its annotation
-`overview.png` (made by `PYTHONPATH=. python data/make_overview.py`) shows every image in `raw/` with its manual
-annotation drawn on top and the number of annotated objects counted from the annotation file. Manual annotations exist
+`overview.png` (made by `PYTHONPATH=. python data/make_overview.py`) is organised by question (one row each): the
+images (grey bar) and, separately, the annotations or references (green bar), with object counts read from the
+annotation files. Manual annotations exist
 for **one field** (field 104: 124 cancer cells, 382 / 369 endothelial cells by two annotators, 441 endothelial nuclei)
 and for the DeepBacs examples (dataset ground truth). The CARE, BioSR, HPMEC and TrackMate images have no manual
 annotation (BioSR is compared with its high-resolution acquisition).
