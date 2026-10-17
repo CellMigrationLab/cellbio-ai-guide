@@ -15,6 +15,7 @@ from common.paths import RAW as U
 from common.pix2pix import read_pix2pix
 from common.labels import read_labels
 from common.annotations import lines_to_cells
+from common.stats import pearson_r
 acq_d = tifffile.imread(U + "field104_dapi.tif").astype(float)
 acq_p = tifffile.imread(U + "field104_pecam1.tif").astype(float)
 prd_d = read_pix2pix("field104_pix2pix_predicted_dapi.tif").astype(float)
@@ -34,7 +35,7 @@ def per_object(img, lab, bgmask):
 out = {}
 for key, lab, a, p, bgm in [("DAPI", nuc, acq_d, prd_d, nuc == 0), ("PECAM-1", band, acq_p, prd_p, band == 0)]:
     xa, xp = per_object(a, lab, bgm), per_object(p, lab, bgm)
-    out[key] = {"n": int(len(xa)), "r": round(float(np.corrcoef(xa, xp)[0, 1]), 3),
+    out[key] = {"n": int(len(xa)), "r": round(pearson_r(xa, xp, name=key), 3),
                 "acquired": np.round(xa, 3).tolist(), "predicted": np.round(xp, 4).tolist()}
     print(key, out[key]["n"], out[key]["r"])
 json.dump(out, open("panels/al_intensity.json", "w"))

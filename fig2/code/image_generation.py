@@ -10,6 +10,7 @@ from export_window import contours
 
 from common.paths import RAW as U
 from common.metadata import BIOSR_GRID_PX_NM, BIOSR_LOWRES_PX_NM
+from common.stats import pearson_r
 def lin(a, p=(0.3, 99.7)):
     lo, hi = np.percentile(a, p)
     return np.clip((a - lo) / (hi - lo), 0, 1)
@@ -39,7 +40,7 @@ ir = np.array([p.intensity_mean for p in props_r])
 idn = np.array([p.intensity_mean for p in props_d])
 bg_r, bg_d = np.median(raw[~m]), np.median(den[~m])
 json.dump({"n_nuclei": int(lab.max()), "acquired": ir.round(1).tolist(), "restored": idn.round(1).tolist(),
-           "r": round(float(np.corrcoef(ir, idn)[0, 1]), 3), "bg_acquired": float(bg_r), "bg_restored": float(bg_d),
+           "r": round(pearson_r(ir, idn, name="denoising per nucleus"), 3), "bg_acquired": float(bg_r), "bg_restored": float(bg_d),
            "ratio_median": round(float(np.median((idn - bg_d) / (ir - bg_r))), 3)},
           open("panels/dn_intensity.json", "w"))
 print("denoise nuclei", lab.max(), "r", np.corrcoef(ir, idn)[0, 1], "bg", bg_r, bg_d)
@@ -69,4 +70,4 @@ P = nz(pr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 Hh = nz(hr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 L = nz(np.repeat(lr[(y + ROW) // 2, x // 2:x // 2 + n // 2], 2))
 json.dump({"row": ROW, "px_nm": BIOSR_GRID_PX_NM, "lowres_px_nm": BIOSR_LOWRES_PX_NM, "predicted": P.round(3).tolist(), "high_res": Hh.round(3).tolist(), "low_res": L.round(3).tolist(),
-           "r_pred_hr": round(float(np.corrcoef(P, Hh)[0, 1]), 3)}, open("panels/sr_profile.json", "w"))
+           "r_pred_hr": round(pearson_r(P, Hh, name="line profile"), 3)}, open("panels/sr_profile.json", "w"))

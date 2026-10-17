@@ -106,11 +106,21 @@ def check_fig2_scores(tmp: Path, with_squirrel: bool) -> list[bool]:
     return results
 
 
+def check_no_nan_json() -> bool:
+    """No committed source-data or score JSON may contain NaN or Infinity (undefined values must be explicit nulls)."""
+    bad = []
+    for folder in ("fig1/source_data", "fig2/source_data", "fig2/analysis", "fig3/figure/source_data", "fig3/v2"):
+        for path in sorted((REPO / folder).rglob("*.json")):
+            json.loads(path.read_text(), parse_constant=lambda c: bad.append(f"{path.relative_to(REPO)}: {c}"))
+    return report("no NaN/Infinity in committed JSON", not bad, "; ".join(bad[:5]))
+
+
 def main(with_squirrel: bool) -> None:
     """Run all checks; exit 1 if any fails."""
     results = []
     proc = run([sys.executable, "-m", "unittest", "discover", "-s", ".", "-p", "test_*.py", "-t", "."], cwd=REPO)
     results.append(report("unit tests (common/, fig2/, fig3/)", proc.returncode == 0, proc.stderr.strip().splitlines()[-1]))
+    results.append(check_no_nan_json())
     proc = run([sys.executable, "data/make_manifest.py", "--verify"], cwd=REPO)
     results.append(report("raw data checksums", proc.returncode == 0, proc.stdout.strip().splitlines()[-1]))
     with tempfile.TemporaryDirectory() as tmp_name:

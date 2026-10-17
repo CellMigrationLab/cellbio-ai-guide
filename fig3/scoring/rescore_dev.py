@@ -39,7 +39,7 @@ def main() -> None:
     for task, path in DEV_OUTPUTS.items():
         artifacts = next(parent for parent in path.parents if parent.name == "artifacts")
         reported = json.loads((artifacts / "reported.json").read_text())
-        out[task] = {"reported_by_agent": reported.get("f1"), "our_scorer": score_dev(task, tifffile.imread(path))["f1"]}
+        out[task] = {"reported_by_agent": reported["f1"], "our_scorer": score_dev(task, tifffile.imread(path))["f1"]}
         print(task, out[task])
     (REPO_ROOT / "fig3" / "optimise" / "dev_rescored.json").write_text(json.dumps(out, indent=1))
 

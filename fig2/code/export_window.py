@@ -6,6 +6,8 @@ from common.labels import validate_labels
 
 
 def contours(L, X, Y, W, H, keep=None):
+    """Vector outlines (window px) of the objects in the window; keep = optional set of labels to draw (labels of the
+    set that are not in the window are simply not in it)."""
     sub = validate_labels(L)[Y:Y + H, X:X + W]
     out = []
     for l in np.unique(sub[sub > 0]):
@@ -27,7 +29,7 @@ def centroids(L, ids, X, Y, W, H):
     for l in ids:
         yy, xx = np.nonzero(L == l)
         if len(yy) == 0:
-            continue
+            raise ValueError(f"label {l} requested but not present in the label image")
         cy, cx = yy.mean() - Y, xx.mean() - X
         if 0 <= cx < W and 0 <= cy < H:
             pts.append([round(float(cx), 1), round(float(cy), 1)])

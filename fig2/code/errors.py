@@ -7,7 +7,7 @@ The four categories are illustrative heuristics, not standard definitions, and d
 - false: an unmatched prediction that is not a merge and does not lie mostly (>= 50%) inside a split reference object.
 The categories are computed independently of the matching: a part covering exactly half of a split object (IoU 0.5)
 is also a true positive.
-Tested on synthetic cases in fig2/tests/test_error_categories.py."""
+Tested on synthetic cases in fig2/tests/test_error_categories.py. mean_iou_matched is null when nothing matched."""
 import json, sys
 import numpy as np
 from common.matching import match
@@ -34,7 +34,7 @@ def errors(pr, ref=REF):
     return dict(n_ref=len(ga), n_pred=len(pa), tp=tp, fn=len(fn), fp=len(fp),
                 f1=round(2 * tp / (2 * tp + len(fn) + len(fp)), 3),
                 missed=len(missed), false=len(false), merges=len(merged_p), splits=len(split_g),
-                mean_iou_matched=round(float(np.mean([i for _, _, i in matched])), 3)), \
+                mean_iou_matched=round(float(np.mean([i for _, _, i in matched])), 3) if matched else None), \
         dict(missed=sorted(map(int, missed)), false=sorted(map(int, false)), merged=sorted(map(int, merged_p)), split=sorted(map(int, split_g)))
 
 

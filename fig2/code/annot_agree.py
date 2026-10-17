@@ -9,6 +9,7 @@ from common.matching import match
 from export_window import export
 
 from common.annotations import lines_to_cells
+from common.stats import finite_values
 from common.paths import RAW as U
 from common.metadata import FOLLAIN_PX_UM as PX
 
@@ -36,6 +37,7 @@ for i in range(len(names)):
         out["pairs"][f"{names[i]} vs {names[j]}"] = f1(src[names[i]], src[names[j]])
 for k, L in src.items():
     ids, areas = np.unique(L[L > 0], return_counts=True)
+    areas = finite_values(areas, name=f"{k} areas")
     out["bio"][k] = {"count": int(len(ids)), "mean_area_um2": round(float(areas.mean() * PX ** 2), 1)}
 json.dump(out, open("panels/annot_agree.json", "w"), indent=1)
 print(out)

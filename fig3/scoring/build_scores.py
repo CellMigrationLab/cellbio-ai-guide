@@ -59,7 +59,7 @@ def agent_condition(task: str) -> dict:
     scored = score_heldout(task, tifffile.imread(FIG3 / "optimise" / "heldout" / f"ref_{task}_labels.tif"))
     reported = FIG3 / "optimise" / "runs" / f"with_annotation_{TASK_DIR_NAME[task]}" / "artifacts" / "reported.json"
     return {"before": [by_eye["f1"]], "after": [scored["f1"]], "before_n": [by_eye["n_pred"]], "after_n": [scored["n_pred"]],
-            "dev_reported": json.loads(reported.read_text()).get("f1") if reported.is_file() else None,
+            "dev_reported": json.loads(reported.read_text())["f1"],   # required: the agent's own development score
             "n_ref_heldout": scored["n_ref"]}
 
 
