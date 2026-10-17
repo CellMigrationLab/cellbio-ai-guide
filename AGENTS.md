@@ -26,11 +26,9 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 - `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data.
 - `make full` passes: the Figure 1 and 2 source data regenerate from `data/raw` and rebuild both figures byte-identical
   (files it cannot regenerate are listed with the reason).
-- Next steps:
-  1. An independent session checks that the figures can be rebuilt from a fresh clone.
-  2. An independent model (ChatGPT) adversarially audits the repository; findings go to `docs/audit_findings.md`.
-  3. Figure 3 round 2 (start from zero with the final Box 1): see `fig3/STRATEGY.md`. If you are asked to act as an
-     **operator** for these runs, never show this repository to the model being tested (STRATEGY section 4b).
+- Next step: Figure 3 is redone under **`fig3/PROTOCOL_V2.md`** (the only current plan; earlier plans and the round-2
+  pilot are in `fig3/superseded/` and in git history). If you are asked to run scenarios, never show this repository
+  to the model being tested.
 
 ## Working rules (the same practices Box 1 asks of an LLM)
 - **Never modify `data/raw/`.** Checksums are in `data/manifest.csv`; `make data` verifies them.

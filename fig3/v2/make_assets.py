@@ -1,14 +1,14 @@
 """Create the files given to subject models in round 2 (all derived from data/raw, so they can be regenerated).
 
-Design (fig3/STRATEGY.md, section 2): field 104 is the DEVELOPMENT image (a model may see it and its full manual
+Design (fig3/PROTOCOL_V2.md, section 2): field 104 is the DEVELOPMENT image (a model may see it and its full manual
 annotation); field 209 is the TEST image (only its image is ever given, to run a frozen script/pipeline on or, in the
 direct-answer row, to answer about; its annotation is never given to a model).
 
-Writes fig3/round2/assets/:
+Writes fig3/v2/assets/:
   dev_<task>_image.tif / .png         field 104 image (uint16 as acquired; 8-bit preview, 1st-99.7th percentile)
   dev_<task>_annotation.tif / .png    field 104 manual annotation (label image; coloured preview)
   test_<task>_image.tif / .png        field 209 image (never its annotation)
-Usage: PYTHONPATH=. python fig3/round2/make_assets.py
+Usage: PYTHONPATH=. python fig3/v2/make_assets.py
 """
 import numpy as np
 import tifffile
@@ -17,7 +17,7 @@ from PIL import Image
 from common.paths import REPO_ROOT, raw_file
 from fig3.scoring.tasks import TASKS, reference
 
-OUT = REPO_ROOT / "fig3" / "round2" / "assets"
+OUT = REPO_ROOT / "fig3" / "v2" / "assets"
 DEV_FIELD, TEST_FIELD = 104, 209
 IMAGE_ROLE = {"nuclei": "dapi", "cancer": "brightfield", "endo": "brightfield"}
 PREVIEW_PERCENTILES = (1.0, 99.7)

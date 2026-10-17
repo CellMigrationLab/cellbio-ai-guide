@@ -33,7 +33,6 @@ Two checks, both run in a temporary copy:
 | `fig3/` | Figure 3, split by use: `advice/`, `code/`, `optimise/`, `direct_answers/`; plus `figure/`, `scoring/`, `harness/`, `prompt_pack/`, `pilots/`, `superseded/` |
 | `box1/` | Box 1 versions (the one used in Fig. 3 and the current draft) |
 | `tools/` | porting and checking tools (how this repository was assembled; `check_all.py` fast check, `check_full.py` full check, `svg_to_pdf.py`) |
-| `docs/` | adversarial audit, our response (`audit_response.md`) and repository plan |
 | `AGENTS.md` | purpose, status and working rules for anyone (human or AI) working in this repository |
 
 Each figure folder follows the same layout: `code/` (builder and scripts), `source_data/` (the files the builder reads,

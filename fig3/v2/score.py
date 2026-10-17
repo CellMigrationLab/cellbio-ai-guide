@@ -1,9 +1,9 @@
 """Score one round-2 run folder and write score.json next to it.
 
-  PYTHONPATH=. python fig3/round2/score_round2.py RUN_DIR
+  PYTHONPATH=. python fig3/v2/score.py RUN_DIR
 
 Everything is scored on the TEST field (209) against the authors' manual annotation, whole field
-(fig3/STRATEGY.md, section 2). RUN_DIR must contain meta.json with "row", "task" and "condition"; then:
+(fig3/PROTOCOL_V2.md, section 2; to be extended to the v2 measures, section 7). RUN_DIR must contain meta.json with "row", "task" and "condition"; then:
   code_python, code_fiji, optimise : labels.tif = output of the final script / frozen pipeline run on the test image
   direct, condition "box1"         : reply.json  {"count": n, "cells": [{"points": [[x, y], ...]}, ...]}
   direct, condition "generic"      : stated_count.txt (the number the model gave)
@@ -118,7 +118,7 @@ def score_run(run_dir: Path) -> dict:
     if row == "direct":
         return score_direct(run_dir, task, condition)
     if row == "advice":
-        return {"status": "not_scored_here", "note": "advice is scored with the rubric (STRATEGY 6.1)"}
+        return {"status": "not_scored_here", "note": "advice is scored with the item check (PROTOCOL_V2 section 5)"}
     raise ValueError(f"Unknown row {row!r}")
 
 

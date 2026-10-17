@@ -1,6 +1,6 @@
 # Box 1 (draft v3, 17 Oct 2026): reusable prompt for LLM-assisted image analysis
 
-Template text as drafted by the authors. Filled-in examples for the three Figure 3 tasks: `fig3/prompt_pack/prompts/`.
+Template text as drafted by the authors. Filled-in examples were in `fig3/prompt_pack/` (removed with the earlier plans; see git history).
 
 ```text
 I want to [biological question or measurement] from [type of microscopy images]. Help me [choose an analysis approach / write the analysis / run or optimise the workflow].

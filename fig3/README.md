@@ -25,8 +25,7 @@ lossless compression, pixel values verified). `runs_index.csv` maps each run to 
 
 Other folders: `figure/` (builder, source data, output), `scoring/` (task definitions, `build_scores.py`,
 `rescore_dev.py`, `all_runs_table.py`), `baselines/` (Cellpose default on DAPI), `harness/` (scripts that queued, ran,
-collected and scored the runs, as used), `prompt_pack/` (protocol and prompts for the next round in ChatGPT and
-claude.ai), `pilots/` (Box 1 draft v3 tests, not in the figure), `superseded/` (all earlier rounds, kept for audit).
+collected and scored the runs, as used), `v2/` (assets and scorer for protocol v2, `PROTOCOL_V2.md`), `pilots/` (Box 1 draft v3 tests, not in the figure), `superseded/` (all earlier rounds, kept for audit).
 
 ## Reproduce the numbers
 ```
@@ -42,7 +41,7 @@ in `harness/queue_runner.sh`. LLM replies themselves are not reproducible bit-fo
 - Illustration, not a benchmark: one field, one model, three runs per condition.
 - The sub-agent harness differs from the chat apps: our wrapper text, a fixed output format (`labels.tif`), a setup line
   (software available) not in Box 1, and web tools that must be loaded before use (most runs never loaded them). See
-  `deviations.md`. The next round (`prompt_pack/`) runs in the chat apps to remove these differences.
+  `deviations.md`. The next round follows `PROTOCOL_V2.md`.
 - Row c "reported" scores came from scoring code written by each agent; with our scorer they are 0.927, 0.930, 0.706
   (nuclei, cancer, endothelial) instead of 0.927, 0.930, 0.695 (`optimise/dev_rescored.json`).
 - Three of six agent runs read or wrote files outside the folder they were told to use (`deviations.md`).

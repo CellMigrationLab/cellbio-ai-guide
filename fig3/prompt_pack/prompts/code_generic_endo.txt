@@ -1,1 +1,0 @@
-I want to count the endothelial cells and measure their area from brightfield images of a confluent endothelial monolayer (some cancer cells sit on top). Help me write the analysis.

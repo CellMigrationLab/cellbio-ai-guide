@@ -1,5 +1,4 @@
 """Tests for the Figure 3 scorers and the round-2 protocol generator. Run: python -m unittest discover -s . -p 'test_*.py'"""
-import csv
 import json
 import tempfile
 import unittest
@@ -9,7 +8,7 @@ import numpy as np
 import tifffile
 
 from common.paths import REPO_ROOT
-from fig3.round2 import make_scenarios, score_round2
+from fig3.v2 import score as v2score
 from fig3.scoring.tasks import TASKS, reference, score, score_heldout
 
 
@@ -41,7 +40,7 @@ class TaskScorerTests(unittest.TestCase):
         self.assertEqual(score("nuclei", pred)["fp"], 0)
 
     def test_heldout_counts_match_strategy(self):
-        """Held-out reference counts stated in STRATEGY.md: 233 nuclei, 51 cancer cells, 181 endothelial cells."""
+        """Round-1 held-out halves (right half of field 104): 233 nuclei, 51 cancer cells, 181 endothelial cells."""
         empty = np.zeros_like(reference("cancer"))
         counts = {task: score_heldout(task, empty)["n_ref"] for task in TASKS}
         self.assertEqual(counts, {"nuclei": 233, "cancer": 51, "endo": 181})
@@ -62,20 +61,20 @@ class ScoreRound2Tests(unittest.TestCase):
     def test_code_run_with_perfect_labels(self):
         run_dir = self._run_dir({"row": "code_python", "task": "cancer", "condition": "box1"})
         tifffile.imwrite(run_dir / "labels.tif", reference("cancer", 209).astype(np.int32))
-        self.assertEqual(score_round2.score_run(run_dir)["f1"], 1.0)
+        self.assertEqual(v2score.score_run(run_dir)["f1"], 1.0)
 
     def test_dev_field_labels_score_low_on_test_field(self):
         """Labels of the development field are not a solution for the test field."""
         run_dir = self._run_dir({"row": "optimise", "task": "cancer", "condition": "generic"})
         tifffile.imwrite(run_dir / "labels.tif", reference("cancer", 104).astype(np.int32))
-        self.assertLess(score_round2.score_run(run_dir)["f1"], 0.2)
+        self.assertLess(v2score.score_run(run_dir)["f1"], 0.2)
 
     def test_missing_labels_is_a_crash(self):
         run_dir = self._run_dir({"row": "code_fiji", "task": "nuclei", "condition": "generic"})
-        self.assertEqual(score_round2.score_run(run_dir), {"status": "crashed", "f1": 0.0})
+        self.assertEqual(v2score.score_run(run_dir), {"status": "crashed", "f1": 0.0})
 
     def test_manual_counts_come_from_annotations(self):
-        self.assertEqual({t: score_round2.manual_count(t) for t in TASKS}, {"nuclei": 473, "cancer": 163, "endo": 388})
+        self.assertEqual({t: v2score.manual_count(t) for t in TASKS}, {"nuclei": 473, "cancer": 163, "endo": 388})
 
     def test_direct_outlines_audit(self):
         run_dir = self._run_dir({"row": "direct", "task": "cancer", "condition": "box1"})
@@ -83,56 +82,26 @@ class ScoreRound2Tests(unittest.TestCase):
         (run_dir / "reply.json").write_text(json.dumps(
             {"count": 5, "cells": [{"points": [[1, 1]]}, {"points": square}, {"points": square},
                                    {"points": [[5000, 5000], [5010, 5000], [5010, 5010]]}]}))
-        r = score_round2.score_run(run_dir)
+        r = v2score.score_run(run_dir)
         self.assertEqual((r["n_invalid"], r["n_empty_or_outside"], r["n_valid"], r["stated_minus_valid_outlines"]), (1, 1, 2, 3))
         self.assertGreater(r["overlap_px"], 0)
 
     def test_malformed_direct_outputs_are_recorded(self):
         run_dir = self._run_dir({"row": "direct", "task": "endo", "condition": "box1"})
         (run_dir / "reply.json").write_text("{not json")
-        self.assertEqual(score_round2.score_run(run_dir)["status"], "invalid_json")
+        self.assertEqual(v2score.score_run(run_dir)["status"], "invalid_json")
         run_dir = self._run_dir({"row": "direct", "task": "endo", "condition": "generic"})
         (run_dir / "stated_count.txt").write_text("about three hundred")
-        self.assertEqual(score_round2.score_run(run_dir)["status"], "invalid_count")
+        self.assertEqual(v2score.score_run(run_dir)["status"], "invalid_count")
         (run_dir / "stated_count.txt").write_text("300-340")
-        self.assertEqual(score_round2.score_run(run_dir)["stated_count"], 320)
+        self.assertEqual(v2score.score_run(run_dir)["stated_count"], 320)
 
 
-class ProtocolTests(unittest.TestCase):
-    def test_prompts_are_complete_and_paired(self):
-        prompts = make_scenarios.build_prompts()
-        self.assertEqual(len(prompts), 30)
-        for prompt_id, text in prompts.items():
-            if not prompt_id.startswith("direct"):
-                self.assertNotIn("[", text.replace("[[x, y], ...]", ""), prompt_id)
-        for task in make_scenarios.TASKS:
-            for row in ("advice", "code_python", "code_fiji"):
-                first_generic = prompts[f"{row}_generic_{task}"].split("\n")[0]
-                self.assertTrue(prompts[f"{row}_box1_{task}"].startswith(first_generic), f"{row} {task}")
-
-    def test_committed_scenarios_match_generator(self):
-        """The committed prompt files and scenarios.csv are what the generator produces (nothing edited by hand)."""
-        prompts = make_scenarios.build_prompts()
-        for prompt_id, text in prompts.items():
-            self.assertEqual((REPO_ROOT / "fig3/round2/prompts" / f"{prompt_id}.txt").read_text(), text + "\n", prompt_id)
-        rows = list(csv.DictReader(open(REPO_ROOT / "fig3/round2/scenarios.csv")))
-        self.assertEqual(len(rows), 162)
-        self.assertEqual(len({r["scenario_id"] for r in rows}), 162)
-        for r in rows:
-            if r["row"].startswith("code"):
-                self.assertTrue(r["attach"].startswith("image.tif <- dev_"), r["scenario_id"])
-            if r["row"] in ("code_python", "code_fiji", "optimise"):
-                self.assertTrue(r["run_final_code_on"].startswith("test_"), r["scenario_id"])
-
-    def test_test_annotation_is_never_given(self):
-        """No asset or scenario hands a model the test-field annotation, and both optimise conditions get the same image."""
-        assets = {p.name for p in (REPO_ROOT / "fig3/round2/assets").iterdir()}
+class AssetTests(unittest.TestCase):
+    def test_test_annotation_is_never_an_asset(self):
+        """No asset hands a model the test-field (209) annotation."""
+        assets = {p.name for p in (REPO_ROOT / "fig3/v2/assets").iterdir()}
         self.assertFalse([a for a in assets if a.startswith("test_") and "annotation" in a])
-        rows = list(csv.DictReader(open(REPO_ROOT / "fig3/round2/scenarios.csv")))
-        for r in rows:
-            self.assertNotIn("test_" + r["task"] + "_annotation", r["attach"] + r["agent_folder"])
-            if r["row"] == "optimise":
-                self.assertIn(f"image.tif <- dev_{r['task']}_image.tif", r["agent_folder"])
 
 
 if __name__ == "__main__":

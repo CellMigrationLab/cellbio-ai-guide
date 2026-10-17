@@ -2,7 +2,7 @@
 
 Draft v3 (`box1_draft_v3.md`) plus four edits from the pilots, marked ➕ here (remove the marks in the manuscript):
 software/version slot; a test the user can run and its failure criterion; work only in a given folder; masks behind any
-count. Filled-in prompts for the three tasks: `fig3/round2/prompts/`.
+count. Filled-in prompts used in the round-2 pilot: `fig3/superseded/round2_pilot/prompts/`; protocol v2 fills it as in `fig3/PROTOCOL_V2.md`, section 4.
 
 ```text
 I want to [biological question or measurement] from [type of microscopy images]. Help me [choose an analysis approach / write the analysis / run or optimise the workflow].

@@ -1,12 +1,12 @@
 # Figure 3, protocol v2 (draft for the authors' review, 17 Oct 2026)
 
-Replaces the round-2 design (`STRATEGY.md`, `round2/`). The runs made under round 2 (three accepted, three rejected)
-become a **pilot** and are not used in the figure. Nothing in this file is frozen yet; after the authors' review it is
+Replaces the round-2 design. The runs made under round 2 (three accepted, three rejected) are a **pilot**, kept in
+`superseded/round2_pilot/` and not used in the figure. Nothing in this file is frozen yet; after the authors' review it is
 implemented in `fig3/v2/`, tested in a short preflight (section 11) and then frozen (hashes of every file that defines
 the protocol, including the operator code and the environment).
 
 Sources of the changes: the authors' plan of 17 Oct 2026, the amendments discussed in the session, and the two
-ChatGPT audits (`docs/round2_plan_reaudit.md`, `docs/analysis_code_audit.md`).
+ChatGPT audits of 17 Oct 2026 (pull request 2: round-2 plan re-audit and analysis-code audit).
 
 ---
 
@@ -97,7 +97,7 @@ No statistical tests (3 replicates); every run is shown.
 
 ### 4.3 Conditions
 - **Simple (rows A, B)**: task sentence + request sentence.
-- **Box 1 (rows A, B)**: the final Box 1 (`box1/box1_final.md`) with the slots filled exactly as in round 2 (2D, axes,
+- **Box 1 (rows A, B)**: the final Box 1 (`box1/box1_final.md`) with the slots filled as in the pilot (2D, axes,
   channel, uint16 12-bit, 0.65 µm, object size: nuclei 13–17 µm, cancer cells 15–25 µm, endothelial cells 25–50 µm;
   "Python 3.13 on a laptop CPU (no GPU)"; output = label image + table of areas and aspect ratios; "I can provide a
   manual annotation of this image (a label image)"), + the request sentence. The optimisation paragraph is omitted.
