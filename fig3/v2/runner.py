@@ -35,8 +35,8 @@ NEVER_COPY = ("annotation", "image.tif", "image.png")   # development data must 
 
 
 def manifest_names(agent_folder: Path) -> list[str]:
-    """Every string in runtime_manifest.json (any layout: the prompt fixes no format) that names a file in the agent
-    folder, in order of appearance."""
+    """Every string in runtime_manifest.json (any layout: the prompt fixes no format) that names, as a relative path, a
+    file in the agent folder, in order of appearance."""
     manifest = agent_folder / "runtime_manifest.json"
     if not manifest.is_file():
         return []
@@ -49,8 +49,10 @@ def manifest_names(agent_folder: Path) -> list[str]:
         elif isinstance(value, list):
             for v in value:
                 walk(v)
-        elif isinstance(value, str) and value not in found and (agent_folder / value).is_file():
-            found.append(value)
+        elif (isinstance(value, str) and value not in found and not Path(value).is_absolute()
+              and (agent_folder / value).resolve().is_relative_to(agent_folder.resolve())
+              and (agent_folder / value).is_file()):
+            found.append(value)           # absolute paths (e.g. shared model weights) are the environment, not copied
 
     walk(json.loads(manifest.read_text()))
     return found

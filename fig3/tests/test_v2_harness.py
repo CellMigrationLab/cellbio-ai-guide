@@ -151,7 +151,8 @@ class RuntimeManifest(unittest.TestCase):
             for name in ("pipeline.py", "weights.npy", "annotation.tif", "image.tif"):
                 (folder / name).write_text("x")
             (folder / "runtime_manifest.json").write_text(json.dumps(
-                {"required_files": ["pipeline.py", "weights.npy"], "note": "a sentence, not a file", "x": ["annotation.tif", "image.tif"]}))
+                {"required_files": ["pipeline.py", "weights.npy", str(folder / "weights.npy"), "/etc/hostname"],
+                 "note": "a sentence, not a file", "x": ["annotation.tif", "image.tif"]}))
             self.assertEqual(runner.manifest_names(folder), ["pipeline.py", "weights.npy", "annotation.tif", "image.tif"])
             self.assertEqual([p.name for p in runner.runtime_files(folder)], ["weights.npy"])
 

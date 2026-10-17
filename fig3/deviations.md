@@ -132,3 +132,12 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   the images are the attachments or files archived with the run); label images written by scripts are stored
   gzip-compressed with their exact bytes (`labels_fF.tif.gz`); the subject's temporary folder is one
   `subject_scratchpad.tar.gz`. Preflight records were converted the same way; their scores are unchanged.
+
+### Main run (frozen protocol; amendments are also listed in `v2/FREEZE.json`)
+- **Runner amendment (run 4, `optimise_labels_endo_r2`)**: the agent's `runtime_manifest.json` named the shared
+  Cellpose weights by absolute path (`/root/.cellpose/models/cpsam_v2`); the runner treated it as a file in the agent
+  folder and stopped before running anything. Absolute paths are now ignored (the weights are part of the
+  environment); only relative names inside the agent folder are copied. Harness fault, no subject rerun needed (the
+  runner had produced nothing); no earlier run had such a manifest.
+- Run 4: the agent ran `mkdir -p /tmp/claude-0/s` (an empty folder it never used; removed by the operator). A write of
+  its own temporary folder, nothing read: recorded, not rerun (reads decide, section 3).

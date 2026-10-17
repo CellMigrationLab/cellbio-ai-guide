@@ -36,7 +36,7 @@
   "fig3/v2/scenarios.csv": "c75938e85fe732dd36d3cb034918714c2eff9abc74b50e5da4f527ac7691db89",
   "fig3/v2/answer_sheet.md": "9e873f52d635d0d095a6b464e6f852e8bfca9fed7dd1300889d4aff9bc2f287a",
   "fig3/v2/run_operator.py": "e39f57df96fc2b15b79d5b844cd6f1257492ae0477bbd78c203df01d99ebb16a",
-  "fig3/v2/runner.py": "00d874ce9e09cd8c98c40a0c660d2271a9afbf0de049f0efb2cad1875757a58a",
+  "fig3/v2/runner.py": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
   "fig3/v2/score.py": "c490937d38068dd0fb3ee012e83c9e49f3245eed3eadcbec868dfb0188488469",
   "fig3/v2/make_protocol.py": "679b14b6de5b75bb8a2682c10e74a9dbd08c6308ccf6ccea75e3be89565e00eb",
   "fig3/v2/make_assets.py": "12e9d380758bca58cbce059d455d2e9bbcca738bd67b8e92fd0240870d2a4dce",
@@ -68,5 +68,15 @@
   "common/stats.py": "929e94054d472d4c8550855fa19e14be14948ef67a77320fa18c41b8f19d9683",
   "common/paths.py": "e4d4855007a021b36d29ced4b6f660cf6130efad84dd2a44da6c528f6cbca697",
   "box1/box1_final.md": "10216f40d7658993cf5c5bfd26caa51ee620b5397d81941546a3b672c8f37c25"
- }
+ },
+ "amendments": [
+  {
+   "date": "2026-10-17",
+   "file": "fig3/v2/runner.py",
+   "old_sha256": "00d874ce9e09cd8c98c40a0c660d2271a9afbf0de049f0efb2cad1875757a58a",
+   "new_sha256": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
+   "reason": "harness fault: an absolute path in runtime_manifest.json (shared model weights) was treated as a file in the agent folder and stopped the runner; absolute paths are now ignored (they are the environment)",
+   "runs_affected": "main run 4 optimise_labels_endo_r2 (runner had not produced any result); no earlier run"
+  }
+ ]
 }
