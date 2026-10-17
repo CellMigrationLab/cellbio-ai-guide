@@ -21,7 +21,7 @@ The builder uses the Python standard library only; it embeds the PNGs in `source
 | `panel_c_step3/B_rep_bf.png`, `panel_c_step3/B_rep_{ref,cellpose,stardist}.json` | c, step 3 window | `code/export_rep_window.py` (window chosen by `code/find_rep_window.py`) |
 | `panel_c_steps2_4/rep_classical.json` | c, step 3 threshold | `code/classical_seg.py` |
 | `panel_c_step3/A_scores.json` | c, step 3 F1 | `code/f1_scores.py` reproduces it from `full_field_labels/*.tif` and `data/raw` (original: `code/recovered_inline/data4_A_scores.json.sh`) |
-| `panel_c_steps2_4/test_bf.png`, `test_ref.json`, `test_stardist.json` | c, step 4 | `code/recovered_inline/data8_test_bf.png.sh` |
+| `panel_c_step4/test_bf.png`, `test_ref.json`, `test_stardist.json`, `step4_scores.json` | c, step 4 (field 209) | `code/export_fresh_field.py` (window rule in its docstring). Until 17 Oct 2026 step 4 showed a field-104 crop (`code/recovered_inline/data8_test_bf.png.sh`; files in git history) |
 | `panel_c_step5/trackmate_crop.png` | c, step 5 | `code/recovered_inline/data9_trackmate_crop.png.sh` |
 | `full_field_labels/cellpose_sam_labels.tif` | c (scores), Figs 2–3 | `code/segment_bf_cellpose.py` (Cellpose 4.2.1.1, default `cpsam`, CPU) |
 | `full_field_labels/threshold_labels.tif` | c (scores) | `code/classical_seg.py` |
@@ -40,7 +40,7 @@ the table above gives the names used here.
 
 Two caveats are listed first because they affect what the figure claims.
 
-> **Caveat 1 — panel c steps 2–4 use one field of view.** The reference images (step 2), the comparison window (step 3) and the "unseen image" (step 4) are all crops of the same brightfield field (`data/raw/field104_brightfield.tif`). The step-4 crop overlaps the step-2 crop `step2_reference_image_1.png` almost completely, and the F1 scores are computed over this whole field. The figure illustrates the workflow; it does not show a genuinely independent final check.
+> **Caveat 1 — panel c steps 2–3 use one field of view; step 4 uses a second field.** The reference images (step 2) and the comparison window (step 3) are crops of `data/raw/field104_brightfield.tif`, and the step-3 F1 scores are computed over that whole field. The "unseen image" (step 4) is a crop of field 209, a second annotated field of the same experiment (Follain et al. 2026) not used in steps 2–3 (audit P0.3, changed 17 Oct 2026). Custom StarDist on field 209: F1 0.89 over the whole field (139 of 163 manual cells matched, 10 extra objects); the crop (x 640–880, y 50–310) was chosen by a fixed rule as the window whose local F1 (0.89) is closest to the whole-field value. Both fields come from one experiment and microscope, so this checks transfer to a new field, not to new experiments. **To confirm by the authors:** whether field 209 (or field 104) was among the images used to train the custom StarDist model; if it was, step 4 is not an unseen image for that model.
 >
 > **Caveat 2 — the classification tile is not one field.** The right half of the classification tile is a gallery of cells from other test images in the same dataset (two per class), not the classification output for the cells in the left half.
 

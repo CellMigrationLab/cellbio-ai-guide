@@ -2,18 +2,18 @@
 PY ?= python3
 export PYTHONPATH := $(CURDIR)
 
-.PHONY: check test data fig1 fig2 fig3 scores
+.PHONY: check test data fig1 fig2 fig3 pdf scores
 
 check:            ## tests + checksums + rebuild all figures and scores in a temporary copy (no files changed)
 	$(PY) tools/check_all.py
 
-test:
-	$(PY) -m unittest discover -s common -t .
+test:             ## all unit tests
+	$(PY) -m unittest discover -s . -p 'test_*.py' -t .
 
 data:
 	$(PY) data/make_manifest.py --verify
 
-fig1:             ## writes fig1/figure/fig1.svg
+fig1:             ## writes fig1/figure/fig1.svg (step 4 crop: cd fig1/source_data && python ../code/export_fresh_field.py)
 	cd fig1/source_data && $(PY) ../code/make_fig1.py
 
 fig2:             ## writes fig2/figure/fig2.svg
@@ -21,6 +21,10 @@ fig2:             ## writes fig2/figure/fig2.svg
 
 fig3:             ## writes fig3/figure/output/fig3.svg
 	cd fig3/figure/source_data && $(PY) ../code/make_fig3.py
+
+pdf:              ## SVG -> PDF for Figs 1 and 2 with headless Chromium
+	$(PY) tools/svg_to_pdf.py fig1/figure/fig1.svg
+	$(PY) tools/svg_to_pdf.py fig2/figure/fig2.svg
 
 scores:           ## recompute Fig 3 scores and compare with the figure
 	$(PY) fig3/scoring/build_scores.py --check

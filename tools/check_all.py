@@ -75,6 +75,18 @@ def check_fig1_scores(tmp: Path) -> bool:
     return report("fig1: F1 scores recomputed from label images", recomputed == published, f"{recomputed}")
 
 
+def check_fig1_step4(tmp: Path) -> bool:
+    """Re-export the Fig 1c step-4 crop of field 209 and compare every file with the committed one."""
+    src = tmp / "fig1" / "source_data"
+    proc = run([sys.executable, "../code/export_fresh_field.py"], cwd=src)
+    if proc.returncode:
+        return report("fig1: step-4 crop (field 209)", False, proc.stderr[-300:])
+    committed = sorted((REPO / "fig1/source_data/panel_c_step4").iterdir())
+    differ = [f.name for f in committed if md5(f) != md5(src / "panel_c_step4" / f.name)]
+    return report("fig1: step-4 crop (field 209) re-exported byte-identical", not differ and bool(committed),
+                  f"differ: {differ}" if differ else "")
+
+
 def check_fig2_scores(tmp: Path, with_squirrel: bool) -> list[bool]:
     """Re-run the Fig 2 scoring scripts (in their required order) and compare every JSON output."""
     results, src = [], tmp / "fig2" / "source_data"
@@ -103,6 +115,7 @@ def main(with_squirrel: bool) -> None:
         tmp = Path(tmp_name)
         results += check_figures(tmp)
         results.append(check_fig1_scores(tmp))
+        results.append(check_fig1_step4(tmp))
         results += check_fig2_scores(tmp, with_squirrel)
     proc = run([sys.executable, "fig3/scoring/build_scores.py", "--check"], cwd=REPO)
     results.append(report("fig3: every score recomputed from the stored runs", proc.returncode == 0, proc.stdout.strip()[-300:]))

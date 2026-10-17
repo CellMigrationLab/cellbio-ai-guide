@@ -832,10 +832,10 @@ for i in range(steps):
         cC_.append(group("find the failure (loop)", lp))
         cC_.append(t(cx, iy + 158, ["channels · object scale · context", "pre- and post-processing"], 12.5, fill=INK, anchor="middle", lh=16))
     elif i == 3:  # final check on fresh images
-        cC_.append(real_image(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_steps2_4/test_bf.png", PX, 240, 50, "fresh image", "#111111"))
+        cC_.append(real_image(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_step4/test_bf.png", PX, 240, 50, "fresh image", "#111111"))
         sb_ = slice_sub(IS, IS * 260 / 240 * 0.92)
-        cC_.append(vector_outlines_sub(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_steps2_4/test_ref.json", "reference (vector)", REF, 1.4, DASH, sb_))
-        cC_.append(vector_outlines_sub(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_steps2_4/test_stardist.json", "model (vector)", MODEL, 1.4, None, sb_))
+        cC_.append(vector_outlines_sub(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_step4/test_ref.json", "reference (vector)", REF, 1.4, DASH, sb_))
+        cC_.append(vector_outlines_sub(ix, iy, IS, IS * 260 / 240 * 0.92, "panel_c_step4/test_stardist.json", "model (vector)", MODEL, 1.4, None, sb_))
         cC_.append(halo(ix + 6, iy + 16, "unseen image"))
     elif i == 4:  # final result: cells tracked over time (TrackMate capture: brightfield, spots and tracks)
         cC_.append(real_image(ix, iy, IS, IS, "panel_c_step5/trackmate_crop.png", 1.31483, 280, 100, "tracked cells (TrackMate)", "#ffffff"))
