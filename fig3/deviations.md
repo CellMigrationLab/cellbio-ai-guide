@@ -68,3 +68,9 @@ Operator conventions applied to every Claude scenario, decided before or at the 
   direct rows offer no shell; a subject that runs code there is rerun.
 - The operator's scratchpad (visible to sub-agents through the harness) was emptied after that attempt; it held
   round-1 working files. No subject read them (audit of attempt 1).
+- The harness tells every sub-agent to keep temporary files in the operator's scratchpad, and subjects do so even when
+  told to stay in their folder. The scratchpad is emptied before each subject, and what a subject leaves there is
+  moved to `subject_scratchpad/` in its run folder. Scratchpad use is recorded in `audit.json`, not treated as a rerun
+  (it holds nothing but the subject's own files); any other path outside the folder still means a rerun.
+- Fiji macros run as in round 1, `xvfb-run -a <Fiji> -batch macro.ijm` (virtual display, no `--headless`), because
+  `--headless` fails on macros that open windows.

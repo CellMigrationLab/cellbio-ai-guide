@@ -28,6 +28,9 @@ SUBJECT_ROOT = Path("/home/user/sessions")
 EXEC_ROOT = Path("/home/user/r2exec")
 TRANSCRIPTS = Path("/root/.claude/projects/-home-user")
 FIJI = Path("/home/user/tools/Fiji/fiji-linux-x64")
+# The harness tells every sub-agent to use this scratchpad for temporary files. It is emptied before each subject and
+# whatever the subject leaves there is moved into its run folder (deviations.md, round 2).
+SCRATCH = Path("/tmp/claude-0/-home-user/8b3112e1-653c-5f4c-bdba-69ecd9f94f24/scratchpad")
 TIMEOUT_S = 3600
 SUBJECT_TOOLS_ALLOWED = {"advice": {"ToolSearch", "WebSearch", "WebFetch"},
                          "direct": {"ToolSearch", "WebSearch", "WebFetch", "Read"},
@@ -71,6 +74,8 @@ def prepare(scenario_id: str) -> None:
     folder, run_dir = subject_dir(sc), RUNS / scenario_id
     if folder.exists() or run_dir.exists():
         raise FileExistsError(f"{folder} or {run_dir} exists; a scenario is prepared once (rerun: new run folder)")
+    if SCRATCH.exists() and any(SCRATCH.iterdir()):
+        raise RuntimeError(f"{SCRATCH} is not empty; archive it into the previous run folder first (audit does this)")
     folder.mkdir(parents=True)
     run_dir.mkdir(parents=True)
     task, row = sc["task"], sc["row"]
@@ -116,7 +121,7 @@ def audit(scenario_id: str, agent_id: str) -> None:
     sc = scenario(scenario_id)
     folder, run_dir = str(subject_dir(sc)), RUNS / scenario_id
     events = transcript(agent_id)
-    calls, flags, lines = [], [], [f"# {scenario_id}\n"]
+    calls, flags, notes, lines = [], [], [], [f"# {scenario_id}\n"]
     for ev in events:
         msg = ev.get("message") or {}
         role, content = msg.get("role"), msg.get("content")
@@ -137,10 +142,14 @@ def audit(scenario_id: str, agent_id: str) -> None:
                 if allowed is not None and name not in allowed:
                     flags.append(f"tool {name} not offered for row {sc['row']}")
                 for p in paths_in(inp):
-                    if not p.startswith(folder):
+                    if p.startswith(str(SCRATCH)):
+                        notes.append(f"{name} in the harness scratchpad (archived): {p}")
+                    elif not p.startswith(folder):
                         flags.append(f"{name} outside the subject folder: {p}")
                 if name in ("Bash", "Glob", "Grep"):
-                    text = json.dumps(inp).replace(folder, "<folder>")
+                    text = json.dumps(inp).replace(folder, "<folder>").replace(str(SCRATCH), "<scratchpad>")
+                    if "<scratchpad>" in text:
+                        notes.append(f"{name} in the harness scratchpad (archived)")
                     hits = [m for m in OUTSIDE_MARKERS if m in text]
                     if hits:
                         flags.append(f"{name} refers to paths outside the subject folder {hits}: {text[:200]}")
@@ -150,9 +159,17 @@ def audit(scenario_id: str, agent_id: str) -> None:
                 lines.append(f"## tool result\n\n```\n{text[:2000]}\n```\n")
     (run_dir / "conversation.md").write_text("\n".join(lines))
     (run_dir / "tool_calls.json").write_text(json.dumps(calls, indent=1))
-    (run_dir / "audit.json").write_text(json.dumps({"agent_id": agent_id, "n_tool_calls": len(calls), "flags": flags},
-                                                   indent=1))
-    print(json.dumps({"n_tool_calls": len(calls), "flags": flags}, indent=1))
+    archived = []
+    if SCRATCH.exists() and any(SCRATCH.iterdir()):
+        target = run_dir / "subject_scratchpad"
+        target.mkdir(exist_ok=True)
+        for item in SCRATCH.iterdir():
+            shutil.move(str(item), target / item.name)
+            archived.append(item.name)
+    result = {"agent_id": agent_id, "n_tool_calls": len(calls), "flags": flags,
+              "scratchpad_notes": sorted(set(notes)), "scratchpad_archived": archived}
+    (run_dir / "audit.json").write_text(json.dumps(result, indent=1))
+    print(json.dumps({k: result[k] for k in ("n_tool_calls", "flags", "scratchpad_archived")}, indent=1))
 
 
 MODEL_ALIASES = {"sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5", "haiku": "claude-haiku-5-5"}
@@ -208,7 +225,7 @@ def run(scenario_id: str) -> None:
     shutil.copyfile(ASSETS / f"test_{sc['task']}_image.tif", exec_dir / "image.tif")
     if sc["row"] == "code_fiji":
         shutil.copyfile(run_dir / "code_run.ijm", exec_dir / "code_run.ijm")
-        cmd = ["xvfb-run", "-a", str(FIJI), "--headless", "-batch", "code_run.ijm"]
+        cmd = ["xvfb-run", "-a", str(FIJI), "-batch", "code_run.ijm"]  # virtual display, as round 1 (no --headless)
     elif sc["row"] == "code_python":
         shutil.copyfile(run_dir / "code_run.py", exec_dir / "code_run.py")
         cmd = [sys.executable, "code_run.py"]
