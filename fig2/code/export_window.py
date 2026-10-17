@@ -1,7 +1,6 @@
 """Vector contours of a label image inside a window (full-field px), in window-pixel coordinates."""
 import json
 import numpy as np
-import tifffile
 from skimage.measure import find_contours, approximate_polygon
 
 

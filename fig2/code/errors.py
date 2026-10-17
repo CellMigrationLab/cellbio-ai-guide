@@ -11,7 +11,6 @@ Tested on synthetic cases in fig2/tests/test_error_categories.py."""
 import json, sys
 import numpy as np
 import tifffile
-from skimage.measure import regionprops
 from common.matching import match
 
 from common.paths import RAW as U
