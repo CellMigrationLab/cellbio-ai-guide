@@ -39,3 +39,10 @@ Images and annotations produced by the authors: **CC BY 4.0** (see `LICENSE-cont
 own licence (DeepBacs: CC BY 4.0, Zenodo 10.5281/zenodo.5551016 and 10.5281/zenodo.5551057; BioSR: CC BY 4.0, to confirm).
 If you use the data, cite the sources in `sources.csv`. To double-check before release: the BioSR licence, and the DOIs
 listed for Cellpose-SAM and NanoPyx.
+
+## Sanity check: every image with its annotation
+`overview.png` (made by `PYTHONPATH=. python data/make_overview.py`) shows every image in `raw/` with its manual
+annotation drawn on top and the number of annotated objects counted from the annotation file. Manual annotations exist
+for **one field** (field 104: 124 cancer cells, 382 / 369 endothelial cells by two annotators, 441 endothelial nuclei)
+and for the DeepBacs examples (dataset ground truth). The CARE, BioSR, HPMEC and TrackMate images have no manual
+annotation (BioSR is compared with its high-resolution acquisition).
