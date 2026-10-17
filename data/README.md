@@ -70,4 +70,4 @@ See [sources.csv](sources.csv) for the original paper, DOI and licence for each 
 
 ## Information to confirm before release
 
-The individual annotators' names and annotation dates remain unrecorded (the Jacquemet lab prepared the annotations using Fiji for the FlowVision paper); the CARE model version and training data; the TrackMate experiment and tracking settings; or the exact BioSR source file/cell and RCAN training provenance. These details should be confirmed by the authors rather than inferred. The [Figure 1 provenance notes](../fig1/README.md) list the remaining source-specific questions.
+Still to be recorded: the individual annotators' names and annotation dates (the annotations were prepared by the Jacquemet lab using Fiji for the FlowVision paper), the CARE model version and training data, the TrackMate experiment and tracking settings, and the exact BioSR source file/cell and RCAN training provenance. These details should be confirmed by the authors rather than inferred. The [Figure 1 provenance notes](../fig1/README.md) list the remaining source-specific questions.
