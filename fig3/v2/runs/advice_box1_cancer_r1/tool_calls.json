@@ -1,0 +1,16 @@
+[
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/api.html",
+   "prompt": "Current Cellpose version, how to load models (CellposeModel, cpsam), eval() parameters (diameter, flow_threshold, cellprob_threshold, normalize, channels), input formats, GPU/CPU notes, and fine-tuning/train API (train_seg) signature."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/train.html",
+   "prompt": "How to fine-tune the cpsam model: train_seg arguments, data format, recommended number of epochs, learning rate, CPU feasibility, and how to evaluate."
+  }
+ }
+]

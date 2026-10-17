@@ -36,5 +36,5 @@
   "in_code_run": false
  },
  "cost_usd": 0.1809,
- "notes": ""
+ "notes": "audit flag '/root' is '~' in the agent's code text (comment '~30', numpy bitwise not), not a path; reviewed by the operator"
 }

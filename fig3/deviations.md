@@ -141,3 +141,6 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   runner had produced nothing); no earlier run had such a manifest.
 - Run 4: the agent ran `mkdir -p /tmp/claude-0/s` (an empty folder it never used; removed by the operator). A write of
   its own temporary folder, nothing read: recorded, not rerun (reads decide, section 3).
+- **Operator convention (from run 10, `advice_box1_cancer_r1`)**: a conversation is closed without a further message
+  when the only questions left are ones already answered (as in the round-2 pilot); the answer sheet does not cover
+  repeated questions.
