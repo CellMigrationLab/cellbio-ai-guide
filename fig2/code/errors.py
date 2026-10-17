@@ -10,11 +10,11 @@ is also a true positive.
 Tested on synthetic cases in fig2/tests/test_error_categories.py."""
 import json, sys
 import numpy as np
-import tifffile
 from common.matching import match
 
 from common.paths import RAW as U
-REF = tifffile.imread(U + "field104_cancer_cells_manual_labels.tif").astype(int)
+from common.labels import read_labels
+REF = read_labels(U + "field104_cancer_cells_manual_labels.tif")
 
 
 def errors(pr, ref=REF):
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     out = {}
     for name, path in [("stardist", U + "field104_cancer_cells_stardist_custom_labels.tif"), ("cellpose_default", "../../fig1/source_data/full_field_labels/cellpose_sam_labels.tif")] + \
             [(a, f"panels/cp_{a}.tif") for a in sys.argv[1:]]:
-        s, ids = errors(tifffile.imread(path).astype(int))
+        s, ids = errors(read_labels(path))
         out[name] = s
         json.dump(ids, open(f"panels/err_ids_{name}.json", "w"))
         print(name, s)

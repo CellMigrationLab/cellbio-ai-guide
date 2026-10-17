@@ -12,6 +12,7 @@ from skimage.segmentation import clear_border
 
 from common.paths import REPO_ROOT
 from fig3.scoring.tasks import HALF_X, _counts, cancer_mask, drop_objects_on_cancer_cells, reference  # round-1 rule
+from common.labels import validate_labels
 
 RUNS = REPO_ROOT / "fig3" / "optimise" / "runs"
 DEV_OUTPUTS = {  # final development-half label image written by each agent
@@ -24,7 +25,7 @@ DEV_OUTPUTS = {  # final development-half label image written by each agent
 def score_dev(task: str, pred: np.ndarray) -> dict:
     """Score a prediction on the development (left) half with the same conventions as the held-out scorer."""
     gt = reference(task)[:, :HALF_X].copy()
-    pred = np.squeeze(pred).astype(int)[:, :HALF_X]
+    pred = validate_labels(pred, squeeze=True)[:, :HALF_X]
     if task == "endo":
         gt, pred = clear_border(gt), clear_border(pred)
     if task == "nuclei":

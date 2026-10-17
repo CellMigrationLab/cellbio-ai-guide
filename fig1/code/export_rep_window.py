@@ -7,13 +7,14 @@ from skimage.measure import find_contours, approximate_polygon
 
 from common.paths import RAW as U
 from fig1_paths import CELLPOSE_LABELS
+from common.labels import validate_labels
 X, Y, W, H = 240, 40, 240, 260          # full-field px; local F1 StarDist 0.86, Cellpose-SAM 0.80 (whole field 0.86 / 0.78)
 bf = tifffile.imread(U + "field104_brightfield.tif").astype(float)[Y:Y + H, X:X + W]
 lo, hi = np.percentile(bf, [0.3, 99.7])
 Image.fromarray(np.repeat(np.repeat(np.round(np.clip((bf - lo) / (hi - lo), 0, 1) * 255).astype(np.uint8), 2, 0), 2, 1)).save("panel_c_step3/B_rep_bf.png")
 for name, L in [("ref", tifffile.imread(U + "field104_cancer_cells_manual_labels.tif")), ("stardist", tifffile.imread(U + "field104_cancer_cells_stardist_custom_labels.tif")),
                 ("cellpose", tifffile.imread(CELLPOSE_LABELS))]:
-    sub = L.astype(int)[Y:Y + H, X:X + W]
+    sub = validate_labels(L, name=name)[Y:Y + H, X:X + W]
     out = []
     for l in np.unique(sub[sub > 0]):
         m = np.pad(sub == l, 1)

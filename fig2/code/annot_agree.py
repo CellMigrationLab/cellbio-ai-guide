@@ -10,7 +10,7 @@ from export_window import export
 
 from common.annotations import lines_to_cells
 from common.paths import RAW as U
-PX = 0.649614
+from common.metadata import FOLLAIN_PX_UM as PX
 
 
 

@@ -10,7 +10,7 @@ from scipy import ndimage as ndi
 from skimage import filters, morphology, feature
 
 from common.paths import RAW as U
-PX = 31.3          # nm per pixel on the 2x grid (BioSR: raw/low-res 62.6 nm, 2x grid 31.3 nm)
+from common.metadata import BIOSR_GRID_PX_NM as PX   # nm per pixel on the 2x grid (low-res 62.6 nm, 2x grid 31.3 nm)
 lr = tifffile.imread(U + "biosr_er_lowres_input.tif").astype(float)
 pr = tifffile.imread(U + "biosr_er_rcan_prediction.tif").astype(float)
 hr = tifffile.imread(U + "biosr_er_highres_reference.tif").astype(float)

@@ -2,10 +2,11 @@
 import json
 import numpy as np
 from skimage.measure import find_contours, approximate_polygon
+from common.labels import validate_labels
 
 
 def contours(L, X, Y, W, H, keep=None):
-    sub = L.astype(int)[Y:Y + H, X:X + W]
+    sub = validate_labels(L)[Y:Y + H, X:X + W]
     out = []
     for l in np.unique(sub[sub > 0]):
         if keep is not None and int(l) not in keep:

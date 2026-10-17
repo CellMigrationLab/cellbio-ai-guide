@@ -8,20 +8,20 @@ import json
 import numpy as np
 import tifffile
 from PIL import Image
-from skimage.measure import label, regionprops
-from skimage.segmentation import clear_border, expand_labels, find_boundaries
+from skimage.measure import regionprops
+from skimage.segmentation import expand_labels, find_boundaries
 
 from common.paths import RAW as U
 from common.pix2pix import read_pix2pix
+from common.labels import read_labels
+from common.annotations import lines_to_cells
 acq_d = tifffile.imread(U + "field104_dapi.tif").astype(float)
 acq_p = tifffile.imread(U + "field104_pecam1.tif").astype(float)
 prd_d = read_pix2pix("field104_pix2pix_predicted_dapi.tif").astype(float)
 prd_p = read_pix2pix("field104_pix2pix_predicted_pecam1.tif").astype(float)
-nuc = tifffile.imread(U + "field104_endothelial_nuclei_manual_labels.tif").astype(int)
+nuc = read_labels(U + "field104_endothelial_nuclei_manual_labels.tif")
 lines = tifffile.imread(U + "field104_endothelial_junctions_annotator1.tif") > 0
-cells = clear_border(expand_labels(label(~lines, connectivity=1), 2))
-sizes = np.bincount(cells.ravel())
-cells[np.isin(cells, np.where(sizes < 150)[0])] = 0
+cells = lines_to_cells(lines)
 band = expand_labels(np.where(find_boundaries(cells, mode="inner"), cells, 0), 1)      # ~3-px junction band per cell
 band[cells == 0] = 0
 

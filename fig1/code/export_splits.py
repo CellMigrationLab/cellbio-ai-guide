@@ -7,6 +7,7 @@ from scipy import ndimage as ndi
 
 from common.paths import RAW as U
 from common.pix2pix import read_pix2pix
+from common.labels import read_labels
 OUT = 360   # output pixels per widget side
 COLS = ["#ff4fa3", "#ffd23f", "#3ec1ff", "#b07cff", "#2ee59d", "#ff7a3d", "#ff3d5a", "#44e0d6", "#a8f03e", "#5a8bff"]
 
@@ -43,14 +44,14 @@ rgb = lambda g: np.stack([g] * 3, -1)
 
 # 1 nuclei (HPMEC, Cellpose): region of the 600x800 crop, 360 x 360 px, split through the touching pair
 hp = tifffile.imread(U + "hpmec_nuclei_max_projection.tif")[1248:2048, 0:600].astype(float)
-hl = tifffile.imread("panel_b/panelA_cellpose_labels.tif").astype(int)
+hl = read_labels("panel_b/panelA_cellpose_labels.tif")
 y, x, n = 280, 20, 480
 g = lin(hp[y:y + n, x:x + n], hp)
 split(rgb(resize(g)), overlay(resize(g), resize(hl[y:y + n, x:x + n]), lift=False), "split_nuclei")
 
 # 2 cancer cells (brightfield, StarDist): 210 x 210 px of the full BF
 bf = tifffile.imread(U + "field104_brightfield.tif").astype(float)
-sd = tifffile.imread(U + "field104_cancer_cells_stardist_custom_labels.tif").astype(int)
+sd = read_labels(U + "field104_cancer_cells_stardist_custom_labels.tif")
 y, x, n = 60, 200, 210
 g = lin(bf[y:y + n, x:x + n])
 split(rgb(resize(g)), overlay(resize(g), resize(sd[y:y + n, x:x + n])), "split_cells")

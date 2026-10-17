@@ -8,8 +8,9 @@ from common.matching import match
 
 from common.paths import RAW as U
 from fig1_paths import THRESHOLD_LABELS
+from common.labels import read_labels
 bf = tifffile.imread(U + "field104_brightfield.tif").astype(float)
-ref = tifffile.imread(U + "field104_cancer_cells_manual_labels.tif").astype(int)
+ref = read_labels(U + "field104_cancer_cells_manual_labels.tif")
 g = filters.gaussian(bf, 1)
 lv = ndi.generic_filter(g, np.std, size=7)                      # local standard deviation (texture of rounded cells)
 m = lv > filters.threshold_otsu(lv)

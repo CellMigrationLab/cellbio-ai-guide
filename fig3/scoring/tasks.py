@@ -21,6 +21,8 @@ from skimage.segmentation import clear_border
 from common.annotations import lines_to_cells
 from common.matching import match
 from common.paths import raw_file
+from common.labels import read_labels
+from common.labels import validate_labels
 
 TASKS = ("nuclei", "cancer", "endo")
 FIELDS = (104, 209)  # 104: development field (round 1 and figures); 209: test field (round 2)
@@ -35,9 +37,9 @@ def reference(task: str, field: int = 104) -> np.ndarray:
         raise ValueError(f"Unknown field {field!r}; expected one of {FIELDS}")
     f = f"field{field}"
     if task == "nuclei":
-        return tifffile.imread(raw_file(f"{f}_endothelial_nuclei_manual_labels.tif")).astype(int)
+        return read_labels(raw_file(f"{f}_endothelial_nuclei_manual_labels.tif"))
     if task == "cancer":
-        return tifffile.imread(raw_file(f"{f}_cancer_cells_manual_labels.tif")).astype(int)
+        return read_labels(raw_file(f"{f}_cancer_cells_manual_labels.tif"))
     if task == "endo":
         return lines_to_cells(tifffile.imread(raw_file(f"{f}_endothelial_junctions_annotator1.tif")) > 0)
     raise ValueError(f"Unknown task {task!r}; expected one of {TASKS}")
@@ -90,7 +92,7 @@ def _counts(gt: np.ndarray, pred: np.ndarray, ignore_unmatched_on: np.ndarray | 
 
 def score(task: str, pred: np.ndarray, nuclei_rule: str = "match_first", field: int = 104) -> dict:
     """Whole-field score of a predicted label image for one task and field (nuclei_rule: see module docstring)."""
-    pred = np.squeeze(pred).astype(int)
+    pred = validate_labels(pred, name=f"{task} prediction", squeeze=True)
     gt = reference(task, field)
     if pred.shape != gt.shape:
         raise ValueError(f"{task}: prediction shape {pred.shape} differs from reference {gt.shape}")
@@ -112,7 +114,7 @@ def _nuclei_counts(gt: np.ndarray, pred: np.ndarray, mask: np.ndarray, rule: str
 
 def score_heldout(task: str, pred: np.ndarray, nuclei_rule: str = "match_first") -> dict:
     """Score on the held-out right half. Accepts a whole-field or a half-width prediction."""
-    pred = np.squeeze(pred).astype(int)
+    pred = validate_labels(pred, name=f"{task} prediction", squeeze=True)
     gt = reference(task)[:, HALF_X:].copy()
     pred = pred[:, HALF_X:].copy() if pred.shape[1] == gt.shape[1] + HALF_X else pred.copy()
     if pred.shape != gt.shape:

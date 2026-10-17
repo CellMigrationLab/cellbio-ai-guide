@@ -9,6 +9,7 @@ from skimage import filters, measure, morphology, segmentation, feature
 from export_window import contours
 
 from common.paths import RAW as U
+from common.metadata import BIOSR_GRID_PX_NM, BIOSR_LOWRES_PX_NM
 def lin(a, p=(0.3, 99.7)):
     lo, hi = np.percentile(a, p)
     return np.clip((a - lo) / (hi - lo), 0, 1)
@@ -67,5 +68,5 @@ nz = lambda a: (a - a.min()) / (a.max() - a.min())
 P = nz(pr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 Hh = nz(hr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 L = nz(np.repeat(lr[(y + ROW) // 2, x // 2:x // 2 + n // 2], 2))
-json.dump({"row": ROW, "px_nm": 31.3, "lowres_px_nm": 62.6, "predicted": P.round(3).tolist(), "high_res": Hh.round(3).tolist(), "low_res": L.round(3).tolist(),
+json.dump({"row": ROW, "px_nm": BIOSR_GRID_PX_NM, "lowres_px_nm": BIOSR_LOWRES_PX_NM, "predicted": P.round(3).tolist(), "high_res": Hh.round(3).tolist(), "low_res": L.round(3).tolist(),
            "r_pred_hr": round(float(np.corrcoef(P, Hh)[0, 1]), 3)}, open("panels/sr_profile.json", "w"))

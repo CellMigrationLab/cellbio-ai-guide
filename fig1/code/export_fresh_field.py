@@ -15,6 +15,7 @@ from skimage.measure import approximate_polygon, find_contours, regionprops
 
 from common.matching import match
 from common.paths import raw_file
+from common.labels import read_labels
 
 FIELD = 209
 W, H = 240, 260          # same window size as step 3
@@ -63,8 +64,8 @@ def choose_window(ref: np.ndarray, pred: np.ndarray, target: float) -> dict:
 
 def main() -> None:
     bf = tifffile.imread(raw_file(f"field{FIELD}_brightfield.tif")).astype(float)
-    ref = tifffile.imread(raw_file(f"field{FIELD}_cancer_cells_manual_labels.tif")).astype(int)
-    pred = tifffile.imread(raw_file(f"field{FIELD}_cancer_cells_stardist_custom_labels.tif")).astype(int)
+    ref = read_labels(raw_file(f"field{FIELD}_cancer_cells_manual_labels.tif"))
+    pred = read_labels(raw_file(f"field{FIELD}_cancer_cells_stardist_custom_labels.tif"))
     if not (bf.shape == ref.shape == pred.shape):
         raise ValueError(f"Shape mismatch: {bf.shape}, {ref.shape}, {pred.shape}")
     pairs, fn, fp = match(ref, pred, 0.5)

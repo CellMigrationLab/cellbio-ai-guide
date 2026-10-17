@@ -11,6 +11,7 @@ from export_window import export
 from common.annotations import lines_to_cells
 from common.paths import RAW as U
 from common.pix2pix import read_pix2pix
+from common.labels import validate_labels
 X, Y, W, H = [int(v) for v in sys.argv[1:5]] if len(sys.argv) > 4 else (220, 110, 200, 200)
 
 
@@ -36,6 +37,6 @@ layers = {"model_cells": read_pix2pix("field104_pix2pix_pecam1_cellpose_cell_lab
           "annot2_cells": lines_to_cells(tifffile.imread(U + "field104_endothelial_junctions_annotator2.tif") > 0),
           "manual_nuclei": tifffile.imread(U + "field104_endothelial_nuclei_manual_labels.tif")}
 for k, L in layers.items():
-    export(L.astype(int), X, Y, W, H, f"panels/roi_{k}.json")
+    export(validate_labels(L, name=k), X, Y, W, H, f"panels/roi_{k}.json")
 json.dump({"x": X, "y": Y, "w": W, "h": H}, open("panels/roi.json", "w"))
 print("roi", X, Y, W, H)

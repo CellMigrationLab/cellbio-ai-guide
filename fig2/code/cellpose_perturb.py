@@ -1,6 +1,6 @@
 """Fig. 2 troubleshooting: Cellpose-SAM (default cpsam weights, CPU) on the brightfield cancer-cell field,
 with one setting changed at a time. Labels are written at native resolution for scoring against the reference."""
-import sys, time
+import re, sys, time
 import numpy as np
 import tifffile
 from importlib.metadata import version
@@ -8,8 +8,15 @@ from cellpose import models
 
 from common.paths import RAW as U
 bf = tifffile.imread(U + "field104_brightfield.tif")
-model = models.CellposeModel(gpu=False)
+RUN_NAME = re.compile(r"^(down\d+|up\d+|file_(minmax|histeq|clahe)|nonorm|pecam|flow\d*\.?\d+|cellprob-?\d*\.?\d+)$")
 runs = sys.argv[1:]
+if not runs:
+    raise SystemExit("usage: python cellpose_perturb.py RUN [RUN ...]  (e.g. down4 up2 file_minmax nonorm flow0.8 cellprob2)")
+unknown = [r for r in runs if not RUN_NAME.match(r)]
+if unknown:
+    raise ValueError(f"unknown run name(s) {unknown}; expected one of down<f>, up<f>, file_<minmax|histeq|clahe>, "
+                     "nonorm, pecam, flow<threshold>, cellprob<threshold>")
+model = models.CellposeModel(gpu=False)
 for r in runs:
     t0 = time.time()
     if r.startswith("down"):
@@ -35,5 +42,9 @@ for r in runs:
         m, _, _ = model.eval(bf, flow_threshold=float(r[4:]))
     elif r.startswith("cellprob"):
         m, _, _ = model.eval(bf, cellprob_threshold=float(r[8:]))
+    else:   # unreachable after the check above; kept so a stale mask can never be written
+        raise ValueError(f"unhandled run {r!r}")
+    if m.shape != bf.shape:
+        raise ValueError(f"{r}: mask shape {m.shape} differs from the image {bf.shape}")
     tifffile.imwrite(f"panels/cp_{r}.tif", m.astype(np.uint16), compression="zlib")  # lossless, as stored
     print(f"cellpose {version('cellpose')} {r}: {m.max()} objects in {time.time()-t0:.0f}s", flush=True)

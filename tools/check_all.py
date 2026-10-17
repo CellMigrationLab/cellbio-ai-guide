@@ -23,7 +23,8 @@ FIGURES = {  # figure folder -> (builder relative to the folder, output written 
     "fig3/figure": ("code/make_fig3.py", "output/fig3.svg"),
 }
 FIG2_SCORING_ORDER = ["errors", "score_perturb", "annot_agree", "bio_result", "al_intensity", "tubule_width"]
-FIG2_KNOWN_EXTRA_KEYS = {("panels/al_intensity.json", "r_pixel")}  # added by a recovered inline command, not used by Fig 2
+FIG2_KNOWN_EXTRA_KEYS = {("panels/al_intensity.json", "r_pixel"),  # added by a recovered inline command, not used by Fig 2
+                         ("panels/squirrel.json", "s")}           # runtime in s, no longer stored by squirrel_run.py
 
 
 def sha256(path: Path) -> str:

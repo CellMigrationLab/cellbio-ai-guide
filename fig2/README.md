@@ -8,6 +8,7 @@ Final version: `figure/fig2.svg` / `fig2.pdf`; legend `legend.md`. Builder `code
 ```
 make fig2                                                     # -> figure/fig2.svg, byte-identical
 cd fig2/source_data && export PYTHONPATH=../..
+python ../code/postfilter.py --threshold 50                  # panels/cp_postfilter.tif (--scan prints thresholds 30-70)
 python ../code/errors.py && python ../code/score_perturb.py   # ORDER MATTERS: score_perturb adds to errors' summary
 python ../code/annot_agree.py; python ../code/bio_result.py; python ../code/al_intensity.py; python ../code/tubule_width.py
 python ../code/squirrel_run.py        # NanoPyx environment (environment/requirements-nanopyx.txt)
@@ -37,6 +38,8 @@ Default Cellpose labels are shared with Fig. 1: `../fig1/source_data/full_field_
   `al_intensity.py` does not write: it was added by a recovered inline command
   (`code/recovered_inline/add_r_pixel_to_al_intensity.sh`), shown briefly and then removed from the figure. It is not
   used by the final Figure 2.
+- `panels/squirrel.json` contains the runtime of each SQUIRREL call (`"s"`), which `squirrel_run.py` now prints instead
+  of storing (it is not a result and varies between runs); the checks ignore that key.
 - `panels/pecam_annotator{1,2}.json`, `panels/perturb*.log` and some `ts_cp_*.json` variants are intermediate files not drawn
   in the final figure.
 - Published model outputs (custom StarDist, pix2pix, CARE, RCAN) were not re-run; Cellpose and SQUIRREL were.

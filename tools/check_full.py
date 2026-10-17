@@ -34,7 +34,8 @@ import tifffile
 REPO = Path(__file__).resolve().parent.parent
 COPY = ["common", "data", "fig1", "fig2"]          # folders the Fig. 1-2 code reads (data/raw is the only input)
 FIGURES = {"fig1": ("code/make_fig1.py", "figure/fig1.svg"), "fig2": ("code/make_fig2.py", "figure/fig2.svg")}
-KNOWN_EXTRA_KEYS = {("fig2", "panels/al_intensity.json"): {"r_pixel"}}  # see fig2/README.md, caveats
+KNOWN_EXTRA_KEYS = {("fig2", "panels/al_intensity.json"): {"r_pixel"},   # see fig2/README.md, caveats
+                    ("fig2", "panels/squirrel.json"): {"s"}}            # runtime, no longer stored
 
 
 @dataclass(frozen=True)
@@ -66,7 +67,7 @@ STEPS = [
         "file_minmax", "file_histeq", "file_clahe", "nonorm", "down4", "down2", "up2", "flow0.8", "cellprob2")),
          args=("file_minmax", "file_histeq", "file_clahe", "nonorm", "down4", "down2", "up2", "flow0.8", "cellprob2"),
          needs="models"),
-    Step("fig2", "postfilter", ("panels/cp_postfilter.tif",), args=("50",)),
+    Step("fig2", "postfilter", ("panels/cp_postfilter.tif",), args=("--threshold", "50")),
     Step("fig2", "errors", ("panels/err_ids_cellpose_default.json", "panels/err_ids_stardist.json")),
     Step("fig2", "score_perturb", ("panels/error_summary.json", "panels/perturb_scores.json") + tuple(
         f"panels/ts_cp_{r}.json" for r in ("cellprob2", "default", "down2", "down4", "file_clahe", "file_histeq",
