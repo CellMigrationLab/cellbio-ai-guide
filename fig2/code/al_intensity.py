@@ -1,21 +1,22 @@
-"""Panel e: predicted vs acquired intensity per object (as in panel d), whole field.
-DAPI: mean intensity per manually annotated HUVEC nucleus (104_3.tif). PECAM-1: mean intensity in a 3-px band along the
-border of each cell outlined by annotator 1 (104.tif, regions enclosed by the drawn lines). Each channel is background-
+"""Panel d, measurement itself: predicted vs acquired intensity per object, whole field.
+DAPI: mean intensity per manually annotated HUVEC nucleus (field104_endothelial_nuclei_manual_labels.tif). PECAM-1:
+mean intensity in a 3-px band along the border of each cell outlined by annotator 1
+(field104_endothelial_junctions_annotator1.tif, regions enclosed by the drawn lines). Each channel is background-
 subtracted (median outside the objects / outside the junction bands) and the two images are compared by Pearson r.
 Predicted images: rows 1-1022 of the pix2pix output (1-row padding offset). Also exports the full-field display images."""
 import json
 import numpy as np
 import tifffile
 from PIL import Image
-from scipy import ndimage as ndi
 from skimage.measure import label, regionprops
 from skimage.segmentation import clear_border, expand_labels, find_boundaries
 
 from common.paths import RAW as U
+from common.pix2pix import read_pix2pix
 acq_d = tifffile.imread(U + "field104_dapi.tif").astype(float)
 acq_p = tifffile.imread(U + "field104_pecam1.tif").astype(float)
-prd_d = tifffile.imread(U + "field104_pix2pix_predicted_dapi.tif")[1:1023].astype(float)
-prd_p = tifffile.imread(U + "field104_pix2pix_predicted_pecam1.tif")[1:1023].astype(float)
+prd_d = read_pix2pix("field104_pix2pix_predicted_dapi.tif").astype(float)
+prd_p = read_pix2pix("field104_pix2pix_predicted_pecam1.tif").astype(float)
 nuc = tifffile.imread(U + "field104_endothelial_nuclei_manual_labels.tif").astype(int)
 lines = tifffile.imread(U + "field104_endothelial_junctions_annotator1.tif") > 0
 cells = clear_border(expand_labels(label(~lines, connectivity=1), 2))

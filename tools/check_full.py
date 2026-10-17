@@ -13,7 +13,7 @@ What it does, in a temporary copy (the committed files are never modified):
 5. The files that were not regenerated are reported with their reason, so the extent of the check is explicit.
 
 Model steps (Cellpose-SAM, CPU, several minutes each; need cellpose and torch) run only with --with-models, and
-SQUIRREL (NanoPyx environment) only with --with-squirrel; otherwise their committed outputs are kept and reported as
+SQUIRREL only with --with-squirrel (nanopyx must be importable by the same Python as the other requirements); otherwise their committed outputs are kept and reported as
 not regenerated. `tools/check_all.py` is the fast check (committed source data -> figures and scores).
 """
 from __future__ import annotations
@@ -178,8 +178,8 @@ def main(with_models: bool, with_squirrel: bool) -> None:
             for fig, (builder, output) in FIGURES.items():
                 proc = subprocess.run([sys.executable, f"../{builder}"], cwd=tmp / fig / "source_data",
                                       capture_output=True, text=True)
-                same = proc.returncode == 0 and hashlib.md5((tmp / fig / output).read_bytes()).hexdigest() == \
-                    hashlib.md5((REPO / fig / output).read_bytes()).hexdigest()
+                same = proc.returncode == 0 and hashlib.sha256((tmp / fig / output).read_bytes()).hexdigest() == \
+                    hashlib.sha256((REPO / fig / output).read_bytes()).hexdigest()
                 results.append(report(f"{fig}: SVG rebuilt from regenerated source data is byte-identical", same,
                                       proc.stderr.strip()[-300:] if proc.returncode else ""))
     skipped = [(s.figure, o, f"needs --with-{s.needs}") for s in STEPS if not enabled[s.needs] for o in s.outputs]

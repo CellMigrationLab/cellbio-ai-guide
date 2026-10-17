@@ -10,6 +10,7 @@ from export_window import export
 
 from common.annotations import lines_to_cells
 from common.paths import RAW as U
+from common.pix2pix import read_pix2pix
 X, Y, W, H = [int(v) for v in sys.argv[1:5]] if len(sys.argv) > 4 else (220, 110, 200, 200)
 
 
@@ -25,12 +26,12 @@ def comp(d, p):
 
 acq_d = tifffile.imread(U + "field104_dapi.tif").astype(float)
 acq_p = tifffile.imread(U + "field104_pecam1.tif").astype(float)
-prd_d = tifffile.imread(U + "field104_pix2pix_predicted_dapi.tif")[1:1023].astype(float)
-prd_p = tifffile.imread(U + "field104_pix2pix_predicted_pecam1.tif")[1:1023].astype(float)
+prd_d = read_pix2pix("field104_pix2pix_predicted_dapi.tif").astype(float)
+prd_p = read_pix2pix("field104_pix2pix_predicted_pecam1.tif").astype(float)
 Image.fromarray(comp(prd_d, prd_p)).save("panels/roi_pred.png")
 Image.fromarray(comp(acq_d, acq_p)).save("panels/roi_acq.png")
-layers = {"model_cells": tifffile.imread(U + "field104_pix2pix_pecam1_cellpose_cell_labels.tif")[1:1023],
-          "model_nuclei": tifffile.imread(U + "field104_pix2pix_dapi_stardist_nuclei_labels.tif")[1:1023],
+layers = {"model_cells": read_pix2pix("field104_pix2pix_pecam1_cellpose_cell_labels.tif"),
+          "model_nuclei": read_pix2pix("field104_pix2pix_dapi_stardist_nuclei_labels.tif"),
           "annot1_cells": lines_to_cells(tifffile.imread(U + "field104_endothelial_junctions_annotator1.tif") > 0),
           "annot2_cells": lines_to_cells(tifffile.imread(U + "field104_endothelial_junctions_annotator2.tif") > 0),
           "manual_nuclei": tifffile.imread(U + "field104_endothelial_nuclei_manual_labels.tif")}

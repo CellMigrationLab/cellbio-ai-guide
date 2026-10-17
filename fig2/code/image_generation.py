@@ -1,5 +1,5 @@
-"""Panel g data. Denoising: nuclei segmented on the restored image, outlines reused on the acquired image, and per-nucleus
-mean intensity in both. Super-resolution: low-res input, prediction and acquired high-res image of the same region."""
+"""Data for panels c and e. Denoising (panel c): nuclei segmented on the restored image, outlines reused on the acquired image, and per-nucleus
+mean intensity in both. Super-resolution (panel e): low-res input, prediction and acquired high-res image of the same region."""
 import json
 import numpy as np
 import tifffile
@@ -56,9 +56,13 @@ save(lin(hr[y:y + n, x:x + n]), "panels/sr_hr.png", 3)
 np.save("panels/sr_pred_crop.npy", pr[y:y + n, x:x + n]); np.save("panels/sr_hr_crop.npy", hr[y:y + n, x:x + n])
 print("sr ok")
 
-# line profile across ER tubules: row 85 of the crop (3-row mean); its predicted-vs-high-res correlation is near the
-# median over rows 15-120, so it is a typical row, not a selected best or worst case
+# line profile across ER tubules: row 85 of the crop (3-row mean). Its predicted-vs-high-res correlation (0.93) is at the
+# 15th percentile of rows 15-120 (median 0.95), computed below: a typical row, not a favourable choice.
 ROW = 85
+row_r = lambda R: np.corrcoef(pr[y + R - 1:y + R + 2, x:x + n].mean(0), hr[y + R - 1:y + R + 2, x:x + n].mean(0))[0, 1]
+all_r = np.array([row_r(R) for R in range(15, 121)])
+print(f"profile row {ROW}: r {row_r(ROW):.3f}, percentile {100 * (all_r < row_r(ROW)).mean():.0f} of rows 15-120 "
+      f"(median r {np.median(all_r):.3f})")
 nz = lambda a: (a - a.min()) / (a.max() - a.min())
 P = nz(pr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))
 Hh = nz(hr[y + ROW - 1:y + ROW + 2, x:x + n].mean(0))

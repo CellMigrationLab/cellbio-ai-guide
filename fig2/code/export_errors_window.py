@@ -1,4 +1,4 @@
-"""Panel c tiles: brightfield window plus reference / StarDist / filtered Cellpose-SAM outlines and error markers."""
+"""Panel a error tiles: brightfield window plus reference / StarDist / filtered Cellpose-SAM outlines and error markers."""
 import json
 import numpy as np
 import tifffile

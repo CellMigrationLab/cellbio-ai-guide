@@ -1,11 +1,10 @@
-"""Panel b: two people's cell outlines (drawn on the acquired PECAM-1 image) vs each other and vs Cellpose-SAM run on the
-same acquired image. Outline drawings are turned into cell instances as in Fig. 1 work (compare_annotations.py):
+"""Panel a, reference agreement: two people's cell outlines (drawn on the acquired PECAM-1 image) compared with each
+other. Outline drawings are turned into cell instances by common/annotations.lines_to_cells:
 regions enclosed by the lines, line pixels returned to neighbours, border cells and slivers < 150 px removed.
 Scores: object F1 at IoU >= 0.5 (greedy one-to-one); biological result: cell count and mean cell area."""
 import json, os
 import numpy as np
 import tifffile
-from skimage.segmentation import clear_border
 from common.matching import match
 from export_window import export
 
@@ -19,9 +18,10 @@ PX = 0.649614
 a1 = lines_to_cells(tifffile.imread(U + "field104_endothelial_junctions_annotator1.tif") > 0)
 a2 = lines_to_cells(tifffile.imread(U + "field104_endothelial_junctions_annotator2.tif") > 0)
 src = {"annotator 1": a1, "annotator 2": a2}
+# Model comparison (Cellpose on acquired PECAM-1, panels/cp_pecam.tif) was dropped from the final figure and its labels
+# are not stored; the two annotators are compared only. Fail if the file appears, so the outputs are not changed silently.
 if os.path.exists("panels/cp_pecam.tif"):
-    m = clear_border(tifffile.imread("panels/cp_pecam.tif").astype(int))
-    src["model"] = m
+    raise RuntimeError("panels/cp_pecam.tif is present: the published annot_agree.json compares the annotators only")
 
 
 def f1(g, p):

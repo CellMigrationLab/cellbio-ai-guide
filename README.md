@@ -6,7 +6,7 @@ Data, code, prompts and LLM transcripts behind Figures 1–3 of
 Every pixel and every number in the three figures can be traced to a file here, and rebuilt:
 
 ```
-python3 -m pip install -r environment/requirements.txt   # numpy, scipy, scikit-image, tifffile, pillow
+python3 -m pip install -r environment/requirements.txt   # numpy, scipy, scikit-image, tifffile, pillow, pandas, matplotlib
 make check                                                # fast check, ~1 min; changes no files
 make full                                                 # full check from raw data, ~2 min; changes no files
 ```

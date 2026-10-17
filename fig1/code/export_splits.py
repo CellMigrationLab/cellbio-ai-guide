@@ -6,6 +6,7 @@ from skimage.segmentation import find_boundaries
 from scipy import ndimage as ndi
 
 from common.paths import RAW as U
+from common.pix2pix import read_pix2pix
 OUT = 360   # output pixels per widget side
 COLS = ["#ff4fa3", "#ffd23f", "#3ec1ff", "#b07cff", "#2ee59d", "#ff7a3d", "#ff3d5a", "#44e0d6", "#a8f03e", "#5a8bff"]
 
@@ -66,8 +67,8 @@ c = lin(hr[y:y + 360, x:x + 360])
 Image.fromarray(np.round(np.stack([c] * 3, -1) * 255).astype(np.uint8)).save("panel_a/sr_hr_region.png")
 
 # 4 artificial labelling: BF vs pix2pix DAPI (magenta) + PECAM (green), another area of the field
-pd = tifffile.imread(U + "field104_pix2pix_predicted_dapi.tif")[1:1023].astype(float)
-pp = tifffile.imread(U + "field104_pix2pix_predicted_pecam1.tif")[1:1023].astype(float)
+pd = read_pix2pix("field104_pix2pix_predicted_dapi.tif").astype(float)
+pp = read_pix2pix("field104_pix2pix_predicted_pecam1.tif").astype(float)
 y, x, n = 560, 620, 210
 g = lin(bf[y:y + n, x:x + n])
 d, p_ = lin(pd[y:y + n, x:x + n]), lin(pp[y:y + n, x:x + n])

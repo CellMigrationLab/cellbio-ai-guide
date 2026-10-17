@@ -26,9 +26,9 @@ FIG2_SCORING_ORDER = ["errors", "score_perturb", "annot_agree", "bio_result", "a
 FIG2_KNOWN_EXTRA_KEYS = {("panels/al_intensity.json", "r_pixel")}  # added by a recovered inline command, not used by Fig 2
 
 
-def md5(path: Path) -> str:
-    """MD5 of a file (used only to compare rebuilt and committed files)."""
-    return hashlib.md5(path.read_bytes()).hexdigest()
+def sha256(path: Path) -> str:
+    """SHA-256 of a file (the same hash as data/manifest.csv)."""
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def run(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess:
@@ -60,7 +60,7 @@ def check_figures(tmp: Path) -> list[bool]:
         work = tmp / folder
         shutil.copytree(REPO / folder, work, dirs_exist_ok=True)
         proc = run([sys.executable, str(work / builder)], cwd=work / "source_data")
-        same = proc.returncode == 0 and md5(work / output) == md5(REPO / folder / output)
+        same = proc.returncode == 0 and sha256(work / output) == sha256(REPO / folder / output)
         results.append(report(f"{folder}: rebuilt SVG is byte-identical", same, proc.stderr[-300:] if proc.returncode else ""))
     return results
 
@@ -72,7 +72,7 @@ def check_fig1_scores(tmp: Path) -> bool:
     if proc.returncode:
         return report("fig1: F1 scores", False, proc.stderr[-300:])
     rel = "panel_c_step3/A_scores.json"
-    same = md5(src / rel) == md5(REPO / "fig1/source_data" / rel)
+    same = sha256(src / rel) == sha256(REPO / "fig1/source_data" / rel)
     return report("fig1: F1 scores recomputed from label images", same, (src / rel).read_text())
 
 
@@ -83,7 +83,7 @@ def check_fig1_step4(tmp: Path) -> bool:
     if proc.returncode:
         return report("fig1: step-4 crop (field 209)", False, proc.stderr[-300:])
     committed = sorted((REPO / "fig1/source_data/panel_c_step4").iterdir())
-    differ = [f.name for f in committed if md5(f) != md5(src / "panel_c_step4" / f.name)]
+    differ = [f.name for f in committed if sha256(f) != sha256(src / "panel_c_step4" / f.name)]
     return report("fig1: step-4 crop (field 209) re-exported byte-identical", not differ and bool(committed),
                   f"differ: {differ}" if differ else "")
 

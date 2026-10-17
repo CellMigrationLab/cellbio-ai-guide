@@ -1,4 +1,4 @@
-# Python 3.13. Versions used to produce the figures (CPU only).
+# Python 3.13. Versions used to produce the figures (CPU only). Enough for make check, make full and the tests.
 numpy==2.5.2
 scipy==1.18.1
 scikit-image==0.26.0
@@ -6,6 +6,3 @@ tifffile==2026.10.15
 pillow==12.3.0
 pandas==3.0.6
 matplotlib==3.11.2
-# Only needed to re-run segmentations (not needed to rebuild figures or scores):
-cellpose==4.2.1.1
-torch==2.14.1+cpu  # install from https://download.pytorch.org/whl/cpu

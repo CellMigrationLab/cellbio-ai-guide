@@ -7,7 +7,7 @@ Everything the figures need is in `raw/`; nothing is downloaded at build time.
 | `raw/` | Raw images and annotations, unchanged bytes (verify with `python data/make_manifest.py --verify`) |
 | `raw/third_party/` | The DeepBacs files used in Fig. 1a (test images, published model predictions, QC tables, our parsing scripts) |
 | `raw_name_map.csv` | Original upload name → repository name, source and content of every authors' file |
-| `sources.csv` | Full citation, DOI and licence for every source key |
+| `sources.csv` | Every source key: kind (data or method), full citation, DOI, data licence and permission status |
 | `manifest.csv` | Path, size, SHA-256 and source key of every file in `raw/` |
 | `make_manifest.py` | Writes or verifies `manifest.csv` |
 
@@ -39,7 +39,7 @@ visually on 17 Oct 2026. Confirmed by the authors (17 Oct 2026): same experiment
 non-zero values (65535 and, on 1,293 px, 38052), both are junction lines.
 
 ## Other images
-`care_denoising_{acquired,restored}.tif` (Fig. 1a, 2c; acquired = uint16 `…_Z0_1.tif`, restored = float32 `…_Z0.tif`, confirmed by the authors), `biosr_er_{lowres_input,rcan_prediction,highres_reference}.tif`
+`care_denoising_{acquired,restored}.tif` (Fig. 1a, 2c; acquired = uint16 `…_Z0_1.tif`, restored = float32 `…_Z0.tif`, confirmed by the authors), `care_denoising_highsnr_reference.tif` (high-SNR acquisition of the same field, added 17 Oct 2026; used only in the exploratory `fig2/analysis/care_linearity.py`), `biosr_er_{lowres_input,rcan_prediction,highres_reference}.tif`
 (Fig. 1a, 2e), `hpmec_nuclei_max_projection.tif` (Fig. 1b), `trackmate_capture_tracks.tif` (Fig. 1c). Two TrackMate PDF
 reports were explored for Fig. 1 and are not shown.
 
@@ -62,4 +62,4 @@ annotation (BioSR is compared with its high-resolution acquisition).
 Send files under any name; `python data/add_raw_files.py` copies them unchanged to `raw/` with standard names
 (`field<N>_<role>.tif`, e.g. `field105_brightfield.tif`, `field105_cancer_cells_manual_labels.tif`; or
 `<prefix>_<role>.tif`, e.g. `care_denoising_highsnr_reference.tif`), checks shapes and label types, and updates
-`raw_name_map.csv` and `manifest.csv`. Pending: a high-SNR acquisition of the CARE field as its ground truth (to be named `care_denoising_highsnr_reference.tif`).
+`raw_name_map.csv` and `manifest.csv`.

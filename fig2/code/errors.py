@@ -1,4 +1,13 @@
-"""Error types against the manual reference: missed, false, merged, split; F1 at IoU>=0.5; mean IoU of matched objects."""
+"""Error types against the manual reference: missed, false, merged, split; F1 at IoU>=0.5; mean IoU of matched objects.
+
+The four categories are illustrative heuristics, not standard definitions, and differ from the IoU rule used for F1:
+- merged prediction: covers >= 50% of the area of each of at least two reference objects;
+- split reference object: at least two predictions each have >= 50% of their own area inside it;
+- missed: an unmatched reference object that is not part of a merge or split;
+- false: an unmatched prediction that is not a merge and does not lie mostly (>= 50%) inside a split reference object.
+The categories are computed independently of the matching: a part covering exactly half of a split object (IoU 0.5)
+is also a true positive.
+Tested on synthetic cases in fig2/tests/test_error_categories.py."""
 import json, sys
 import numpy as np
 import tifffile

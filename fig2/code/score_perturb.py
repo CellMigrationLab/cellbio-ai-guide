@@ -1,4 +1,4 @@
-"""Score each Cellpose-SAM variant against the reference (whole field) and export its outlines for the panel b window."""
+"""Score each Cellpose-SAM variant against the reference (whole field) and export its outlines for the panel a tiles."""
 import json, os
 import tifffile
 from errors import errors
@@ -9,11 +9,11 @@ runs = {"default": "../../fig1/source_data/full_field_labels/cellpose_sam_labels
         "nonorm": "panels/cp_nonorm.tif", "cellprob2": "panels/cp_cellprob2.tif", "postfilter": "panels/cp_postfilter.tif",
         "up2": "panels/cp_up2.tif", "file_minmax": "panels/cp_file_minmax.tif", "file_histeq": "panels/cp_file_histeq.tif",
         "file_clahe": "panels/cp_file_clahe.tif", "flow0.8": "panels/cp_flow0.8.tif"}
-out, summ = {}, json.load(open("panels/error_summary.json"))
+missing = [p for p in runs.values() if not os.path.exists(p)]
+if missing:
+    raise FileNotFoundError(f"Cellpose variant labels missing (run cellpose_perturb.py / postfilter.py 50): {missing}")
+out, summ = {}, json.load(open("panels/error_summary.json"))   # written by errors.py, which must run first
 for k, p in runs.items():
-    if not os.path.exists(p):
-        out[k] = None
-        continue
     L = tifffile.imread(p).astype(int)
     s, _ = errors(L)
     out[k] = s["f1"]

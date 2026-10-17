@@ -1,4 +1,4 @@
-"""Error-map tile for panel f: same crop as the super-resolution tiles, inferno colour map, 0 to the 99.5th percentile
+"""Error-map tile for panel e: same crop as the super-resolution tiles, inferno colour map, 0 to the 99.5th percentile
 of the whole map."""
 import numpy as np, tifffile, json
 from PIL import Image
