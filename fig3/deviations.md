@@ -203,3 +203,10 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   Row C runs 8, 9, 12, 13 and 16 (and the agents already running when this was found) ran without it.
 - **Earlier runs**: a `ps` in any earlier subject would also have shown the operator's command lines (they contain the
   scenario id). The audit found no such command in the runs checked.
+- **Run 19 (`optimise_labels_endo_r1`), first attempt**: interrupted when the operator's background command reached its time
+  limit while the subject was still training a model; rejected and archived (`v2/runs_rejected/optimise_labels_endo_r1_attempt1/`),
+  then run again in an isolated process namespace (PROTOCOL_V2 section 9, session interruption).
+- **Large files (19 Oct 2026)**: the first attempt of run 19 saved a fine-tuned Cellpose model (`ft_a.pt`, 1.2 GB) in its
+  folder, which the git host refuses. Files over 50 MB in run records are moved outside the repository by
+  `v2/large_files.py` (to `/home/user/large_files_archive/`) and listed with size and SHA-256 in `LARGE_FILES.json` in the
+  run folder (here `runs_rejected/optimise_labels_endo_r1_attempt1/LARGE_FILES.json`). Nothing else in the record changed.

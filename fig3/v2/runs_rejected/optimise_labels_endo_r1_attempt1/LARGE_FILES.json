@@ -1,0 +1,9 @@
+[
+ {
+  "path": "subject_folder/work/ft_a.pt",
+  "size_bytes": 1233554263,
+  "sha256": "4addb6a5eab77b395e3b705a0f2811bb856e821cc7090a984af0a250ffc6fba2",
+  "moved_to": "/home/user/large_files_archive/fig3/v2/runs_rejected/optimise_labels_endo_r1_attempt1/subject_folder/work/ft_a.pt",
+  "reason": "larger than 50 MB; not stored in git"
+ }
+]

@@ -1,0 +1,1 @@
+Attempt 1 of optimise_labels_endo_r1 rejected: interrupted: the operator's background command was stopped at its time limit while the subject was still working (PROTOCOL_V2 section 9, API or session interruption); the subject had not finished

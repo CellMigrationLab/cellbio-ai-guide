@@ -763,7 +763,7 @@ for i, (task, name, mod) in enumerate(TASKS):
     row.append(halo(x + 6, Y0 + 62, "image", size=12.5) + halo(x + TT + 14, Y0 + 62, "desired result (manual)", size=12.5))
 add("".join(row))
 
-ORDER = [("a", "Ask for advice", 156), ("b", "Ask for code: Python script", 134),
+ORDER = [("a", "Ask for advice", 176), ("b", "Ask for code: Python script", 156),
          ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 164)]
 ry, RH = {}, {}
 yy = Y0 + HDH + GAP
@@ -793,35 +793,35 @@ def ask(key, items, y0=42):
 
 # ================================================================ a
 key = "a"
-ask(key, [("before", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
-          ("after", ["“…check the current documentation first.”"])])
+ask(key, [("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
+          ("detailed prompt", ["+ “…check the current documentation first.”"])])
 y = ry[key] + 40
 WB = 300
-s, hA = reply(CX_SC, y, WB, ["“…Cellpose-SAM (Cellpose 4) or cyto3.”", "“…try the cyto3 denoise models.”"], 12.5, False, "From memory"); add(s)
-add(t(CX_SC + 4, y + hA + 4, "models removed in Cellpose 4", 12.5, "bold", NOC))
+s, hA = reply(CX_SC, y, WB, ["“Start with Cellpose 3 (cyto3) and", "fine-tune it … Cellpose-SAM is probably", "more accurate out of the box.”"], 12.5, False, "Basic prompt: from memory"); add(s)
+add(t(CX_SC + 4, y + hA + 4, "outdated cyto3 recommended: 2 of 9", 12.5, "bold", NOC))
 add(change_pill(CX_SC + WB + 48, y + 34, ["read the", "docs"]))
 XD = CX_SC + WB + 104
-s, hB = reply(XD, y, CX_CAV - 30 - XD, ["“The docs list … cpsam_v2, cpdino …", "The old cyto3 and nuclei models are", "not mentioned in the current docs.”"], 12.5, False, "After reading the docs"); add(s)
-add(t(XD + 4, y + hB + 4, "current models", 12.5, "bold", OKT))
-add(cav(key, ["Outdated advice runs without error"], -8))
-s, _ = terminal(CX_CAV + 14, ry[key] + 62, W_CAV - 16, [(">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
+s, hB = reply(XD, y, CX_CAV - 30 - XD, ["“Use CellposeModel with the default", "pretrained weights, which are cpsam_v2", "in the current docs.”"], 12.5, False, "Detailed prompt: after checking the docs"); add(s)
+add(t(XD + 4, y + hB + 4, "current model named: 9 of 9 (basic prompt: 3 of 9)", 12.5, "bold", OKT))
+add(cav(key, ["Outdated advice runs without error,", "but falls back silently: you may not know", "which model you are using"], -8))
+s, _ = terminal(CX_CAV + 14, ry[key] + 98, W_CAV - 16, [(">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
                                                        ("(no message)  → loads cpsam_v2", "#ff8a80")], 12.5); add(s)
 
 # ================================================================ b1 / b2 / c / d
 key = "b"
 ask(key, [("", ["“Please write a Python script to segment the …”", "+ ask for explicit, testable code"])] if BOX1_ONLY else
-    [("before", ["“Please write a Python script to segment the …”"]), ("after", ["Box 1 prompt"])])
-add(panel(key, ry[key] + 34, "py", None if BOX1_ONLY else "generic", "script" if BOX1_ONLY else "Box 1"))
-add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"]) if BOX1_ONLY else
-    cav(key, ["Box 1 makes the settings visible;", "only the test shows if they work"]))
-add(t(CX_CAV + 36, ry[key] + 88, ["The code differs between runs, but each script", "gives the same result every time it is run."], 11.5, "normal", "#5b6270", lh=15))
+    [("basic prompt", ["“Please write a Python script to segment the …”"]),
+     ("detailed prompt", ["Same request + ask for explicit parameters,", "input checks and a test on reference data"])])
+add(panel(key, ry[key] + 34, "py", None if BOX1_ONLY else "basic", "script" if BOX1_ONLY else "detailed"))
+add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"]))
+add(t(CX_CAV + 36, ry[key] + 92, ["Each script differs between runs, but the", "generated script gives the same result", "every time it is run."], 15, "bold", NOC, lh=19))
 
 key = "c"
-ask(key, [("before", ["“…run the pipeline, assess, improve…”"]), ("after", ["“…score every version against my annotation…”"])])
+ask(key, [("by eye", ["“…run the pipeline, assess, improve…”"]), ("scored", ["+ “…score every version against my annotation…”"])])
 add(panel(key, ry[key] + 34, "agent", "by eye", "scored"))
-add(cav(key, ["By eye it had no score to check;", "give agents an external objective"]))
+add(cav(key, ["Without reference data the agent judges", "by eye: give it a score to optimise"]))
 key = "d"
-ask(key, [("before", ["“How many … are in this image?”"]), ("after", ["“Draw around every … and count them.”"])])
+ask(key, [("count", ["“How many … are in this image?”"]), ("draw", ["“Draw around every … and count them.”"])])
 y = ry[key] + 34
 for i, (task, name, _) in enumerate(TASKS):
     x = CX_SC + i * (GW + GG)
@@ -852,7 +852,7 @@ for i, (task, name, _) in enumerate(TASKS):
     add("".join(gg))
 add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="4.5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "one run", 12, fill=BODY)
     + f'<line x1="{CX_SC+80}" y1="{ry[key]+RH[key]-23}" x2="{CX_SC+80}" y2="{ry[key]+RH[key]-11}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>' + t(CX_SC + 90, ry[key] + RH[key] - 14, "manual count", 12, fill=BODY))
-add(cav(key, ["Estimated, not counted: not reproducible,", "asking again gives different numbers"]))
+add(cav(key, ["Asking again gives a different count:", "the answer is not reproducible"]))
 
 # ---------------------------------------------------------------- key line under task row: F1 legend
 add(t(CX_SC, ry["b"] - 2, "", 1))
@@ -871,7 +871,7 @@ KH = 92
 add(rrect(28, KY, 1784, KH, 16, "#ffffff", NN["stroke"], 1.4)
     + t(48, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 16.5, "bold", INK))
 KEEP = [("lock", "Check how the service handles data"), ("check", "Verify advice against the docs"),
-        ("ruler", "Ask for code that is easy to debug" if BOX1_ONLY else "Ask it to expose parameters (Box 1)"), ("target", "Give agents an external objective"),
+        ("ruler", "Ask for code that is easy to debug"), ("target", "Give agents a score to optimise"),
         ("file", "Request masks, not only a number")]
 KW = (1784 - 40) / 5
 
