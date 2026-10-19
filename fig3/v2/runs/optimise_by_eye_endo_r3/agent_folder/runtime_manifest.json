@@ -1,0 +1,8 @@
+{
+  "entrypoint": "pipeline.py",
+  "command": "python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
+  "required_files": ["pipeline.py"],
+  "models": "Cellpose built-in 'cpsam' weights, expected in ~/.cellpose/models (already present; Cellpose downloads them if absent)",
+  "packages": ["numpy", "scipy", "scikit-image", "tifffile", "pandas", "cellpose==4.2.1.1", "torch (CPU)"],
+  "extra_outputs": "<labels>_overlay.png"
+}

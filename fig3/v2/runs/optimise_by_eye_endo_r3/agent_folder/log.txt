@@ -1,0 +1,15 @@
+Only image.tif was used. Raw image never modified.
+1. Inspected image: 1022x1024 uint16, 12-bit. Left/right halves differ in offset (~2580 vs ~3090) and look
+   different (seam at x=512) -> global normalisation unsuitable.
+2. v1: local z-score flattening (Gaussian sigma 40 px), clip 1-99 pct, downscale 0.5 (1.3 um/px), Cellpose cpsam
+   (flow 0.4, cellprob 0). 445 labels; endothelial cells well outlined, but cancer cells also labelled.
+   (Scratch label array was briefly written to /tmp/lab.npy, outside the folder, then copied to the scratchpad.)
+3. Added cancer-cell filter: round cells with bright/dark refractile halo (fraction |z|>2.5, or label SD) removed.
+   First rule (any size, SD>1.5) wrongly dropped large endothelial cells with debris -> halo/SD rules restricted to
+   labels <500 um2; only a very high halo fraction (>0.08) removes larger labels.
+4. Added removal of border-touching labels and <100 um2 fragments; measurements = area (um2), aspect ratio
+   (ellipse major/minor).
+5. Final run: 445 raw -> 262 endothelial cells, median area 531 um2, median AR 1.36; runtime ~6.5 min on 4 CPUs.
+   Visual check: ~4 cancer cells still kept (merged with/adjacent to endothelium); some endothelium in the left
+   half (debris-rich) is missed.
+Not tuned: Cellpose thresholds, scale (only one image, no ground truth).
