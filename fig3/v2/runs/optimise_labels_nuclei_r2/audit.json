@@ -1,0 +1,31 @@
+{
+ "session_id": "57bbe24c-d373-4d24-8fd9-b96e1cbf7670",
+ "n_tool_calls": 23,
+ "flags": [],
+ "notes": [
+  "Bash in the subject's own scratchpad (archived)",
+  "Bash refers to environment paths ['/root/.cellpose/models']",
+  "Read in the subject's own scratchpad (archived)",
+  "tried Monitor, not offered for row optimise; refused by the CLI (no access)"
+ ],
+ "scratchpad_archived": [
+  "subject_tmp/scratchpad/__pycache__/cl.cpython-313.pyc",
+  "subject_tmp/scratchpad/__pycache__/ev.cpython-313.pyc",
+  "subject_tmp/scratchpad/ann.png",
+  "subject_tmp/scratchpad/cl.py",
+  "subject_tmp/scratchpad/err.png",
+  "subject_tmp/scratchpad/ev.py",
+  "subject_tmp/scratchpad/exp.py",
+  "subject_tmp/scratchpad/lab.tif",
+  "subject_tmp/scratchpad/m.csv",
+  "subject_tmp/scratchpad/mk_p90_30.npy",
+  "subject_tmp/scratchpad/o1.txt",
+  "subject_tmp/scratchpad/p90.png",
+  "subject_tmp/scratchpad/raw.png",
+  "subject_tmp/tasks/b0i0yldpv.output",
+  "subject_tmp/tasks/b7fbvm3er.output",
+  "subject_tmp/tasks/bsddaxsrz.output"
+ ],
+ "tmp_files_named": [],
+ "tmp_files_archived": []
+}

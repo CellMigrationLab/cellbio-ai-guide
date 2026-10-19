@@ -1,0 +1,9 @@
+{
+  "entrypoint": "pipeline.py",
+  "command": "python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
+  "python": "3.13",
+  "packages": ["numpy", "scipy", "scikit-image", "tifffile", "pandas", "cellpose==4.2.1.1 (torch)"],
+  "model_files": ["~/.cellpose/models/cpsam"],
+  "other_files": [],
+  "notes": "CPU only; ~8-9 min per 1024x1024 image. Model is loaded from the local Cellpose cache (pretrained_model='cpsam'); no network access needed if present."
+}

@@ -1,0 +1,7 @@
+v1: Cellpose-SAM (cpsam, CPU, no rescale, 1-99.5 pct normalisation, flow 0.4, cellprob 0). 636 objects, ~8.5 min. Nuclei found well, but cancer cells (bright, small, round) included; outlines loose in right tile.
+v2: added half-max boundary refinement per object (max shift 4 px) -> jagged outlines in textured right tile.
+v3: refinement threshold on Gaussian-smoothed image (sigma 1.5) + opening disk(2); outlines smooth.
+v4: filters: area<70 um2 (small), >700 (large; was 450, which removed real big nuclei), mean intensity >1.6x median (bright=cancer), solidity<0.85.
+v5: bright filter applied only to objects <200 um2, to keep large bright endothelial nuclei.
+Tuned on image.tif only; no other images accessed. Thresholds chosen by visual inspection of overlays (no ground truth).
+Final full run of pipeline.py on image.tif: 476 nuclei (8.5 min CPU).

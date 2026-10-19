@@ -1,0 +1,33 @@
+{
+ "session_id": "78055e03-1956-4533-979c-268956f1b8ca",
+ "n_tool_calls": 20,
+ "flags": [],
+ "notes": [
+  "Bash in the subject's own scratchpad (archived)",
+  "Bash refers to environment paths ['/root/.cellpose/models']",
+  "Bash refers to environment paths ['/root/.cellpose/models/cpsam']",
+  "Read in the subject's own scratchpad (archived)"
+ ],
+ "scratchpad_archived": [
+  "subject_tmp/scratchpad/dev.py",
+  "subject_tmp/scratchpad/f.csv",
+  "subject_tmp/scratchpad/f.py",
+  "subject_tmp/scratchpad/final.log",
+  "subject_tmp/scratchpad/labels.tif",
+  "subject_tmp/scratchpad/m_raw.npy",
+  "subject_tmp/scratchpad/meas.csv",
+  "subject_tmp/scratchpad/ov.py",
+  "subject_tmp/scratchpad/ov1.png",
+  "subject_tmp/scratchpad/ov2.png",
+  "subject_tmp/scratchpad/t1.log",
+  "subject_tmp/scratchpad/t1.py",
+  "subject_tmp/scratchpad/view.png",
+  "subject_tmp/tasks/b5o776ixy.output",
+  "subject_tmp/tasks/bfmtc1ht7.output",
+  "subject_tmp/tasks/boc7127m6.output",
+  "subject_tmp/tasks/bso6iwncl.output",
+  "subject_tmp/tasks/bugd05m3n.output"
+ ],
+ "tmp_files_named": [],
+ "tmp_files_archived": []
+}
