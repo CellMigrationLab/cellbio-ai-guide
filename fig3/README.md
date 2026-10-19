@@ -12,8 +12,8 @@ brightfield. Results are scored against the authors' manual annotations.
 | D | Ask for the answer (count) | Count against the manual count, per field |
 
 **Status (20 Oct 2026):** all 72 runs of [protocol v2](PROTOCOL_V2.md) are recorded; 54 are scored (rows B, C, D) and
-the 18 row-A runs are classified rather than scored ([v2/advice_outdated.csv](v2/advice_outdated.csv)). The figure is a draft
-under review by the authors.
+the 18 row-A runs are classified rather than scored ([v2/advice_outdated.csv](v2/advice_outdated.csv)). The figure is final (signed off by
+the authors, 20 Oct 2026).
 
 ## Where things are
 

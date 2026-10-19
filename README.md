@@ -38,7 +38,7 @@ Figure 3 depends on recorded LLM conversations. Those replies cannot be regenera
 | [`common/`](common/) | Shared analysis code and tests, including label validation, object matching, annotation conversion and image metadata. |
 | [`fig1/`](fig1/) | Figure 1 code, source data, figure files, legend and provenance notes. |
 | [`fig2/`](fig2/) | Figure 2 code, source data, figure files, legend and provenance notes. |
-| [`fig3/`](fig3/) | Protocol v2, its harness and run records (`v2/`), the draft figure (`figure_v2/`), scoring references and tests. |
+| [`fig3/`](fig3/) | Protocol v2, its harness and run records (`v2/`), the figure (`figure_v2/`), scoring references and tests. |
 | [`box1/`](box1/) | The final Box 1 prompt. Earlier versions survive in git history. |
 | [`tools/`](tools/) | Repository checks (fast and full) and SVG-to-PDF conversion. |
 
@@ -46,7 +46,7 @@ Figure 3 depends on recorded LLM conversations. Those replies cannot be regenera
 
 The figures are worked examples, not benchmarks. Most quantitative panels use one or two fields of view from one experiment. The LLM experiments use small, date-stamped samples, and the interface and model are recorded with each run. The figure-specific README files give the relevant caveats and scoring conventions.
 
-Figures 1 and 2 are the current manuscript versions. Figure 3 is a draft under review by the authors: the stored output is the protocol-v2 figure (`fig3/figure_v2/`), built from the study in [`fig3/PROTOCOL_V2.md`](fig3/PROTOCOL_V2.md). Of its 72 runs, 54 are scored and the 18 row-A runs are classified.
+Figures 1, 2 and 3 are the final manuscript versions. For Figure 3 the stored output is the protocol-v2 figure (`fig3/figure_v2/`), built from the study in [`fig3/PROTOCOL_V2.md`](fig3/PROTOCOL_V2.md). Of its 72 runs, 54 are scored and the 18 row-A runs are classified.
 
 ## Citation and licence
 
