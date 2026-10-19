@@ -103,20 +103,33 @@
   "cancer": {
    "py": {
     "before": [
-     0.406
+     0.406,
+     -1
     ],
-    "after": [],
+    "after": [
+     -1,
+     0.611
+    ],
     "before_n": [
-     247
+     247,
+     null
     ],
-    "after_n": [],
+    "after_n": [
+     null,
+     310
+    ],
     "before_shape": [
      [
       37.25,
       0.14150000000000001
      ]
     ],
-    "after_shape": []
+    "after_shape": [
+     [
+      23.4,
+      0.0625
+     ]
+    ]
    },
    "agent": {
     "before": [],
@@ -174,18 +187,24 @@
    "py": {
     "before": [
      0.387,
-     -1
+     -1,
+     0.561
     ],
     "after": [],
     "before_n": [
      328,
-     null
+     null,
+     275
     ],
     "after_n": [],
     "before_shape": [
      [
       16.75,
       0.182
+     ],
+     [
+      14.5,
+      0.1875
      ]
     ],
     "after_shape": []
@@ -252,7 +271,7 @@
    "default": null
   }
  },
- "n_runs": 27,
+ "n_runs": 31,
  "n_ref_heldout": {
   "nuclei": 473,
   "cancer": 145,

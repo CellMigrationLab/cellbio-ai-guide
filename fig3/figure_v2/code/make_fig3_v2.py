@@ -755,7 +755,7 @@ for i, (task, name, mod) in enumerate(TASKS):
 add("".join(row))
 
 ORDER = [("a", "Ask for advice", 156), ("b", "Ask for code: Python script", 134),
-         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 172)]
+         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 132)]
 ry, RH = {}, {}
 yy = Y0 + HDH + GAP
 for key, ttl, h in ORDER:
@@ -827,11 +827,6 @@ for i, (task, name, _) in enumerate(TASKS):
             gg.append(f'<rect x="{X(v)-4.5:.1f}" y="{y+25.5}" width="9" height="9" fill="none" stroke="{ACC}" stroke-width="2"/>')
     for fr, lab in [(0, "0"), (1, "manual"), (1.5, "1.5×")]:
         gg.append(t(x + fr / 1.6 * bw, y + 56, lab, 11, fill="#7a8699", anchor="middle"))
-    f1d = [v for v in dd["f1"] if v is not None]
-    ar_, rr_ = dd["area_ratio"], dd["ar_ratio"]
-    if ar_:
-        gg.append(t(x, y + 96, f"stated median vs manual: area ×{np.median(ar_):.1f} · AR ×{np.median(rr_):.2f}", 12, fill="#5b6676"))
-    gg.append(t(x, y + 80, f"F1 of drawn outlines: {min(f1d):.2f}–{max(f1d):.2f}" if f1d else "", 12.5, "bold", INK))
     add("".join(gg))
 add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "count, number only", 12, fill=BODY)
     + f'<rect x="{CX_SC+150}" y="{ry[key]+RH[key]-22.5}" width="9" height="9" fill="none" stroke="{ACC}" stroke-width="2"/>' + t(CX_SC + 165, ry[key] + RH[key] - 14, "count of cells it drew", 12, fill=BODY))

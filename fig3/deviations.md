@@ -177,3 +177,13 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   "I don't know." would have been untrue, so two lines were added: the image is two fields placed side by side (answered only
   when asked), and `image.png` is an 8-bit display copy of `image.tif`. Runs 2, 4 and 6 did not ask (run 6 mentioned the seam
   in its final report).
+
+### Row D observation: the model declined to draw ellipses for nuclei and endothelial cells (19 Oct 2026)
+- In turn 3 ("draw an ellipse around every ... and give the JSON") the model drew ellipses in all 6 cancer-cell
+  conversations (113–160 ellipses) and **declined in all 12 nuclei and endothelial-cell conversations**: it said it could
+  not run code or measure pixels, so it would be inventing 300–1,000 coordinates, repeated its earlier estimates and gave
+  a Cellpose script instead. These are valid results (a refusal is never rerun, PROTOCOL_V2 section 9); `score.json` has
+  `turn3.status = no_valid_json` and F1 0 for them. The replies are kept verbatim in `turns.json`; `v2/direct_summary.csv`
+  (made by `v2/summarise_direct.py`) records one line per conversation, with the start of each decline.
+- Authors' decision (19 Oct 2026): the figure shows only the count results of row D (turn-1 stated count, and the count of
+  ellipses drawn where it drew); the F1 of the drawn outlines and the stated medians are not shown in the figure.
