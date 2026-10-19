@@ -1,0 +1,10 @@
+Optimisation used only image.tif (1022x1024 uint16, max 4095). Raw image never modified.
+1. v1: flatten background (4x-downsampled 40 um median), divide by local std; Cellpose cpsam, diameter 30 px (~19.5 um), CPU (~3.7 min);
+   area filter 80-900 um2. Finding: image has two panels (seam at x=512, background 2600 vs 3080, different contrast); global
+   normalisation unsafe -> local normalisation kept. Cellpose also segments endothelial cells (>300 objects, 286 kept) -> area filter insufficient.
+2. Added boundary edge-strength filter (gaussian gradient / local median, mean on mask boundary >= 2.0): endothelial boundaries are weak,
+   cancer cells have halo/rim. Area range 100-700 um2. Tuned visually on overlays (2.5 lost dim cells; 2.0 chosen).
+3. Tried cellprob_threshold -2: no gain (more merges), reverted to 0.
+4. Tried robust MAD normalisation + clip: more endothelial false positives, reverted to local-std.
+5. Tried halo/rim intensity features for remaining false positives: no separation, dropped.
+6. Added solidity >= 0.9 filter (rejects merged/irregular objects). Final: 148 cells on image.tif.
