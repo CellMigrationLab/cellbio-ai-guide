@@ -4,7 +4,7 @@
  "cli_version": "2.1.302 (Claude Code)",
  "python": "3.13.16",
  "files": {
-  "fig3/PROTOCOL_V2.md": "7b69cd6a2d09f9ed680092db93bbad73dbacad9300de532102c362bd07cbde7e",
+  "fig3/PROTOCOL_V2.md": "6143484d17f31cb021437b7437027d406d68d93fafae145680e13ccb6fc3ddf1",
   "fig3/v2/prompts/advice_box1_cancer.txt": "4916dd77768a40ee14900cd58e75b1e45dcce63cc74d0cb2a7187742367c4171",
   "fig3/v2/prompts/advice_box1_endo.txt": "d9a7caf63b9f3f0d96ec44f09937c1ca81673ab337ab1a2d966fcfb73590e3c7",
   "fig3/v2/prompts/advice_box1_nuclei.txt": "5c4ab85ce8ca6661206cd0ffa295a280c1749279977b971948c47dd38499daaa",
@@ -33,13 +33,13 @@
   "fig3/v2/prompts/optimise_labels_endo.txt": "143f1c36601bc6036c2a5891ef7f235187dbe86285ab5e88331af2a7d3cb476c",
   "fig3/v2/prompts/optimise_labels_nuclei.txt": "fb6dca53d1ec1c1710039b3e206509520305df881eced7bd499bcabdfb99d112",
   "fig3/v2/rows.csv": "ef36f3517244868410732b2720ae89ac444829c8d7f25d61174db1134ea6468e",
-  "fig3/v2/scenarios.csv": "c75938e85fe732dd36d3cb034918714c2eff9abc74b50e5da4f527ac7691db89",
-  "fig3/v2/answer_sheet.md": "9e873f52d635d0d095a6b464e6f852e8bfca9fed7dd1300889d4aff9bc2f287a",
-  "fig3/v2/run_operator.py": "ff3008ceaf7b68528a4a5acda2a625cf62f644ac438a7397d2a60555272e5b55",
+  "fig3/v2/scenarios.csv": "b45825e18e0d38843ab0569d096c180a0cf423780c7534d908e77fa6fb35078a",
+  "fig3/v2/answer_sheet.md": "4f41c2a3bf70aff5e003f91076758d014fe7ceb890ffff8ed44c4c7bd9b23781",
+  "fig3/v2/run_operator.py": "f2847e4e52aa7e177b88b396eeb2ed82c3c68c227c162a5b8e26ce16a1551e57",
   "fig3/v2/runner.py": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
-  "fig3/v2/score.py": "c490937d38068dd0fb3ee012e83c9e49f3245eed3eadcbec868dfb0188488469",
-  "fig3/v2/make_protocol.py": "679b14b6de5b75bb8a2682c10e74a9dbd08c6308ccf6ccea75e3be89565e00eb",
-  "fig3/v2/make_assets.py": "12e9d380758bca58cbce059d455d2e9bbcca738bd67b8e92fd0240870d2a4dce",
+  "fig3/v2/score.py": "6e8e14b03963d6fd7c235ed3fd775828ac3b9fffccb5fff9f61e520dbddfc0f9",
+  "fig3/v2/make_protocol.py": "5c9921f4c1817cb4470eb38c03398c767a407a0242a9e4945285afc65b2bccc7",
+  "fig3/v2/make_assets.py": "4ac47e98b38660484e32e78ad9cb86fb9463f5659faaae12adad44ae2acbef9b",
   "fig3/v2/freeze.py": "f14f8cd6e1464156841e1f767faeb4b52446308bd7fef337dcdc40440752bb99",
   "fig3/v2/assets/dev_cancer_annotation.png": "34fbbfd29e4e45db3f4d8f72732fe5be03d260932f6e1064157e2f44c3075489",
   "fig3/v2/assets/dev_cancer_annotation.tif": "4b4e7838d1c41ae4aa3b39d121c2001f5826e8e5b5171d68ac4ff75d606ad2c9",
@@ -53,6 +53,18 @@
   "fig3/v2/assets/dev_nuclei_annotation.tif": "2a13aefaeb4a7e482be3af76614477cce4743dc7462574bd11811049766aa42f",
   "fig3/v2/assets/dev_nuclei_image.png": "3b429100fc7c5d1110006f3d509b691c240c94ce1c4c393d18d304d19a51ec41",
   "fig3/v2/assets/dev_nuclei_image.tif": "47ae84b8664cb1472137e96c7287cc9327d44b147199e99c5fd70dcee8a8ad99",
+  "fig3/v2/assets/halfdev_cancer_annotation.png": "3794e69174621ebf1a1c7f856c79904db128f4220e05ea761cd5dcc43480798b",
+  "fig3/v2/assets/halfdev_cancer_annotation.tif": "1fb8380dc18e299dbdfe44f23574025fbe30beea82d4a7d90d68ab75a920cf72",
+  "fig3/v2/assets/halfdev_cancer_image.png": "99d7a4c9c288228460e7dd1c22175ab074aa3270ac687cc02185263bd2fe9915",
+  "fig3/v2/assets/halfdev_cancer_image.tif": "a5360f97d663491b75cb3d48e5015e96f28e254d58c11453df794cd88c8bf25f",
+  "fig3/v2/assets/halfdev_endo_annotation.png": "dd0068ece8f773245602f17f34ec98d8b5764dd74b067bfaa8dc61fcadeefb5b",
+  "fig3/v2/assets/halfdev_endo_annotation.tif": "7c9b08c5c91516b7fbdcb19ae5efb80e2ffe63ba492ef614e8d8edfe723e4c80",
+  "fig3/v2/assets/halfdev_endo_image.png": "99d7a4c9c288228460e7dd1c22175ab074aa3270ac687cc02185263bd2fe9915",
+  "fig3/v2/assets/halfdev_endo_image.tif": "a5360f97d663491b75cb3d48e5015e96f28e254d58c11453df794cd88c8bf25f",
+  "fig3/v2/assets/halfdev_nuclei_annotation.png": "46aca6460dd51fb6b09a0c6f3796ea213a77ac5ce1c2b55827902ebbdab63840",
+  "fig3/v2/assets/halfdev_nuclei_annotation.tif": "a7a5b7ae1e6a351e0bb5cd7c4499c66b46047c0cae0c0f34fc09002d3dd05335",
+  "fig3/v2/assets/halfdev_nuclei_image.png": "14b519e7d92d05c95c89575bf0e5eb29651aa75194bf18c12f073fe140a320d6",
+  "fig3/v2/assets/halfdev_nuclei_image.tif": "da6938fa0a7bc5e2bb70ec3d4c677d492e40a0edf719cc4138e114b5799d93a5",
   "fig3/v2/assets/test_cancer_image.png": "454acd6a607018a0bbb5cf58182cc70b8a0d30b807144a39e57b98378e4af0d4",
   "fig3/v2/assets/test_cancer_image.tif": "103c502410ce242c7b5e8084dc53ff4ad0619bd0cbc5599ee805e73604318118",
   "fig3/v2/assets/test_endo_image.png": "454acd6a607018a0bbb5cf58182cc70b8a0d30b807144a39e57b98378e4af0d4",
@@ -60,7 +72,7 @@
   "fig3/v2/assets/test_nuclei_image.png": "bee36bd09b607f447531b854f80c622a8f5305b6ed043457a99b7b2402979547",
   "fig3/v2/assets/test_nuclei_image.tif": "5b5cfd44a3b3831efd76953924b500938b4a7c7239a5ca75bc82278d0af10394",
   "fig3/v2/environment_freeze.txt": "79248e0876cbf0310ba79083a1b764c78820b3a8cfeb0907919c00541e025d67",
-  "fig3/scoring/tasks.py": "d388fe30a3ae819ab9c37481b7b8640e1a45ed1aa85e4a32889256dae1d06eb1",
+  "fig3/scoring/tasks.py": "8b41002980b0ea8521c3b63a8ac8fab55374f462f18993547126fbf9fcac3f68",
   "common/labels.py": "51544fd55d50fd7d860f63df07c6a4eea3428b9e8eee8985b84e4e3bdc80eee2",
   "common/matching.py": "b1243829b0b118a69c1f230009e5f77adb4c431444ccc78770c755ec44307df0",
   "common/annotations.py": "7d9a909bf7b1340eb772bdc0e0f4034a359b3916588281b65720d3235172ce9a",
@@ -85,6 +97,90 @@
    "new_sha256": "ff3008ceaf7b68528a4a5acda2a625cf62f644ac438a7397d2a60555272e5b55",
    "reason": "harness fault: the 'latest complete script' rule (row B) selected an indented patch fragment that named both output files; a complete script must now also parse on its own and contain an import",
    "runs_affected": "main run 11 code_box1_nuclei_r3 (re-collected and re-run; no subject rerun); runs 2 and 7 re-checked: same block selected"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/PROTOCOL_V2.md",
+   "old_sha256": "7b69cd6a2d09f9ed680092db93bbad73dbacad9300de532102c362bd07cbde7e",
+   "new_sha256": "6143484d17f31cb021437b7437027d406d68d93fafae145680e13ccb6fc3ddf1",
+   "reason": "revision of rows B and C (authors, 19 Oct 2026): revision note and sections 1, 2, 6, 7, 8 for rows B and C",
+   "runs_affected": "rows B and C restart; superseded runs in fig3/v2/runs_superseded/ (12 runs)"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/v2/scenarios.csv",
+   "old_sha256": "c75938e85fe732dd36d3cb034918714c2eff9abc74b50e5da4f527ac7691db89",
+   "new_sha256": "b45825e18e0d38843ab0569d096c180a0cf423780c7534d908e77fa6fb35078a",
+   "reason": "revision of rows B and C (authors, 19 Oct 2026): folder_files of rows B and C use the mosaic",
+   "runs_affected": "rows B and C restart; superseded runs in fig3/v2/runs_superseded/ (12 runs)"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/v2/answer_sheet.md",
+   "old_sha256": "9e873f52d635d0d095a6b464e6f852e8bfca9fed7dd1300889d4aff9bc2f287a",
+   "new_sha256": "4f41c2a3bf70aff5e003f91076758d014fe7ceb890ffff8ed44c4c7bd9b23781",
+   "reason": "revision of rows B and C (authors, 19 Oct 2026): intensity values and annotation counts of the development mosaic",
+   "runs_affected": "rows B and C restart; superseded runs in fig3/v2/runs_superseded/ (12 runs)"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/v2/run_operator.py",
+   "old_sha256": "ff3008ceaf7b68528a4a5acda2a625cf62f644ac438a7397d2a60555272e5b55",
+   "new_sha256": "f2847e4e52aa7e177b88b396eeb2ed82c3c68c227c162a5b8e26ce16a1551e57",
+   "reason": "revision of rows B and C (authors, 19 Oct 2026): annotation file names for give_dev_files",
+   "runs_affected": "rows B and C restart; superseded runs in fig3/v2/runs_superseded/ (12 runs)"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/v2/score.py",
+   "old_sha256": "c490937d38068dd0fb3ee012e83c9e49f3245eed3eadcbec868dfb0188488469",
+   "new_sha256": "6e8e14b03963d6fd7c235ed3fd775828ac3b9fffccb5fff9f61e520dbddfc0f9",
+   "reason": "revision of rows B and C (authors, 19 Oct 2026): rows B and C scored on the held-out right halves; mean F1 of fields 104 and 209",
+   "runs_affected": "rows B and C restart; superseded runs in fig3/v2/runs_superseded/ (12 runs)"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/v2/make_protocol.py",
+   "old_sha256": "679b14b6de5b75bb8a2682c10e74a9dbd08c6308ccf6ccea75e3be89565e00eb",
+   "new_sha256": "5c9921f4c1817cb4470eb38c03398c767a407a0242a9e4945285afc65b2bccc7",
+   "reason": "revision of rows B and C (authors, 19 Oct 2026): folder_files of rows B and C use the mosaic",
+   "runs_affected": "rows B and C restart; superseded runs in fig3/v2/runs_superseded/ (12 runs)"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/v2/make_assets.py",
+   "old_sha256": "12e9d380758bca58cbce059d455d2e9bbcca738bd67b8e92fd0240870d2a4dce",
+   "new_sha256": "4ac47e98b38660484e32e78ad9cb86fb9463f5659faaae12adad44ae2acbef9b",
+   "reason": "revision of rows B and C (authors, 19 Oct 2026): halfdev mosaic assets",
+   "runs_affected": "rows B and C restart; superseded runs in fig3/v2/runs_superseded/ (12 runs)"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/scoring/tasks.py",
+   "old_sha256": "d388fe30a3ae819ab9c37481b7b8640e1a45ed1aa85e4a32889256dae1d06eb1",
+   "new_sha256": "8b41002980b0ea8521c3b63a8ac8fab55374f462f18993547126fbf9fcac3f68",
+   "reason": "revision of rows B and C (authors, 19 Oct 2026): score_heldout for a chosen field; heldout_reference",
+   "runs_affected": "rows B and C restart; superseded runs in fig3/v2/runs_superseded/ (12 runs)"
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/v2/assets/halfdev_*",
+   "reason": "files added (development mosaic for rows B and C); existing assets unchanged",
+   "files_added": [
+    "fig3/v2/assets/halfdev_cancer_annotation.png",
+    "fig3/v2/assets/halfdev_cancer_annotation.tif",
+    "fig3/v2/assets/halfdev_cancer_image.png",
+    "fig3/v2/assets/halfdev_cancer_image.tif",
+    "fig3/v2/assets/halfdev_endo_annotation.png",
+    "fig3/v2/assets/halfdev_endo_annotation.tif",
+    "fig3/v2/assets/halfdev_endo_image.png",
+    "fig3/v2/assets/halfdev_endo_image.tif",
+    "fig3/v2/assets/halfdev_nuclei_annotation.png",
+    "fig3/v2/assets/halfdev_nuclei_annotation.tif",
+    "fig3/v2/assets/halfdev_nuclei_image.png",
+    "fig3/v2/assets/halfdev_nuclei_image.tif"
+   ],
+   "files_removed": []
   }
  ]
 }

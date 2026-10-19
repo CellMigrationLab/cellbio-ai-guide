@@ -152,3 +152,23 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   used CLI 2.1.302 (as in `FREEZE.json`); the container that resumed the main run has 2.1.303. Runs from 14 onward use
   2.1.303 (recorded in each run's `session.json`). Subject model unchanged (`claude-sonnet-5-5`). Affected: runs 14–72.
   The resumed environment was rebuilt from `environment_freeze.txt` (identical `pip freeze`; `cpsam_v2` SHA-256 matches).
+
+### Revision of rows B and C (19 Oct 2026, authors' decision; A and D unchanged)
+- **Why**: the first 19 main runs (runs 1–19; B and C: 12 runs) used field 104 for development and field 209 for test.
+  On field 209 (DAPI) all four nuclei pipelines drew masks about twice the manual area (median 802 vs 435 px; centres
+  agree, F1 0.55 against 0.96 on field 104): the field carries a faint haze around the nuclei that field 104 does not.
+  One test field made the comparison of the ways of using the model depend on how typical that field is.
+- **New design (rows B and C only)**: the development image is a mosaic of the left halves (x < 512) of fields 104 and
+  209 (`v2/assets/halfdev_<task>_image.tif/.png`, annotation `halfdev_<task>_annotation.tif/.png`; objects cut at
+  x = 512 stay cut). Subjects, prompts and the answer sheet are otherwise unchanged (the mosaic has the size of a field).
+  The runner still runs scripts and pipelines unchanged on the **whole** fields 104 and 209; scoring crops to the held-out
+  right halves (x ≥ 512) (`fig3.scoring.tasks.score_heldout(field=...)`, `v2/score.py`); endothelial cells touching the
+  border of the crop are removed from prediction (as for the whole field). The reported score is the mean of the F1 on
+  the two fields (`score.json`: `mean.f1`), as in Figures 1 and 2 (whole fields; same references and scorer).
+- **Affected runs**: all B and C runs made before the revision (`runs_superseded/`, kept unedited with their old scores
+  on field 104 as development and field 209 as test); B and C restart from the first scenario. Rows A and D runs already
+  done stay (the subject sees nothing of this change).
+- **Frozen files changed** (hashes in `FREEZE.json` amendments): `PROTOCOL_V2.md`, `answer_sheet.md` (intensity values
+  and annotation counts of the mosaic), `make_assets.py` and `assets/` (mosaic files added; existing files unchanged),
+  `make_protocol.py`, `scenarios.csv` (folder_files of rows B and C), `run_operator.py` (annotation file names),
+  `score.py` and `scoring/tasks.py` (held-out half scoring for a chosen field; round-1 behaviour unchanged).

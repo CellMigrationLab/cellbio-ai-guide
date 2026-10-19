@@ -112,15 +112,21 @@ def _nuclei_counts(gt: np.ndarray, pred: np.ndarray, mask: np.ndarray, rule: str
     raise ValueError(f"Unknown nuclei rule {rule!r}; expected 'match_first' or 'drop_first'")
 
 
-def score_heldout(task: str, pred: np.ndarray, nuclei_rule: str = "match_first") -> dict:
-    """Score on the held-out right half. Accepts a whole-field or a half-width prediction."""
+def score_heldout(task: str, pred: np.ndarray, nuclei_rule: str = "match_first", field: int = 104) -> dict:
+    """Score on the held-out right half (x >= HALF_X) of a field. Accepts a whole-field or a half-width prediction.
+    Round 1 used field 104 only (default); protocol v2 scores the right halves of fields 104 and 209."""
     pred = validate_labels(pred, name=f"{task} prediction", squeeze=True)
-    gt = reference(task)[:, HALF_X:].copy()
+    gt = heldout_reference(task, field)
     pred = pred[:, HALF_X:].copy() if pred.shape[1] == gt.shape[1] + HALF_X else pred.copy()
     if pred.shape != gt.shape:
         raise ValueError(f"{task}: held-out prediction shape {pred.shape} differs from {gt.shape}")
     if task == "endo":
         gt, pred = clear_border(gt), clear_border(pred)
     if task == "nuclei":
-        return _nuclei_counts(gt, pred, cancer_mask()[:, HALF_X:], nuclei_rule)
+        return _nuclei_counts(gt, pred, cancer_mask(field)[:, HALF_X:], nuclei_rule)
     return _counts(gt, pred)
+
+
+def heldout_reference(task: str, field: int = 104) -> np.ndarray:
+    """Manual reference of the held-out right half (x >= HALF_X) of a field (objects cut by the crop stay cut)."""
+    return reference(task, field)[:, HALF_X:].copy()

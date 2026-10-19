@@ -54,3 +54,23 @@ class AssetTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HeldoutHalf(unittest.TestCase):
+    """Protocol v2 rows B and C are scored on the right half (x >= 512) of fields 104 and 209."""
+
+    def test_reference_scores_one_on_both_fields(self):
+        from fig3.scoring.tasks import reference, score_heldout
+        for field in (104, 209):
+            for task in ("nuclei", "cancer", "endo"):
+                self.assertEqual(score_heldout(task, reference(task, field), field=field)["f1"], 1.0, (task, field))
+
+    def test_mosaic_annotation_is_the_left_halves(self):
+        import numpy as np
+        import tifffile
+        from common.paths import REPO_ROOT
+        from fig3.scoring.tasks import HALF_X, reference
+        for task in ("nuclei", "cancer", "endo"):
+            mosaic = tifffile.imread(REPO_ROOT / "fig3" / "v2" / "assets" / f"halfdev_{task}_annotation.tif")
+            self.assertTrue(np.array_equal(mosaic[:, :HALF_X] > 0, reference(task, 104)[:, :HALF_X] > 0))
+            self.assertTrue(np.array_equal(mosaic[:, HALF_X:] > 0, reference(task, 209)[:, :HALF_X] > 0))

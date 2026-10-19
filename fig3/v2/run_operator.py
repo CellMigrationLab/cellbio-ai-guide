@@ -6,7 +6,7 @@ Usage (repository root, PYTHONPATH=., V2_STAGE=preflight|main, SUBJECT_SCRATCHPA
   python fig3/v2/run_operator.py start SCENARIO_ID               fresh headless subject session, first message
   python fig3/v2/run_operator.py answer SCENARIO_ID TEXT         reply to a follow-up question (answer sheet, verbatim)
   python fig3/v2/run_operator.py turn SCENARIO_ID N              row D: send the prescribed turn N (2 or 3)
-  python fig3/v2/run_operator.py give_dev_files SCENARIO_ID      row B before code: add the field-104 image and annotation
+  python fig3/v2/run_operator.py give_dev_files SCENARIO_ID      row B before code: add the development-mosaic annotation
   python fig3/v2/run_operator.py audit SCENARIO_ID               every tool call checked; conversation.md from the transcript
   python fig3/v2/run_operator.py meta SCENARIO_ID NOTES          meta.json from scenarios.csv, rows.csv and the transcript
   python fig3/v2/run_operator.py collect SCENARIO_ID             code_as_returned.py / agent_folder/ / direct_answers.json
@@ -226,7 +226,7 @@ def code_given(history: list[dict]) -> bool:
 
 
 def give_dev_files(scenario_id: str) -> None:
-    """Answer-sheet line 'Image / annotation request', row B before any code: field-104 files into the folder."""
+    """Answer-sheet line 'Image / annotation request', row B before any code: the development-mosaic annotation into the folder."""
     sc = scenario(scenario_id)
     if sc["row"] != "code":
         raise ValueError("only row B receives the development files on request (row C labels arm has them already)")
@@ -234,7 +234,7 @@ def give_dev_files(scenario_id: str) -> None:
     if code_given(turns(run_dir)):
         raise RuntimeError("the subject has already given code: the answer is \"I don't know.\"")
     folder, task = subject_dir(sc), sc["task"]
-    sent = copy_assets(f"annotation.tif <- dev_{task}_annotation.tif; annotation.png <- dev_{task}_annotation.png",
+    sent = copy_assets(f"annotation.tif <- halfdev_{task}_annotation.tif; annotation.png <- halfdev_{task}_annotation.png",
                        folder)
     record = json.loads((run_dir / "attachments_sent.json").read_text())
     record["files"] += [f"{s} (on request)" for s in sent]

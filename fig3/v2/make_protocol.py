@@ -135,11 +135,11 @@ def build_scenarios() -> list[dict]:
                                  prompt=f"advice_{cond}_{task}", folder_files=""))
                 rows.append(dict(row="code", condition=cond, task=task, field="", replicate=rep,
                                  prompt=f"code_{cond}_{task}",
-                                 folder_files=f"image.tif <- dev_{task}_image.tif; image.png <- dev_{task}_image.png"))
+                                 folder_files=f"image.tif <- halfdev_{task}_image.tif; image.png <- halfdev_{task}_image.png"))
             for arm in ("by_eye", "labels"):
-                files = f"image.tif <- dev_{task}_image.tif"
+                files = f"image.tif <- halfdev_{task}_image.tif"
                 if arm == "labels":
-                    files += f"; annotation.tif <- dev_{task}_annotation.tif"
+                    files += f"; annotation.tif <- halfdev_{task}_annotation.tif"
                 rows.append(dict(row="optimise", condition=arm, task=task, field="", replicate=rep,
                                  prompt=f"optimise_{arm}_{task}", folder_files=files))
             for field in (104, 209):

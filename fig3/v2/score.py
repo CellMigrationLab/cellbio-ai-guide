@@ -3,7 +3,9 @@
 Usage: PYTHONPATH=. python fig3/v2/score.py RUN_DIR      (writes RUN_DIR/score.json)
 
 RUN_DIR/meta.json gives "row" and "task". Inputs per row:
-  code, optimise : for each field F in (104, 209): execution_fF.json (from runner.py) and, if the run succeeded,
+  code, optimise : scored on the HELD-OUT RIGHT HALF (x >= 512) of each field F in (104, 209); the pipeline is run on the
+                   whole field, and the left halves are what the model was given (mosaic). "mean" = mean F1 of the two.
+                   For each field F: execution_fF.json (from runner.py) and, if the run succeeded,
                    labels_fF.tif.gz and measurements_fF.csv
   direct         : direct_answers.json, written by the operator from the conversation:
                    {"field": F, "turn1_text": "...", "turn2_text": "...", "turn2_median_area_um2": x | null,
@@ -32,7 +34,7 @@ from skimage.segmentation import clear_border
 from common.labels import InvalidLabels, validate_labels
 from common.matching import match
 from common.metadata import FOLLAIN_FIELD_SHAPE, FOLLAIN_PX_UM
-from fig3.scoring.tasks import TASKS, reference, score as f1_score_task
+from fig3.scoring.tasks import HALF_X, TASKS, heldout_reference, reference, score_heldout
 
 FIELDS = (104, 209)
 MIN_MINOR_PX = 2.0
@@ -68,8 +70,10 @@ def reference_summary(task: str, field: int) -> dict:
 
 
 def matched_shape_errors(task: str, pred: np.ndarray, field: int) -> dict:
-    """Median absolute relative area error and absolute aspect-ratio error over matched, non-border objects."""
-    gt = reference(task, field)
+    """Median absolute relative area error and absolute aspect-ratio error over matched, non-border objects of the
+    held-out right half of the field (pred: whole-field label image)."""
+    gt = heldout_reference(task, field)
+    pred = pred[:, HALF_X:]
     p = clear_border(pred) if task == "endo" else pred
     pairs, _, _ = match(gt, p, 0.5)
     mg, mp = object_measures(gt), object_measures(p)
@@ -128,8 +132,8 @@ def score_field(run_dir: Path, task: str, field: int) -> dict:
         pred = run_labels(run_dir, field)
     except InvalidLabels as exc:
         return {"status": "invalid_labels", "error": str(exc), "f1": 0.0}
-    out = {"status": "ok", **f1_score_task(task, pred, field=field)}
-    pred_sum, ref_sum = summary_measures(pred), reference_summary(task, field)
+    out = {"status": "ok", **score_heldout(task, pred, field=field)}   # right half of the field only
+    pred_sum, ref_sum = summary_measures(pred[:, HALF_X:]), summary_measures(heldout_reference(task, field))
     out["measures"] = pred_sum
     out["reference"] = ref_sum
     out["count_error"] = pred_sum["count"] - ref_sum["count"]
@@ -236,7 +240,10 @@ def score_run(run_dir: Path) -> dict:
     if task not in TASKS:
         raise ValueError(f"unknown task {task!r}")
     if row in ("code", "optimise"):
-        return {f"f{f}": score_field(run_dir, task, f) for f in FIELDS}
+        out = {f"f{f}": score_field(run_dir, task, f) for f in FIELDS}
+        out["mean"] = {"f1": round(sum(out[f"f{f}"]["f1"] for f in FIELDS) / len(FIELDS), 3),
+                       "note": "mean of the object F1 on the held-out halves of fields 104 and 209 (failed = 0)"}
+        return out
     if row == "direct":
         return score_direct(run_dir, task)
     if row == "advice":

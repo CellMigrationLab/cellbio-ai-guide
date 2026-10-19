@@ -27,6 +27,10 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 - `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data.
 - `make full` passes: the Figure 1 and 2 source data regenerate from `data/raw` and rebuild both figures byte-identical
   (files it cannot regenerate are listed with the reason).
+- Figure 3 revision of 19 Oct 2026 (rows B and C only; see `fig3/PROTOCOL_V2.md` and `fig3/deviations.md`): the model is
+  given a mosaic of the left halves of fields 104 and 209; scripts and pipelines are scored on the held-out right halves
+  of both fields and the score is the mean of the two F1. The first B and C runs are in `fig3/v2/runs_superseded/`; rows
+  A and D runs already done stay in `fig3/v2/runs/`. Draft figure: `make fig3v2`.
 - Figure 3, protocol v2: preflight done (12 runs, `fig3/v2/runs_preflight/`, not used in the figure); protocol frozen on
   17 Oct 2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless Claude Code sessions); the 72 main
   runs go to `fig3/v2/runs/`, one commit per scenario. To resume an interrupted main run, start from

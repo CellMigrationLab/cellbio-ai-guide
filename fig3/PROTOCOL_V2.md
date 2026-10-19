@@ -10,6 +10,19 @@ ChatGPT audits of 17 Oct 2026 (pull request 2: round-2 plan re-audit and analysi
 
 ---
 
+> **Revision of 19 Oct 2026 (authors; rows B and C only; A and D unchanged).** The first 19 main runs showed that one
+> development field and one test field make the comparison depend on how typical the test field is (on the DAPI field
+> 209 every nuclei pipeline tuned on field 104 drew masks about twice the manual size: F1 0.55 against 0.96). Rows B and
+> C therefore start again. The model is given **a mosaic of the left halves (x < 512) of fields 104 and 209** as its one
+> development image (same size as a field, so the prompts and the answer sheet's image size stay true). Scripts and
+> pipelines are run on the whole fields and **scored on the held-out right halves (x ≥ 512) of both fields**; the score
+> is the **mean of the F1 on the two fields**, as in Figures 1 and 2 (same references and scorer; there on whole fields).
+> The aim is a pipeline that works despite the diversity of the data. Superseded runs are kept in
+> `v2/runs_superseded/` (never edited). Details in `deviations.md`. Below, "field 104 = development, field 209 = test"
+> still holds for row D only (whole fields).
+
+---
+
 ## 1. Question and what each row shows
 
 What changes when a cell biologist uses an LLM (Claude) in four ways, on one family of tasks: **segment, count and
@@ -18,8 +31,8 @@ measure the shape (area and aspect ratio)** of three object types of increasing 
 | Row | Use | Compared | Shown in the figure |
 |---|---|---|---|
 | A | Ask for advice | simple prompt vs Box 1 prompt | one illustrative reply per condition (chosen by the authors after the runs, stated as illustrative), with every named tool, function and parameter marked current / outdated / does not exist; counts of such items over all runs |
-| B | Ask for code (the model writes, a separate runner runs) | simple prompt vs Box 1 prompt | the score of every script on field 104 (development) and field 209 (test), all tasks; crashed scripts as ×; one code excerpt (fixed rule) |
-| C | Let an agent write, run and optimise on field 104 | by eye vs with labels (Box 1 in both) | score of every frozen pipeline re-run by the runner on field 104 and field 209, all tasks; the score the agent reported vs ours |
+| B | Ask for code (the model writes, a separate runner runs) | simple prompt vs Box 1 prompt | the score of every script on the held-out halves of fields 104 and 209 and their mean, all tasks; crashed scripts as ×; one code excerpt (fixed rule) |
+| C | Let an agent write, run and optimise on the development mosaic (left halves of fields 104 and 209) | by eye vs with labels (Box 1 in both) | score of every frozen pipeline re-run by the runner on fields 104 and 209 (held-out right halves) and their mean, all tasks; the score the agent reported vs ours |
 | D | Ask for the answer directly | count → size and shape → ellipses drawn, count and shape from the drawing (one conversation per image), on field 104 and field 209 | stated vs manual count, stated vs measured size and shape, on both fields, one drawing (fixed rule) |
 
 No statistical tests (3 replicates); every run is shown.
@@ -32,8 +45,10 @@ No statistical tests (3 replicates); every run is shown.
 | Cancer cells | brightfield | 124 / 163 | manual cell labels |
 | Endothelial cells | brightfield | 382 / 388 complete cells | annotator 1 junction lines → cells (`lines_to_cells`) |
 
-- **Field 104 = development** (given to models when they ask, row B before the code is written, row C as the working
-  image). **Field 209 = test**; its annotations never reach a model.
+- **Rows B and C (revised 19 Oct 2026): development = mosaic of the left halves (x < 512) of fields 104 and 209**
+  (given to models as image.tif, with its annotation when they ask, row B before the code is written, row C labels arm as
+  the working annotation); **test = the right halves (x ≥ 512) of both fields**, whose annotations never reach a model.
+  **Row D: whole fields** (104 and 209), unchanged.
 - Pixel size 0.65 µm (exact value 0.649614 µm used in scoring).
 - **Endothelial cells** are annotated on PECAM-1, a channel the model does not receive. The task stays (it is the hard
   task) and the legend says so; the human ceiling is the agreement between the two annotators (F1 0.90 on field 104;
@@ -137,22 +152,22 @@ documentation and classified: *current* / *outdated or renamed* / *does not exis
 is chosen by the authors after the runs as the most useful illustration; the legend says it is illustrative, and the
 item counts over all 18 runs and every reply are given (supplement and repository).
 
-**B — code.** 2 conditions × 3 tasks × 3 replicates = **18 runs**. The subject sees image.png (preview of field 104;
+**B — code.** 2 conditions × 3 tasks × 3 replicates = **18 runs**. The subject sees image.png (preview of the development mosaic;
 image.tif is named in the prompt as the user's file). If it asks for the image or an annotation **before it has given
-code**, it receives field 104 (image TIFF/PNG, annotation PNG) with the answer-sheet sentence; requests after the code
+code**, it receives the annotation of the development mosaic (PNG and TIFF) with the answer-sheet sentence; requests after the code
 are answered "I don't know". The final script is saved as returned: the latest complete script (the latest Python
 block naming both `labels.tif` and `measurements.csv`); partial edits sent after it are not applied (recorded per
 run, authors' decision after the preflight). The **scripted runner** (`v2/runner.py`; authors' decision) runs it twice, unchanged except input/output paths (diff stored):
-on field 104 and on field 209, in a fresh per-run environment, installing only packages the reply names, 1 h limit.
+on the whole of field 104 and of field 209 (scored on their right halves), in a fresh per-run environment, installing only packages the reply names, 1 h limit.
 
-**C — optimise.** 2 arms × 3 tasks × 3 replicates = **18 runs**. Working folder with image.tif (field 104), plus
+**C — optimise.** 2 arms × 3 tasks × 3 replicates = **18 runs**. Working folder with image.tif (the development mosaic), plus
 annotation.tif in the labels arm. When the agent finishes, its folder is archived; `pipeline.py` is then run unchanged
-in a **clean folder** containing only the field-209 image, `pipeline.py` and the files listed in
-`runtime_manifest.json` (the field-104 image and annotation are never copied). The agent's own reported score is
+in a **clean folder** containing only the input image, `pipeline.py` and the files listed in
+`runtime_manifest.json` (the development image and annotation are never copied). The agent's own reported score is
 recorded. The **runner** (the same one as row B) then runs the frozen `pipeline.py` unchanged, twice, each time in a
 clean folder containing only the input image, `pipeline.py` and the files listed in `runtime_manifest.json`: on field
-104 (the image the agent optimised on; the annotation is not copied) and on field 209. Both are scored with our scorer;
-the agent's own field-104 claim is compared with our field-104 score.
+104 and on field 209 (whole fields; the annotation is not copied). Both are scored with our scorer on the held-out right
+halves; the agent's own reported score is compared with our mean held-out F1.
 
 **D — direct answers.** 3 tasks × 2 fields × 3 replicates = **18 conversations**, one conversation per image (PNG,
 full field), field 104 and field 209 in separate fresh conversations. Field 104 doubles the number of images (direct
@@ -186,8 +201,8 @@ integer-valued, within uint16/uint32 range; otherwise status `invalid_labels` (s
 
 | Row | Primary | Secondary |
 |---|---|---|
-| B | object F1 (IoU ≥ 0.5) on field 209; same on field 104 | runs unchanged (yes / after installing / no); count error; median area and AR vs reference (% / absolute); per matched object area and AR error; measurements.csv present, one row per label, area and AR agree with the label image (±2 % / ±0.05) |
-| C | object F1 on field 209; same on field 104 | as B, + agent-reported score vs our field-104 score; files used at test time |
+| B | mean over fields 104 and 209 of the object F1 (IoU ≥ 0.5) on the held-out right half; each field separately | runs unchanged (yes / after installing / no); count error; median area and AR vs reference (% / absolute); per matched object area and AR error; measurements.csv present, one row per label, area and AR agree with the label image (±2 % / ±0.05) |
+| C | as B | as B, + agent-reported score vs our mean held-out F1; files used at test time |
 | D | count error (turn 1), each field | turn 2 area and AR vs reference medians; turn 3 ellipses: centres matched one-to-one to reference objects (centre inside an object, Hungarian on distance) → F1; count and shape from the drawing vs the reference and vs turns 1–2 |
 | A | items classified (section 5) | — |
 
@@ -197,9 +212,10 @@ or times out is `crashed` even if it wrote a file (that file may be scored only 
 ## 8. Figure layout (fixed before the runs)
 - Row A: two reply excerpts (simple, Box 1), chosen after the runs as illustrations, with items colour-coded; bar or
   table of item classes over all 18 runs.
-- Row B: per task, two columns of dots per condition (field 104, field 209), 3 runs each, × for crashes; one code
-  excerpt: the Box 1 cancer-cell script with the median field-209 F1 among those that ran.
-- Row C: per task, F1 per run on field 104 and field 209 for by eye vs with labels; marker for the agent's own claim.
+- Row B: per task, bar = median over runs of the mean F1 of fields 104 and 209 (held-out halves) per condition, circles =
+  runs (as the mean; each field's F1 in the supplement), × for crashes; one code excerpt: the Box 1 cancer-cell script
+  with the median mean F1 among those that ran.
+- Row C: as B, by eye vs with labels; marker for the agent's own claim.
 - Row D: per task and field, stated count (turn 1) and drawn count (turn 3) vs manual; shape from turn 2 and turn 3 vs
   reference; one ellipse overlay: the field-209 cancer-cell replicate with the median count error.
 - Supplementary table: every run with every measure; every conversation and script in the repository.
