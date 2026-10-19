@@ -1,0 +1,6 @@
+Change log (optimised on image.tif only)
+1. v1: seam detection (column-median step >5%) + per-block 1-99 percentile normalisation (image is two tiles, bg 2579 vs 3088 at x=512); Cellpose cpsam, diameter=30 px, flow 0.4, cellprob 0; area filter 100-1000 um2. Result: 284 objects, but right half had many flat endothelial cells segmented as cells.
+2. Added rim "halo score" filter (bright/dark boundary band vs ring 3-8 px outside; threshold 0.25 in normalised units, trough in score histogram) and reduced max area to 700 um2. First ring used only unlabelled pixels -> score 0 for cells surrounded by endothelial masks (cancer cells lost); fixed by using all pixels outside the mask.
+3. Cellpose flow_threshold 0.4->0 (disabled) and cellprob_threshold 0->-1: recovers missed isolated cells; extra false objects removed by filter.
+4. Added solidity >= 0.90 filter (debris, ragged shapes). Final on image.tif: 157 cells.
+5. Fixed skimage 0.26 deprecation (axis_major_length). Outputs include touches_border flag (truncated cells are not removed).

@@ -1,0 +1,37 @@
+{
+ "session_id": "fcd8c227-2fbb-4fb0-823d-9b64b343667d",
+ "n_tool_calls": 22,
+ "flags": [],
+ "notes": [
+  "Bash in the subject's own scratchpad (archived)",
+  "Bash refers to environment paths ['/usr/local/lib/python3.13/dist-packages/cellpose']",
+  "Read in the subject's own scratchpad (archived)"
+ ],
+ "scratchpad_archived": [
+  "subject_tmp/scratchpad/ann.png",
+  "subject_tmp/scratchpad/p05.png",
+  "subject_tmp/scratchpad/raw.png",
+  "subject_tmp/scratchpad/w/__pycache__/evalseg.cpython-313.pyc",
+  "subject_tmp/scratchpad/w/evalseg.py",
+  "subject_tmp/scratchpad/w/explore.py",
+  "subject_tmp/scratchpad/w/feat.npy",
+  "subject_tmp/scratchpad/w/ft.py",
+  "subject_tmp/scratchpad/w/ft_right.out",
+  "subject_tmp/scratchpad/w/lab_0.5.tif",
+  "subject_tmp/scratchpad/w/lab_0.75.tif",
+  "subject_tmp/scratchpad/w/post.py",
+  "subject_tmp/scratchpad/w/post2.py",
+  "subject_tmp/scratchpad/w/v_clahe_0.5.tif",
+  "subject_tmp/scratchpad/w/v_cp-2_0.5.tif",
+  "subject_tmp/scratchpad/w/v_ft0.8_0.5.tif",
+  "subject_tmp/scratchpad/w/var.out",
+  "subject_tmp/scratchpad/w/var.py",
+  "subject_tmp/tasks/b2nj9jtjc.output",
+  "subject_tmp/tasks/bc03i3gtc.output",
+  "subject_tmp/tasks/bdpbnqhfo.output",
+  "subject_tmp/tasks/bgoxj1g2k.output",
+  "subject_tmp/tasks/bvmf9qmsu.output"
+ ],
+ "tmp_files_named": [],
+ "tmp_files_archived": []
+}
