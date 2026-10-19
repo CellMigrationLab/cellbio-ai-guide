@@ -845,7 +845,7 @@ ask(key, [("basic prompt", ["“Please write a Python script to segment the …�
          ("detailed prompt", ["Same request + ask for explicit parameters,", "input checks and a test on reference data"])])
 add(panel(key, ry[key] + 34, "py", "basic", "detailed"))
 add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"], 4))
-add(caution(CX_CAV + 14, ry[key] + 106, NOC) + t(CX_CAV + 36, ry[key] + 112, ["Each script differs between runs, but the", "generated script gives the same result", "every time it is run."], 16.5, "bold", NOC, lh=21))
+add(caution(CX_CAV + 14, ry[key] + 106, NOC) + t(CX_CAV + 36, ry[key] + 112, ["Asking again gives a different script,", "but each script gives the same result", "every time it is run."], 16.5, "bold", NOC, lh=21))
 
 key = "c"
 ask(key, [("by eye", ["“…run the pipeline, assess, improve…”"]), ("scored", ["+ “…score every version against my annotation…”"])])
