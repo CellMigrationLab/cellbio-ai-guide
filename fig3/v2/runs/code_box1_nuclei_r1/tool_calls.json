@@ -1,0 +1,22 @@
+[
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2/v055/image.png"
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "cellpose 4 cpsam python API CellposeModel eval diameter normalize python 3.13 CPU",
+   "mode": "standard"
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "stardist PyPI tensorflow python 3.13 support 2D_versatile_fluo",
+   "mode": "standard"
+  }
+ }
+]

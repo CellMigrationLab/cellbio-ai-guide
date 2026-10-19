@@ -1,0 +1,22 @@
+[
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2/v050/image.png"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/api.html",
+   "prompt": "Cellpose 4 / cpsam: how to instantiate CellposeModel (gpu arg, pretrained_model), eval() signature and parameters (diameter, flow_threshold, cellprob_threshold, niter, min_size, normalize, batch_size, bsize), return values, and any note about diameter/resizing and image channels. Also default normalization."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/settings.html",
+   "prompt": "What does the doc say about diameter in Cellpose-SAM (cpsam), recommended object size, CPU speed, normalization, and flow_threshold/cellprob_threshold?"
+  }
+ }
+]

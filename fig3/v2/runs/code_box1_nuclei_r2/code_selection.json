@@ -1,0 +1,9 @@
+{
+ "replies_with_code": 2,
+ "reply_used": 1,
+ "block_used": 1,
+ "rule": "complete script: parses on its own, imports, names labels.tif and measurements.csv",
+ "later_replies_with_code_not_used": [
+  2
+ ]
+}

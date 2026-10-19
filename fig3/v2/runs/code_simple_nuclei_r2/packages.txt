@@ -1,0 +1,6 @@
+# from the replies' pip install lines, as given
+numpy
+pandas
+tifffile
+scipy
+scikit-image

@@ -1,0 +1,18 @@
+$ script.py
+exit 0
+--- stdout
+713 objects -> 589 endothelial nuclei kept
+
+--- stderr
+/home/user/r2exec_v2/runs/code_simple_nuclei_r3/f104/work/script.py:28: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  mask = morphology.remove_small_objects(mask, 20)
+/home/user/r2exec_v2/runs/code_simple_nuclei_r3/f104/work/script.py:29: FutureWarning: `binary_opening` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.opening` instead.
+  mask = ndi.binary_fill_holes(morphology.binary_opening(mask, morphology.disk(1)))
+/home/user/r2exec_v2/runs/code_simple_nuclei_r3/f104/work/script.py:41: FutureWarning: `RegionProperties.mean_intensity` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.intensity_mean` instead. 
+  med_int = np.median([p.mean_intensity for p in props])
+/home/user/r2exec_v2/runs/code_simple_nuclei_r3/f104/work/script.py:49: FutureWarning: `RegionProperties.mean_intensity` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.intensity_mean` instead. 
+  and p.mean_intensity < BRIGHT_FACTOR * med_int   # drop bright cancer nuclei
+/home/user/r2exec_v2/runs/code_simple_nuclei_r3/f104/work/script.py:61: FutureWarning: `RegionProperties.major_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_major_length` instead. 
+  "aspect_ratio": p.major_axis_length / p.minor_axis_length}
+/home/user/r2exec_v2/runs/code_simple_nuclei_r3/f104/work/script.py:61: FutureWarning: `RegionProperties.minor_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_minor_length` instead. 
+  "aspect_ratio": p.major_axis_length / p.minor_axis_length}

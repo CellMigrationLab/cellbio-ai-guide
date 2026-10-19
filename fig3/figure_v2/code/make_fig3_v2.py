@@ -589,9 +589,10 @@ def build_scores_v2():
     fields 104 and 209 (a failed field counts 0; both failed = -1, drawn as x). Row d: count / manual count, both fields."""
     with open("../../v2/scenarios.csv", newline="") as f:
         sc = {r["scenario_id"]: r for r in csv.DictReader(f)}
-    tasks = {k: {"py": {"before": [], "after": [], "before_n": [], "after_n": []},
-                 "agent": {"before": [], "after": [], "before_n": [], "after_n": []},
-                 "draw": {"f1": [], "drawn": [], "asked": []}, "default": None} for k in TASK_IDS}
+    tasks = {k: {"py": {"before": [], "after": [], "before_n": [], "after_n": [], "before_shape": [], "after_shape": []},
+                 "agent": {"before": [], "after": [], "before_n": [], "after_n": [], "before_shape": [], "after_shape": []},
+                 "draw": {"f1": [], "drawn": [], "asked": [], "area_ratio": [], "ar_ratio": []}, "default": None}
+             for k in TASK_IDS}
     n_runs = 0
     n_ref = {k: 0 for k in TASK_IDS}
     for sid, r in sc.items():
@@ -610,12 +611,20 @@ def build_scores_v2():
             blk[side + "_n"].append(sum(f["n_pred"] for f in fields) if all(ok) else None)
             if all(ok):
                 n_ref[task] = sum(f["n_ref"] for f in fields)
+                # shape accuracy on matched held-out objects: mean over the two fields of the median |errors|
+                a_err = [f["median_abs_area_error_pct"] for f in fields]
+                r_err = [f["median_abs_aspect_ratio_error"] for f in fields]
+                blk[side + "_shape"].append([sum(a_err) / 2, sum(r_err) / 2] if None not in a_err + r_err else None)
         elif r["row"] == "direct":
             ok = d["turn3"]["status"] == "ok"
             ref = d["reference"]["count"]
             T["draw"]["f1"].append(d["turn3"]["f1"] if ok else None)
             T["draw"]["drawn"].append(d["turn3"]["n_drawn"] / ref if ok else None)
             T["draw"]["asked"].append(d["turn1"]["count"] / ref if d["turn1"]["count"] is not None else None)
+            t2, rs = d["turn2"], d["reference"]
+            if t2["turn2_median_area_um2"] is not None and rs["median_area_um2"]:
+                T["draw"]["area_ratio"].append(t2["turn2_median_area_um2"] / rs["median_area_um2"])
+                T["draw"]["ar_ratio"].append(t2["turn2_median_aspect_ratio"] / rs["median_aspect_ratio"])
     return {"tasks": tasks, "n_runs": n_runs, "n_ref_heldout": n_ref}
 
 
@@ -631,6 +640,9 @@ CAVF, CAVS = "#fdf0ef", "#efc2be"
 CHG = "#6b2c87"
 OKT = "#1a7a4c"
 BEFC = "#b7c0e3"
+TASK_TEXT = {"nuclei": ["Task: segment and count the endothelial nuclei", "(not the cancer cells' nuclei); area and aspect ratio of each"],
+             "cancer": ["Task: segment and count the cancer cells;", "area and aspect ratio of each"],
+             "endo": ["Task: segment and count the endothelial cells (whole", "cells, outlined at the junctions); area and aspect ratio of each"]}
 TASKS = [("nuclei", "Nuclei", "DAPI"), ("cancer", "Cancer cells", "brightfield"), ("endo", "Endothelial cells", "brightfield")]
 
 
@@ -670,7 +682,15 @@ W_CAV = 1812 - 14 - CX_CAV
 GAP = 10
 
 
-def group(x, y, task, b, a, bn, an, lb, la, manual=None):
+def shape_text(runs):
+    """'area err 18 % · AR err 0.16' = median over runs of the mean (two fields) median |error| of matched objects."""
+    v = [r for r in runs if r]
+    if not v:
+        return ""
+    return f"area err {np.median([r[0] for r in v]):.0f}% · AR err {np.median([r[1] for r in v]):.2f}"
+
+
+def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
     """Two bars (median F1 of runs; open circles = runs; x = crashed) + median object count vs manual."""
     bw = GW - 150
     g = []
@@ -698,6 +718,10 @@ def group(x, y, task, b, a, bn, an, lb, la, manual=None):
         n = medn(ns)
         if n is not None:
             g.append(t(bx + bw + 40, yy + 10, f"n={n}", 12, fill="#5b6676"))
+    for i, (runs, lbl) in enumerate(zip(shapes, (lb, la))):
+        txt = shape_text(runs)
+        if txt:
+            g.append(t(x, y + 66 + i * 15, f"{lbl}: {txt}", 11.5, fill="#5b6676"))
     if d is not None:
         ax = x + 58 + bw * d
         g.append(f'<line x1="{ax:.1f}" y1="{y-6}" x2="{ax:.1f}" y2="{y+46}" stroke="{DEFC}" stroke-width="2" stroke-dasharray="3 2"/>')
@@ -711,13 +735,14 @@ def panel(key, y, sub, lb, la, half=False):
         r = FS[task][sub]
         manual = FSJ.get("manual_half", {}).get(task) if half else None
         g.append(t(x, y, f"{name}", 13.5, "bold", INK) + t(x + GW - 6, y, f"manual n={manual or MAN[task]}", 11.5, fill="#5b6676", anchor="end")
-                 + group(x, y + 14, task, r["before"], r["after"], r.get("before_n", [None]), r.get("after_n", [None]), lb, la, manual))
+                 + group(x, y + 14, task, r["before"], r["after"], r.get("before_n", [None]), r.get("after_n", [None]), lb, la, manual,
+                                                                     (r.get("before_shape", []), r.get("after_shape", []))))
     return "".join(g)
 
 
 # ---------------------------------------------------------------- task row: original image + desired result (full field)
 TT = 232
-HDH = TT + 70
+HDH = TT + 98
 add(group_svg := None) if False else None
 row = [rrect(RX, Y0, RW, HDH, 14, "#ffffff", NN["stroke"], 1.3)]
 for i, (task, name, mod) in enumerate(TASKS):
@@ -725,11 +750,12 @@ for i, (task, name, mod) in enumerate(TASKS):
     src = A3 + ("dapi_full.png" if task == "nuclei" else "bf_full.png")
     row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK) + t(x + 2 * TT + 8, Y0 + 30, f"{mod} · field 104 · manual n = {MAN104[task]}", 13, fill=BODY, anchor="end"))
     row.append(img(x, Y0 + 44, TT, TT, src, f"{task} image") + img(x + TT + 8, Y0 + 44, TT, TT, A3 + f"labels_{task}.png", f"{task} manual labels"))
+    row.append(t(x, Y0 + 44 + TT + 22, TASK_TEXT[task], 13, "bold", INK, lh=17))
     row.append(halo(x + 6, Y0 + 62, "image", size=12.5) + halo(x + TT + 14, Y0 + 62, "desired result (manual)", size=12.5))
 add("".join(row))
 
 ORDER = [("a", "Ask for advice", 156), ("b", "Ask for code: Python script", 134),
-         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 150)]
+         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 172)]
 ry, RH = {}, {}
 yy = Y0 + HDH + GAP
 for key, ttl, h in ORDER:
@@ -802,6 +828,9 @@ for i, (task, name, _) in enumerate(TASKS):
     for fr, lab in [(0, "0"), (1, "manual"), (1.5, "1.5×")]:
         gg.append(t(x + fr / 1.6 * bw, y + 56, lab, 11, fill="#7a8699", anchor="middle"))
     f1d = [v for v in dd["f1"] if v is not None]
+    ar_, rr_ = dd["area_ratio"], dd["ar_ratio"]
+    if ar_:
+        gg.append(t(x, y + 96, f"stated median vs manual: area ×{np.median(ar_):.1f} · AR ×{np.median(rr_):.2f}", 12, fill="#5b6676"))
     gg.append(t(x, y + 80, f"F1 of drawn outlines: {min(f1d):.2f}–{max(f1d):.2f}" if f1d else "", 12.5, "bold", INK))
     add("".join(gg))
 add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "count, number only", 12, fill=BODY)

@@ -1,0 +1,21 @@
+{
+ "field": 209,
+ "script": "code_as_returned.py",
+ "packages": [
+  "numpy",
+  "pandas",
+  "tifffile",
+  "scipy",
+  "scikit-image"
+ ],
+ "runtime_files_refused": [],
+ "runtime_files_copied": [],
+ "command": [
+  "/home/user/r2exec_v2/runs/code_simple_nuclei_r2/f209/venv/bin/python",
+  "script.py"
+ ],
+ "exit_code": 0,
+ "timeout": false,
+ "runtime_s": 2.6,
+ "status": "ok"
+}

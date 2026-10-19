@@ -1,0 +1,22 @@
+[
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2/v060/image.png"
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "Cellpose 4 cpsam API CellposeModel eval diameter documentation",
+   "mode": "standard"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/api.html",
+   "prompt": "Give the exact signature and defaults of models.CellposeModel (constructor) and CellposeModel.eval in Cellpose 4 (cpsam): pretrained_model names, gpu arg, diameter handling, normalize options, flow_threshold, cellprob_threshold, min_size, niter, return values. Also say whether a size model/diameter auto-estimation exists in v4."
+  }
+ }
+]

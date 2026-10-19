@@ -1,0 +1,22 @@
+[
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2/v044/image.png"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/api.html",
+   "prompt": "Cellpose 4 / cpsam: CellposeModel constructor args, eval() args (diameter, normalize, flow_threshold, cellprob_threshold, channels deprecated?), return values, GPU arg, and supported python versions."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://raw.githubusercontent.com/MouseLand/cellpose/main/setup.py",
+   "prompt": "python_requires and classifiers for Python versions; install_requires"
+  }
+ }
+]

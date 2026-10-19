@@ -1,0 +1,35 @@
+$ pip install numpy pandas tifffile scipy scikit-image
+exit 0
+Requirement already satisfied: numpy in /usr/local/lib/python3.13/dist-packages (2.5.2)
+Requirement already satisfied: pandas in /usr/local/lib/python3.13/dist-packages (3.0.6)
+Requirement already satisfied: tifffile in /usr/local/lib/python3.13/dist-packages (2026.10.15)
+Requirement already satisfied: scipy in /usr/local/lib/python3.13/dist-packages (1.18.1)
+Requirement already satisfied: scikit-image in /usr/local/lib/python3.13/dist-packages (0.26.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in /root/.local/lib/python3.13/site-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: networkx>=3.0 in /usr/local/lib/python3.13/dist-packages (from scikit-image) (3.7)
+Requirement already satisfied: pillow>=10.1 in /usr/local/lib/python3.13/dist-packages (from scikit-image) (12.3.0)
+Requirement already satisfied: imageio!=2.35.0,>=2.33 in /usr/local/lib/python3.13/dist-packages (from scikit-image) (2.38.1)
+Requirement already satisfied: packaging>=21 in /usr/local/lib/python3.13/dist-packages (from scikit-image) (26.3)
+Requirement already satisfied: lazy-loader>=0.4 in /usr/local/lib/python3.13/dist-packages (from scikit-image) (0.6)
+Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.13/dist-packages (from python-dateutil>=2.8.2->pandas) (1.17.0)
+
+
+
+$ script.py
+exit 0
+--- stdout
+553 endothelial nuclei; pixel size 0.6496 µm
+
+--- stderr
+/home/user/r2exec_v2/runs/code_simple_nuclei_r2/f104/work/script.py:61: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  mask = morphology.remove_small_objects(mask, 20)
+/home/user/r2exec_v2/runs/code_simple_nuclei_r2/f104/work/script.py:62: FutureWarning: `binary_opening` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.opening` instead.
+  mask = ndi.binary_fill_holes(morphology.binary_opening(mask, morphology.disk(2)))
+/home/user/r2exec_v2/runs/code_simple_nuclei_r2/f104/work/script.py:82: FutureWarning: `RegionProperties.mean_intensity` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.intensity_mean` instead. 
+  med = np.median([p.mean_intensity for p in tile_props])
+/home/user/r2exec_v2/runs/code_simple_nuclei_r2/f104/work/script.py:84: FutureWarning: `RegionProperties.mean_intensity` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.intensity_mean` instead. 
+  if p.mean_intensity > BRIGHT_FACTOR * med:
+/home/user/r2exec_v2/runs/code_simple_nuclei_r2/f104/work/script.py:93: FutureWarning: `RegionProperties.minor_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_minor_length` instead. 
+  ar = p.major_axis_length / p.minor_axis_length if p.minor_axis_length > 0 else np.nan
+/home/user/r2exec_v2/runs/code_simple_nuclei_r2/f104/work/script.py:93: FutureWarning: `RegionProperties.major_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_major_length` instead. 
+  ar = p.major_axis_length / p.minor_axis_length if p.minor_axis_length > 0 else np.nan

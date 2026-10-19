@@ -1,0 +1,22 @@
+[
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2/v037/image.png"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/api.html",
+   "prompt": "Cellpose latest version: how to instantiate CellposeModel (model_type, pretrained_model, gpu), the eval() signature and parameters (diameter, flow_threshold, cellprob_threshold, niter, normalize, channels deprecated?, min_size), return values, and which models exist (cpsam, cyto3). Note CPU guidance."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/settings.html",
+   "prompt": "Summarize settings: diameter behaviour in Cellpose 4 / cpsam, normalization defaults, flow_threshold, cellprob_threshold, channels handling."
+  }
+ }
+]

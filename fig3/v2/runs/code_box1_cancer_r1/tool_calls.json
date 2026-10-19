@@ -1,0 +1,21 @@
+[
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2/v026/image.png"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/api.html",
+   "prompt": "How to instantiate CellposeModel in Cellpose 4 (cpsam), the eval() signature and parameters (diameter, flow_threshold, cellprob_threshold, normalize, channels), return values, and the default pretrained model name and whether GPU is required."
+  }
+ },
+ {
+  "tool": "Read",
+  "input": {
+   "file_path": "/home/user/sessions_v2/v026"
+  }
+ }
+]

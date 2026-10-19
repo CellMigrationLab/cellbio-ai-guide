@@ -1,0 +1,7 @@
+# from the replies' pip install lines, as given
+cellpose>=4
+scikit-image
+tifffile
+scipy
+pandas
+numpy
