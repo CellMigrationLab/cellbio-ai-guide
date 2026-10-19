@@ -1,0 +1,20 @@
+Change log (optimised only on image.tif / annotation.tif; no other images touched; image.tif never modified)
+Metrics = evaluate.py: F1 at IoU>0.5, count ratio, median area/aspect ratio vs annotation, matched-cell relative errors.
+
+0. Inspected data: 1022x1024 uint16, max 4095. Annotation: 413 endothelial cells (labels non-consecutive), 88% foreground,
+   median area 849 um2, median aspect ratio 1.62. Image has an illumination step at x=512 (mean 2620 left, 3073 right)
+   and low contrast in the upper-left; cancer cells are bright-ringed round cells on top of the monolayer.
+1. v1: local mean/sd normalisation (sigma 40) + Cellpose-SAM (cpsam, cellpose 4.2.1.1), diameter 50, defaults.
+   F1 0.456, fg 58% (annotation 88%), cancer cells segmented as cells, upper-left almost empty.  ~250 s on CPU.
+2. Diameter 50 -> 35 (cells are ~25-50 um; cpsam is size-robust). Compared normalisations (diam 35, flow_thr 1.0, cellprob -6):
+   A local mean/sd s=40: F1 0.42 | B local mean + wide sd: 0.46 | C coarse median background + global robust scale + clip +-3: 0.55 (chosen).
+   Lower cellprob threshold (0 -> -6) and flow_threshold 0.4 -> 1.0 increased coverage of the confluent layer and F1 (monolayer tiles the plane).
+3. Added cancer-cell removal: masks with area < 1500 px and mean gaussian gradient magnitude (s=1.5) > 25 are dropped
+   (cancer cells have bright/dark halo; separated matched vs unmatched masks, median gradient 14 vs 32). F1 0.55 -> 0.66.
+4. Added bounded label growth (expand_labels) into freed area: F1 -> 0.69.
+5. Two-pass: cancer cells located in pass 1, dilated 4 px and inpainted in the normalised image, Cellpose re-run (pass 2).
+   Visually fixes the empty upper-left region; F1 0.69 -> ~0.70, coverage 76% -> full monolayer.
+6. Tuned growth distance on pass-2 masks: 25 px over-fills (fg 98% vs 88% annotated, median area +16%); 8 px chosen (fg ~87%).
+   Gradient threshold 25 kept (60 gave the same F1 within 0.005 -> not tuned further to avoid overfitting a single image).
+7. Pipeline writes labels (int32), CSV (area_um2, aspect_ratio, centroid, touches_border) and an overlay PNG.
+Known limitations: single-image tuning; annotation-level boundary ambiguity caps IoU; cancer-cell rule is a heuristic.

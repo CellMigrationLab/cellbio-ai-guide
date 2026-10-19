@@ -1,0 +1,9 @@
+[
+ {
+  "path": "subject_scratchpad.tar.gz",
+  "size_bytes": 69866223,
+  "sha256": "1c2539f964df8e26baa3c3b75377e079720c5caa8447c2c62a9fcf7c2aaeecc3",
+  "moved_to": "/home/user/large_files_archive/fig3/v2/runs/optimise_labels_endo_r1/subject_scratchpad.tar.gz",
+  "reason": "larger than 50 MB; not stored in git"
+ }
+]
