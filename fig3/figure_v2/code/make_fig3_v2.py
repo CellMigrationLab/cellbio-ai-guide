@@ -763,7 +763,7 @@ for i, (task, name, mod) in enumerate(TASKS):
     row.append(halo(x + 6, Y0 + 62, "image", size=12.5) + halo(x + TT + 14, Y0 + 62, "desired result (manual)", size=12.5))
 add("".join(row))
 
-ORDER = [("a", "Ask for advice", 196), ("b", "Ask for code: Python script", 182),
+ORDER = [("a", "Ask for advice", 206), ("b", "Ask for code: Python script", 182),
          ("c", "Let an agent run it", 150), ("d", "Ask for the answer", 164)]
 ry, RH = {}, {}
 yy = Y0 + HDH + GAP
@@ -797,7 +797,7 @@ def ask(key, items, y0=42):
 # ================================================================ a
 key = "a"
 ask(key, [("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
-          ("detailed prompt", ["+ “…check the current documentation first.”"])])
+          ("detailed prompt", ["+ “…check current documentation”,", "model suitability, tests …"])])
 ADV = {}                                               # first-pass item check (fig3/v2/advice_outdated.py)
 with open("../../v2/advice_outdated.csv", newline="") as _f:
     for _r in csv.DictReader(_f):
@@ -836,8 +836,10 @@ for i, (task, name, _) in enumerate(TASKS):
 add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-16}" r="5.5" fill="{NOC}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 12, "reply suggested an outdated model or code", 12, fill=BODY)
     + f'<circle cx="{CX_SC+276}" cy="{ry[key]+RH[key]-16}" r="5" fill="#ffffff" stroke="#7a8699" stroke-width="1.5"/>' + t(CX_SC + 286, ry[key] + RH[key] - 12, "none (3 replies per prompt and task)", 12, fill=BODY))
 add(cav(key, ["Outdated advice may not run, may run with", "errors, or may fall back silently (you may", "not know which model you are using)"], -8))
-s, _ = terminal(CX_CAV + 14, ry[key] + 98, W_CAV - 16, [(">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
-                                                       ("(no message)  → loads cpsam_v2", "#ff8a80")], 12.5); add(s)
+s, _ = terminal(CX_CAV + 14, ry[key] + 96, W_CAV - 16, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
+                                                       ("AttributeError: no attribute 'Cellpose'", "#ff8a80"),
+                                                       (">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
+                                                       ("(no message)  → loads cpsam_v2", "#ff8a80")], 12); add(s)
 
 # ================================================================ b1 / b2 / c / d
 key = "b"
