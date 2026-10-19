@@ -1,7 +1,8 @@
 # Figure 2: Is the deep-learning output good enough for the measurement?
 
 Final version: `figure/fig2.svg` / `fig2.pdf`; legend `legend.md`. Builder `code/make_fig2.py` (= working version v3,
-16 Oct 2026; updated 17 Oct 2026 for panels a and e).
+16 Oct 2026; updated 17 Oct 2026 for panels a and e; re-laid out as a full-page portrait on 19 Oct 2026: 1100 px = 183 mm
+wide, panels a-e stacked, smallest text 14 px; data and wording unchanged).
 
 ## Rebuild and re-score
 ```
