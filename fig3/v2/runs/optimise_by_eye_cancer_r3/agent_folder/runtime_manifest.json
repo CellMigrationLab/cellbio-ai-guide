@@ -1,0 +1,3 @@
+{"entrypoint":"pipeline.py","python":"3.13","packages":["numpy","scipy","scikit-image","tifffile","pandas","cellpose==4.2.1.1","torch (CPU)"],
+ "model_files":["/root/.cellpose/models/cpsam_v2 (Cellpose-SAM weights, loaded by default by CellposeModel)"],
+ "other_files":[]}

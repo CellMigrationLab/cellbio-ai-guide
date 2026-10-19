@@ -1,0 +1,5 @@
+v1: flatten (Gaussian sigma 50 px), smooth 1 px, cpsam diameter 30 px, cellprob 0, size filter 10-35 um. Result 251 objects: ~half were endothelial cells (polygonal, no refractile rim).
+v2: added per-object rim gradient filter (>=22), solidity >=0.85, per-object opening (r=6 px) to cut tails, cellprob -2. 117 cells; a few endothelial tails remained.
+v3: rim>=16, solidity>=0.92 -> 130 objects, many endothelial false positives. Rejected.
+v4 (final): rim>=26, solidity>=0.90 -> 109 cells, no visible false positives on image.tif; ~10 faint cancer cells missed.
+Aspect ratio deliberately NOT used as a filter (would bias the shape measurement).
