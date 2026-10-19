@@ -1,0 +1,37 @@
+{
+ "session_id": "e3c4d99b-9516-4da5-a23d-a7434f978108",
+ "n_tool_calls": 26,
+ "flags": [],
+ "notes": [
+  "Bash in the subject's own scratchpad (archived)",
+  "Bash refers to environment paths ['/root/.cellpose/models']",
+  "Read in the subject's own scratchpad (archived)"
+ ],
+ "scratchpad_archived": [
+  "subject_tmp/scratchpad/cp2.py",
+  "subject_tmp/scratchpad/f.png",
+  "subject_tmp/scratchpad/f2.png",
+  "subject_tmp/scratchpad/feat.pkl",
+  "subject_tmp/scratchpad/feat.py",
+  "subject_tmp/scratchpad/feat2.py",
+  "subject_tmp/scratchpad/final.png",
+  "subject_tmp/scratchpad/l.tif",
+  "subject_tmp/scratchpad/l2.tif",
+  "subject_tmp/scratchpad/l3.tif",
+  "subject_tmp/scratchpad/l4.tif",
+  "subject_tmp/scratchpad/m.csv",
+  "subject_tmp/scratchpad/norm.npy",
+  "subject_tmp/scratchpad/o.png",
+  "subject_tmp/scratchpad/o2.png",
+  "subject_tmp/scratchpad/o3.png",
+  "subject_tmp/scratchpad/o4.png",
+  "subject_tmp/scratchpad/ov.py",
+  "subject_tmp/scratchpad/raw.npy",
+  "subject_tmp/scratchpad/raw.py",
+  "subject_tmp/scratchpad/raw_m2.npy",
+  "subject_tmp/scratchpad/v.png",
+  "subject_tmp/tasks/bjuec70mm.output"
+ ],
+ "tmp_files_named": [],
+ "tmp_files_archived": []
+}

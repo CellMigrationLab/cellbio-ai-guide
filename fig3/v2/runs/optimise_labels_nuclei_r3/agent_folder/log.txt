@@ -1,0 +1,7 @@
+Change log (optimised only on image.tif + annotation.tif)
+1. Baseline: Cellpose cpsam, percentile(1,99.5) norm, diameter 23 px (15 um/0.65), flow 0.4, cellprob 0.0.
+   vs annotation: 653 objects vs 460 GT; recall 0.82, precision 0.58, F1@0.5 0.68, mean IoU 0.83. Extra objects are bright round cancer cells/blurry out-of-focus nuclei.
+2. Tried flow 0.6 / cellprob -1.5: worse (F1 0.58, more merges, area +9.5%). Reverted.
+3. Added post-filter: mean intensity <= 1.5 x median object mean; area 100-420 um2. Chosen from a coarse grid on this image (plateau F1 ~0.82-0.83 across neighbouring values; kept the simplest setting).
+   Result: 402 objects, P 0.88, R 0.77, F1 0.82, IoU 0.83, median area +1%, median AR 1.49 vs 1.43.
+4. Wrote pipeline.py, runtime_manifest.json, evaluate.py (validation against annotation).

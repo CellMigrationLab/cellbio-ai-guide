@@ -187,3 +187,19 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   (made by `v2/summarise_direct.py`) records one line per conversation, with the start of each decline.
 - Authors' decision (19 Oct 2026): the figure shows only the count results of row D (the turn-1 stated count); the count of
   ellipses drawn, the F1 of the drawn outlines and the stated medians are not shown in the figure.
+
+### Parallel subjects, a boundary violation and process isolation (19 Oct 2026)
+- **Parallel runs**: with the authors' permission, rows A, B and D (chat only, no shell) and several row C agents ran at the
+  same time (up to three C agents at once on 4 CPUs). The protocol had one subject at a time.
+- **Violation (run 28, `optimise_by_eye_endo_r2`, first attempt)**: the agent ran `pgrep -af pipeline`, which printed the full
+  command lines of other subjects' sessions, including another subject's prompt (v013). That is a listing of information
+  from outside its folder (PROTOCOL_V2 sections 3 and 9). The attempt was rejected and archived unedited in
+  `v2/runs_rejected/optimise_by_eye_endo_r2_attempt1/` and the scenario was run again. A search of the other finished row C
+  transcripts found no other command that prints process command lines (several used `pgrep -f` as a wait loop, which prints
+  process ids only and can wait on another agent's process; harmless for the results).
+- **Isolation (from the rerun of run 28 onward)**: every subject session is started through a one-line wrapper that runs
+  the same Claude Code CLI in its own process namespace (`unshare --pid --fork --mount-proc`), so a subject sees only its own
+  processes. The wrapper is outside the repository (`PATH` of the start command) and does not change `run_operator.py`.
+  Row C runs 8, 9, 12, 13 and 16 (and the agents already running when this was found) ran without it.
+- **Earlier runs**: a `ps` in any earlier subject would also have shown the operator's command lines (they contain the
+  scenario id). The audit found no such command in the runs checked.
