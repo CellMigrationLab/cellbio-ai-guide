@@ -1,0 +1,25 @@
+$ script.py
+exit 0
+--- stdout
+parameters: Params(pixel_size_um=0.65, n_fields=2, diameter_um=37.5, background_sigma_px=100.0, percentile_low=1.0, percentile_high=99.0, flow_threshold=0.4, cellprob_threshold=0.0, min_area_um2=100.0, cancer_z=6.0, cancer_close_radius_px=4, cancer_min_area_px=150, cancer_overlap_max=0.5, max_bit_value=4095)
+cellpose version: unknown
+field 0: Cellpose objects 302; removed {'border': 55, 'too_small': 0, 'mostly_cancer': 59}; kept 188
+field 1: Cellpose objects 298; removed {'border': 48, 'too_small': 0, 'mostly_cancer': 80}; kept 170
+
+--- stderr
+/home/user/r2exec_v2/runs/code_box1_endo_r2/f209/work/script.py:104: FutureWarning: `binary_closing` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.closing` instead.
+  mask = morphology.binary_closing(mask, morphology.disk(params.cancer_close_radius_px))
+/home/user/r2exec_v2/runs/code_box1_endo_r2/f209/work/script.py:106: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  return morphology.remove_small_objects(mask, params.cancer_min_area_px)
+/usr/local/lib/python3.13/dist-packages/cellpose/dynamics.py:541: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+  coo = torch.sparse_coo_tensor(pt, torch.ones(pt.shape[1], device=pt.device, dtype=torch.int),
+/home/user/r2exec_v2/runs/code_box1_endo_r2/f209/work/script.py:104: FutureWarning: `binary_closing` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.closing` instead.
+  mask = morphology.binary_closing(mask, morphology.disk(params.cancer_close_radius_px))
+/home/user/r2exec_v2/runs/code_box1_endo_r2/f209/work/script.py:106: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  return morphology.remove_small_objects(mask, params.cancer_min_area_px)
+/home/user/r2exec_v2/runs/code_box1_endo_r2/f209/work/script.py:184: FutureWarning: `RegionProperties.minor_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_minor_length` instead. 
+  if region.minor_axis_length <= 0:
+/home/user/r2exec_v2/runs/code_box1_endo_r2/f209/work/script.py:189: FutureWarning: `RegionProperties.major_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_major_length` instead. 
+  "aspect_ratio": region.major_axis_length / region.minor_axis_length,
+/home/user/r2exec_v2/runs/code_box1_endo_r2/f209/work/script.py:189: FutureWarning: `RegionProperties.minor_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_minor_length` instead. 
+  "aspect_ratio": region.major_axis_length / region.minor_axis_length,
