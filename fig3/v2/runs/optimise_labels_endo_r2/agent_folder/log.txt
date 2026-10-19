@@ -1,0 +1,9 @@
+Optimisation on image.tif / annotation.tif only (single image; metric F1@IoU0.5 on annotated region, plus count, area, AR bias).
+1. Baseline: Gaussian(40) bg subtraction + local std norm, Cellpose default (cpsam_v2), full res: F1 0.43; scale 0.5: 0.51. Cause: cell diameter ~50 px, model prefers smaller; also brightness seam at x=512 (two tiles).
+2. Background: Gaussian -> median on 4x-downsampled image (keeps seam step, so it cancels). Scale 0.4-0.5: F1 0.62-0.64. Scale 0.65 worse (0.55-0.58).
+3. flow_threshold 0.8, cellprob -1 at scale 0.4: more cells recovered, F1 0.643 (raw).
+4. Cancer cell removal (small area + high normalised intensity std; chosen from feature distributions, thresholds 1.2 / 1500 px, not fine-tuned): F1 0.73-0.76.
+5. expand_labels (GT tiles the sheet, Cellpose leaves gaps; area bias -14% -> ~0): 3 px 0.762, 6 px 0.767; chose 4 px.
+6. Added min area 100 um2, touches_border flag, input validation.
+Final: F1 0.762, count ratio 1.05, matched area ratio 1.02, AR diff -0.05 (test_annotation.py PASS). Runtime ~26 s.
+Not done: fine-tuning Cellpose on the annotation (one image; would overfit and leave no check).

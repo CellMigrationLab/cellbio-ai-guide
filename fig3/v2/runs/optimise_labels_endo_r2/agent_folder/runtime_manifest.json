@@ -1,0 +1,5 @@
+{"entry_point":"pipeline.py","command":"python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
+ "python_packages":["numpy","scipy","scikit-image","tifffile","pandas","cellpose==4.2.1.1","torch"],
+ "model_files":["~/.cellpose/models/cpsam_v2 (default pretrained model of Cellpose 4.2; must already be present, otherwise Cellpose tries to download it)"],
+ "other_files":[],
+ "extra_outputs":["<labels>.overlay.png"]}
