@@ -1,0 +1,1 @@
+Attempt 1 of optimise_by_eye_cancer_r2 rejected: interrupted: the session worker was restarted while the subject was still working (PROTOCOL_V2 section 9, API or session interruption); the subject had not finished

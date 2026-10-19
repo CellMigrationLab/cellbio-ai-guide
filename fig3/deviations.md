@@ -210,3 +210,11 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   folder, which the git host refuses. Files over 50 MB in run records are moved outside the repository by
   `v2/large_files.py` (to `/home/user/large_files_archive/`) and listed with size and SHA-256 in `LARGE_FILES.json` in the
   run folder (here `runs_rejected/optimise_labels_endo_r1_attempt1/LARGE_FILES.json`). Nothing else in the record changed.
+- **Worker restart (19 Oct 2026, about 11:00 UTC)**: the session that operates the experiment was restarted while three agents were
+  working (run 19 second attempt, run 52 `optimise_labels_endo_r3`, run 62 `optimise_by_eye_cancer_r2`; their last recorded events
+  are tool calls). The three attempts were rejected and archived unedited in `v2/runs_rejected/` (PROTOCOL_V2 section 9, session
+  interruption) and run again in isolated process namespaces. The scoring of run 66 was interrupted and repeated from the stored
+  agent folder.
+- **Extra model weights in the shared folder**: a file `~/.cellpose/models/cpsam` (1.2 GB, created 19 Oct 06:10 UTC) appeared next to
+  `cpsam_v2`; it was downloaded by one of the agents running in that period. The frozen environment records only `cpsam_v2`; the
+  default model used by `CellposeModel()` is still `cpsam_v2`. The affected run is not identified.
