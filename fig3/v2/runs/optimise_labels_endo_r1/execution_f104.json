@@ -1,0 +1,18 @@
+{
+ "field": 104,
+ "script": "pipeline.py",
+ "packages": [],
+ "runtime_files_refused": [],
+ "runtime_files_copied": [],
+ "command": [
+  "/home/user/r2exec_v2/runs/optimise_labels_endo_r1/f104/venv/bin/python",
+  "pipeline.py",
+  "image.tif",
+  "labels.tif",
+  "measurements.csv"
+ ],
+ "exit_code": 0,
+ "timeout": false,
+ "runtime_s": 260.6,
+ "status": "ok"
+}
