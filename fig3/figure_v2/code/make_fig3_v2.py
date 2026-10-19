@@ -345,7 +345,7 @@ def row(y, h, key, letter, title, desc):
     c = C[key]
     return (rrect(28, y, 1784, h, 16, c["bg"], c["stroke"], 2)
             + f'<circle cx="70" cy="{y+38}" r="22" fill="{c["accent"]}"/>' + t(70, y + 47, letter, 25, "bold", "#fff", "middle")
-            + t(106, y + 46, title, 24, "bold", INK))            # description line removed (author request)
+            + t(106, y + 42, title, 24, "bold", INK))            # description line removed (author request)
 
 
 HH = 66                       # row header height
@@ -508,7 +508,7 @@ def frame(x, y, w, h, L, title, key="N"):
     k = C[key]
     return (rrect(x, y, w, h, 16, NN["bg"], NN["stroke"], 1.4)
             + f'<circle cx="{x+42}" cy="{y+38}" r="22" fill="{k["accent"]}"/>' + t(x + 42, y + 47, L, 25, "bold", "#fff", "middle")
-            + t(x + 78, y + 46, title, 24, "bold", INK))
+            + t(x + 78, y + 42, title, 24, "bold", INK))
 
 # ======================================================================= FIGURE 2 BODY
 # ======================================================================= FIGURE 3 BODY: four ways to use an LLM, real runs
@@ -842,10 +842,10 @@ def two_prompts(y, left, right):
 
 
 # ================================================================ a
-y = new_row("a", "Ask for advice", 384, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
-ph = two_prompts(y + 46, ("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
+y = new_row("a", "Ask for advice", 364, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
+ph = two_prompts(y + 42, ("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
                  ("detailed prompt", ["+ “…check current documentation”,", "model suitability, tests …"]))
-py_ = y + 46 + ph + 22
+py_ = y + 42 + ph + 18
 for i, (task, name, _) in enumerate(TASKS):
     x = PX[i]
     add(t(x, py_ + 15, name, 16, "bold", INK))
@@ -867,7 +867,7 @@ for i, (task, name, _) in enumerate(TASKS):
             assert cut in shown
             shown = cut
         add(t(x, py_ + 94 + j * 22, "“" + shown + "”", FS_TXT, "normal", col, style="italic"))
-cy_ = py_ + 94 + 22 + 14
+cy_ = py_ + 94 + 22 + 10
 TW = 420                                                # terminal width; the call-out takes the rest of the row
 cs, ch = callout(X0, cy_, XW - TW - 14, ["Outdated advice can fail or silently run another model.", "It checked the docs only when asked: ask it to check them"], h=98)
 add(cs)
@@ -876,41 +876,41 @@ ts, th = terminal(X0 + XW - TW, cy_, TW, [(">>> models.Cellpose(model_type='nucl
                                           (">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
                                           ("(no message)  → loads cpsam_v2", "#ff8a80")], 14.5)
 add(ts)
-assert cy_ + max(ch, th - 12) + 10 <= y + 384, (cy_ + max(ch, th - 12) + 10 - y)
+assert cy_ + max(ch, th - 12) + 8 <= y + 364, (cy_ + max(ch, th - 12) + 8 - y)
 
 # ================================================================ b
-y = new_row("b", "Ask for code: a Python script", 306,
+y = new_row("b", "Ask for code: a Python script", 289,
             [("run", "one run"), ("cross", "a field failed (counts 0)"), ("bar", "median of the runs")])
-ph = two_prompts(y + 46, ("basic prompt", ["“Please write a Python script to segment the …”"]),
+ph = two_prompts(y + 42, ("basic prompt", ["“Please write a Python script to segment the …”"]),
                  ("detailed prompt", ["Same request + explicit parameters,", "input checks and a test on reference data"]))
-py_ = y + 46 + ph + 22
+py_ = y + 42 + ph + 18
 add(panel(py_, "py", "basic", "detailed"))
-cy_ = py_ + 26 + 33 + 20 + 14
+cy_ = py_ + 26 + 33 + 20 + 10
 cs, ch = callout(X0, cy_, BW, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"], h=60)
 add(cs)
 cs, _ = callout(X0 + BW + 14, cy_, BW, ["Asking again gives a different script, but each", "script gives the same result every time it is run."], h=60)
 add(cs)
-assert cy_ + 60 + 10 <= y + 306, (cy_ + 70 - y)
+assert cy_ + 60 + 8 <= y + 289, (cy_ + 68 - y)
 
 # ================================================================ c
-y = new_row("c", "Let an agent run it", 268,
+y = new_row("c", "Let an agent run it", 254,
             [("run", "one run"), ("cross", "a field failed (counts 0)"), ("bar", "median of the runs")])
-ph = two_prompts(y + 46, ("by eye", ["“…run the pipeline, assess, improve…”"]),
+ph = two_prompts(y + 42, ("by eye", ["“…run the pipeline, assess, improve…”"]),
                  ("scored", ["+ “…score every version against my annotation…”"]))
-py_ = y + 46 + ph + 22
+py_ = y + 42 + ph + 18
 add(panel(py_, "agent", "by eye", "scored"))
-cy_ = py_ + 26 + 33 + 20 + 14
+cy_ = py_ + 26 + 33 + 20 + 10
 cs, ch = callout(X0, cy_, XW, ["Without reference data the agent judges by eye: giving it a score to optimise may help on harder tasks"], h=44)
 add(cs)
-assert cy_ + 44 + 10 <= y + 268, (cy_ + 54 - y)
+assert cy_ + 44 + 8 <= y + 254, (cy_ + 52 - y)
 
 # ================================================================ d
-y = new_row("d", "Ask for the answer", 262, [("dot", "one run"), ("man", "manual count")])
-s1, h1 = prompt2(X0, y + 46, BW, "", ["“How many … are in this image?”"], h=60)
+y = new_row("d", "Ask for the answer", 246, [("dot", "one run"), ("man", "manual count")])
+s1, h1 = prompt2(X0, y + 42, BW, "", ["“How many … are in this image?”"], h=60)
 add(s1)
-cs, ch = callout(X0 + BW + 14, y + 46, BW, ["Asking again gives a different count:", "the answer is not reproducible"], h=60)
+cs, ch = callout(X0 + BW + 14, y + 42, BW, ["Asking again gives a different count:", "the answer is not reproducible"], h=60)
 add(cs)
-py_ = y + 46 + 60 + 20
+py_ = y + 42 + 60 + 14
 for i, (task, name, _) in enumerate(TASKS):
     x = PX[i]
     dd = FS[task]["draw"]
@@ -921,7 +921,7 @@ for i, (task, name, _) in enumerate(TASKS):
         vals = dd["count_by_field"][fld]
         if man is None:
             continue
-        yy = py_ + 54 + j * 52
+        yy = py_ + 54 + j * 48
         top = int(np.ceil(max([1.6 * man] + vals) / 100.0) * 100)   # axis from 0 to a round number >= 1.6 x manual
         X = lambda v, top=top: x + 56 + v / top * (bw - 56)
         gg.append(t(x, yy + 5, {"104": "FOV 1", "209": "FOV 2"}[fld], FS_TXT, fill=BODY))
@@ -949,7 +949,7 @@ add(f'<path d="M{AXc-11},{AT} H{AXc+11} V{AB-22} H{AXc+15} L{AXc},{AB} L{AXc-15}
 
 # ================================================================ what to keep
 KY = AB + GAP
-KH = 150
+KH = 142
 add(rrect(M, KY, W - 2 * M, KH, 16, "#ffffff", NN["stroke"], 1.4)
     + t(M + 16, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 17, "bold", INK))
 KEEP = [("lock", ["Check how the", "service handles data"]), ("check", ["Verify advice", "against the docs"]),
@@ -975,7 +975,7 @@ def kicon(name, cx, cy, col):
 
 for i, (ic, a_) in enumerate(KEEP):
     cx = M + 10 + i * KW + KW / 2
-    add(kicon(ic, cx, KY + 62, ACC) + t(cx, KY + 98, a_, FS_TXT, "bold", INK, "middle", lh=19))
+    add(kicon(ic, cx, KY + 58, ACC) + t(cx, KY + 92, a_, FS_TXT, "bold", INK, "middle", lh=19))
 
 H = KY + KH + M
 svg = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
