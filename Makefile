@@ -2,7 +2,7 @@
 PY ?= python3
 export PYTHONPATH := $(CURDIR)
 
-.PHONY: check full test data fig1 fig2 fig3 pdf scores
+.PHONY: check full test data fig1 fig2 fig3 fig3v2 pdf scores
 
 check:            ## tests + checksums + rebuild all figures and scores in a temporary copy (no files changed)
 	$(PY) tools/check_all.py
@@ -24,6 +24,9 @@ fig2:             ## writes fig2/figure/fig2.svg
 
 fig3:             ## writes fig3/figure/output/fig3.svg
 	cd fig3/figure/source_data && $(PY) ../code/make_fig3.py
+
+fig3v2:           ## draft Figure 3 (protocol v2) from the stored main runs
+	cd fig3/figure_v2/source_data && PYTHONPATH=../../.. $(PY) ../code/make_fig3_v2.py
 
 pdf:              ## SVG -> PDF for Figs 1 and 2 with headless Chromium
 	$(PY) tools/svg_to_pdf.py fig1/figure/fig1.svg
