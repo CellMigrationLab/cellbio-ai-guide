@@ -1,0 +1,41 @@
+{
+ "session_id": "3b6ad864-d583-4e54-9468-6e4fb791da0d",
+ "n_tool_calls": 20,
+ "flags": [],
+ "notes": [
+  "Bash in the subject's own scratchpad (archived)",
+  "Bash refers to environment paths ['/dev/null']",
+  "Bash refers to environment paths ['/root/.cellpose/models']",
+  "Bash refers to environment paths ['/root/.cellpose/models/cpsam']",
+  "Read in the subject's own scratchpad (archived)"
+ ],
+ "scratchpad_archived": [
+  "subject_tmp/scratchpad/f.py",
+  "subject_tmp/scratchpad/f1.csv",
+  "subject_tmp/scratchpad/f2.py",
+  "subject_tmp/scratchpad/l1.npy",
+  "subject_tmp/scratchpad/l2.npy",
+  "subject_tmp/scratchpad/l3.npy",
+  "subject_tmp/scratchpad/l4.npy",
+  "subject_tmp/scratchpad/o1_a.png",
+  "subject_tmp/scratchpad/o1_b.png",
+  "subject_tmp/scratchpad/o2_a.png",
+  "subject_tmp/scratchpad/o2_b.png",
+  "subject_tmp/scratchpad/o3_a.png",
+  "subject_tmp/scratchpad/o3_b.png",
+  "subject_tmp/scratchpad/o4_a.png",
+  "subject_tmp/scratchpad/o4_b.png",
+  "subject_tmp/scratchpad/o5_a.png",
+  "subject_tmp/scratchpad/o5_b.png",
+  "subject_tmp/scratchpad/out/labels.tif",
+  "subject_tmp/scratchpad/out/labels_all_objects.csv",
+  "subject_tmp/scratchpad/out/labels_overlay.png",
+  "subject_tmp/scratchpad/out/m.csv",
+  "subject_tmp/scratchpad/ov.py",
+  "subject_tmp/scratchpad/t1.py",
+  "subject_tmp/scratchpad/t2.py",
+  "subject_tmp/scratchpad/view.png"
+ ],
+ "tmp_files_named": [],
+ "tmp_files_archived": []
+}

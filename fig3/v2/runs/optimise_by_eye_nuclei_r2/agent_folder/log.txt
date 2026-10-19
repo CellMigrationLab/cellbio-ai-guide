@@ -1,0 +1,8 @@
+Optimisation log (tuned on image.tif only; no other images accessed)
+0. Image: 1022x1024 uint16, 12-bit; appears stitched from two tiles (seam x~512) with different haze/contrast. Cancer cells = bright round blobs.
+1. Baseline: percentile(1,99.5) scaling + cpsam, no resizing. Left half good; right half segmented cytoplasm/cell bodies (areas up to 3000 px). Cancer cells included.
+2. Added background subtraction (opening disk 20) - little effect on haze.
+3. Added gamma 2 after scaling to 99th percentile: right half nuclei correct, but some dim nuclei lost.
+4. Gamma 1.5: kept dim nuclei, still correct on right half. ADOPTED (638 objects).
+5. Added post-filter: debris < 40 um2; cancer cells = intensity > 2x median & aspect<1.35, or > 3.5x median. Removed 82 cancer + 22 debris; 509 nuclei kept.
+6. Final: pipeline.py, runtime_manifest.json written; ran unchanged on image.tif.
