@@ -1,0 +1,9 @@
+Change log (optimised only on image.tif / annotation.tif)
+1. v1: flat-field (divide by Gaussian sigma=50 px), Cellpose cpsam_v2, diameter 25 px, CPU, min area 60 um2.
+   Result: recall high (141/147 TP) but 334 objects; 193 FP = endothelial cells (large, smooth, 250-1250 um2) and debris. F1 0.59.
+2. Added filter_objects: area window 120-700 um2 (border-touching: >=60 um2), mean 5x5 local-std texture >= 0.03 of flat-fielded image.
+   Thresholds chosen from a small grid on image.tif (TP vs FP feature distributions). Chose conservative values, not the F1-max corner.
+3. Bug found: pipeline CLI gave 213 cells while same filter on saved Cellpose output gave 150. Cause: Cellpose normalises its input array in place,
+   corrupting the 'corrected' image later used for the texture filter. Fix: pass corrected.copy().
+4. Observed: Cellpose output is not bit-reproducible on CPU (~4% of pixels differ between runs); after filtering, count/F1 identical in 2 repeats.
+Final on image.tif: 150 cells vs 147 annotated; TP140 FP10 FN7, F1@IoU0.5 = 0.943; median area error +5.8%; aspect MAE 0.098.
