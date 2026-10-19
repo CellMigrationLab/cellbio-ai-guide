@@ -1,0 +1,8 @@
+v1: Flat-field (Gaussian sigma 40 px, divide) + percentile 1-99 norm; Cellpose cpsam_v2, diameter 25 px, flow 0.4, cellprob 0, area 60-900 um2.
+    image.tif vs annotation: F1@0.5 0.653, precision 0.495, recall 0.959, 285 pred vs 147 GT. Cause: Cellpose also segments the endothelial cells.
+    Reason for flat-field: left half of image ~20% darker than right (tile seam at x~512).
+v2: Raw masks inspected (cached): endothelial objects are large (median 733 um2) and smooth (internal std 0.07) vs cancer cells (250 um2, std 0.35).
+    Added filter: area 80-600 um2 (kept loose; tighter minima gave higher F1 but looked overfit to this image) and texture std >= 0.15.
+    Result: 161 pred, F1 0.909, precision 0.870, recall 0.952, area bias +6%, AR bias +0.02 (AR MAE 0.10).
+    Also: use axis_major/minor_length (skimage 0.26 deprecation).
+Not changed / not tried: seam-aware flat-field, cellprob/diameter sweep (each run ~9 min on CPU), fine-tuning Cellpose.

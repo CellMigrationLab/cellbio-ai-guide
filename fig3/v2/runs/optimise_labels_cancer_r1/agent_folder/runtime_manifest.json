@@ -1,0 +1,8 @@
+{
+  "entrypoint": "pipeline.py",
+  "command": "python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
+  "files": ["pipeline.py"],
+  "external_model_files": ["~/.cellpose/models/cpsam_v2 (Cellpose 4.2.1.1 built-in 'cpsam_v2'; loaded by name, must exist locally or be downloadable)"],
+  "python_packages": ["numpy", "scipy", "scikit-image", "tifffile", "pandas", "cellpose==4.2.1.1", "torch (CPU)"],
+  "not_needed_at_runtime": ["evaluate.py", "annotation.tif"]
+}
