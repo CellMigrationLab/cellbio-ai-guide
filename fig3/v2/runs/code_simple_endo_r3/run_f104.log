@@ -1,0 +1,18 @@
+$ script.py
+exit 0
+--- stdout
+204 endothelial cells; pixel size 0.6496 µm/px
+
+--- stderr
+/usr/local/lib/python3.13/dist-packages/cellpose/dynamics.py:541: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+  coo = torch.sparse_coo_tensor(pt, torch.ones(pt.shape[1], device=pt.device, dtype=torch.int),
+/home/user/r2exec_v2/runs/code_simple_endo_r3/f104/work/script.py:59: FutureWarning: `binary_closing` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.closing` instead.
+  ring = morphology.binary_closing(ring, morphology.disk(3))
+/home/user/r2exec_v2/runs/code_simple_endo_r3/f104/work/script.py:61: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
+  filled = morphology.remove_small_objects(filled, 150)
+/home/user/r2exec_v2/runs/code_simple_endo_r3/f104/work/script.py:62: FutureWarning: `binary_dilation` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.dilation` instead. Note the lack of mirroring for non-symmetric footprints (see docstring notes).
+  return morphology.binary_dilation(filled, morphology.disk(2))
+/home/user/r2exec_v2/runs/code_simple_endo_r3/f104/work/script.py:99: FutureWarning: `RegionProperties.major_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_major_length` instead. 
+  "aspect_ratio": r.major_axis_length / max(r.minor_axis_length, 1e-6),
+/home/user/r2exec_v2/runs/code_simple_endo_r3/f104/work/script.py:99: FutureWarning: `RegionProperties.minor_axis_length` is deprecated starting in version 0.26 and will be removed in version 2.0. Use `RegionProperties.axis_minor_length` instead. 
+  "aspect_ratio": r.major_axis_length / max(r.minor_axis_length, 1e-6),
