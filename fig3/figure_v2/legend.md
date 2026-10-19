@@ -1,7 +1,7 @@
 # Figure 3 (protocol v2): legend draft
 
 **Figure 3. Four ways of using an LLM (Claude) for image analysis, on three tasks.** Top: the three tasks, each with one
-field of view (FOV 1) and its manual annotation. For rows b and c the model was given only the left halves of FOV 1 and
+field of view (FOV 1: DAPI for the nuclei, brightfield for the cells) and its manual annotation. For rows b and c the model was given only the left halves of FOV 1 and
 FOV 2 (dashed line: "given"); every result in those rows is scored on the right halves of both FOVs ("held out"), against
 the authors' manual annotation. **a**, Ask for advice: nine replies per prompt (three per task). A basic prompt asks which
 tool to use; the detailed prompt also asks the model to check the current documentation. The replies were classified by

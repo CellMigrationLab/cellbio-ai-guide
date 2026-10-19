@@ -751,7 +751,7 @@ row = [rrect(RX, Y0, RW, HDH, 14, "#ffffff", NN["stroke"], 1.3)]
 for i, (task, name, mod) in enumerate(TASKS):
     x = RX + 20 + i * (2 * TT + 8 + (RW - 40 - 3 * (2 * TT + 8)) / 2)
     src = A3 + ("dapi_full.png" if task == "nuclei" else "bf_full.png")
-    row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK) + t(x + 2 * TT + 8, Y0 + 30, f"{mod} · FOV 1", 13, fill=BODY, anchor="end"))
+    row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK))
     row.append(img(x, Y0 + 44, TT, TT, src, f"{task} image") + img(x + TT + 8, Y0 + 44, TT, TT, A3 + f"labels_{task}.png", f"{task} manual labels"))
     row.append(t(x, Y0 + 44 + TT + 22, TASK_TEXT[task], 13, "bold", INK, lh=17))
     for xi in (x, x + TT + 8):                    # the model worked on the left halves; scoring uses the right halves
