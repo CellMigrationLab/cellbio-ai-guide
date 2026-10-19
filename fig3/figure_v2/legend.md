@@ -1,6 +1,6 @@
 # Figure 3 (protocol v2): legend draft
 
-**Figure 3. Four ways of using an LLM (Claude) for image analysis, on three tasks.** Top: the three tasks, each with one
+**Figure 3. Four ways of using an LLM for image analysis, on three tasks.** Top: the three tasks, each with one
 field of view (FOV 1: DAPI for the nuclei, brightfield for the cells) and its manual annotation. For rows b and c the model was given only the left halves of FOV 1 and
 FOV 2 (dashed line: "given"); every result in those rows is scored on the right halves of both FOVs ("held out"), against
 the authors' manual annotation. **a**, Ask for advice: nine replies per prompt (three per task). A basic prompt asks which
@@ -13,7 +13,8 @@ FOVs; open circles: each script; red cross: a script that failed on at least one
 and task: by eye (no annotation) or scored (given the annotation of the development halves). The final pipeline was run
 by us on both FOVs; symbols as in b. **d**, Ask for the answer: "How many … are in this image?", three conversations per
 FOV and task. Each dot is the count the model stated; the dashed line, with its value, is the manual count of that FOV (each panel has
-its own scale). Repeating the same question gives different answers.
+its own scale). Repeating the same question gives different answers. All conversations used Claude Sonnet 5.5 (model ID `claude-sonnet-5-5`) in
+headless Claude Code sessions (versions 2.1.302 and 2.1.303).
 
 Notes for the authors (not for the figure): the model refused to draw ellipses for nuclei and endothelial cells (12 of 18
 conversations, `fig3/v2/direct_summary.csv`), so the drawn results and the stated size and shape (turn 2) are not shown;
