@@ -1,0 +1,9 @@
+{
+  "entrypoint": "pipeline.py",
+  "command": "python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
+  "python": "3.13",
+  "packages": ["numpy", "scipy", "scikit-image", "tifffile", "pandas", "cellpose==4.2.1.1", "torch (CPU)"],
+  "model_files": ["~/.cellpose/models/cpsam_v2"],
+  "extra_outputs": ["<labels>_raw_cellpose.tif", "<labels>_overlay.tif"],
+  "notes": "Expects two fields side by side (seam detected automatically, error otherwise). Model loaded from local Cellpose cache; no network at runtime. ~3-5 min per 1022x1024 image on laptop CPU."
+}

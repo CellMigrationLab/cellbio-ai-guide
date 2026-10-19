@@ -1,0 +1,7 @@
+{
+ "subject_folder": "/home/user/sessions_v2/v049",
+ "files": [
+  "image.tif <- halfdev_nuclei_image.tif"
+ ],
+ "cli_tools": "Read,Write,Edit,Bash,Glob,Grep,WebSearch,WebFetch"
+}
