@@ -1,0 +1,6 @@
+1. Inspected image.tif (1022x1024 uint16, brightfield, low-contrast endothelium, round cancer cells on top, debris).
+2. v1: flat-field (Gaussian sigma 60 subtract/divide by local SD, smooth 1) + cpsam_v2, diameter 45 vs 70 px. 70 chosen (481 vs 364 labels; 45 under-segmented endothelium on visual check; median ~670 um2 consistent with 25-50 um cells).
+3. Observed Cellpose also labels cancer cells and debris as separate objects -> added texture-based (local SD of high-passed raw image, threshold 90, fill, open r=9, min 300 px) cancer/debris mask; drop labels >50% covered. Mask not carved from endothelial labels (debris would punch holes).
+4. Drop border-touching labels (truncated shape) and labels <150 um2.
+5. Final: 482 Cellpose labels -> 329 kept. Overlay inspected visually; cancer cells removed, monolayer tiling plausible.
+Not tuned: flow/cellprob thresholds (defaults), texture threshold only checked at 90/110 visually.
