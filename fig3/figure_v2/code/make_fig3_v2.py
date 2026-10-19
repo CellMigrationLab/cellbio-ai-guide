@@ -803,7 +803,7 @@ add(change_pill(CX_SC + WB + 48, y + 34, ["read the", "docs"]))
 XD = CX_SC + WB + 104
 s, hB = reply(XD, y, CX_CAV - 30 - XD, ["“Use CellposeModel with the default", "pretrained weights, which are cpsam_v2", "in the current docs.”"], 12.5, False, "Detailed prompt: after checking the docs"); add(s)
 add(t(XD + 4, y + hB + 4, "current model named: 9 of 9 (basic prompt: 3 of 9)", 12.5, "bold", OKT))
-add(cav(key, ["Outdated advice runs without error,", "but falls back silently: you may not know", "which model you are using"], -8))
+add(cav(key, ["Outdated advice may not run, may run with", "errors, or may fall back silently (you may", "not know which model you are using)"], -8))
 s, _ = terminal(CX_CAV + 14, ry[key] + 98, W_CAV - 16, [(">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
                                                        ("(no message)  → loads cpsam_v2", "#ff8a80")], 12.5); add(s)
 
