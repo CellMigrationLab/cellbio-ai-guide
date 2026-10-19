@@ -10,7 +10,7 @@ import os
 import random
 from xml.sax.saxutils import escape
 
-W, H = 1840, 2334
+W, H = 1648, 2334
 AUDIT = os.environ.get("AUDIT", "1") == "1"  # audited wording is the default; AUDIT=0 restores the original
 
 
@@ -474,9 +474,10 @@ def b_icon(name, cx, cy, col):
 # ================================================================ Fig. 1 v11: A (DL examples, left) | B (LLM uses, right) ; C full row
 YO = 20
 CT = YO + HH
-WS, GAP = 276, 10
-WA = (1812 - 28 - 6) / 2                # A and B equal width
-PADX = (WA - 28 - 3 * WS - 2 * GAP) / 2
+WS, GAP = 264, 10
+M, FP = 10, 12                          # outer margin; padding inside a panel frame
+WA = 3 * WS + 2 * GAP + 2 * FP          # panel A: three examples across
+PADX = 0
 NN = C["N"]
 
 
@@ -613,9 +614,9 @@ def card(x, y, w, h, title, key="N"):
 
 def row_frame(y, h, L, title, key="N"):
     k = C[key]
-    return (rrect(28, y, 1784, h, 16, NN["bg"], NN["stroke"], 1.4)
-            + f'<circle cx="70" cy="{y+38}" r="22" fill="{NN["accent"]}"/>' + t(70, y + 47, L, 25, "bold", "#fff", "middle")
-            + t(106, y + 46, title, 24, "bold", INK))
+    return (rrect(M, y, W - 2 * M, h, 16, NN["bg"], NN["stroke"], 1.4)
+            + f'<circle cx="{M+42}" cy="{y+38}" r="22" fill="{NN["accent"]}"/>' + t(M + 42, y + 47, L, 25, "bold", "#fff", "middle")
+            + t(M + 78, y + 46, title, 24, "bold", INK))
 
 
 def ico(name, cx, cy, col):
@@ -658,12 +659,12 @@ cards_o = [
 ]
 GH = 34 + WS + 30                      # group height
 HTOP = 66 + 2 * GH + 14
-a = [frame(28, YO, WA, HTOP, "A", "Deep-learning examples")]
+a = [frame(M, YO, WA, HTOP, "A", "Deep-learning examples")]
 for gi, (key, ttl, widgets) in enumerate(cards_o):
     k = C[key]
-    gx, gy = 28 + 14, YO + 66 + gi * GH
-    a.append(t(gx + (WA - 28) / 2, gy + 18, ttl, 17, "bold", k["accent"], "middle")
-             + f'<line x1="{gx+PADX}" y1="{gy+27}" x2="{gx+WA-28-PADX}" y2="{gy+27}" stroke="{k["accent"]}" stroke-width="2"/>')
+    gx, gy = M + FP, YO + 66 + gi * GH
+    a.append(t(gx + (WA - 2 * FP) / 2, gy + 18, ttl, 17, "bold", k["accent"], "middle")
+             + f'<line x1="{gx+PADX}" y1="{gy+27}" x2="{gx+WA-2*FP-PADX}" y2="{gy+27}" stroke="{k["accent"]}" stroke-width="2"/>')
     for j, w in enumerate(widgets):
         wx, wy = gx + PADX + j * (WS + GAP), gy + 34
         a.append(draw_widget(w, wx, wy))
@@ -671,8 +672,8 @@ for gi, (key, ttl, widgets) in enumerate(cards_o):
 add(group("Panel A deep-learning examples", "".join(a)))
 
 # ---------------- B: four ways to use an LLM, with context (2 x 2)
-xB = 28 + WA + 6
-WB = 1812 - xB
+xB = M + WA + 4
+WB = W - M - xB
 k = C["C"]
 b = [frame(xB, YO, WB, HTOP, "B", "Four ways to use an LLM")]
 # compact tree: LLM / agent -> four uses; below, what each produces
@@ -713,21 +714,21 @@ for q, (nm, ttl, sub, prm, (rk, rep)) in enumerate(uses):
          f'<g transform="translate({x0+cw2-48} {y0+36}) scale(0.9) translate({-(x0+cw2-48)} {-(y0+36)})">' + ico(nm, x0 + cw2 - 48, y0 + 36, kc) + "</g>",
          t(x0 + 44, y0 + 31, ttl, 19, "bold", "#6b2c87"),
          t(x0 + 44, y0 + 54, sub, 14.5, fill=BODY)]
-    bx_ = x0 + 18
+    bx_ = x0 + 12
     if nm == "answer":
         IA = min(ch2 - 76 - 16, 0.4 * cw2)
         g.append(real_image(bx_, y0 + 74 + (ch2 - 90 - IA) / 2, IA, IA, "panel_b/panelA_acquired_crop.png", 0.158436, 600, 20, "attached image"))
         bx_ += IA + 16
-    bw_ = x0 + cw2 - 18 - bx_
+    bw_ = x0 + cw2 - 12 - bx_
     ph = 26 + 21 * len(prm)
     py0 = y0 + 74
     g.append(bubble(bx_, py0, bw_, ph, "#ffffff", kc, "br"))
     g.append(t(bx_ + 16, py0 + 26, ["“" + prm[0]] + prm[1:-1] + [prm[-1] + "”"] if len(prm) > 1 else ["“" + prm[0] + "”"], 15.5, fill=INK, lh=21))
     ry0 = py0 + ph + 24
     rh = ch2 - (ry0 - y0) - 16
-    rx0 = bx_ + 40
+    rx0 = bx_ + 34
     g.append(f'<g inkscape:label="LLM icon">{petal(bx_ + 14, ry0 + 20, 0.62, kc)}</g>')
-    g.append(bubble(rx0, ry0, x0 + cw2 - 18 - rx0, rh, "#ffffff", k["tintstroke"], "bl"))
+    g.append(bubble(rx0, ry0, x0 + cw2 - 12 - rx0, rh, "#ffffff", k["tintstroke"], "bl"))
     yy = ry0 + rh / 2 - 10.5 * (len(rep) - 1) + 5
     if rk == "runs":                      # same question asked three times
         g.append(t(rx0 + 16, ry0 + 24, "asked 3 times:", 12.5, "bold", "#6b2c87"))
@@ -759,14 +760,15 @@ cC_ = [row_frame(Y3, HCR, "C", "Start an image-analysis project")]
 CT3 = Y3 + 66 + CT3_PAD
 IS = 236
 steps = 5
-REL = [1, 1, 1.85, 1, 1]
-SW_ = (1752 - (steps - 1) * 26) / sum(REL)
+REL = [1, 1, 2, 1, 1]
+SG = 22                                          # gap between steps
+SW_ = (W - 2 * (M + 14) - (steps - 1) * SG) / sum(REL)
 TITLES = ["Define the measurement", "Build a reference test set", "Compare candidate approaches and optimise",
           "Final check on fresh images", "Track the cells"]
 SUBS = ["from the biological question", "representative variation; annotations\nare references, not ground truth",
         "not good enough? find the failure first (channels, object scale, context,\npre- and post-processing), then adjust or fine-tune; F1 scores missed and extra cells",
         "not used to choose or tune; e.g.\nan independent repeat or day", "biological effect larger than\nthe analysis error"]
-XS = [44 + sum(REL[:q]) * SW_ + q * 26 for q in range(steps)]
+XS = [M + 14 + sum(REL[:q]) * SW_ + q * SG for q in range(steps)]
 for i in range(steps):
     sx = XS[i]
     sw_i = SW_ * REL[i]
@@ -787,7 +789,7 @@ for i in range(steps):
                 f'<path d="M168,1186 H212"/><path d="M196,1186 C206,1176 210,1160 200,1144"/>'
                 f'<path d="M182,1170 H206"/><path d="M178,1110 L194,1148"/><circle cx="196" cy="1150" r="5"/>'
                 f'<path d="M188,1186 V1172"/></g>')
-        cC_.append(f'<g transform="translate({ix-28:.1f} {iy+IS:.1f}) scale(0.95) translate(-58 -1186)" inkscape:label="scientist + microscope">{pers}</g>')
+        cC_.append(f'<g transform="translate({ix-14:.1f} {iy+IS:.1f}) scale(0.95) translate(-58 -1186)" inkscape:label="scientist + microscope">{pers}</g>')
         bx, by, bw, bh = ix + 64, iy - 4, 180, 128
         cC_.append(rrect(bx, by, bw, bh, 12, "#ffffff", "#9fb3cc", 1.8)
                    + f'<path d="M{bx+8},{by+bh-14} L{bx-14},{by+bh+10} L{bx+26},{by+bh} Z" fill="#ffffff" stroke="#9fb3cc" stroke-width="1.8" stroke-linejoin="round"/>'
@@ -805,7 +807,7 @@ for i in range(steps):
     elif i == 2:  # three candidates on the same reference test set (real outputs), optimisation loop
         SC_ = json.load(open("panel_c_step3/A_scores.json"))
         hw = 166
-        gap3 = 10
+        gap3 = 6
         x0_ = cx - (3 * hw + 2 * gap3) / 2
         for k_, (cj, lab, v) in enumerate([("panel_c_steps2_4/rep_classical.json", "Threshold", SC_["classical"]),
                                            ("panel_c_step3/B_rep_cellpose.json", "Pre-trained generalist", SC_["cellpose"]),
@@ -840,7 +842,7 @@ for i in range(steps):
     elif i == 4:  # final result: cells tracked over time (TrackMate capture: brightfield, spots and tracks)
         cC_.append(real_image(ix, iy, IS, IS, "panel_c_step5/trackmate_crop.png", 1.31483, 280, 100, "tracked cells (TrackMate)", "#ffffff"))
     if i < steps - 1:
-        cC_.append(arrow(sx + sw_i + 2, iy + IS / 2, sx + sw_i + 24, iy + IS / 2, "#4a5568", 2.4))
+        cC_.append(arrow(sx + sw_i + 2, iy + IS / 2, sx + sw_i + SG - 2, iy + IS / 2, "#4a5568", 2.4))
 add(group("Panel C start a project", "".join(cC_)))
 H = Y3 + HCR + 14
 svg = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
