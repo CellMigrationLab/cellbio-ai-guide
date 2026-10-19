@@ -686,9 +686,9 @@ Y0 = 20
 LW_ = 64
 RX = 28 + LW_ + 10
 RW = 1812 - RX
-CX_ASK, W_ASK = RX + 18, 380
+CX_ASK, W_ASK = RX + 18, 344
 CX_SC = CX_ASK + W_ASK + 28
-GW, GG = 276, 18
+GW, GG = 288, 18
 CX_CAV = CX_SC + 3 * GW + 2 * GG + 24
 W_CAV = 1812 - 14 - CX_CAV
 GAP = 10
@@ -764,7 +764,7 @@ for i, (task, name, mod) in enumerate(TASKS):
 add("".join(row))
 
 ORDER = [("a", "Ask for advice", 206), ("b", "Ask for code: Python script", 182),
-         ("c", "Let an agent run it", 150), ("d", "Ask for the answer", 164)]
+         ("c", "Let an agent run it", 172), ("d", "Ask for the answer", 164)]
 ry, RH = {}, {}
 yy = Y0 + HDH + GAP
 for key, ttl, h in ORDER:

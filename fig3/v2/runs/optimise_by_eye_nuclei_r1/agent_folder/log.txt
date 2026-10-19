@@ -1,0 +1,6 @@
+1. Baseline: Cellpose (cpsam_v2, diameter=None) on 1-99.5 percentile-normalised image -> 646 objects. Right half (hazy) masks too large, covering halo; cancer nuclei (bright, round) included.
+2. Added per-object boundary tightening (bg ring 20th pct + 0.4*(p90 peak - bg) on sigma=1 smoothed image). Masks fit nuclei visibly better (median area 413 -> ~370 px).
+3. Added cancer-nucleus removal: object mean intensity / median of 40 nearest objects > 1.5 (histogram gap at ~1.3-1.6; works across left/right fields with different brightness).
+4. Added min-area filter 120 px (debris).
+5. Final run: 645 raw -> 627 -> 467 endothelial. Dropped pandas (csv module), replaced deprecated skimage property names.
+Not tried (time cost ~5 min/run on CPU): diameter rescaling, other models.
