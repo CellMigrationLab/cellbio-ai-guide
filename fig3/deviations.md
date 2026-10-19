@@ -148,3 +148,7 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   patch from reply 2 that named both output files (it crashed with IndentationError). A complete script must now also
   parse on its own and contain an import; the run was re-collected (reply 1, the full script) and re-run; the first
   selection and its execution records are kept in `superseded_selection/`. Runs 2 and 7 re-checked: same selection.
+- **Claude Code CLI version (from run 14, `direct_three_turns_endo_f209_r3`; authors' decision, 19 Oct 2026)**: runs 1–13
+  used CLI 2.1.302 (as in `FREEZE.json`); the container that resumed the main run has 2.1.303. Runs from 14 onward use
+  2.1.303 (recorded in each run's `session.json`). Subject model unchanged (`claude-sonnet-5-5`). Affected: runs 14–72.
+  The resumed environment was rebuilt from `environment_freeze.txt` (identical `pip freeze`; `cpsam_v2` SHA-256 matches).
