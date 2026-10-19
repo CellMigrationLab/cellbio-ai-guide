@@ -1,0 +1,125 @@
+{
+ "tasks": {
+  "nuclei": {
+   "py": {
+    "before": [],
+    "after": [
+     0.556
+    ],
+    "before_n": [],
+    "after_n": [
+     505
+    ]
+   },
+   "agent": {
+    "before": [
+     0.562,
+     0.549
+    ],
+    "after": [
+     0.55
+    ],
+    "before_n": [
+     487,
+     478
+    ],
+    "after_n": [
+     473
+    ]
+   },
+   "draw": {
+    "f1": [
+     null
+    ],
+    "drawn": [
+     null
+    ],
+    "asked": [
+     1000
+    ]
+   },
+   "default": null
+  },
+  "cancer": {
+   "py": {
+    "before": [
+     0.397
+    ],
+    "after": [],
+    "before_n": [
+     119
+    ],
+    "after_n": []
+   },
+   "agent": {
+    "before": [
+     0.844
+    ],
+    "after": [
+     0.899,
+     0.905
+    ],
+    "before_n": [
+     214
+    ],
+    "after_n": [
+     175,
+     184
+    ]
+   },
+   "draw": {
+    "f1": [
+     0.923
+    ],
+    "drawn": [
+     160
+    ],
+    "asked": [
+     200
+    ]
+   },
+   "default": null
+  },
+  "endo": {
+   "py": {
+    "before": [
+     0.631
+    ],
+    "after": [],
+    "before_n": [
+     322
+    ],
+    "after_n": []
+   },
+   "agent": {
+    "before": [
+     0.773,
+     0.789
+    ],
+    "after": [
+     0.794
+    ],
+    "before_n": [
+     347,
+     345
+    ],
+    "after_n": [
+     358
+    ]
+   },
+   "draw": {
+    "f1": [
+     null
+    ],
+    "drawn": [
+     null
+    ],
+    "asked": [
+     450.0
+    ]
+   },
+   "default": null
+  }
+ },
+ "n_runs": 16
+}
