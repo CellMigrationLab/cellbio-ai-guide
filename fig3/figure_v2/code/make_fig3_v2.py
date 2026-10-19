@@ -757,7 +757,7 @@ row = [rrect(RX, Y0, RW, HDH, 14, "#ffffff", NN["stroke"], 1.3)]
 for i, (task, name, mod) in enumerate(TASKS):
     x = RX + 20 + i * (2 * TT + 8 + 48)
     src = A3 + ("dapi_full.png" if task == "nuclei" else "bf_full.png")
-    row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK) + t(x + 2 * TT + 8, Y0 + 30, f"{mod} · field 104 · manual n = {MAN104[task]}", 13, fill=BODY, anchor="end"))
+    row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK) + t(x + 2 * TT + 8, Y0 + 30, f"{mod} · FOV 1 · manual n = {MAN104[task]}", 13, fill=BODY, anchor="end"))
     row.append(img(x, Y0 + 44, TT, TT, src, f"{task} image") + img(x + TT + 8, Y0 + 44, TT, TT, A3 + f"labels_{task}.png", f"{task} manual labels"))
     row.append(t(x, Y0 + 44 + TT + 22, TASK_TEXT[task], 13, "bold", INK, lh=17))
     row.append(halo(x + 6, Y0 + 62, "image", size=12.5) + halo(x + TT + 14, Y0 + 62, "desired result (manual)", size=12.5))
@@ -836,7 +836,7 @@ for i, (task, name, _) in enumerate(TASKS):
         yy = y + 34 + j * 40
         top = int(np.ceil(max([1.6 * man] + vals) / 100.0) * 100)   # axis from 0 to a round number >= 1.6 x manual
         X = lambda v, top=top: x + 40 + v / top * (bw - 40)
-        gg.append(t(x, yy + 4, fld, 11.5, fill=BODY))
+        gg.append(t(x, yy + 4, {"104": "FOV 1", "209": "FOV 2"}[fld], 11.5, fill=BODY))
         gg.append(f'<line x1="{X(0):.1f}" y1="{yy}" x2="{X(top):.1f}" y2="{yy}" stroke="#c9d1dc" stroke-width="1.2"/>')
         for tick in (0, top):
             gg.append(f'<line x1="{X(tick):.1f}" y1="{yy-3}" x2="{X(tick):.1f}" y2="{yy+3}" stroke="#9aa4b2" stroke-width="1"/>')
@@ -895,7 +895,7 @@ for i, (ic, a_) in enumerate(KEEP):
     x = 48 + i * KW
     add(kicon(ic, x + 20, KY + 62, ACC) + t(x + 48, KY + 67, a_, 14.5, "bold", INK))
 
-add(t(1812 - 14, KY + KH + 18, f"DRAFT: {FSJ['n_runs']} of 72 main runs scored. Rows b, c: bar = median of the runs' mean F1 on the held-out halves of fields 104 and 209 (open circles: runs; x: failed). Images above: field 104.",
+add(t(1812 - 14, KY + KH + 18, f"DRAFT: {FSJ['n_runs']} of 72 main runs scored. Rows b, c: bar = median of the runs' mean F1 on the held-out halves of FOV 1 and FOV 2 (open circles: runs; x: failed). Images above: FOV 1.",
       12, fill="#7a8699", anchor="end"))
 H = KY + KH + 34
 svg = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
