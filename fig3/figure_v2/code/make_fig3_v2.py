@@ -744,13 +744,13 @@ def panel(y, sub, lb, la):
     return "".join(g)
 
 
-def prompt2(x, y, w, tag, lines, tag_col=CHG):
-    """Speech bubble of the person with a small tag above it; returns (svg, height)."""
-    h = 14 + 19 * len(lines)
+def prompt2(x, y, w, tag, lines, tag_col=CHG, nlines=None, h=None):
+    """Speech bubble of the person with a small tag above it; returns (svg, height). nlines / h make bubbles equally tall."""
+    h = h or 14 + 19 * max(len(lines), nlines or 0)
     ty = y + (20 if tag else 0)
     g = [t(x + 46, y + 14, tag, FS_TXT, "bold", tag_col)] if tag else []
     g += [bubble(x + 30, ty, w - 30, h, "#ffffff", "#b8c2d0", "l"), person(x + 12, ty + h / 2),
-          t(x + 46, ty + 24, lines, FS_TXT, fill=INK, lh=19)]
+          t(x + 46, ty + (h - 19 * len(lines)) / 2 + 14, lines, FS_TXT, fill=INK, lh=19)]
     return "".join(g), ty - y + h
 
 
@@ -834,17 +834,18 @@ def clean(txt):
 
 
 def two_prompts(y, left, right):
-    s1, h1 = prompt2(X0, y, BW, *left)
-    s2, h2 = prompt2(X0 + BW + 14, y, BW, *right)
+    n = max(len(left[1]), len(right[1]))
+    s1, h1 = prompt2(X0, y, BW, *left, nlines=n)
+    s2, h2 = prompt2(X0 + BW + 14, y, BW, *right, nlines=n)
     add(s1 + s2)
     return max(h1, h2)
 
 
 # ================================================================ a
-y = new_row("a", "Ask for advice", 366, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
-ph = two_prompts(y + 40, ("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
+y = new_row("a", "Ask for advice", 384, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
+ph = two_prompts(y + 46, ("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
                  ("detailed prompt", ["+ “…check current documentation”,", "model suitability, tests …"]))
-py_ = y + 40 + ph + 14
+py_ = y + 46 + ph + 22
 for i, (task, name, _) in enumerate(TASKS):
     x = PX[i]
     add(t(x, py_ + 15, name, 16, "bold", INK))
@@ -867,59 +868,59 @@ for i, (task, name, _) in enumerate(TASKS):
             shown = cut
         add(t(x, py_ + 94 + j * 22, "“" + shown + "”", FS_TXT, "normal", col, style="italic"))
 cy_ = py_ + 94 + 22 + 14
-cs, ch = callout(X0, cy_, BW, ["Outdated advice can fail or silently run", "another model. It checked the docs only", "when asked: ask it to check them"])
+cs, ch = callout(X0, cy_, BW, ["Outdated advice can fail or silently run", "another model. It checked the docs only", "when asked: ask it to check them"], h=98)
 add(cs)
 ts, th = terminal(X0 + BW + 14, cy_, BW, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
                                           ("AttributeError: no attribute 'Cellpose'", "#ff8a80"),
                                           (">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
                                           ("(no message)  → loads cpsam_v2", "#ff8a80")], 14.5)
 add(ts)
-assert cy_ + max(ch, th - 12) + 10 <= y + 366, (cy_ + max(ch, th - 12) + 10 - y)
+assert cy_ + max(ch, th - 12) + 10 <= y + 384, (cy_ + max(ch, th - 12) + 10 - y)
 
 # ================================================================ b
-y = new_row("b", "Ask for code: a Python script", 290,
+y = new_row("b", "Ask for code: a Python script", 306,
             [("run", "one run"), ("cross", "a field failed (counts 0)"), ("bar", "median of the runs")])
-ph = two_prompts(y + 40, ("basic prompt", ["“Please write a Python script to segment the …”"]),
+ph = two_prompts(y + 46, ("basic prompt", ["“Please write a Python script to segment the …”"]),
                  ("detailed prompt", ["Same request + explicit parameters,", "input checks and a test on reference data"]))
-py_ = y + 40 + ph + 14
+py_ = y + 46 + ph + 22
 add(panel(py_, "py", "basic", "detailed"))
 cy_ = py_ + 26 + 33 + 20 + 14
 cs, ch = callout(X0, cy_, BW, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"], h=60)
 add(cs)
 cs, _ = callout(X0 + BW + 14, cy_, BW, ["Asking again gives a different script, but each", "script gives the same result every time it is run."], h=60)
 add(cs)
-assert cy_ + 60 + 10 <= y + 290, (cy_ + 70 - y)
+assert cy_ + 60 + 10 <= y + 306, (cy_ + 70 - y)
 
 # ================================================================ c
-y = new_row("c", "Let an agent run it", 270,
+y = new_row("c", "Let an agent run it", 284,
             [("run", "one run"), ("cross", "a field failed (counts 0)"), ("bar", "median of the runs")])
-ph = two_prompts(y + 40, ("by eye", ["“…run the pipeline, assess, improve…”"]),
+ph = two_prompts(y + 46, ("by eye", ["“…run the pipeline, assess, improve…”"]),
                  ("scored", ["+ “…score every version against my annotation…”"]))
-py_ = y + 40 + ph + 14
+py_ = y + 46 + ph + 22
 add(panel(py_, "agent", "by eye", "scored"))
 cy_ = py_ + 26 + 33 + 20 + 14
-cs, ch = callout(X0, cy_, XW, ["Without reference data the agent judges by eye: giving it a score to optimise", "may help on harder tasks"], h=60)
+cs, ch = callout(X0, cy_, XW, ["Without reference data the agent judges by eye:", "giving it a score to optimise may help on harder tasks"], h=60)
 add(cs)
-assert cy_ + 60 + 10 <= y + 270, (cy_ + 70 - y)
+assert cy_ + 60 + 10 <= y + 284, (cy_ + 70 - y)
 
 # ================================================================ d
-y = new_row("d", "Ask for the answer", 236, [("dot", "one run"), ("man", "manual count")])
-s1, h1 = prompt2(X0, y + 40, BW, "", ["“How many … are in this image?”"])
+y = new_row("d", "Ask for the answer", 262, [("dot", "one run"), ("man", "manual count")])
+s1, h1 = prompt2(X0, y + 46, BW, "", ["“How many … are in this image?”"], h=60)
 add(s1)
-cs, ch = callout(X0 + BW + 14, y + 40, BW, ["Asking again gives a different count:", "the answer is not reproducible"], h=60)
+cs, ch = callout(X0 + BW + 14, y + 46, BW, ["Asking again gives a different count:", "the answer is not reproducible"], h=60)
 add(cs)
-py_ = y + 40 + 60 + 12
+py_ = y + 46 + 60 + 20
 for i, (task, name, _) in enumerate(TASKS):
     x = PX[i]
     dd = FS[task]["draw"]
-    bw = PW - 6
+    bw = PW - 30
     gg = [t(x, py_ + 15, name, 16, "bold", INK)]
     for j, fld in enumerate(("104", "209")):
         man = dd["manual_by_field"].get(fld)
         vals = dd["count_by_field"][fld]
         if man is None:
             continue
-        yy = py_ + 52 + j * 44
+        yy = py_ + 54 + j * 52
         top = int(np.ceil(max([1.6 * man] + vals) / 100.0) * 100)   # axis from 0 to a round number >= 1.6 x manual
         X = lambda v, top=top: x + 56 + v / top * (bw - 56)
         gg.append(t(x, yy + 5, {"104": "FOV 1", "209": "FOV 2"}[fld], FS_TXT, fill=BODY))
@@ -947,7 +948,7 @@ add(f'<path d="M{AXc-11},{AT} H{AXc+11} V{AB-22} H{AXc+15} L{AXc},{AB} L{AXc-15}
 
 # ================================================================ what to keep
 KY = AB + GAP
-KH = 136
+KH = 150
 add(rrect(M, KY, W - 2 * M, KH, 16, "#ffffff", NN["stroke"], 1.4)
     + t(M + 16, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 17, "bold", INK))
 KEEP = [("lock", ["Check how the", "service handles data"]), ("check", ["Verify advice", "against the docs"]),
