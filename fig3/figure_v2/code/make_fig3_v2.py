@@ -592,7 +592,8 @@ def build_scores_v2():
         sc = {r["scenario_id"]: r for r in csv.DictReader(f)}
     tasks = {k: {"py": {"before": [], "after": [], "before_n": [], "after_n": [], "before_shape": [], "after_shape": []},
                  "agent": {"before": [], "after": [], "before_n": [], "after_n": [], "before_shape": [], "after_shape": []},
-                 "draw": {"f1": [], "drawn": [], "asked": [], "area_ratio": [], "ar_ratio": []}, "default": None}
+                 "draw": {"f1": [], "drawn": [], "asked": [], "area_ratio": [], "ar_ratio": [],
+                          "count_by_field": {"104": [], "209": []}, "manual_by_field": {}}, "default": None}
              for k in TASK_IDS}
     n_runs = 0
     n_ref = {k: 0 for k in TASK_IDS}
@@ -622,6 +623,9 @@ def build_scores_v2():
             T["draw"]["f1"].append(d["turn3"]["f1"] if ok else None)
             T["draw"]["drawn"].append(d["turn3"]["n_drawn"] / ref if ok else None)
             T["draw"]["asked"].append(d["turn1"]["count"] / ref if d["turn1"]["count"] is not None else None)
+            T["draw"]["manual_by_field"][str(d["field"])] = ref
+            if d["turn1"]["count"] is not None:
+                T["draw"]["count_by_field"][str(d["field"])].append(d["turn1"]["count"])
             t2, rs = d["turn2"], d["reference"]
             if t2["turn2_median_area_um2"] is not None and rs["median_area_um2"]:
                 T["draw"]["area_ratio"].append(t2["turn2_median_area_um2"] / rs["median_area_um2"])
@@ -760,7 +764,7 @@ for i, (task, name, mod) in enumerate(TASKS):
 add("".join(row))
 
 ORDER = [("a", "Ask for advice", 156), ("b", "Ask for code: Python script", 134),
-         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 132)]
+         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 176)]
 ry, RH = {}, {}
 yy = Y0 + HDH + GAP
 for key, ttl, h in ORDER:
@@ -821,18 +825,24 @@ y = ry[key] + 34
 for i, (task, name, _) in enumerate(TASKS):
     x = CX_SC + i * (GW + GG)
     dd = FS[task]["draw"]
-    man = 1.0                                   # values are count / manual count (both whole fields)
     bw = GW - 20
-    X = lambda v: x + min(v / man, 1.6) / 1.6 * bw
-    gg = [t(x, y, name, 13.5, "bold", INK) + t(x + GW - 6, y, "stated count / manual count", 11.5, fill="#5b6676", anchor="end"),
-          f'<line x1="{x}" y1="{y+30}" x2="{x+bw}" y2="{y+30}" stroke="#c9d1dc" stroke-width="1.2"/>',
-          f'<line x1="{X(man):.1f}" y1="{y+18}" x2="{X(man):.1f}" y2="{y+42}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>']
-    for v in [v for v in dd["asked"] if v is not None]:
-        gg.append(f'<circle cx="{X(v):.1f}" cy="{y+30}" r="5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
-    for fr, lab in [(0, "0"), (1, "= manual"), (1.5, "1.5×")]:
-        gg.append(t(x + fr / 1.6 * bw, y + 56, lab, 11, fill="#7a8699", anchor="middle"))
+    gg = [t(x, y, name, 13.5, "bold", INK) + t(x + GW - 6, y, "stated count per run", 11.5, fill="#5b6676", anchor="end")]
+    for j, fld in enumerate(("104", "209")):
+        man = dd["manual_by_field"].get(fld)
+        vals = dd["count_by_field"][fld]
+        if man is None:
+            continue
+        yy = y + 36 + j * 38
+        top = max([1.6 * man] + vals)                      # axis 0 to 1.6 x manual (or the largest stated count)
+        X = lambda v, top=top: x + 62 + v / top * (bw - 62)
+        gg.append(t(x, yy + 4, f"field {fld}", 11.5, fill=BODY))
+        gg.append(f'<line x1="{X(0):.1f}" y1="{yy}" x2="{X(top):.1f}" y2="{yy}" stroke="#c9d1dc" stroke-width="1.2"/>')
+        gg.append(f'<line x1="{X(man):.1f}" y1="{yy-9}" x2="{X(man):.1f}" y2="{yy+9}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>')
+        gg.append(t(X(man), yy + 21, f"manual {man}", 11, fill="#5b6676", anchor="middle"))
+        for v in vals:
+            gg.append(f'<circle cx="{X(v):.1f}" cy="{yy}" r="5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
     add("".join(gg))
-add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "one run: the count it stated (3 runs on each of fields 104 and 209), as a fraction of that field's manual count", 12, fill=BODY))
+add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "one run: the count it stated (3 runs per field; dashed line = manual count of that field)", 12, fill=BODY))
 add(cav(key, ["The numbers were estimated,", "not counted"]))
 
 # ---------------------------------------------------------------- key line under task row: F1 legend
