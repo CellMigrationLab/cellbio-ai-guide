@@ -1,0 +1,8 @@
+Optimisation used only image.tif + annotation.tif. Metric: IoU>0.5 matching (F1, precision, recall), plus median per-nucleus area and aspect-ratio bias.
+1. Image: 1022x1024 uint16, max 4095. Annotation 460 endothelial nuclei, median 177 um2, mean AR 1.50. Endothelial nuclei are dim/oval; cancer nuclei on top are small, round, much brighter; right half has a vertical seam at x=512 and blurrier look.
+2. Cellpose 4.2 (cpsam, CPU, diameter 30, intensity clipped at image p90): ~6.6 min/image; 639 objects, F1 0.60 (prec 0.52, rec 0.72). Also segments cancer nuclei and over-sizes nuclei on right half. Rejected (cpsam is a generalist model trained on mixed 2D images; no nuclear-class selectivity; too slow). Other Cellpose settings not explored because of runtime.
+3. (Evaluation bug found and fixed: first IoU calc excluded non-overlapping pixels from union, gave falsely high F1 0.83.)
+4. Classical: Gaussian smooth, local threshold, opening, fill, distance-transform watershed: recall 0.96 but precision 0.60 (cancer nuclei and debris).
+5. Added object filter on mean intensity (cancer too bright, debris too dim) + min area: F1 ~0.92. Made thresholds relative to the image's median object mean (0.5x..1.5x) rather than absolute counts so they transfer across exposures.
+6. Sweep of smoothing sigma (1-2), local block (41-71), opening radius (2-3), clip (800-1500), upper intensity ratio (1.5-2): F1 plateau 0.92-0.926; chose sigma 1, block 51, clip 1000, ratio 1.5, opening radius 3 (best area bias, smoother outlines).
+7. Final: F1 and bias values in the report; deliberately did not chase the last 1-2% (overfit risk on one image).

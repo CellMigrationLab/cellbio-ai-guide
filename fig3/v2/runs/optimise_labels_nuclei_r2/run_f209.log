@@ -1,0 +1,6 @@
+$ pipeline.py image.tif labels.tif measurements.csv
+exit 0
+--- stdout
+456 endothelial nuclei (from 690 candidates); median area 197.3 um2, median AR 1.47
+
+--- stderr
