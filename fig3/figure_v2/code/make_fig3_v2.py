@@ -868,9 +868,10 @@ for i, (task, name, _) in enumerate(TASKS):
             shown = cut
         add(t(x, py_ + 94 + j * 22, "“" + shown + "”", FS_TXT, "normal", col, style="italic"))
 cy_ = py_ + 94 + 22 + 14
-cs, ch = callout(X0, cy_, BW, ["Outdated advice can fail or silently run", "another model. It checked the docs only", "when asked: ask it to check them"], h=98)
+TW = 420                                                # terminal width; the call-out takes the rest of the row
+cs, ch = callout(X0, cy_, XW - TW - 14, ["Outdated advice can fail or silently run another model.", "It checked the docs only when asked: ask it to check them"], h=98)
 add(cs)
-ts, th = terminal(X0 + BW + 14, cy_, BW, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
+ts, th = terminal(X0 + XW - TW, cy_, TW, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
                                           ("AttributeError: no attribute 'Cellpose'", "#ff8a80"),
                                           (">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
                                           ("(no message)  → loads cpsam_v2", "#ff8a80")], 14.5)
@@ -892,16 +893,16 @@ add(cs)
 assert cy_ + 60 + 10 <= y + 306, (cy_ + 70 - y)
 
 # ================================================================ c
-y = new_row("c", "Let an agent run it", 284,
+y = new_row("c", "Let an agent run it", 268,
             [("run", "one run"), ("cross", "a field failed (counts 0)"), ("bar", "median of the runs")])
 ph = two_prompts(y + 46, ("by eye", ["“…run the pipeline, assess, improve…”"]),
                  ("scored", ["+ “…score every version against my annotation…”"]))
 py_ = y + 46 + ph + 22
 add(panel(py_, "agent", "by eye", "scored"))
 cy_ = py_ + 26 + 33 + 20 + 14
-cs, ch = callout(X0, cy_, XW, ["Without reference data the agent judges by eye:", "giving it a score to optimise may help on harder tasks"], h=60)
+cs, ch = callout(X0, cy_, XW, ["Without reference data the agent judges by eye: giving it a score to optimise may help on harder tasks"], h=44)
 add(cs)
-assert cy_ + 60 + 10 <= y + 284, (cy_ + 70 - y)
+assert cy_ + 44 + 10 <= y + 268, (cy_ + 54 - y)
 
 # ================================================================ d
 y = new_row("d", "Ask for the answer", 262, [("dot", "one run"), ("man", "manual count")])
