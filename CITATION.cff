@@ -8,6 +8,8 @@ authors:
     given-names: Ricardo
   - family-names: Jacquemet
     given-names: Guillaume
-license: MIT
+license:
+  - MIT
+  - CC-BY-4.0
 repository-code: "https://github.com/CellMigrationLab/cellbio-ai-guide"
-date-released: 2026-10-17
+date-released: 2026-10-19

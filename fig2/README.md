@@ -12,7 +12,8 @@ python ../code/errors.py && python ../code/score_perturb.py   # ORDER MATTERS: s
 python ../code/annot_agree.py; python ../code/bio_result.py; python ../code/al_intensity.py; python ../code/tubule_width.py
 python ../code/squirrel_run.py        # NanoPyx environment (environment/requirements-nanopyx.txt)
 ```
-`tools/check_all.py` runs all of these in a temporary copy and checks that every JSON output equals the committed one
+`tools/check_all.py` runs the scoring scripts (not the Cellpose runs, `norm_inputs.py` or `postfilter.py`, which
+need the models) in a temporary copy and checks that every JSON output equals the committed one
 (SQUIRREL with `--with-squirrel`; verified: RSE/RSP and error maps identical, NanoPyx 2.1.5).
 
 ## Panels, scripts and source data

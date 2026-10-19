@@ -23,15 +23,16 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
   `fig3/figure_v2/` (`make fig3`). The superseded round-1 draft was removed on
   19 Oct 2026 (it is in git history).
 
-## Current status (19 Oct 2026)
+## Current status (20 Oct 2026)
 - Figure 1 is final. Figure 2 was updated on 17 Oct 2026 after the code audit (panel e sampling; panel a scored on
-  two fields). Figure 3: all 72 protocol-v2 main runs are recorded and scored (`fig3/v2/runs/`); the draft figure is in
+  two fields). Figure 3: all 72 protocol-v2 main runs are recorded (`fig3/v2/runs/`), 54 are scored (rows B, C and D)
+  and the 18 row-A runs are classified rather than scored; the draft figure is in
   `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`, `.pdf`; the legend is kept in the manuscript, not here); the authors are reviewing it.
-- `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data (Fig. 3). `make full` passes for Figures 1 and 2 (files it cannot regenerate are listed with the reason).
+- `make check` passes: all figure SVGs rebuild byte-identical; all scores reproduce from the stored data (Fig. 3). `make full` passes for Figures 1 and 2 (files it cannot regenerate are listed with the reason).
 - Figure 3, protocol v2: preflight (12 runs, `fig3/v2/runs_preflight/`) not used in the figure; protocol frozen on 17 Oct
   2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless Claude Code sessions) and revised for rows B and
-  C on 19 Oct 2026 (development mosaic, held-out halves, answer-sheet lines; see the amendments in `FREEZE.json` and
-  `fig3/deviations.md`). Runs that were replaced or interrupted are kept unedited in `fig3/v2/runs_superseded/` and
+  C on 19 Oct 2026 (development mosaic, held-out halves, answer-sheet lines), and the harness was hardened on 20 Oct 2026
+  (see the amendments in `FREEZE.json` and `fig3/deviations.md`). Runs that were replaced or interrupted are kept unedited in `fig3/v2/runs_superseded/` and
   `fig3/v2/runs_rejected/` (with the reason in each folder); files over 50 MB are listed in `LARGE_FILES.json` and stored
   outside git (`fig3/v2/large_files.py`). The main run is complete: `fig3/v2/RESUME_PROMPT.md` is kept for reference only.
   If you run scenarios again, never show this repository to the model being tested (subjects are started only by

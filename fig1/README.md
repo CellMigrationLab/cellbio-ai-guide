@@ -74,12 +74,12 @@ All prompts and replies in panel b are illustrative and were written for the fig
 | `full_field_labels/threshold_labels.tif` | Classical pipeline: Gaussian σ = 1 → local s.d. (7 px) → Otsu → closing (disk 3) → fill holes → remove < 250 px → opening (disk 4) → distance-transform watershed (min distance 12); parameters not tuned | `code/classical_seg.py` |
 | `step2_reference_image_{0,1,2}.png` | Crops of `brightfield.tif`, 260 × 260 px at (y, x) = (40, 240), (600, 620), (700, 60), resized to 300 px | Image 0 carries the manual annotation outlines |
 | `step3_*` | Window x 240–480, y 40–300, chosen by `code/find_rep_window.py` so that its local scores resemble the whole-field scores | Vector contours (`find_contours` + `approximate_polygon`, tolerance 0.6). `code/export_rep_window.py`, `code/classical_seg.py` |
-| `step4_*` | Window x 600–840, y 620–880 of the **same** field. **See caveat 1** | As above |
+| `step4_*` | Window x 640–880, y 50–310 of field 209 (a second field, not the one used in steps 2–3). **See caveat 1** | As above |
 | `step5_trackmate_tracks.png` | TrackMate capture provided by the authors, 1.31483 µm/px | Crop y 520–800, x 200–480; Lanczos resize to 472 px |
 
 ### F1 scores (panel c, step 3)
 
-Object-level F1 over the whole field against `manual_annotation_labels.tif` (124 cells). Each pair of overlapping objects is scored by IoU; pairs are matched greedily from the highest IoU, one-to-one, keeping IoU ≥ 0.5. F1 = 2TP / (2TP + FP + FN). No edge exclusion; one image.
+Object-level F1 over the whole field against `field104_cancer_cells_manual_labels.tif` (124 cells). Each pair of overlapping objects is scored by IoU; pairs are matched greedily from the highest IoU, one-to-one, keeping IoU ≥ 0.5. F1 = 2TP / (2TP + FP + FN). No edge exclusion; one image.
 
 | Candidate | Objects | TP | FP | FN | F1 | Shown |
 |---|---|---|---|---|---|---|

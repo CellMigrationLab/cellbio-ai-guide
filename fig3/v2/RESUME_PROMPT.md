@@ -40,7 +40,7 @@ Read first: AGENTS.md, fig3/PROTOCOL_V2.md (frozen), fig3/v2/README.md, fig3/v2/
    - Subjects are headless sessions started only by run_operator.py start (never a sub-agent: a sub-agent sees
      AGENTS.md). The subject never sees this repository, the protocol, the answer sheet, condition names or other runs.
    - Answer follow-up questions only from the answer sheet, verbatim, at most 3 replies; row B gets the field-104
-     image and annotation only if asked before any code (run_operator.py give_dev_files); never a field-209 annotation.
+     development mosaic only if asked before any code (run_operator.py give_dev_files); never a held-out annotation.
    - Rerun only for the reasons in PROTOCOL_V2 section 9 (row C: reads decide, section 3); archive every attempt with
      run_operator.py reject, the reason written before the new attempt.
    - Code is run only by fig3/v2/runner.py; scores only against the authors' manual annotations; if a reference looks

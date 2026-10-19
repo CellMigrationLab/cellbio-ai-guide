@@ -10,7 +10,7 @@ This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2
 | [rows.csv](rows.csv) | Defines the model access and tools offered for each row; also used in audits and metadata. |
 | [scenarios.csv](scenarios.csv) | Lists the 72 planned runs in seeded random order. |
 | [answer_sheet.md](answer_sheet.md) | Approved replies to model follow-up questions. |
-| [assets/](assets/) | Whole-field images and annotations (rows A, D and scoring) and, from the revision of 19 Oct 2026, `halfdev_*` mosaics of the left halves of fields 104 and 209 for rows B and C; prepared by `make_assets.py`. |
+| [assets/](assets/) | Whole-field images and annotations (rows D and scoring) and, from the revision of 19 Oct 2026, `halfdev_*` mosaics of the left halves of fields 104 and 209 for rows B and C; prepared by `make_assets.py`. |
 | [run_operator.py](run_operator.py) | Prepares, runs (headless subject sessions), audits and records each model conversation. |
 | [FREEZE.json](FREEZE.json) | SHA-256 of every file that defines the protocol, model ID and CLI version; `fig3/tests/test_v2_freeze.py` fails if any changes. |
 | [runner.py](runner.py) | Executes returned code on fields 104 and 209 in clean environments (rows B and C). |
@@ -49,4 +49,4 @@ All commands need `V2_STAGE=preflight` (runs in `runs_preflight/`, not used in t
 8. Commit and push after every scenario, so that an interrupted session loses nothing. To resume in a new session,
    use [RESUME_PROMPT.md](RESUME_PROMPT.md); `run_operator.py status` lists complete, partial and next scenarios.
 
-Keep the field-209 annotations away from the subject model. Do not alter the generated prompts, answer sheet or scoring rules during the experiment; changes require a documented protocol revision.
+Keep every held-out annotation away from the subject model: the right halves of fields 104 and 209 given to rows B and C, and the whole field-209 annotation used for row D. Do not alter the generated prompts, answer sheet or scoring rules during the experiment; changes require a documented protocol revision.
