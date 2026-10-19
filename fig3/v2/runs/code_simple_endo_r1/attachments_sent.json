@@ -1,0 +1,8 @@
+{
+ "subject_folder": "/home/user/sessions_v2/v020",
+ "files": [
+  "image.tif <- halfdev_endo_image.tif",
+  "image.png <- halfdev_endo_image.png"
+ ],
+ "cli_tools": "Read,WebSearch,WebFetch"
+}

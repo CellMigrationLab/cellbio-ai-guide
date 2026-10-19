@@ -34,7 +34,7 @@
   "fig3/v2/prompts/optimise_labels_nuclei.txt": "fb6dca53d1ec1c1710039b3e206509520305df881eced7bd499bcabdfb99d112",
   "fig3/v2/rows.csv": "ef36f3517244868410732b2720ae89ac444829c8d7f25d61174db1134ea6468e",
   "fig3/v2/scenarios.csv": "b45825e18e0d38843ab0569d096c180a0cf423780c7534d908e77fa6fb35078a",
-  "fig3/v2/answer_sheet.md": "4f41c2a3bf70aff5e003f91076758d014fe7ceb890ffff8ed44c4c7bd9b23781",
+  "fig3/v2/answer_sheet.md": "68cb2a0fb143722837470eb4acff0d25af617d7c8aa8087a70fe4c26d11205b7",
   "fig3/v2/run_operator.py": "f2847e4e52aa7e177b88b396eeb2ed82c3c68c227c162a5b8e26ce16a1551e57",
   "fig3/v2/runner.py": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
   "fig3/v2/score.py": "6e8e14b03963d6fd7c235ed3fd775828ac3b9fffccb5fff9f61e520dbddfc0f9",
@@ -181,6 +181,14 @@
     "fig3/v2/assets/halfdev_nuclei_image.tif"
    ],
    "files_removed": []
+  },
+  {
+   "date": "2026-10-19",
+   "file": "fig3/v2/answer_sheet.md",
+   "old_sha256": "4f41c2a3bf70aff5e003f91076758d014fe7ceb890ffff8ed44c4c7bd9b23781",
+   "new_sha256": "68cb2a0fb143722837470eb4acff0d25af617d7c8aa8087a70fe4c26d11205b7",
+   "reason": "two truthful lines for the revised rows B and C: the development image is a mosaic of two fields (every Box 1 subject sees the seam in the preview and asks); image.png is a display copy of image.tif. Answering \"I don't know\" would have been untrue.",
+   "runs_affected": "rows B and C from run 7 on; runs 2, 4 and 6 had no such question (run 6 mentioned the seam in its report)"
   }
  ]
 }

@@ -172,3 +172,8 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   and annotation counts of the mosaic), `make_assets.py` and `assets/` (mosaic files added; existing files unchanged),
   `make_protocol.py`, `scenarios.csv` (folder_files of rows B and C), `run_operator.py` (annotation file names),
   `score.py` and `scoring/tasks.py` (held-out half scoring for a chosen field; round-1 behaviour unchanged).
+- **Answer sheet amendment (19 Oct 2026, runs 7 onward of rows B and C)**: every subject that was shown the development
+  mosaic noticed the seam at x = 512 in the PNG preview and asked whether it is one image. The sheet had no line for it, and
+  "I don't know." would have been untrue, so two lines were added: the image is two fields placed side by side (answered only
+  when asked), and `image.png` is an 8-bit display copy of `image.tif`. Runs 2, 4 and 6 did not ask (run 6 mentioned the seam
+  in its final report).
