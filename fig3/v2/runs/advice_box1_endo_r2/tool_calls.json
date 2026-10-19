@@ -1,0 +1,44 @@
+[
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/",
+   "prompt": "Which Cellpose version is current? How to run models.CellposeModel with cpsam, eval args (diameter, flow_threshold, cellprob_threshold, channels), CPU support, and fine-tuning/training API (train_seg) and CLI. Note any notes on diameter in Cellpose 4."
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "segmentation endothelial cells brightfield phase contrast confluent monolayer Cellpose fine-tune cell shape aspect ratio",
+   "mode": "standard"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/settings.html",
+   "prompt": "Summarize Diameter, channels, normalization, flow_threshold, cellprob_threshold settings for Cellpose 4 / cpsam, and how diameter changed vs Cellpose 3."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/train.html",
+   "prompt": "Show the Python training example: train_seg signature and arguments (train_data, train_labels, test_data, test_labels, learning_rate, n_epochs, weight_decay, model_name, normalize), and how to load the model with pretrained_model; training data format and recommended number of ROIs."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://raw.githubusercontent.com/MouseLand/cellpose/main/cellpose/models.py",
+   "prompt": "Show the exact signature and docstring of CellposeModel.__init__ (pretrained_model, gpu, device args) and how pretrained_model path is loaded; and the signature and return values of CellposeModel.eval (normalize, diameter, batch_size, tile_overlap, return values)."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://raw.githubusercontent.com/MouseLand/cellpose/main/cellpose/train.py",
+   "prompt": "Show the exact signature of train_seg (all args and defaults, including bsize, batch_size, normalize, min_train_masks, save_path, rescale) and what it returns, and how it handles train data shape (2D arrays vs channel-first) and label dtype."
+  }
+ }
+]

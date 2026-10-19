@@ -1,0 +1,16 @@
+[
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "Cellpose 4 Cellpose-SAM CPU speed python 3.13 pip install nuclei diameter",
+   "mode": "standard"
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "StarDist PyPI python 3.13 tensorflow support 2D_versatile_fluo",
+   "mode": "standard"
+  }
+ }
+]

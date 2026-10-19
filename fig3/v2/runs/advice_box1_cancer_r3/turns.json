@@ -76,5 +76,80 @@
   },
   "permission_denials": [],
   "session_id": "453bc1a8-4cc2-4e0c-9a5d-562ceeaec3b2"
+ },
+ {
+  "kind": "answer",
+  "sent": "I have more fields of the same kind, from the same microscope and settings. My images are 1024 × 1022 pixels (width × height), uint16. They are rounded and sit on top of the endothelial monolayer; touching cells should be counted individually. Cells cut by the image border can be left out of the area and shape statistics. Major axis divided by minor axis of the fitted ellipse. I don't have an example image to share in this conversation. I don't know.",
+  "reply": "Your answers settle most of the design. Here is what I'm assuming, and what the plan looks like now.\n\n**Assumptions. Tell me if any are wrong.**\n- Arrays are `(1022, 1024)` as `(Y, X)`, uint16, one channel, at 0.65 µm per pixel.\n- Touching rounded cells must be split into separate labels. I'll measure merges explicitly.\n- Border-cut cells stay in the label image and in the count, but are flagged and left out of area and aspect-ratio statistics. I'm assuming you still want them counted. If you don't, say so.\n- Your \"I don't know\" didn't match any single question, so I'm guessing it was about whether your annotation labels only cancer cells. **Please check this before anything else.** If the annotation also contains endothelial cells, every score below is meaningless.\n- I still don't know how many fields you have. That decides whether fine-tuning is realistic.\n\n## Plan\n1. **Zero-shot baseline.** Run `cpsam` on your annotated field and score it. It costs nothing, and the result tells you whether to continue.\n2. **If it fails, fine-tune.** The most likely failure is endothelial cells being segmented. Annotate 3–5 more fields, only the cancer cells, with the same rules as your first annotation.\n3. **Split by field, never by tile.** Train on some fields, and hold out whole fields for testing. Neighbouring tiles of one field share cells and illumination, so a tile split would leak.\n4. **Fix the settings, then run the batch.** After tuning, make no per-image adjustments.\n\n## Code (not run, since I can't run code here)\n\n```python\n\"\"\"cellcount.py: cancer cell segmentation and shape measurement, brightfield 2D.\"\"\"\nfrom pathlib import Path\n\nimport numpy as np\nimport pandas as pd\nfrom skimage import io as skio, measure, segmentation\n\nPIXEL_SIZE_UM = 0.65\nEXPECTED_SHAPE = (1022, 1024)     # (Y, X)\nAREA_RANGE_UM2 = (50.0, 1500.0)   # flag only; objects are never silently removed\n\n\ndef load_image(path: Path) -> np.ndarray:\n    image = skio.imread(path)\n    if image.shape != EXPECTED_SHAPE:\n        raise ValueError(f\"{path}: expected {EXPECTED_SHAPE} (Y, X), got {image.shape}\")\n    if image.dtype != np.uint16:\n        raise ValueError(f\"{path}: expected uint16, got {image.dtype}\")\n    return image\n\n\ndef segment(image: np.ndarray, pretrained_model: str = \"cpsam\") -> np.ndarray:\n    \"\"\"Cellpose-SAM on CPU with default eval settings. Image is not rescaled by us.\"\"\"\n    from cellpose import models\n    model = models.CellposeModel(gpu=False, pretrained_model=pretrained_model)\n    masks, _flows, _styles = model.eval(image)\n    if masks.shape != image.shape:\n        raise RuntimeError(f\"Output {masks.shape} != input {image.shape}\")\n    return masks.astype(np.int32)\n\n\ndef measure_cells(labels: np.ndarray) -> pd.DataFrame:\n    \"\"\"One row per label. Border and size are flagged, not filtered.\"\"\"\n    h, w = labels.shape\n    rows = []\n    for r in measure.regionprops(labels):\n        if r.axis_minor_length == 0:\n            raise ValueError(f\"label {r.label} has zero minor axis (degenerate)\")\n        y0, x0, y1, x1 = r.bbox\n        area_um2 = r.area * PIXEL_SIZE_UM**2\n        rows.append({\n            \"label\": r.label,\n            \"area_um2\": area_um2,\n            \"aspect_ratio\": r.axis_major_length / r.axis_minor_length,\n            \"touches_border\": y0 == 0 or x0 == 0 or y1 == h or x1 == w,\n            \"area_out_of_range\": not AREA_RANGE_UM2[0] <= area_um2 <= AREA_RANGE_UM2[1],\n            \"centroid_y_um\": r.centroid[0] * PIXEL_SIZE_UM,\n            \"centroid_x_um\": r.centroid[1] * PIXEL_SIZE_UM,\n        })\n    return pd.DataFrame(rows)\n\n\ndef shape_statistics(table: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Rows used for area/aspect-ratio statistics: not touching the border.\"\"\"\n    return table[~table.touches_border]\n\n\ndef save_outputs(out_dir: Path, stem: str, image: np.ndarray,\n                 labels: np.ndarray, table: pd.DataFrame) -> None:\n    out_dir.mkdir(parents=True, exist_ok=True)\n    skio.imsave(out_dir / f\"{stem}_labels.tif\", labels.astype(np.uint16), check_contrast=False)\n    table.to_csv(out_dir / f\"{stem}_cells.csv\", index=False)\n    lo, hi = np.percentile(image, (1, 99))\n    display = np.clip((image.astype(float) - lo) / (hi - lo), 0, 1)\n    overlay = segmentation.mark_boundaries(display, labels, color=(1, 0, 0))\n    skio.imsave(out_dir / f\"{stem}_overlay.png\", (overlay * 255).astype(np.uint8))\n```\n\n```python\n\"\"\"evaluate.py: score a prediction against a manual annotation of the same field.\"\"\"\nimport numpy as np\nfrom cellcount import measure_cells\n\n\ndef iou_matrix(pred, truth):\n    \"\"\"IoU for every (true, pred) pair that overlaps. Returns dict[(t, p)] -> iou.\"\"\"\n    both = (pred > 0) & (truth > 0)\n    pairs, inter = np.unique(np.stack([truth[both], pred[both]]), axis=1, return_counts=True)\n    t_area = dict(zip(*np.unique(truth[truth > 0], return_counts=True)))\n    p_area = dict(zip(*np.unique(pred[pred > 0], return_counts=True)))\n    return {(t, p): n / (t_area[t] + p_area[p] - n) for (t, p), n in zip(pairs.T, inter)}\n\n\ndef evaluate(pred, truth, iou_threshold=0.5) -> dict:\n    ious = iou_matrix(pred, truth)\n    # IoU >= 0.5 gives at most one match per object, so greedy matching is unambiguous.\n    matches = {t: p for (t, p), v in ious.items() if v >= iou_threshold}\n    n_true, n_pred = len(np.unique(truth)) - 1, len(np.unique(pred)) - 1\n    tp = len(matches)\n\n    # Merges: one prediction overlapping >=2 true cells; splits: the reverse.\n    overlap_p = [p for (t, p), v in ious.items() if v > 0.1]\n    overlap_t = [t for (t, p), v in ious.items() if v > 0.1]\n    merges = sum(c > 1 for c in np.unique(overlap_p, return_counts=True)[1]) if overlap_p else 0\n    splits = sum(c > 1 for c in np.unique(overlap_t, return_counts=True)[1]) if overlap_t else 0\n\n    pt = measure_cells(pred).set_index(\"label\")\n    tt = measure_cells(truth).set_index(\"label\")\n    inner = [(t, p) for t, p in matches.items()\n             if not tt.touches_border[t] and not pt.touches_border[p]]\n    area_err = np.array([(pt.area_um2[p] - tt.area_um2[t]) / tt.area_um2[t] for t, p in inner])\n    ar_err = np.array([pt.aspect_ratio[p] - tt.aspect_ratio[t] for t, p in inner])\n    return {\n        \"n_true\": n_true, \"n_pred\": n_pred,\n        \"count_error_pct\": 100 * (n_pred - n_true) / n_true,\n        \"precision\": tp / n_pred, \"recall\": tp / n_true,\n        \"merged_predictions\": merges, \"split_true_cells\": splits,\n        \"n_shape_pairs\": len(inner),\n        \"median_area_error_pct\": 100 * float(np.median(area_err)),\n        \"median_abs_area_error_pct\": 100 * float(np.median(np.abs(area_err))),\n        \"median_aspect_bias\": float(np.median(ar_err)),\n        \"median_abs_aspect_error\": float(np.median(np.abs(ar_err))),\n    }\n```\n\n```python\n\"\"\"run_zero_shot.py <image.tif> <annotation.tif> <out_dir>\"\"\"\nimport json, sys\nfrom pathlib import Path\nfrom skimage import io as skio\nfrom cellcount import load_image, segment, measure_cells, save_outputs\nfrom evaluate import evaluate\n\nimage_path, truth_path, out_dir = map(Path, sys.argv[1:4])\nimage = load_image(image_path)\ntruth = skio.imread(truth_path)\nif truth.shape != image.shape:\n    raise ValueError(f\"annotation {truth.shape} != image {image.shape}\")\n\nlabels = segment(image)\nsave_outputs(out_dir, image_path.stem, image, labels, measure_cells(labels))\nskio.imsave(out_dir / \"annotation_overlay_check.tif\", truth.astype(\"uint16\"), check_contrast=False)\nprint(json.dumps(evaluate(labels, truth.astype(\"int32\")), indent=2))\n```\n\nFine-tuning, only if the baseline fails. It uses the `train.train_seg` call from the docs, with arrays passed directly. I haven't confirmed that in-memory arrays work for 2D grayscale in your installed version, so check against the installed docs.\n\n```python\n\"\"\"finetune.py: train on whole annotated fields, test on other whole fields.\"\"\"\nfrom pathlib import Path\nfrom skimage import io as skio\nfrom cellpose import models, train\nfrom cellcount import load_image\n\ndef load_pairs(image_dir: Path, mask_suffix=\"_masks.tif\"):\n    images, masks = [], []\n    for p in sorted(image_dir.glob(\"*.tif\")):\n        if p.name.endswith(mask_suffix):\n            continue\n        mask_path = p.with_name(p.stem + mask_suffix)\n        if not mask_path.exists():\n            raise FileNotFoundError(f\"no annotation for {p.name}: {mask_path.name}\")\n        images.append(load_image(p)); masks.append(skio.imread(mask_path).astype(\"int32\"))\n    if not images:\n        raise ValueError(f\"no images found in {image_dir}\")\n    return images, masks\n\ntrain_x, train_y = load_pairs(Path(\"train_fields\"))\ntest_x, test_y = load_pairs(Path(\"test_fields\"))   # different fields from train\nmodel = models.CellposeModel(gpu=False)            # starts from cpsam\nmodel_path, train_loss, test_loss = train.train_seg(\n    model.net, train_data=train_x, train_labels=train_y,\n    test_data=test_x, test_labels=test_y,\n    weight_decay=0.1, learning_rate=1e-5, n_epochs=20,   # docs default is 100\n    model_name=\"cancer_brightfield\")\nprint(\"saved:\", model_path)\n```\n\nI set `n_epochs=20` as a time-test, because I couldn't verify CPU training speed. Run it and time one epoch. Then raise it only if the test loss is still falling.\n\n## Pass/fail for your annotated field\nFix these before you look at the numbers. They're my suggested thresholds, so adjust them to your biology:\n- **Fail if** precision or recall is below 0.8, or the count error is beyond ±10%.\n- **Fail if** `merged_predictions + split_true_cells` is more than about 5% of `n_true`. You asked for touching cells to be counted individually, so merges are the key error.\n- **Fail if** `median_abs_area_error_pct` is above 15%, or `median_abs_aspect_error` is above 0.15.\n- **Fail if** `|median_aspect_bias|` is above 0.05 or `|median_area_error_pct|` is above 5%. That means a systematic outline bias, and it would shift every comparison between conditions.\n- **Look at the overlay regardless.** The metrics can pass while endothelial structures are labelled in areas your annotation doesn't cover.\n\n## Audit: what is most likely to be wrong\n1. **Rounded cells in brightfield have a bright halo and a dark rim.** Cellpose may include or exclude the rim, which biases area and also aspect ratio. Check this against an independent reference, such as a fluorescent cancer-cell label on a few fields. If you don't have one, measure the same cells on a different focus plane.\n2. **Clusters.** The aspect ratio of a merged pair is large, so merges inflate the shape tail. Check the largest 5% of objects by area in the overlay.\n3. **Annotation consistency.** One person annotating one field is a single sample of how \"the correct outline\" looks. Re-annotate a crop a week later and score it against your first pass. If that human-to-human agreement is below your pass thresholds, the thresholds are too strict.\n4. **Hidden variation between fields.** \"Same microscope and settings\" doesn't guarantee the same density, focus, or endothelial texture. Hold out whole fields from different wells or days, and compare their metrics with your first field.\n5. **Border-cell exclusion.** This biases shape statistics against large cells, because large cells are more likely to touch the border. Keep the counts of excluded cells per field, and check that the proportion doesn't differ between conditions.\n6. **Aspect ratio precision.** A 15 µm cell is only about 23 px across. Compare conditions with bootstrapped confidence intervals, not raw means.\n\nNext steps: check your annotation, then run `run_zero_shot.py` and send me the metrics JSON. I can also look at the numbers if you paste them. Please also tell me how many fields you have. That decides whether we fine-tune or only tune post-processing.",
+  "exit_code": 0,
+  "stderr": "Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.\n",
+  "is_error": false,
+  "subtype": "success",
+  "duration_ms": 40279,
+  "num_turns": 1,
+  "total_cost_usd": 0.1520299,
+  "usage": {
+   "input_tokens": 2,
+   "cache_creation_input_tokens": 5298,
+   "cache_read_input_tokens": 7260,
+   "output_tokens": 5777,
+   "output_tokens_details": {
+    "thinking_tokens": 1036
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 5298,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 5777,
+     "cache_read_input_tokens": 7260,
+     "cache_creation_input_tokens": 5298,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 5298
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-5-5": {
+    "inputTokens": 14535,
+    "outputTokens": 3416,
+    "thinkingTokens": 1675,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "webSearchRequests": 0,
+    "costUSD": 0.0031615000000000002,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000
+   },
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 11370,
+    "thinkingTokens": 2191,
+    "cacheReadInputTokens": 16444,
+    "cacheCreationInputTokens": 8378,
+    "webSearchRequests": 0,
+    "costUSD": 0.14886839999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "permission_denials": [],
+  "session_id": "453bc1a8-4cc2-4e0c-9a5d-562ceeaec3b2"
  }
 ]

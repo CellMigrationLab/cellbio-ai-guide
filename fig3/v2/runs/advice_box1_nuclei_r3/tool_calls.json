@@ -1,0 +1,16 @@
+[
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/models.html",
+   "prompt": "Which models exist in current Cellpose (v4)? Is cpsam the default, are nuclei/cyto3 models still available, what are diameter/normalization/channel behaviors, CPU speed notes, and how to fine-tune?"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://github.com/stardist/stardist",
+   "prompt": "What is the 2D_versatile_fluo pretrained model trained on, how to normalize input (percentile), prob_thresh/nms_thresh, Python version support/install notes (TensorFlow), and any CPU caveats?"
+  }
+ }
+]

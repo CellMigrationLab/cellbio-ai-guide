@@ -1,0 +1,16 @@
+[
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/",
+   "prompt": "Which models exist in current Cellpose (cpsam, Cellpose-SAM)? Python version support, CPU use, how to fine-tune/train on own labels, API for models.CellposeModel eval and train (train_seg), diameter handling, input channel handling, normalization defaults."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/train.html",
+   "prompt": "Give the exact Python API for fine-tuning: train.train_seg arguments, models.CellposeModel arguments (pretrained_model, gpu), data loading, recommended number of epochs, CPU notes."
+  }
+ }
+]

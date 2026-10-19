@@ -1,0 +1,23 @@
+[
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/api.html",
+   "prompt": "Cellpose 4 / cpsam: CellposeModel constructor args, eval() signature and args (diameter, channels, normalize, flow_threshold, cellprob_threshold, niter, batch_size, tile_overlap), return values, gpu arg; any note about CPU speed, fine-tuning/train function signature (train_seg), and the training data of cpsam (brightfield?)."
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "Cellpose-SAM cpsam brightfield endothelial monolayer segmentation fine-tuning CPU",
+   "mode": "standard"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/_modules/cellpose/train.html",
+   "prompt": "Show the exact signature and docstring of train_seg in Cellpose 4, including args: net, train_data, train_labels, test_data, test_labels, normalize, compute_flows, save_path, model_name, n_epochs, learning_rate, batch_size, bsize, rescale, scale_range, min_train_masks. Also how it expects image shape (channels first or last, 3 channels?), whether data are lists of arrays, whether it normalizes internally, and what it returns. Also how to load a saved model (pretrained_model path)."
+  }
+ }
+]

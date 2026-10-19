@@ -1,0 +1,30 @@
+[
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://github.com/MouseLand/cellpose",
+   "prompt": "What is the current Cellpose version, which models are available (cpsam, nuclei etc.), Python version support, CPU/GPU notes, how to call model.eval and diameter handling, and fine-tuning/training instructions?"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://github.com/stardist/stardist",
+   "prompt": "What is the current StarDist version, TensorFlow requirements and Python version support, pretrained 2D_versatile_fluo details, and normalization (normalize percentiles) usage?"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/",
+   "prompt": "Current Cellpose version, available models, Python support, CPU notes, diameter handling, training/fine-tuning, and eval API."
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://pypi.org/project/stardist/",
+   "prompt": "Current StarDist version, release date, Python and TensorFlow requirements, and usage of pretrained 2D_versatile_fluo with normalize."
+  }
+ }
+]

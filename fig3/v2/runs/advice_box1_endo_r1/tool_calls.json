@@ -1,0 +1,23 @@
+[
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/api.html",
+   "prompt": "How to instantiate CellposeModel in Cellpose 4 (cpsam), eval() arguments (diameter, flow_threshold, cellprob_threshold, channels, normalize, batch_size), whether diameter is used, and the fine-tuning/training API (train_seg). Also CPU usage notes."
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "Cellpose-SAM cpsam brightfield endothelial monolayer segmentation fine-tune CPU",
+   "mode": "standard"
+  }
+ },
+ {
+  "tool": "WebFetch",
+  "input": {
+   "url": "https://cellpose.readthedocs.io/en/latest/train.html",
+   "prompt": "Exact fine-tuning code example for Cellpose 4 / cpsam: how to create the model (models.CellposeModel), call train.train_seg with arguments (train_data, train_labels, test_data, test_labels, save_path, model_name, n_epochs, learning_rate, weight_decay, batch_size, channel handling), image shape/format requirements, label requirements, and how to load the fine-tuned model (pretrained_model=path). Also any CPU/GPU memory or time guidance and recommended number of training images."
+  }
+ }
+]

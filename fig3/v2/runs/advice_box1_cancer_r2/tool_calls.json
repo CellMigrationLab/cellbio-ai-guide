@@ -1,0 +1,16 @@
+[
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "Cellpose 4 cpsam CellposeModel eval API diameter brightfield fine-tuning CPU",
+   "mode": "standard"
+  }
+ },
+ {
+  "tool": "WebSearch",
+  "input": {
+   "query": "Cellpose latest release python 3.13 support train_seg train from CLI",
+   "mode": "standard"
+  }
+ }
+]
