@@ -1,0 +1,19 @@
+scenario_id,task,condition,python_blocks,blocks_with_syntax_error,calls_checked,unverified,flags,unverified_items
+advice_box1_cancer_r1,cancer,box1,5,0,17,0,,
+advice_box1_cancer_r2,cancer,box1,1,0,32,0,,
+advice_box1_cancer_r3,cancer,box1,6,0,46,12,,evaluate | from cellcount import load_image | from cellcount import measure_cells | from cellcount import save_outputs | from cellcount import segment | from evaluate import evaluate
+advice_box1_endo_r1,endo,box1,4,0,30,0,,
+advice_box1_endo_r2,endo,box1,2,0,37,0,,
+advice_box1_endo_r3,endo,box1,4,0,22,0,,
+advice_box1_nuclei_r1,nuclei,box1,4,0,36,0,import not found: from scipy.stats import mannwhitnyu,
+advice_box1_nuclei_r2,nuclei,box1,2,0,14,0,,
+advice_box1_nuclei_r3,nuclei,box1,3,0,27,2,,from sklearn.metrics import roc_auc_score | roc_auc_score
+advice_simple_cancer_r1,cancer,simple,0,0,0,0,,
+advice_simple_cancer_r2,cancer,simple,0,0,0,0,,
+advice_simple_cancer_r3,cancer,simple,0,0,0,0,,
+advice_simple_endo_r1,endo,simple,0,0,0,0,,
+advice_simple_endo_r2,endo,simple,0,0,0,0,,
+advice_simple_endo_r3,endo,simple,0,0,0,0,,
+advice_simple_nuclei_r1,nuclei,simple,0,0,0,0,,
+advice_simple_nuclei_r2,nuclei,simple,1,0,14,0,not found in installed version: models.Cellpose,
+advice_simple_nuclei_r3,nuclei,simple,1,0,7,0,,
