@@ -843,7 +843,7 @@ for i, (task, name, _) in enumerate(TASKS):
             gg.append(f'<circle cx="{X(v):.1f}" cy="{yy}" r="5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
     add("".join(gg))
 add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "one run: the count it stated (3 runs per field; dashed line = manual count of that field)", 12, fill=BODY))
-add(cav(key, ["The numbers were estimated,", "not counted"]))
+add(cav(key, ["Estimated, not counted, and not reproducible:", "asking again gives different numbers"]))
 
 # ---------------------------------------------------------------- key line under task row: F1 legend
 add(t(CX_SC, ry["b"] - 2, "", 1))
