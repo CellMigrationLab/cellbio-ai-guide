@@ -35,5 +35,5 @@
   "in_code_run": false
  },
  "cost_usd": 0.391,
- "notes": "no follow-up questions; ran in its own process namespace; audit no flags; CLI 2.1.303; revised design (halfdev mosaic)"
+ "notes": "no follow-up questions; ran in its own process namespace; audit no flags; CLI 2.1.303; revised design (halfdev mosaic); scoring repeated after the worker restart"
 }
