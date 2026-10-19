@@ -1,0 +1,33 @@
+{
+ "field": 209,
+ "reference": {
+  "count": 163,
+  "median_area_um2": 176.0,
+  "median_aspect_ratio": 1.111
+ },
+ "turn1": {
+  "count": 200,
+  "range": null,
+  "count_error": 37
+ },
+ "turn2": {
+  "turn2_median_area_um2": 200.0,
+  "turn2_median_aspect_ratio": 1.075
+ },
+ "turn3": {
+  "status": "ok",
+  "stated_count": 146,
+  "n_ellipses": 146,
+  "n_invalid": 0,
+  "stated_median_area_um2": 199.1,
+  "stated_median_aspect_ratio": 1.04,
+  "drawn_median_area_um2": 198.9,
+  "drawn_median_aspect_ratio": 1.042,
+  "n_ref": 163,
+  "n_drawn": 146,
+  "tp": 140,
+  "fp": 6,
+  "fn": 23,
+  "f1": 0.906
+ }
+}
