@@ -185,5 +185,5 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   a Cellpose script instead. These are valid results (a refusal is never rerun, PROTOCOL_V2 section 9); `score.json` has
   `turn3.status = no_valid_json` and F1 0 for them. The replies are kept verbatim in `turns.json`; `v2/direct_summary.csv`
   (made by `v2/summarise_direct.py`) records one line per conversation, with the start of each decline.
-- Authors' decision (19 Oct 2026): the figure shows only the count results of row D (turn-1 stated count, and the count of
-  ellipses drawn where it drew); the F1 of the drawn outlines and the stated medians are not shown in the figure.
+- Authors' decision (19 Oct 2026): the figure shows only the count results of row D (the turn-1 stated count); the count of
+  ellipses drawn, the F1 of the drawn outlines and the stated medians are not shown in the figure.

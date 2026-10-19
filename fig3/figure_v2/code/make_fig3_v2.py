@@ -822,14 +822,10 @@ for i, (task, name, _) in enumerate(TASKS):
           f'<line x1="{X(man):.1f}" y1="{y+18}" x2="{X(man):.1f}" y2="{y+42}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>']
     for v in [v for v in dd["asked"] if v is not None]:
         gg.append(f'<circle cx="{X(v):.1f}" cy="{y+30}" r="5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
-    for v in dd["drawn"]:
-        if v is not None:
-            gg.append(f'<rect x="{X(v)-4.5:.1f}" y="{y+25.5}" width="9" height="9" fill="none" stroke="{ACC}" stroke-width="2"/>')
     for fr, lab in [(0, "0"), (1, "manual"), (1.5, "1.5×")]:
         gg.append(t(x + fr / 1.6 * bw, y + 56, lab, 11, fill="#7a8699", anchor="middle"))
     add("".join(gg))
-add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "count, number only", 12, fill=BODY)
-    + f'<rect x="{CX_SC+150}" y="{ry[key]+RH[key]-22.5}" width="9" height="9" fill="none" stroke="{ACC}" stroke-width="2"/>' + t(CX_SC + 165, ry[key] + RH[key] - 14, "count of cells it drew", 12, fill=BODY))
+add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "stated count (turn 1)", 12, fill=BODY))
 add(cav(key, ["The numbers were estimated,", "not counted"]))
 
 # ---------------------------------------------------------------- key line under task row: F1 legend
