@@ -1,0 +1,10 @@
+Change log (optimised only on image.tif / annotation.tif; no other image touched)
+1. Data check: 1022x1024 uint16 (12-bit), two stitched tiles with a brightness step at x=512 (mean ~2600 vs ~3080); annotation = 413 endothelial cells forming a tessellation (88% of pixels), cancer cells NOT separate objects. Median GT area 849 um2, AR 1.62.
+2. Baseline: Cellpose-SAM (cpsam, pretrained), local-flattened image, 0.5x scale, defaults-ish (flow 0.4, cellprob 0): F1@0.5 0.44, 461 objects, includes round cancer cells, gaps between cells, foreground 54% vs 88%.  0.75x scale: worse (F1 0.35) and slower -> keep 0.5x.
+3. Added cancer-cell removal (boundary-ring intensity SD >= threshold) + expand_labels to fill confluent monolayer: F1@0.5 0.44 -> 0.63.
+4. Flow threshold 0.8 / cellprob -1.0 (more irregular/faint cells kept): F1@0.5 0.64. cellprob -2 alone worse (0.54); CLAHE input worse (0.41-0.57) -> rejected.
+5. Sweeps of ring-SD threshold (0.9-2.0) and expansion (4-12 px): best ring SD 1.2, expansion 8 px (area closest to GT without hurting AR).
+6. Image-guided watershed instead of distance expansion: no gain (F1@0.5 0.55-0.62) -> rejected.
+7. Fine-tuning cpsam on the right tile (hold out left tile): CPU training killed by out-of-memory (~12 GB) -> abandoned; also single-image fine-tuning could not be validated honestly.
+8. Final pipeline.py run end-to-end (65 s CPU): 431 cells, F1@0.3/0.5/0.75 = 0.75/0.64/0.14, count error +4.4%, median area 788 vs 849 um2, median AR 1.39 vs 1.62, matched-cell area error 15%, AR Spearman 0.57.
+Note: scratch files were lost once mid-session (scratchpad wiped); results above were re-measured with the final code.

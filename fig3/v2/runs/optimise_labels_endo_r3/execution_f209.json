@@ -1,0 +1,22 @@
+{
+ "field": 209,
+ "script": "pipeline.py",
+ "packages": [],
+ "runtime_files_refused": [
+  "annotation.tif"
+ ],
+ "runtime_files_copied": [
+  "validate.py"
+ ],
+ "command": [
+  "/home/user/r2exec_v2/runs/optimise_labels_endo_r3/f209/venv/bin/python",
+  "pipeline.py",
+  "image.tif",
+  "labels.tif",
+  "measurements.csv"
+ ],
+ "exit_code": 0,
+ "timeout": false,
+ "runtime_s": 30.9,
+ "status": "ok"
+}
