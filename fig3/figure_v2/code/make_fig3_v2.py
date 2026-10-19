@@ -824,15 +824,15 @@ for i, (task, name, _) in enumerate(TASKS):
     man = 1.0                                   # values are count / manual count (both whole fields)
     bw = GW - 20
     X = lambda v: x + min(v / man, 1.6) / 1.6 * bw
-    gg = [t(x, y, name, 13.5, "bold", INK) + t(x + GW - 6, y, "count / manual", 11.5, fill="#5b6676", anchor="end"),
+    gg = [t(x, y, name, 13.5, "bold", INK) + t(x + GW - 6, y, "stated count / manual count", 11.5, fill="#5b6676", anchor="end"),
           f'<line x1="{x}" y1="{y+30}" x2="{x+bw}" y2="{y+30}" stroke="#c9d1dc" stroke-width="1.2"/>',
           f'<line x1="{X(man):.1f}" y1="{y+18}" x2="{X(man):.1f}" y2="{y+42}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>']
     for v in [v for v in dd["asked"] if v is not None]:
         gg.append(f'<circle cx="{X(v):.1f}" cy="{y+30}" r="5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
-    for fr, lab in [(0, "0"), (1, "manual"), (1.5, "1.5×")]:
+    for fr, lab in [(0, "0"), (1, "= manual"), (1.5, "1.5×")]:
         gg.append(t(x + fr / 1.6 * bw, y + 56, lab, 11, fill="#7a8699", anchor="middle"))
     add("".join(gg))
-add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "stated count (turn 1)", 12, fill=BODY))
+add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "one run: the count it stated (3 runs on each of fields 104 and 209), as a fraction of that field's manual count", 12, fill=BODY))
 add(cav(key, ["The numbers were estimated,", "not counted"]))
 
 # ---------------------------------------------------------------- key line under task row: F1 legend
