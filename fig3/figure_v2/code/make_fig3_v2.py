@@ -728,9 +728,6 @@ def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
                     g.append(f'<path d="M{cx-4.5:.1f},{yy+4} l9,9 M{cx+4.5:.1f},{yy+4} l-9,9" stroke="{NOC}" stroke-width="2.2"/>')
                 else:
                     g.append(f'<circle cx="{bx+(bw-8)*v:.1f}" cy="{yy+BH/2}" r="4" fill="#ffffff" stroke="{INK}" stroke-width="1.3"/>')
-        n = medn(ns)
-        if n is not None:
-            g.append(t(bx + bw + 36, yy + 14, f"n={n}", 12.5, fill="#5b6676"))
     return "".join(g)
 
 
@@ -740,7 +737,7 @@ def panel(key, y, sub, lb, la, half=False):
         x = CX_SC + i * (GW + GG)
         r = FS[task][sub]
         manual = FSJ.get("manual_half", {}).get(task) if half else None
-        g.append(t(x, y, f"{name}", 13.5, "bold", INK) + t(x + GW - 6, y, f"manual n={manual or MAN[task]}", 11.5, fill="#5b6676", anchor="end")
+        g.append(t(x, y, f"{name}", 13.5, "bold", INK)
                  + group(x, y + 14, task, r["before"], r["after"], r.get("before_n", [None]), r.get("after_n", [None]), lb, la, manual,
                                                                      (r.get("before_shape", []), r.get("after_shape", []))))
     return "".join(g)
@@ -754,7 +751,7 @@ row = [rrect(RX, Y0, RW, HDH, 14, "#ffffff", NN["stroke"], 1.3)]
 for i, (task, name, mod) in enumerate(TASKS):
     x = RX + 20 + i * (2 * TT + 8 + (RW - 40 - 3 * (2 * TT + 8)) / 2)
     src = A3 + ("dapi_full.png" if task == "nuclei" else "bf_full.png")
-    row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK) + t(x + 2 * TT + 8, Y0 + 30, f"{mod} · FOV 1 · manual n = {MAN104[task]}", 13, fill=BODY, anchor="end"))
+    row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK) + t(x + 2 * TT + 8, Y0 + 30, f"{mod} · FOV 1", 13, fill=BODY, anchor="end"))
     row.append(img(x, Y0 + 44, TT, TT, src, f"{task} image") + img(x + TT + 8, Y0 + 44, TT, TT, A3 + f"labels_{task}.png", f"{task} manual labels"))
     row.append(t(x, Y0 + 44 + TT + 22, TASK_TEXT[task], 13, "bold", INK, lh=17))
     for xi in (x, x + TT + 8):                    # the model worked on the left halves; scoring uses the right halves

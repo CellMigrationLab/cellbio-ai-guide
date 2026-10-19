@@ -9,13 +9,11 @@ the authors' operator for outdated models or code (for example Cellpose `cyto3` 
 outdated code can fail, raise errors, or fall back silently (example in the black box: `cyto3` loads the current model
 without any message). **b**, Ask for code: three scripts per prompt and task, written by the model and run by us unchanged
 on both FOVs. Bars: median over the three scripts of the mean object F1 (IoU ≥ 0.5) on the held-out halves of the two
-FOVs; open circles: each script; red cross: a script that failed on at least one FOV (a failed FOV counts 0). n: objects
-found, summed over the two held-out halves; manual n: objects in the manual annotation of the same regions (border cells
-removed as in the scoring). **c**, Let an agent write, run and optimise a pipeline in its own folder, three runs per arm
+FOVs; open circles: each script; red cross: a script that failed on at least one FOV (a failed FOV counts 0). **c**, Let an agent write, run and optimise a pipeline in its own folder, three runs per arm
 and task: by eye (no annotation) or scored (given the annotation of the development halves). The final pipeline was run
 by us on both FOVs; symbols as in b. **d**, Ask for the answer: "How many … are in this image?", three conversations per
-FOV and task. Each dot is the count the model stated; the dashed line is the manual count of that FOV (each panel has its
-own scale). Repeating the same question gives different answers.
+FOV and task. Each dot is the count the model stated; the dashed line, with its value, is the manual count of that FOV (each panel has
+its own scale). Repeating the same question gives different answers.
 
 Notes for the authors (not for the figure): the model refused to draw ellipses for nuclei and endothelial cells (12 of 18
 conversations, `fig3/v2/direct_summary.csv`), so the drawn results and the stated size and shape (turn 2) are not shown;
