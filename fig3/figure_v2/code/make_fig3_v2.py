@@ -7,6 +7,7 @@ images in the header are the whole development field 104). Row d: whole fields. 
 Row a (illustration) and the red call-outs are round-1 wording until the v2 item tables and the full results are reviewed.
 """
 import csv
+import os
 import math
 import base64
 import json
@@ -628,6 +629,7 @@ def build_scores_v2():
     return {"tasks": tasks, "n_runs": n_runs, "n_ref_heldout": n_ref}
 
 
+BOX1_ONLY = os.environ.get("BOX1_ONLY") == "1"   # row b: Box 1 only (simple vs Box 1 goes to the supplement)
 FSJ = build_scores_v2()
 json.dump(FSJ, open("fig_scores_v2.json", "w"), indent=1)
 FS = FSJ["tasks"]
@@ -696,7 +698,10 @@ def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
     g = []
     d = FS[task]["default"]
     manual = manual or MAN[task]
-    for i, (lbl, vals, ns, col) in enumerate([(lb, b, bn, BEFC), (la, a, an, F1C)]):
+    conds = [(lb, b, bn, BEFC), (la, a, an, F1C)]
+    if lb is None:                      # one condition only (Box 1)
+        conds, shapes = conds[1:], shapes[1:]
+    for i, (lbl, vals, ns, col) in enumerate(conds):
         yy = y + i * 30
         g.append(t(x, yy + 9, lbl, 12.5, "bold" if i else "normal", INK if i else BODY))
         bx = x + 58
@@ -718,7 +723,7 @@ def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
         n = medn(ns)
         if n is not None:
             g.append(t(bx + bw + 40, yy + 10, f"n={n}", 12, fill="#5b6676"))
-    for i, (runs, lbl) in enumerate(zip(shapes, (lb, la))):
+    for i, (runs, lbl) in enumerate(zip(shapes, [c[0] for c in conds])):
         txt = shape_text(runs)
         if txt:
             g.append(t(x, y + 66 + i * 15, f"{lbl}: {txt}", 11.5, fill="#5b6676"))
@@ -800,8 +805,9 @@ s, _ = terminal(CX_CAV + 14, ry[key] + 62, W_CAV - 16, [(">>> CellposeModel(pret
 
 # ================================================================ b1 / b2 / c / d
 key = "b"
-ask(key, [("before", ["“Please write a Python script to segment the …”"]), ("after", ["Box 1 prompt"])])
-add(panel(key, ry[key] + 34, "py", "generic", "Box 1"))
+ask(key, [("", ["“Please write a Python script to segment the …”", "+ the Box 1 checklist"])] if BOX1_ONLY else
+    [("before", ["“Please write a Python script to segment the …”"]), ("after", ["Box 1 prompt"])])
+add(panel(key, ry[key] + 34, "py", None if BOX1_ONLY else "generic", "Box 1"))
 add(cav(key, ["Box 1 makes the settings visible;", "only the test shows if they work"]))
 
 key = "c"
@@ -877,5 +883,5 @@ svg = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
        f'width="{W}" height="{H}" viewBox="0 0 {W} {H}" font-family="{FONT}">\n'
        f'<defs>{"".join(defs)}</defs>\n<rect width="{W}" height="{H}" fill="#ffffff"/>\n'
        + "\n".join(out) + "\n</svg>\n")
-open("../output/fig3_v2.svg", "w", encoding="utf-8").write(svg)
+open("../output/fig3_v2_box1only.svg" if BOX1_ONLY else "../output/fig3_v2.svg", "w", encoding="utf-8").write(svg)
 print("written", len(svg) // 1024, "KB; height", H)
