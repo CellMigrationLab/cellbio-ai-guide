@@ -1,0 +1,20 @@
+{
+ "field": 104,
+ "script": "code_as_returned.py",
+ "packages": [
+  "cellpose",
+  "tifffile",
+  "scikit-image",
+  "pandas"
+ ],
+ "runtime_files_refused": [],
+ "runtime_files_copied": [],
+ "command": [
+  "/home/user/r2exec_v2/runs/code_box1_cancer_r1/f104/venv/bin/python",
+  "script.py"
+ ],
+ "exit_code": 1,
+ "timeout": false,
+ "runtime_s": 498.5,
+ "status": "crashed"
+}
