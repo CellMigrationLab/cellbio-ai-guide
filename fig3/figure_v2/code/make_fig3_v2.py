@@ -905,7 +905,7 @@ add(rrect(28, KY, 1784, KH, 16, "#ffffff", NN["stroke"], 1.4)
     + t(48, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 16.5, "bold", INK))
 KEEP = [("lock", "Check how the service handles data"), ("check", "Verify advice against the docs"),
         ("ruler", "Ask for code that is easy to debug"), ("target", "Give agents a score to optimise"),
-        ("file", "Request masks, not only a number")]
+        ("file", ["Request code and intermediate", "outputs, not only the result"])]
 KW = (1784 - 40) / 5
 
 
@@ -926,7 +926,7 @@ def kicon(name, cx, cy, col):
 
 for i, (ic, a_) in enumerate(KEEP):
     x = 48 + i * KW
-    add(kicon(ic, x + 20, KY + 62, ACC) + t(x + 48, KY + 67, a_, 14.5, "bold", INK))
+    add(kicon(ic, x + 20, KY + 62, ACC) + t(x + 48, KY + (60 if isinstance(a_, list) else 67), a_, 14.5, "bold", INK, lh=18))
 
 add(t(1812 - 14, KY + KH + 18, f"DRAFT: {FSJ['n_runs']} of 72 main runs scored. Rows b, c: bar = median of the runs' mean F1 on the held-out halves of FOV 1 and FOV 2 (open circles: runs; x: failed). Images above: FOV 1.",
       12, fill="#7a8699", anchor="end"))
