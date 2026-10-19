@@ -1,0 +1,1 @@
+Attempt 2 of optimise_by_eye_cancer_r2 rejected: interrupted again: the session worker was restarted a second time (about 11:20 UTC) while the subject was still working (PROTOCOL_V2 section 9, API or session interruption); the subject had not finished

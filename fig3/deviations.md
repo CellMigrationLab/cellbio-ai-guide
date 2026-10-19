@@ -218,3 +218,6 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
 - **Extra model weights in the shared folder**: a file `~/.cellpose/models/cpsam` (1.2 GB, created 19 Oct 06:10 UTC) appeared next to
   `cpsam_v2`; it was downloaded by one of the agents running in that period. The frozen environment records only `cpsam_v2`; the
   default model used by `CellposeModel()` is still `cpsam_v2`. The affected run is not identified.
+- **Second worker restart (19 Oct 2026, about 11:20 UTC)**: the three reruns of runs 19, 52 and 62 were killed again before they
+  finished; their attempts were rejected and archived (`v2/runs_rejected/*_attempt2` and `_attempt3`) and the three scenarios were
+  started a third time. The scoring of run 66 was interrupted a second time and repeated.
