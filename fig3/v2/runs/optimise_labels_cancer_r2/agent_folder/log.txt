@@ -1,0 +1,4 @@
+1. v1: illumination flatten (image / Gaussian sigma 40 px; left half of image was darker), Cellpose cpsam_v2 CPU, diameter 25 px, flow 0.4, cellprob 0, area filter 60-800 um2. Result: 251 objects, recall 0.96, precision 0.56, F1@IoU0.5 0.71. FPs were large low-contrast endothelial cells (median 540 um2) and small debris.
+2. Added filters tuned on image.tif only: area 80-450 um2, solidity >= 0.90, std of flattened intensity >= 0.04 (cancer cells are textured/rounded). Bug found: Cellpose normalised the input array in place, making std filter inert (166 objects); fixed with flat.copy().
+3. Final: 157 objects vs 147 annotated, TP 137, FP 20, FN 10, F1 0.90, mean IoU 0.81, median area error +5.6%, median |AR error| 0.07.
+Not changed (tested only on one image): diameter, flow/cellprob thresholds, model choice.

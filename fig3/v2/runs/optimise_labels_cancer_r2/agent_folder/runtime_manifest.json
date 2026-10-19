@@ -1,0 +1,5 @@
+{"entrypoint":"pipeline.py","command":"python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
+ "files":["pipeline.py"],
+ "model_weights":["~/.cellpose/models/cpsam_v2"],
+ "python_packages":["numpy","scipy","scikit-image","tifffile","cellpose==4.2.1.1","torch"],
+ "note":"evaluate.py is optional (validation only): python evaluate.py labels.tif annotation.tif"}
