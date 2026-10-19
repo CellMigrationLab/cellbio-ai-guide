@@ -764,7 +764,7 @@ for i, (task, name, mod) in enumerate(TASKS):
 add("".join(row))
 
 ORDER = [("a", "Ask for advice", 156), ("b", "Ask for code: Python script", 134),
-         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 176)]
+         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 164)]
 ry, RH = {}, {}
 yy = Y0 + HDH + GAP
 for key, ttl, h in ORDER:
@@ -826,24 +826,32 @@ for i, (task, name, _) in enumerate(TASKS):
     x = CX_SC + i * (GW + GG)
     dd = FS[task]["draw"]
     bw = GW - 20
-    gg = [t(x, y, name, 13.5, "bold", INK) + t(x + GW - 6, y, "stated count per run", 11.5, fill="#5b6676", anchor="end")]
+    gg = [t(x, y, name, 13.5, "bold", INK)]
     for j, fld in enumerate(("104", "209")):
         man = dd["manual_by_field"].get(fld)
         vals = dd["count_by_field"][fld]
         if man is None:
             continue
-        yy = y + 36 + j * 38
-        top = max([1.6 * man] + vals)                      # axis 0 to 1.6 x manual (or the largest stated count)
-        X = lambda v, top=top: x + 62 + v / top * (bw - 62)
-        gg.append(t(x, yy + 4, f"field {fld}", 11.5, fill=BODY))
+        yy = y + 34 + j * 40
+        top = int(np.ceil(max([1.6 * man] + vals) / 100.0) * 100)   # axis from 0 to a round number >= 1.6 x manual
+        X = lambda v, top=top: x + 40 + v / top * (bw - 40)
+        gg.append(t(x, yy + 4, fld, 11.5, fill=BODY))
         gg.append(f'<line x1="{X(0):.1f}" y1="{yy}" x2="{X(top):.1f}" y2="{yy}" stroke="#c9d1dc" stroke-width="1.2"/>')
-        gg.append(f'<line x1="{X(man):.1f}" y1="{yy-9}" x2="{X(man):.1f}" y2="{yy+9}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>')
-        gg.append(t(X(man), yy + 21, f"manual {man}", 11, fill="#5b6676", anchor="middle"))
-        for v in vals:
-            gg.append(f'<circle cx="{X(v):.1f}" cy="{yy}" r="5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
+        for tick in (0, top):
+            gg.append(f'<line x1="{X(tick):.1f}" y1="{yy-3}" x2="{X(tick):.1f}" y2="{yy+3}" stroke="#9aa4b2" stroke-width="1"/>')
+            gg.append(t(X(tick), yy + 17, str(tick), 10.5, fill="#7a8699", anchor="middle"))
+        gg.append(f'<line x1="{X(man):.1f}" y1="{yy-10}" x2="{X(man):.1f}" y2="{yy+10}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>')
+        gg.append(t(X(man), yy - 13, str(man), 10.5, "bold", INK, anchor="middle"))
+        placed = []                                           # dots that would overlap are spread vertically
+        for v in sorted(vals):
+            k = sum(abs(X(v) - px) < 9 for px in placed)
+            placed.append(X(v))
+            dy = [0, -6, 6, -12, 12][min(k, 4)]
+            gg.append(f'<circle cx="{X(v):.1f}" cy="{yy + dy}" r="4.5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
     add("".join(gg))
-add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "one run: the count it stated (3 runs per field; dashed line = manual count of that field)", 12, fill=BODY))
-add(cav(key, ["Estimated, not counted, and not reproducible:", "asking again gives different numbers"]))
+add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="4.5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "one run", 12, fill=BODY)
+    + f'<line x1="{CX_SC+80}" y1="{ry[key]+RH[key]-23}" x2="{CX_SC+80}" y2="{ry[key]+RH[key]-11}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>' + t(CX_SC + 90, ry[key] + RH[key] - 14, "manual count", 12, fill=BODY))
+add(cav(key, ["Estimated, not counted: not reproducible,", "asking again gives different numbers"]))
 
 # ---------------------------------------------------------------- key line under task row: F1 legend
 add(t(CX_SC, ry["b"] - 2, "", 1))
