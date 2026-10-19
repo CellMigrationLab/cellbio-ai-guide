@@ -1,0 +1,10 @@
+Optimised only on image.tif. Intermediate files in the session scratchpad.
+1. v1: per-512px-tile flat-field (Gaussian sigma 40 px, robust MAD scaling), cpsam, diameter 30 px,
+   native resolution, flow_thr 0.4, cellprob 0, size/solidity filter. Reason for tiles: the image has an
+   intensity step at x=512 (mean 2.6k vs 3.1k; different contrast). Result: 336 objects, ~half were endothelial cells.
+2. v2: added filter on boundary-ring gradient (>=0.35) + per-object opening (disk 3) to trim leaks.
+   146 objects; remaining false positives were leaks next to cancer cells; one cancer cell lost (rim 0.34).
+3. v3 (final): replaced ring gradient with std of normalised intensity in mask >= 1.0
+   (cancer 1.5-2.3, endothelial <=0.7 on inspected examples). 148 objects, visually good.
+4. Tried cellprob_threshold 0/-2/-4 on a crop for one missed isolated cancer cell: no change; left as limitation.
+5. Replaced deprecated skimage major/minor_axis_length with axis_major/minor_length.
