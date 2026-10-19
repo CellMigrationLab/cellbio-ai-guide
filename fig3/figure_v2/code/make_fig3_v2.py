@@ -16,7 +16,7 @@ import os
 import random
 from xml.sax.saxutils import escape
 
-W, H = 1676, 2334          # canvas width: narrow, so the text stays large when the figure is scaled to a page
+W, H = 1100, 1500          # full-page portrait (183 mm wide): at this width 15 px is about 7 pt on paper
 AUDIT = os.environ.get("AUDIT", "1") == "1"  # audited wording is the default; AUDIT=0 restores the original
 
 
@@ -685,122 +685,141 @@ def change_pill(cx, cy, lines, w=96):
             + t(cx - 4, cy - h / 2 + 20, lines, 12, "bold", "#ffffff", "middle", lh=15))
 
 
-# ---------------------------------------------------------------- grid
-Y0 = 20
-M = 20                                  # outer margin
-LW_ = 52                                # delegation arrow strip
-RX = M + LW_ + 10
+
+
+# ---------------------------------------------------------------- grid (full-page portrait: rows stacked, text >= 15 px)
+M = 12                                  # outer margin
+LW_ = 30                                # delegation arrow strip
+RX = M + LW_ + 6
 RIGHT = W - M
 RW = RIGHT - RX
-CX_ASK, W_ASK = RX + 14, 336
-CX_SC = CX_ASK + W_ASK + 22
-GW, GG = 262, 12
-CX_CAV = CX_SC + 3 * GW + 2 * GG + 20
-W_CAV = RIGHT - 14 - CX_CAV
-GAP = 10
+PAD = 14
+X0 = RX + PAD                           # content left edge inside a row
+XW = RW - 2 * PAD                       # content width
+PG = 14                                 # gap between the three task panels
+PW = (XW - 2 * PG) / 3                  # task panel width
+PX = [X0 + i * (PW + PG) for i in range(3)]
+BW = (XW - 14) / 2                      # width of one of two prompt bubbles
+GAP = 6
+FS_TXT = 15                             # smallest text (about 7 pt when the figure is 183 mm wide)
+
+TASK_TEXT = {"nuclei": ["Segment and count the endothelial nuclei", "(not the cancer cells' nuclei)"],
+             "cancer": ["Segment and count the cancer cells"],
+             "endo": ["Segment and count the endothelial cells", "(whole cells, outlined at the junctions)"]}
 
 
-def shape_text(runs):
-    """'area err 18 % · AR err 0.16' = median over runs of the mean (two fields) median |error| of matched objects."""
-    v = [r for r in runs if r]
-    if not v:
-        return ""
-    return f"area err {np.median([r[0] for r in v]):.0f}% · AR err {np.median([r[1] for r in v]):.2f}"
-
-
-def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
+def group(x, y, vals_pair, labels):
     """Two bars: median F1 of the runs; open circle = one run; red cross = a run in which a field failed (counts 0)."""
-    bar_w = GW - 66 - 48                  # label 66 px, value 48 px
+    bar_w = PW - 76 - 54
     g = []
-    conds = [(lb, b, bn, BEFC), (la, a, an, F1C)]
-    BH, STEP = 18, 40
-    for i, (lbl, vals, ns, col) in enumerate(conds):
+    cols = (BEFC, F1C)
+    BH, STEP = 20, 33
+    for i, (lbl, vals, col) in enumerate(zip(labels, vals_pair, cols)):
         yy = y + i * STEP
-        g.append(t(x, yy + 13, lbl, 13.5, "bold" if i else "normal", INK if i else BODY))
-        bx = x + 66
+        g.append(t(x, yy + 15, lbl, FS_TXT, "bold" if i else "normal", INK if i else BODY))
+        bx = x + 76
         g.append(f'<rect x="{bx}" y="{yy}" width="{bar_w}" height="{BH}" rx="4" fill="#eef1f5"/>')
         m = med(vals)
         if m is None:
-            g.append(t(bx + bar_w + 6, yy + 14, "…", 14, "bold", "#7a8699"))
+            g.append(t(bx + bar_w + 6, yy + 16, "…", 16, "bold", "#7a8699"))
             continue
         g.append(f'<rect x="{bx}" y="{yy}" width="{bar_w*m:.1f}" height="{BH}" rx="4" fill="{col}"/>'
-                 + t(bx + bar_w + 6, yy + 14, f"{m:.2f}", 14.5, "bold", INK))
-        if len(vals) > 1:
-            for v in vals:
-                if v is None:
-                    continue
-                if isinstance(v, list):                 # a field failed: x at the mean score
-                    cx = bx + bar_w * v[1]
-                    g.append(f'<path d="M{cx-4.5:.1f},{yy+4} l9,9 M{cx+4.5:.1f},{yy+4} l-9,9" stroke="{NOC}" stroke-width="2.2"/>')
-                else:
-                    g.append(f'<circle cx="{bx+bar_w*v:.1f}" cy="{yy+BH/2}" r="4" fill="#ffffff" stroke="{INK}" stroke-width="1.3"/>')
+                 + t(bx + bar_w + 6, yy + 16, f"{m:.2f}", 16, "bold", INK))
+        for v in vals:
+            if v is None:
+                continue
+            if isinstance(v, list):                 # a field failed: x at the mean score
+                cx = bx + bar_w * v[1]
+                g.append(f'<path d="M{cx-5:.1f},{yy+5} l10,10 M{cx+5:.1f},{yy+5} l-10,10" stroke="{NOC}" stroke-width="2.4"/>')
+            else:
+                g.append(f'<circle cx="{bx+bar_w*v:.1f}" cy="{yy+BH/2}" r="4.5" fill="#ffffff" stroke="{INK}" stroke-width="1.4"/>')
     return "".join(g)
 
 
-def panel(key, y, sub, lb, la, half=False):
+def panel(y, sub, lb, la):
     g = []
     for i, (task, name, _) in enumerate(TASKS):
-        x = CX_SC + i * (GW + GG)
         r = FS[task][sub]
-        manual = FSJ.get("manual_half", {}).get(task) if half else None
-        g.append(t(x, y, f"{name}", 13.5, "bold", INK)
-                 + group(x, y + 14, task, r["before"], r["after"], r.get("before_n", [None]), r.get("after_n", [None]), lb, la, manual,
-                                                                     (r.get("before_shape", []), r.get("after_shape", []))))
+        g.append(t(PX[i], y + 15, name, 16, "bold", INK) + group(PX[i], y + 26, (r["before"], r["after"]), (lb, la)))
     return "".join(g)
 
 
-# ---------------------------------------------------------------- task row: original image + desired result (full field)
-TT = 236                      # task image size; the three task blocks are spread evenly across the header
-HDH = TT + 98
-add(group_svg := None) if False else None
-row = [rrect(RX, Y0, RW, HDH, 14, "#ffffff", NN["stroke"], 1.3)]
+def prompt2(x, y, w, tag, lines, tag_col=CHG):
+    """Speech bubble of the person with a small tag above it; returns (svg, height)."""
+    h = 14 + 19 * len(lines)
+    ty = y + (20 if tag else 0)
+    g = [t(x + 46, y + 14, tag, FS_TXT, "bold", tag_col)] if tag else []
+    g += [bubble(x + 30, ty, w - 30, h, "#ffffff", "#b8c2d0", "l"), person(x + 12, ty + h / 2),
+          t(x + 46, ty + 24, lines, FS_TXT, fill=INK, lh=19)]
+    return "".join(g), ty - y + h
+
+
+def callout(x, y, w, lines, size=16, h=None):
+    """Red call-out band with a warning sign; returns (svg, height)."""
+    h = h or 18 + 21 * len(lines)
+    return (rrect(x, y, w, h, 10, CAVF, CAVS, 1.2) + caution(x + 22, y + h / 2 - 1, NOC)
+            + t(x + 44, y + h / 2 - 10.5 * (len(lines) - 1) + 5.5, lines, size, "bold", NOC, lh=21)), h
+
+
+def legend_right(y, items):
+    """Legend on the title line of a row, right-aligned. items: (kind, text)."""
+    widths = [26 + 7.6 * len(s) + 16 for _, s in items]
+    x = RIGHT - PAD - sum(widths) + 16
+    g = []
+    for (kind, s), w in zip(items, widths):
+        if kind == "run":
+            g.append(f'<circle cx="{x+8}" cy="{y-5}" r="4.5" fill="#ffffff" stroke="{INK}" stroke-width="1.4"/>')
+        elif kind == "cross":
+            g.append(f'<path d="M{x+3},{y-10} l10,10 M{x+13},{y-10} l-10,10" stroke="{NOC}" stroke-width="2.4"/>')
+        elif kind == "bar":
+            g.append(f'<rect x="{x+1}" y="{y-12}" width="14" height="12" rx="3" fill="{F1C}"/>')
+        elif kind == "red":
+            g.append(f'<circle cx="{x+8}" cy="{y-5}" r="6" fill="{NOC}"/>')
+        elif kind == "dot":
+            g.append(f'<circle cx="{x+8}" cy="{y-5}" r="5" fill="{MCOL["sonnet"]}"/>')
+        elif kind == "man":
+            g.append(f'<line x1="{x+8}" y1="{y-13}" x2="{x+8}" y2="{y+2}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>')
+        g.append(t(x + 22, y, s, FS_TXT, fill=BODY))
+        x += w
+    return "".join(g)
+
+
+# ---------------------------------------------------------------- header: the three tasks (image + manual annotation)
+TT = 164
+Y0 = M
+HDH = 38 + TT + 12 + 19 * 2 + 12
+hdr = [rrect(M, Y0, W - 2 * M, HDH, 14, "#ffffff", NN["stroke"], 1.3)]
+BWH = 2 * TT + 8                                    # width of one task block
+SPREAD = (W - 2 * M - 28 - 3 * BWH) / 2
 for i, (task, name, mod) in enumerate(TASKS):
-    x = RX + 20 + i * (2 * TT + 8 + (RW - 40 - 3 * (2 * TT + 8)) / 2)
+    x = M + 14 + i * (BWH + SPREAD)
+    iy = Y0 + 36
     src = A3 + ("dapi_full.png" if task == "nuclei" else "bf_full.png")
-    row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK))
-    row.append(img(x, Y0 + 44, TT, TT, src, f"{task} image") + img(x + TT + 8, Y0 + 44, TT, TT, A3 + f"labels_{task}.png", f"{task} manual labels"))
-    row.append(t(x, Y0 + 44 + TT + 22, TASK_TEXT[task], 13, "bold", INK, lh=17))
+    hdr.append(t(x, Y0 + 26, name, 18, "bold", INK))
+    hdr.append(img(x, iy, TT, TT, src, f"{task} image") + img(x + TT + 8, iy, TT, TT, A3 + f"labels_{task}.png", f"{task} manual labels"))
+    hdr.append(t(x, iy + TT + 22, TASK_TEXT[task], FS_TXT, "bold", INK, lh=19))
     for xi in (x, x + TT + 8):                    # the model worked on the left halves; scoring uses the right halves
-        row.append(f'<line x1="{xi + TT / 2:.1f}" y1="{Y0 + 44}" x2="{xi + TT / 2:.1f}" y2="{Y0 + 44 + TT}" stroke="#ffffff" stroke-width="1.6" stroke-dasharray="5 4" opacity="0.9"/>')
-    row.append(halo(x + 6, Y0 + 44 + TT - 8, "given", size=12) + halo(x + TT / 2 + 8, Y0 + 44 + TT - 8, "held out", size=12))
-    row.append(halo(x + 6, Y0 + 62, "image", size=12.5) + halo(x + TT + 14, Y0 + 62, "desired result (manual)", size=12.5))
-add("".join(row))
+        hdr.append(f'<line x1="{xi + TT / 2:.1f}" y1="{iy}" x2="{xi + TT / 2:.1f}" y2="{iy + TT}" stroke="#ffffff" stroke-width="1.6" stroke-dasharray="5 4" opacity="0.9"/>')
+    hdr.append(halo(x + 6, iy + TT - 8, "given", size=FS_TXT) + halo(x + TT / 2 + 6, iy + TT - 8, "held out", size=FS_TXT))
+    hdr.append(halo(x + 6, iy + 18, "image", size=FS_TXT) + halo(x + TT + 14, iy + 18, "manual", size=FS_TXT))
+add("".join(hdr))
 
-ORDER = [("a", "Ask for advice", 206), ("b", "Ask for code: Python script", 182),
-         ("c", "Let an agent run it", 172), ("d", "Ask for the answer", 164)]
+# ---------------------------------------------------------------- rows (heights are set by the content)
 ry, RH = {}, {}
-yy = Y0 + HDH + GAP
-for key, ttl, h in ORDER:
-    ry[key], RH[key] = yy, h
-    yy += h + GAP
-for key, ttl, h in ORDER:
-    y = ry[key]
+ROWS = []
+
+
+def new_row(key, title, h, legend=()):
+    y = ROWS[-1][0] + ROWS[-1][1] + GAP if ROWS else Y0 + HDH + GAP
+    ROWS.append((y, h))
+    ry[key], RH[key] = y, h
     add(rrect(RX, y, RW, h, 16, NN["bg"], NN["stroke"], 1.4)
-        + f'<circle cx="{CX_ASK+15}" cy="{y+24}" r="15" fill="{ACC}"/>' + t(CX_ASK + 15, y + 30, key[0], 17, "bold", "#fff", "middle")
-        + t(CX_ASK + 40, y + 30, ttl, 17, "bold", INK)
-        + rrect(CX_CAV - 8, y + 9, W_CAV + 14, h - 18, 12, CAVF, CAVS, 1.2))
+        + f'<circle cx="{X0+14}" cy="{y+24}" r="14" fill="{ACC}"/>' + t(X0 + 14, y + 30, key, 17, "bold", "#fff", "middle")
+        + t(X0 + 38, y + 30, title, 18, "bold", INK)
+        + (legend_right(y + 30, legend) if legend else ""))
+    return y
 
 
-def cav(key, lines, dy=None):
-    """Red call-out; unless dy is given, the text is centred vertically in the box."""
-    if dy is None:
-        dy = max(0, (RH[key] - 18 - 21 * len(lines)) / 2 - 22)
-    y = ry[key] + dy
-    return caution(CX_CAV + 14, y + 38, NOC) + t(CX_CAV + 36, y + 44, lines, 16.5, "bold", NOC, lh=21)
-
-
-def ask(key, items, y0=42):
-    y = ry[key] + y0
-    for tg, lines in items:
-        if tg:
-            add(t(CX_ASK + 46, y + 2, tg, 11.5, "bold", CHG)); y += 5
-        s, h = prompt(CX_ASK, y, W_ASK, lines, 12); add(s); y += h + 10
-
-
-# ================================================================ a
-key = "a"
-ask(key, [("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
-          ("detailed prompt", ["+ “…check current documentation”,", "model suitability, tests …"])])
 ADV = {}                                               # first-pass item check (fig3/v2/advice_outdated.py)
 with open(V2 / "advice_outdated.csv", newline="") as _f:
     for _r in csv.DictReader(_f):
@@ -814,104 +833,127 @@ def clean(txt):
     return txt.replace("**", "").replace("`", "").strip()
 
 
+def two_prompts(y, left, right):
+    s1, h1 = prompt2(X0, y, BW, *left)
+    s2, h2 = prompt2(X0 + BW + 14, y, BW, *right)
+    add(s1 + s2)
+    return max(h1, h2)
+
+
+# ================================================================ a
+y = new_row("a", "Ask for advice", 366, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
+ph = two_prompts(y + 40, ("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
+                 ("detailed prompt", ["+ “…check current documentation”,", "model suitability, tests …"]))
+py_ = y + 40 + ph + 14
 for i, (task, name, _) in enumerate(TASKS):
-    x = CX_SC + i * (GW + GG)
-    y0 = ry[key] + 40
-    add(t(x, y0, name, 13.5, "bold", INK))
+    x = PX[i]
+    add(t(x, py_ + 15, name, 16, "bold", INK))
     for j, (cond, lbl, col) in enumerate((("simple", "basic", NOC), ("box1", "detailed", OKT))):
-        yy = y0 + 22 + j * 28
+        yy = py_ + 36 + j * 26
         runs = sorted((r for r in ADV.values() if r["task"] == task and r["condition"] == cond), key=lambda r: r["scenario_id"])
-        add(t(x, yy + 4, lbl, 12.5, "bold" if j else "normal", INK if j else BODY))
+        add(t(x, yy + 5, lbl, FS_TXT, "bold" if j else "normal", INK if j else BODY))
         for k, r in enumerate(runs):                    # one dot per reply: filled = outdated model or code suggested
-            cx = x + 68 + k * 22
+            cx = x + 84 + k * 24
             if r["outdated_suggested"] == "1":
-                add(f'<circle cx="{cx}" cy="{yy}" r="6" fill="{NOC}"/>')
+                add(f'<circle cx="{cx}" cy="{yy}" r="7" fill="{NOC}"/>')
             else:
-                add(f'<circle cx="{cx}" cy="{yy}" r="5.5" fill="#ffffff" stroke="#7a8699" stroke-width="1.5"/>')
+                add(f'<circle cx="{cx}" cy="{yy}" r="6.5" fill="#ffffff" stroke="#7a8699" stroke-width="1.5"/>')
         n_out = sum(r["outdated_suggested"] == "1" for r in runs)
-        add(t(x + 68 + 3 * 22 + 6, yy + 4, f"{n_out} of {len(runs)}", 13, "bold", col))
+        add(t(x + 84 + 3 * 24 + 4, yy + 5, f"{n_out} of {len(runs)}", FS_TXT, "bold", col))
     for j, (sid, col) in enumerate(zip(EXAMPLE[task], (NOC, OKT))):
         shown = clean(ADV[sid]["evidence"])
         for cut in SHOW_AS.get(sid, ()):                # a verbatim part of the evidence, when the whole is too long
             assert cut in shown
             shown = cut
-        add(t(x, y0 + 84 + j * 30, "“" + shown + "”", 11.5, "normal", col, style="italic"))
-add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-16}" r="5.5" fill="{NOC}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 12, "outdated model or code suggested (one dot per reply, 3 replies per prompt and task)", 12, fill=BODY))
-add(cav(key, ["Outdated advice can fail or silently run", "another model. It checked the docs only", "when asked: ask it to check them"], -8))
-s, _ = terminal(CX_CAV + 14, ry[key] + 96, W_CAV - 16, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
-                                                       ("AttributeError: no attribute 'Cellpose'", "#ff8a80"),
-                                                       (">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
-                                                       ("(no message)  → loads cpsam_v2", "#ff8a80")], 12); add(s)
+        add(t(x, py_ + 94 + j * 22, "“" + shown + "”", FS_TXT, "normal", col, style="italic"))
+cy_ = py_ + 94 + 22 + 14
+cs, ch = callout(X0, cy_, BW, ["Outdated advice can fail or silently run", "another model. It checked the docs only", "when asked: ask it to check them"])
+add(cs)
+ts, th = terminal(X0 + BW + 14, cy_, BW, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
+                                          ("AttributeError: no attribute 'Cellpose'", "#ff8a80"),
+                                          (">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
+                                          ("(no message)  → loads cpsam_v2", "#ff8a80")], 14.5)
+add(ts)
+assert cy_ + max(ch, th - 12) + 10 <= y + 366, (cy_ + max(ch, th - 12) + 10 - y)
 
-# ================================================================ b1 / b2 / c / d
-key = "b"
-ask(key, [("basic prompt", ["“Please write a Python script to segment the …”"]),
-         ("detailed prompt", ["Same request + ask for explicit parameters,", "input checks and a test on reference data"])])
-add(panel(key, ry[key] + 34, "py", "basic", "detailed"))
-add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"], 4))
-add(caution(CX_CAV + 14, ry[key] + 106, NOC) + t(CX_CAV + 36, ry[key] + 112, ["Asking again gives a different script,", "but each script gives the same result", "every time it is run."], 16.5, "bold", NOC, lh=21))
+# ================================================================ b
+y = new_row("b", "Ask for code: a Python script", 290,
+            [("run", "one run"), ("cross", "a field failed (counts 0)"), ("bar", "median of the runs")])
+ph = two_prompts(y + 40, ("basic prompt", ["“Please write a Python script to segment the …”"]),
+                 ("detailed prompt", ["Same request + explicit parameters,", "input checks and a test on reference data"]))
+py_ = y + 40 + ph + 14
+add(panel(py_, "py", "basic", "detailed"))
+cy_ = py_ + 26 + 33 + 20 + 14
+cs, ch = callout(X0, cy_, BW, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"], h=60)
+add(cs)
+cs, _ = callout(X0 + BW + 14, cy_, BW, ["Asking again gives a different script, but each", "script gives the same result every time it is run."], h=60)
+add(cs)
+assert cy_ + 60 + 10 <= y + 290, (cy_ + 70 - y)
 
-key = "c"
-ask(key, [("by eye", ["“…run the pipeline, assess, improve…”"]), ("scored", ["+ “…score every version against my annotation…”"])])
-add(panel(key, ry[key] + 34, "agent", "by eye", "scored"))
-add(cav(key, ["Without reference data the agent judges", "by eye: give it a score to optimise"]))
-add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-16}" r="4" fill="#ffffff" stroke="{INK}" stroke-width="1.3"/>' + t(CX_SC + 16, ry[key] + RH[key] - 12, "one run", 12, fill=BODY)
-    + f'<path d="M{CX_SC+88},{ry[key]+RH[key]-21} l9,9 M{CX_SC+97},{ry[key]+RH[key]-21} l-9,9" stroke="{NOC}" stroke-width="2.2"/>' + t(CX_SC + 106, ry[key] + RH[key] - 12, "a field failed (counts 0)", 12, fill=BODY)
-    + t(CX_SC + 290, ry[key] + RH[key] - 12, "bar = median of the runs", 12, fill=BODY))
-key = "d"
-ask(key, [("", ["“How many … are in this image?”"])])
-y = ry[key] + 34
+# ================================================================ c
+y = new_row("c", "Let an agent run it", 270,
+            [("run", "one run"), ("cross", "a field failed (counts 0)"), ("bar", "median of the runs")])
+ph = two_prompts(y + 40, ("by eye", ["“…run the pipeline, assess, improve…”"]),
+                 ("scored", ["+ “…score every version against my annotation…”"]))
+py_ = y + 40 + ph + 14
+add(panel(py_, "agent", "by eye", "scored"))
+cy_ = py_ + 26 + 33 + 20 + 14
+cs, ch = callout(X0, cy_, XW, ["Without reference data the agent judges by eye: giving it a score to optimise", "may help on harder tasks"], h=60)
+add(cs)
+assert cy_ + 60 + 10 <= y + 270, (cy_ + 70 - y)
+
+# ================================================================ d
+y = new_row("d", "Ask for the answer", 236, [("dot", "one run"), ("man", "manual count")])
+s1, h1 = prompt2(X0, y + 40, BW, "", ["“How many … are in this image?”"])
+add(s1)
+cs, ch = callout(X0 + BW + 14, y + 40, BW, ["Asking again gives a different count:", "the answer is not reproducible"], h=60)
+add(cs)
+py_ = y + 40 + 60 + 12
 for i, (task, name, _) in enumerate(TASKS):
-    x = CX_SC + i * (GW + GG)
+    x = PX[i]
     dd = FS[task]["draw"]
-    bw = GW - 20
-    gg = [t(x, y, name, 13.5, "bold", INK)]
+    bw = PW - 6
+    gg = [t(x, py_ + 15, name, 16, "bold", INK)]
     for j, fld in enumerate(("104", "209")):
         man = dd["manual_by_field"].get(fld)
         vals = dd["count_by_field"][fld]
         if man is None:
             continue
-        yy = y + 34 + j * 40
+        yy = py_ + 52 + j * 44
         top = int(np.ceil(max([1.6 * man] + vals) / 100.0) * 100)   # axis from 0 to a round number >= 1.6 x manual
-        X = lambda v, top=top: x + 40 + v / top * (bw - 40)
-        gg.append(t(x, yy + 4, {"104": "FOV 1", "209": "FOV 2"}[fld], 11.5, fill=BODY))
+        X = lambda v, top=top: x + 56 + v / top * (bw - 56)
+        gg.append(t(x, yy + 5, {"104": "FOV 1", "209": "FOV 2"}[fld], FS_TXT, fill=BODY))
         gg.append(f'<line x1="{X(0):.1f}" y1="{yy}" x2="{X(top):.1f}" y2="{yy}" stroke="#c9d1dc" stroke-width="1.2"/>')
         for tick in (0, top):
             gg.append(f'<line x1="{X(tick):.1f}" y1="{yy-3}" x2="{X(tick):.1f}" y2="{yy+3}" stroke="#9aa4b2" stroke-width="1"/>')
-            gg.append(t(X(tick), yy + 17, str(tick), 10.5, fill="#7a8699", anchor="middle"))
-        gg.append(f'<line x1="{X(man):.1f}" y1="{yy-10}" x2="{X(man):.1f}" y2="{yy+10}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>')
-        gg.append(t(X(man), yy - 13, str(man), 10.5, "bold", INK, anchor="middle"))
+            gg.append(t(X(tick), yy + 19, str(tick), 14, fill="#7a8699", anchor="middle"))
+        gg.append(f'<line x1="{X(man):.1f}" y1="{yy-11}" x2="{X(man):.1f}" y2="{yy+11}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>')
+        gg.append(t(X(man), yy - 14, str(man), 14, "bold", INK, anchor="middle"))
         placed = []                                           # dots that would overlap are spread vertically
         for v in sorted(vals):
-            k = sum(abs(X(v) - px) < 9 for px in placed)
+            k = sum(abs(X(v) - px) < 10 for px in placed)
             placed.append(X(v))
-            dy = [0, -6, 6, -12, 12][min(k, 4)]
-            gg.append(f'<circle cx="{X(v):.1f}" cy="{yy + dy}" r="4.5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
+            dy = [0, -7, 7, -14, 14][min(k, 4)]
+            gg.append(f'<circle cx="{X(v):.1f}" cy="{yy + dy}" r="5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
     add("".join(gg))
-add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-18}" r="4.5" fill="{MCOL["sonnet"]}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 14, "one run", 12, fill=BODY)
-    + f'<line x1="{CX_SC+80}" y1="{ry[key]+RH[key]-23}" x2="{CX_SC+80}" y2="{ry[key]+RH[key]-11}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>' + t(CX_SC + 90, ry[key] + RH[key] - 14, "manual count", 12, fill=BODY))
-add(cav(key, ["Asking again gives a different count:", "the answer is not reproducible"]))
-
-# ---------------------------------------------------------------- key line under task row: F1 legend
-add(t(CX_SC, ry["b"] - 2, "", 1))
 
 # ================================================================ delegation arrow
 AT, AB = ry["a"], ry["d"] + RH["d"]
 defs.append(f'<linearGradient id="deleg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d9cbea"/><stop offset="1" stop-color="{ACC}"/></linearGradient>')
 AXc = M + LW_ / 2
-add(f'<path d="M{AXc-20},{AT} H{AXc+20} V{AB-26} H{AXc+30} L{AXc},{AB} L{AXc-30},{AB-26} H{AXc-20} Z" fill="url(#deleg)"/>'
-    + f'<text x="{AXc+6}" y="{(AT+AB)/2}" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle" '
-      f'transform="rotate(-90 {AXc+6} {(AT+AB)/2})">more of the analysis happens inside the LLM interaction</text>')
+add(f'<path d="M{AXc-11},{AT} H{AXc+11} V{AB-22} H{AXc+15} L{AXc},{AB} L{AXc-15},{AB-22} H{AXc-11} Z" fill="url(#deleg)"/>'
+    + f'<text x="{AXc+5}" y="{(AT+AB)/2}" font-size="{FS_TXT}" font-weight="bold" fill="#ffffff" text-anchor="middle" '
+      f'transform="rotate(-90 {AXc+5} {(AT+AB)/2})">more of the analysis happens inside the LLM interaction</text>')
 
 # ================================================================ what to keep
-KY = ry["d"] + RH["d"] + GAP
-KH = 92
+KY = AB + GAP
+KH = 136
 add(rrect(M, KY, W - 2 * M, KH, 16, "#ffffff", NN["stroke"], 1.4)
-    + t(M + 20, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 16.5, "bold", INK))
-KEEP = [("lock", "Check how the service handles data"), ("check", "Verify advice against the docs"),
-        ("ruler", "Ask for code that is easy to debug"), ("target", "Give agents a score to optimise"),
-        ("file", ["Request code and intermediate", "outputs, not only the result"])]
-KW = (W - 2 * M - 40) / 5
+    + t(M + 16, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 17, "bold", INK))
+KEEP = [("lock", ["Check how the", "service handles data"]), ("check", ["Verify advice", "against the docs"]),
+        ("ruler", ["Ask for code that", "is easy to debug"]), ("target", ["Give agents a score", "to optimise"]),
+        ("file", ["Request code and", "intermediate outputs,", "not only the result"])]
+KW = (W - 2 * M - 20) / 5
 
 
 def kicon(name, cx, cy, col):
@@ -930,10 +972,10 @@ def kicon(name, cx, cy, col):
 
 
 for i, (ic, a_) in enumerate(KEEP):
-    x = M + 20 + i * KW
-    add(kicon(ic, x + 20, KY + 62, ACC) + t(x + 48, KY + (60 if isinstance(a_, list) else 67), a_, 14.5, "bold", INK, lh=18))
+    cx = M + 10 + i * KW + KW / 2
+    add(kicon(ic, cx, KY + 62, ACC) + t(cx, KY + 98, a_, FS_TXT, "bold", INK, "middle", lh=19))
 
-H = KY + KH + 20
+H = KY + KH + M
 svg = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink" '
        f'width="{W}" height="{H}" viewBox="0 0 {W} {H}" font-family="{FONT}">\n'
