@@ -36,7 +36,7 @@ The main files follow the pattern `field104_<description>.tif` or `field209_<des
 - `field104_cancer_cells_stardist_custom_labels.tif`: published custom StarDist predictions.
 - `field104_pix2pix_predicted_dapi.tif` and `field104_pix2pix_predicted_pecam1.tif`: predicted fluorescence channels from brightfield.
 
-Equivalent field-209 files use the same naming scheme. The two fields were not used to train the custom StarDist model. Field 209 is used for a separate-field check in Figures 1 and 2 and is reserved as the test field in the Figure 3 protocol v2. It is **not** an independent biological repeat.
+Equivalent field-209 files use the same naming scheme. The two fields were not used to train the custom StarDist model. Field 209 is used for the step-4 check in Figure 1, contributes to the two-field mean in Figure 2a, and is used in the Figure 3 protocol v2: both fields are test images for row D, while rows B and C are given a development mosaic of the left halves and are scored on the held-out right halves. It is **not** an independent biological repeat.
 
 The pix2pix outputs are 1024 × 1024 pixels and have a one-row offset relative to the acquired images (1022 × 1024). The analysis applies the checked alignment in [common/pix2pix.py](../common/pix2pix.py). The alignment of field 209 was also inspected visually.
 

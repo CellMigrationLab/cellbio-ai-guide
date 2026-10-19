@@ -24,7 +24,7 @@ make check
 make full
 ```
 
-`make check` runs the tests, verifies the raw-file checksums, rebuilds the figures from the committed source data and recomputes the stored scores.
+`make check` runs the tests, verifies the raw-file checksums, rebuilds the figure SVGs from the committed source data and recomputes the stored scores.
 
 `make full` starts from the raw data and regenerates the Figure 1 and Figure 2 source files for which a runnable producer is available. It reports any files that were kept rather than regenerated. Cellpose-SAM and SQUIRREL require the additional environments described in [`environment/README.md`](environment/README.md).
 
@@ -38,15 +38,15 @@ Figure 3 depends on recorded LLM conversations. Those replies cannot be regenera
 | [`common/`](common/) | Shared analysis code and tests, including label validation, object matching, annotation conversion and image metadata. |
 | [`fig1/`](fig1/) | Figure 1 code, source data, figure files, legend and provenance notes. |
 | [`fig2/`](fig2/) | Figure 2 code, source data, figure files, legend and provenance notes. |
-| [`fig3/`](fig3/) | Protocol v2 and its harness (`v2/`); the round-1 draft figure and its LLM records. |
-| [`box1/`](box1/) | The final Box 1 prompt. Earlier versions survive in the prompts of the runs that used them and in git history. |
+| [`fig3/`](fig3/) | Protocol v2, its harness and run records (`v2/`), the draft figure (`figure_v2/`), scoring references and tests. |
+| [`box1/`](box1/) | The final Box 1 prompt. Earlier versions survive in git history. |
 | [`tools/`](tools/) | Repository checks (fast and full) and SVG-to-PDF conversion. |
 
 ## Scope and current status
 
 The figures are worked examples, not benchmarks. Most quantitative panels use one or two fields of view from one experiment. The LLM experiments use small, date-stamped samples, and the interface and model are recorded with each run. The figure-specific README files give the relevant caveats and scoring conventions.
 
-Figures 1 and 2 are the current manuscript versions. Figure 3 is being revised: the stored output is the round-1 draft, while [`fig3/PROTOCOL_V2.md`](fig3/PROTOCOL_V2.md) describes the replacement study.
+Figures 1 and 2 are the current manuscript versions. Figure 3 is a draft under review by the authors: the stored output is the protocol-v2 figure (`fig3/figure_v2/`), built from the study in [`fig3/PROTOCOL_V2.md`](fig3/PROTOCOL_V2.md). Of its 72 runs, 54 are scored and the 18 row-A runs are classified.
 
 ## Citation and licence
 

@@ -1,7 +1,7 @@
 # Figure 3 (protocol v2): figure builder
 
 `make fig3` (or, from `source_data/`, `PYTHONPATH=../../.. python ../code/make_fig3_v2.py`, then `../code/export_png.py`) draws
-the figure from the stored runs and writes `output/fig3_v2.svg` (editable; the same style as Figures 1 and 2) a 2x PNG and a PDF (page size = SVG size).
+the figure from the stored runs and writes `output/fig3_v2.svg` (editable; the same style as Figures 1 and 2), a 2x PNG and a PDF (page size = SVG size).
 
 | Item | What it is |
 |---|---|

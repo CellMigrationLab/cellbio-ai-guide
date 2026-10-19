@@ -27,10 +27,11 @@ The base environment uses Python 3.13. The SVG builders themselves use the Pytho
 
 ## Export PDFs
 
-The SVGs are converted using headless Chromium:
+The figure SVGs are converted using headless Chromium:
 
 ```bash
-make pdf
+make pdf     # Figures 1 and 2
+make fig3    # Figure 3: SVG, PNG and PDF (the PDF also needs headless Chromium)
 ```
 
 See [tools/svg_to_pdf.py](../tools/svg_to_pdf.py) for the converter.

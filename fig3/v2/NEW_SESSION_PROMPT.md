@@ -3,9 +3,8 @@
 
 # Prompt for a new session (operator of Figure 3, protocol v2)
 
-Paste the text below into a new Claude Code session started **in the repository `CellMigrationLab/cellbio-ai-guide`**
-. Optional environment setup script (cloud environment settings),
-so the tools need not be reinstalled each time:
+Paste the text below into a new Claude Code session started **in the repository `CellMigrationLab/cellbio-ai-guide`**.
+Optional environment setup script (cloud environment settings), so the tools need not be reinstalled each time:
 
 ```bash
 pip install -r environment/requirements-models.txt --extra-index-url https://download.pytorch.org/whl/cpu
