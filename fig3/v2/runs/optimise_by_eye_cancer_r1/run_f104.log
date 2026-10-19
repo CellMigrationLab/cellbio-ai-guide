@@ -1,63 +1,8 @@
 $ pipeline.py image.tif labels.tif measurements.csv
-exit 1
+exit 0
 --- stdout
+129 cells; median area 264 um2
 
 --- stderr
-Traceback (most recent call last):
-  File "/home/user/r2exec_v2/runs/optimise_by_eye_cancer_r1/f104/work/pipeline.py", line 161, in <module>
-    main(*sys.argv[1:])
-    ~~~~^^^^^^^^^^^^^^^
-  File "/home/user/r2exec_v2/runs/optimise_by_eye_cancer_r1/f104/work/pipeline.py", line 149, in main
-    masks = run_cellpose(norm)
-  File "/home/user/r2exec_v2/runs/optimise_by_eye_cancer_r1/f104/work/pipeline.py", line 68, in run_cellpose
-    from cellpose import models
-  File "/usr/local/lib/python3.13/dist-packages/cellpose/models.py", line 18, in <module>
-    from . import transforms, dynamics, utils, plot
-  File "/usr/local/lib/python3.13/dist-packages/cellpose/transforms.py", line 11, in <module>
-    from torchvision.transforms import functional as F
-  File "/usr/local/lib/python3.13/dist-packages/torchvision/__init__.py", line 8, in <module>
-    from torchvision import (
-    ^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...<8 lines>...
-    )  # usort:skip
-    ^
-  File "/usr/local/lib/python3.13/dist-packages/torchvision/models/__init__.py", line 2, in <module>
-    from .convnext import *
-  File "/usr/local/lib/python3.13/dist-packages/torchvision/models/convnext.py", line 9, in <module>
-    from ..ops.misc import Conv2dNormActivation, Permute
-  File "/usr/local/lib/python3.13/dist-packages/torchvision/ops/__init__.py", line 23, in <module>
-    from .poolers import MultiScaleRoIAlign
-  File "/usr/local/lib/python3.13/dist-packages/torchvision/ops/poolers.py", line 10, in <module>
-    from .roi_align import roi_align
-  File "/usr/local/lib/python3.13/dist-packages/torchvision/ops/roi_align.py", line 7, in <module>
-    from torch._dynamo.utils import is_compile_supported
-  File "/usr/local/lib/python3.13/dist-packages/torch/_dynamo/__init__.py", line 13, in <module>
-    from . import (
-    ...<7 lines>...
-    )
-  File "/usr/local/lib/python3.13/dist-packages/torch/_dynamo/aot_compile.py", line 17, in <module>
-    from torch._dynamo.convert_frame import GraphRuntimeEnv
-  File "/usr/local/lib/python3.13/dist-packages/torch/_dynamo/convert_frame.py", line 62, in <module>
-    from torch._dynamo.symbolic_convert import TensorifyState
-  File "/usr/local/lib/python3.13/dist-packages/torch/_dynamo/symbolic_convert.py", line 65, in <module>
-    from . import (
-    ...<6 lines>...
-    )
-  File "/usr/local/lib/python3.13/dist-packages/torch/_dynamo/trace_rules.py", line 45, in <module>
-    import torch._inductor.test_operators
-  File "/usr/local/lib/python3.13/dist-packages/torch/_inductor/__init__.py", line 12, in <module>
-    from .standalone_compile import (
-    ...<4 lines>...
-    )
-  File "/usr/local/lib/python3.13/dist-packages/torch/_inductor/standalone_compile.py", line 20, in <module>
-    from torch._inductor.cpp_builder import normalize_path_separator
-  File "/usr/local/lib/python3.13/dist-packages/torch/_inductor/cpp_builder.py", line 30, in <module>
-    from torch._inductor import config, exc
-  File "/usr/local/lib/python3.13/dist-packages/torch/_inductor/config.py", line 2701, in <module>
-    class xpu(cutlass):
-    ...<10 lines>...
-        cutlass_dir = os.path.realpath(os.environ.get("TORCHINDUCTOR_CUTLASS_DIR", ""))
-  File "/usr/local/lib/python3.13/dist-packages/torch/_inductor/config.py", line 2712, in xpu
-    cutlass_dir = os.path.realpath(os.environ.get("TORCHINDUCTOR_CUTLASS_DIR", ""))
-  File "<frozen posixpath>", line 424, in realpath
-FileNotFoundError: [Errno 2] No such file or directory
+/usr/local/lib/python3.13/dist-packages/cellpose/dynamics.py:541: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+  coo = torch.sparse_coo_tensor(pt, torch.ones(pt.shape[1], device=pt.device, dtype=torch.int),

@@ -221,3 +221,7 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
 - **Second worker restart (19 Oct 2026, about 11:20 UTC)**: the three reruns of runs 19, 52 and 62 were killed again before they
   finished; their attempts were rejected and archived (`v2/runs_rejected/*_attempt2` and `_attempt3`) and the three scenarios were
   started a third time. The scoring of run 66 was interrupted a second time and repeated.
+- **Cause of the interruptions (19 Oct 2026)**: the virtual machine that runs the experiment is suspended and restarted whenever the
+  operating session is idle, and every running subject is killed (`uptime` showed the machine had just booted). Runs 19, 52 and 62
+  were interrupted three times in this way (attempts 1 to 3 in `v2/runs_rejected/`); from the fourth attempt the operator stays
+  active (polling) for the whole run. The protocol rule (PROTOCOL_V2 section 9, session interruption: rerun) was applied each time.

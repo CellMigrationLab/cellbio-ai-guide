@@ -11,8 +11,8 @@
   "labels.tif",
   "measurements.csv"
  ],
- "exit_code": 1,
+ "exit_code": 0,
  "timeout": false,
- "runtime_s": 30.1,
- "status": "crashed"
+ "runtime_s": 344.7,
+ "status": "ok"
 }

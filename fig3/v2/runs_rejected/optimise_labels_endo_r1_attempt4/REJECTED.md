@@ -1,0 +1,1 @@
+Attempt 4 of optimise_labels_endo_r1 rejected: interrupted a third time: the virtual machine running the session was suspended and rebooted while the subject was still working (PROTOCOL_V2 section 9, session interruption); the subject had not finished

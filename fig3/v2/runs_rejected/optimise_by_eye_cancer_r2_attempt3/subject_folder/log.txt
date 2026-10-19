@@ -1,0 +1,1 @@
+v1: Cellpose cpsam_v2, native scale (no resize), background flatten (median sigma 60px) because image has a seam at x=512 with an intensity step; 243 objects, but ~60 endothelial cells were also segmented (large, low edge contrast) -> need classifier.
