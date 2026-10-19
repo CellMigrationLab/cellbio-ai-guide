@@ -29,7 +29,7 @@ def validate_labels(array: np.ndarray, *, name: str = "labels", expected_shape: 
         raise InvalidLabels(f"{name}: expected a 2D label image, got shape {a.shape}")
     if expected_shape is not None and a.shape != tuple(expected_shape):
         raise InvalidLabels(f"{name}: expected shape {tuple(expected_shape)}, got {a.shape}")
-    if a.dtype == bool or not np.issubdtype(a.dtype, np.number):
+    if a.dtype == bool or not np.issubdtype(a.dtype, np.integer) and not np.issubdtype(a.dtype, np.floating):
         raise InvalidLabels(f"{name}: expected integer labels, got dtype {a.dtype}")
     if np.issubdtype(a.dtype, np.floating):
         if not np.all(np.isfinite(a)):

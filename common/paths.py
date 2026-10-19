@@ -10,8 +10,10 @@ RAW = str(RAW_DIR) + "/"
 
 
 def raw_file(name: str) -> Path:
-    """Path of a raw data file; raises if it is missing so a wrong name never fails silently later."""
-    path = RAW_DIR / name
+    """Path of a raw data file; raises if it is missing or outside data/raw, so a wrong name never fails silently later."""
+    path = (RAW_DIR / name).resolve()
+    if not path.is_relative_to(RAW_DIR.resolve()):
+        raise FileNotFoundError(f"{name!r} does not name a file inside data/raw. See data/README.md and data/manifest.csv.")
     if not path.is_file():
         raise FileNotFoundError(f"Raw data file not found: {path}. See data/README.md and data/manifest.csv.")
     return path
