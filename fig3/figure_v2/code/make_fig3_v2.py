@@ -703,40 +703,34 @@ def shape_text(runs):
 
 
 def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
-    """Two bars (median F1 of runs; open circles = runs; x = crashed) + median object count vs manual."""
+    """Two bars: median F1 of the runs; open circle = one run; red cross = a run in which a field failed (counts 0)."""
     bw = GW - 150
     g = []
-    d = FS[task]["default"]
-    manual = manual or MAN[task]
     conds = [(lb, b, bn, BEFC), (la, a, an, F1C)]
-    if lb is None:                      # one condition only (Box 1)
-        conds, shapes = conds[1:], shapes[1:]
+    BH, STEP = 18, 40
     for i, (lbl, vals, ns, col) in enumerate(conds):
-        yy = y + i * 30
-        g.append(t(x, yy + 9, lbl, 12.5, "bold" if i else "normal", INK if i else BODY))
-        bx = x + 58
-        g.append(f'<rect x="{bx}" y="{yy}" width="{bw}" height="11" rx="3" fill="#eef1f5"/>')
+        yy = y + i * STEP
+        g.append(t(x, yy + 13, lbl, 13.5, "bold" if i else "normal", INK if i else BODY))
+        bx = x + 66
+        g.append(f'<rect x="{bx}" y="{yy}" width="{bw-8}" height="{BH}" rx="4" fill="#eef1f5"/>')
         m = med(vals)
         if m is None:
-            g.append(t(bx + bw + 6, yy + 10, "…", 13, "bold", "#7a8699"))
+            g.append(t(bx + bw - 2, yy + 14, "…", 14, "bold", "#7a8699"))
             continue
-        g.append(f'<rect x="{bx}" y="{yy}" width="{bw*m:.1f}" height="11" rx="3" fill="{col}"/>'
-                 + t(bx + bw + 6, yy + 10, f"{m:.2f}", 13, "bold", INK))
+        g.append(f'<rect x="{bx}" y="{yy}" width="{(bw-8)*m:.1f}" height="{BH}" rx="4" fill="{col}"/>'
+                 + t(bx + bw - 2, yy + 14, f"{m:.2f}", 14.5, "bold", INK))
         if len(vals) > 1:
             for v in vals:
                 if v is None:
                     continue
                 if isinstance(v, list):                 # a field failed: x at the mean score
-                    cx = bx + bw * v[1]
-                    g.append(f'<path d="M{cx-4:.1f},{yy+1.5} l8,8 M{cx+4:.1f},{yy+1.5} l-8,8" stroke="{NOC}" stroke-width="2"/>')
+                    cx = bx + (bw - 8) * v[1]
+                    g.append(f'<path d="M{cx-4.5:.1f},{yy+4} l9,9 M{cx+4.5:.1f},{yy+4} l-9,9" stroke="{NOC}" stroke-width="2.2"/>')
                 else:
-                    g.append(f'<circle cx="{bx+bw*v:.1f}" cy="{yy+5.5}" r="3.2" fill="#ffffff" stroke="{INK}" stroke-width="1.2"/>')
+                    g.append(f'<circle cx="{bx+(bw-8)*v:.1f}" cy="{yy+BH/2}" r="4" fill="#ffffff" stroke="{INK}" stroke-width="1.3"/>')
         n = medn(ns)
         if n is not None:
-            g.append(t(bx + bw + 40, yy + 10, f"n={n}", 12, fill="#5b6676"))
-    if d is not None:
-        ax = x + 58 + bw * d
-        g.append(f'<line x1="{ax:.1f}" y1="{y-6}" x2="{ax:.1f}" y2="{y+46}" stroke="{DEFC}" stroke-width="2" stroke-dasharray="3 2"/>')
+            g.append(t(bx + bw + 36, yy + 14, f"n={n}", 12.5, fill="#5b6676"))
     return "".join(g)
 
 
@@ -753,12 +747,12 @@ def panel(key, y, sub, lb, la, half=False):
 
 
 # ---------------------------------------------------------------- task row: original image + desired result (full field)
-TT = 232
+TT = 262                      # task image size; the three task blocks are spread evenly across the header
 HDH = TT + 98
 add(group_svg := None) if False else None
 row = [rrect(RX, Y0, RW, HDH, 14, "#ffffff", NN["stroke"], 1.3)]
 for i, (task, name, mod) in enumerate(TASKS):
-    x = RX + 20 + i * (2 * TT + 8 + 48)
+    x = RX + 20 + i * (2 * TT + 8 + (RW - 40 - 3 * (2 * TT + 8)) / 2)
     src = A3 + ("dapi_full.png" if task == "nuclei" else "bf_full.png")
     row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK) + t(x + 2 * TT + 8, Y0 + 30, f"{mod} · FOV 1 · manual n = {MAN104[task]}", 13, fill=BODY, anchor="end"))
     row.append(img(x, Y0 + 44, TT, TT, src, f"{task} image") + img(x + TT + 8, Y0 + 44, TT, TT, A3 + f"labels_{task}.png", f"{task} manual labels"))
@@ -784,7 +778,10 @@ for key, ttl, h in ORDER:
         + rrect(CX_CAV - 8, y + 9, W_CAV + 14, h - 18, 12, CAVF, CAVS, 1.2))
 
 
-def cav(key, lines, dy=0):
+def cav(key, lines, dy=None):
+    """Red call-out; unless dy is given, the text is centred vertically in the box."""
+    if dy is None:
+        dy = max(0, (RH[key] - 18 - 21 * len(lines)) / 2 - 22)
     y = ry[key] + dy
     return caution(CX_CAV + 14, y + 38, NOC) + t(CX_CAV + 36, y + 44, lines, 16.5, "bold", NOC, lh=21)
 
@@ -848,12 +845,15 @@ ask(key, [("basic prompt", ["“Please write a Python script to segment the …�
          ("detailed prompt", ["Same request + ask for explicit parameters,", "input checks and a test on reference data"])])
 add(panel(key, ry[key] + 34, "py", "basic", "detailed"))
 add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"]))
-add(t(CX_CAV + 36, ry[key] + 92, ["Each script differs between runs, but the", "generated script gives the same result", "every time it is run."], 15, "bold", NOC, lh=19))
+add(t(CX_SC, ry[key] + 130, "Each script differs between runs, but the generated script gives the same result every time it is run.", 14, "bold", NOC))
 
 key = "c"
 ask(key, [("by eye", ["“…run the pipeline, assess, improve…”"]), ("scored", ["+ “…score every version against my annotation…”"])])
 add(panel(key, ry[key] + 34, "agent", "by eye", "scored"))
 add(cav(key, ["Without reference data the agent judges", "by eye: give it a score to optimise"]))
+add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-16}" r="4" fill="#ffffff" stroke="{INK}" stroke-width="1.3"/>' + t(CX_SC + 16, ry[key] + RH[key] - 12, "one run", 12, fill=BODY)
+    + f'<path d="M{CX_SC+88},{ry[key]+RH[key]-21} l9,9 M{CX_SC+97},{ry[key]+RH[key]-21} l-9,9" stroke="{NOC}" stroke-width="2.2"/>' + t(CX_SC + 106, ry[key] + RH[key] - 12, "a field failed (counts 0)", 12, fill=BODY)
+    + t(CX_SC + 290, ry[key] + RH[key] - 12, "bar = median of the runs", 12, fill=BODY))
 key = "d"
 ask(key, [("", ["“How many … are in this image?”"])])
 y = ry[key] + 34
