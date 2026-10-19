@@ -22,8 +22,8 @@ fig1:             ## writes fig1/figure/fig1.svg (step 4 crop: cd fig1/source_da
 fig2:             ## writes fig2/figure/fig2.svg
 	cd fig2/source_data && $(PY) ../code/make_fig2.py
 
-fig3:             ## Figure 3 (protocol v2): scores from the stored runs, SVG and PNG in fig3/figure_v2/output/
-	cd fig3/figure_v2/source_data && PYTHONPATH=../../.. $(PY) ../code/make_fig3_v2.py && $(PY) ../code/export_png.py
+fig3:             ## Figure 3 (protocol v2): scores from the stored runs, SVG, PNG and PDF in fig3/figure_v2/output/
+	cd fig3/figure_v2/source_data && PYTHONPATH=../../.. $(PY) ../code/make_fig3_v2.py && $(PY) ../code/export_png.py && cd ../../.. && $(PY) tools/svg_to_pdf.py fig3/figure_v2/output/fig3_v2.svg
 
 pdf:              ## SVG -> PDF for Figs 1 and 2 with headless Chromium
 	$(PY) tools/svg_to_pdf.py fig1/figure/fig1.svg

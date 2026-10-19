@@ -25,8 +25,8 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 
 ## Current status (19 Oct 2026)
 - Figure 1 is final. Figure 2 was updated on 17 Oct 2026 after the code audit (panel e sampling; panel a scored on
-  two fields). Figure 3: all 72 protocol-v2 main runs are recorded and scored (`fig3/v2/runs/`); the draft figure and its
-  legends are in `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`; `legend_short.md`); the authors are reviewing it.
+  two fields). Figure 3: all 72 protocol-v2 main runs are recorded and scored (`fig3/v2/runs/`); the draft figure is in
+  `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`, `.pdf`; the legend is kept in the manuscript, not here); the authors are reviewing it.
 - `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data (Fig. 3). `make full` passes for Figures 1 and 2 (files it cannot regenerate are listed with the reason).
 - Figure 3, protocol v2: preflight (12 runs, `fig3/v2/runs_preflight/`) not used in the figure; protocol frozen on 17 Oct
   2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless Claude Code sessions) and revised for rows B and

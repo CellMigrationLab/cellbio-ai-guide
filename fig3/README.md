@@ -20,7 +20,7 @@ review by the authors.
 |---|---|
 | [PROTOCOL_V2.md](PROTOCOL_V2.md) | The plan, frozen on 17 Oct 2026 and revised for rows B and C on 19 Oct 2026. |
 | [v2/](v2/README.md) | The harness (prompts, runner, scorer, operator tools) and every run record (`runs/`; replaced, interrupted or preflight runs are kept unedited in `runs_superseded/`, `runs_rejected/`, `runs_preflight/`). |
-| [figure_v2/](figure_v2/README.md) | The figure builder (`make fig3`), its source data, SVG/PNG output and legends. |
+| [figure_v2/](figure_v2/README.md) | The figure builder (`make fig3`), its source data, SVG/PNG/PDF output. |
 | [scoring/](scoring/) | Task references and scoring conventions (`tasks.py`). |
 | [deviations.md](deviations.md) | Everything that departed from the protocol, and other things an auditor should know. |
 | [tests/](tests/) | Unit tests of the references, the freeze and the harness. |
@@ -34,7 +34,7 @@ From the repository root:
 
 ```bash
 PYTHONPATH=. python fig3/v2/check_scores.py   # every score recomputed from the stored runs (nothing is run again)
-make fig3                                     # rebuild fig3/figure_v2/output/fig3_v2.svg and .png
+make fig3                                     # rebuild fig3/figure_v2/output/fig3_v2.svg, .png and .pdf
 ```
 
 These commands rescore stored outputs and redraw the figure. They do **not** recreate the LLM conversations. Running the
