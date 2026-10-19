@@ -1,0 +1,19 @@
+scenario_id,task,condition,outdated_suggested,evidence,web_used
+advice_box1_cancer_r1,cancer,box1,0,I checked the current Cellpose docs,1
+advice_box1_cancer_r2,cancer,box1,0,I haven't confirmed whether cpsam needs a diameter at all,1
+advice_box1_cancer_r3,cancer,box1,0,"**Cellpose-SAM (Cellpose 4, `cpsam`) first",1
+advice_box1_endo_r1,endo,box1,0,"the default pretrained weights, which are `cpsam_v2` in the current docs",1
+advice_box1_endo_r2,endo,box1,0,"Cellpose 4 (Cellpose-SAM, `cpsam`)",1
+advice_box1_endo_r3,endo,box1,0,,1
+advice_box1_nuclei_r1,nuclei,box1,0,"Cellpose 4 uses a single model, CPSAM",1
+advice_box1_nuclei_r2,nuclei,box1,0,Cellpose 4 dropped the old `nuclei` model,1
+advice_box1_nuclei_r3,nuclei,box1,0,"The page I fetched doesn't mention the older `nuclei` model, so I can't confirm it still exists",1
+advice_simple_cancer_r1,cancer,simple,0,I'd use the Cellpose-SAM model as the starting point,0
+advice_simple_cancer_r2,cancer,simple,1,Try Cellpose first (cyto3 or Cellpose-SAM),0
+advice_simple_cancer_r3,cancer,simple,0,Fine-tune Cellpose (Cellpose-SAM) on a small set,0
+advice_simple_endo_r1,endo,simple,0,Use **Cellpose (the Cellpose-SAM / v4 generalist),0
+advice_simple_endo_r2,endo,simple,1,Fine-tune Cellpose (the CPSAM or cyto3 model),0
+advice_simple_endo_r3,endo,simple,1,start with Cellpose 3 (`cyto3`) and fine-tune it,0
+advice_simple_nuclei_r1,nuclei,simple,1,**Cellpose** (`nuclei` or `cyto3` model),0
+advice_simple_nuclei_r2,nuclei,simple,1,"use Cellpose 3.x (`pip install ""cellpose<4""`), whose `nuclei` model is much lighter",0
+advice_simple_nuclei_r3,nuclei,simple,1,"(nuclei model, or the newer generalist model)",0

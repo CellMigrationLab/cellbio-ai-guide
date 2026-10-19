@@ -801,14 +801,43 @@ def ask(key, items, y0=42):
 key = "a"
 ask(key, [("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
           ("detailed prompt", ["+ “…check the current documentation first.”"])])
-y = ry[key] + 40
-WB = 300
-s, hA = reply(CX_SC, y, WB, ["“Start with Cellpose 3 (cyto3) and", "fine-tune it … Cellpose-SAM is probably", "more accurate out of the box.”"], 12.5, False, "Basic prompt: from memory"); add(s)
-add(t(CX_SC + 4, y + hA + 4, "outdated model or code suggested: 6 of 9", 12.5, "bold", NOC))
-add(change_pill(CX_SC + WB + 48, y + 34, ["read the", "docs"]))
-XD = CX_SC + WB + 104
-s, hB = reply(XD, y, CX_CAV - 30 - XD, ["“Use CellposeModel with the default", "pretrained weights, which are cpsam_v2", "in the current docs.”"], 12.5, False, "Detailed prompt: after checking the docs"); add(s)
-add(t(XD + 4, y + hB + 4, "outdated model or code suggested: 0 of 9", 12.5, "bold", OKT))
+ADV = {}                                               # first-pass item check (fig3/v2/advice_outdated.py)
+with open("../../v2/advice_outdated.csv", newline="") as _f:
+    for _r in csv.DictReader(_f):
+        ADV[_r["scenario_id"]] = _r
+SHOW_AS = {"advice_box1_endo_r1": ("which are cpsam_v2 in the current docs",)}
+EXAMPLE = {"nuclei": ("advice_simple_nuclei_r1", "advice_box1_nuclei_r2"), "cancer": ("advice_simple_cancer_r2", "advice_box1_cancer_r3"),
+           "endo": ("advice_simple_endo_r3", "advice_box1_endo_r1")}
+
+
+def clean(txt):
+    return txt.replace("**", "").replace("`", "").strip()
+
+
+for i, (task, name, _) in enumerate(TASKS):
+    x = CX_SC + i * (GW + GG)
+    y0 = ry[key] + 40
+    add(t(x, y0, name, 13.5, "bold", INK))
+    for j, (cond, lbl, col) in enumerate((("simple", "basic", NOC), ("box1", "detailed", OKT))):
+        yy = y0 + 22 + j * 28
+        runs = sorted((r for r in ADV.values() if r["task"] == task and r["condition"] == cond), key=lambda r: r["scenario_id"])
+        add(t(x, yy + 4, lbl, 12.5, "bold" if j else "normal", INK if j else BODY))
+        for k, r in enumerate(runs):                    # one dot per reply: filled = outdated model or code suggested
+            cx = x + 68 + k * 22
+            if r["outdated_suggested"] == "1":
+                add(f'<circle cx="{cx}" cy="{yy}" r="6" fill="{NOC}"/>')
+            else:
+                add(f'<circle cx="{cx}" cy="{yy}" r="5.5" fill="#ffffff" stroke="#7a8699" stroke-width="1.5"/>')
+        n_out = sum(r["outdated_suggested"] == "1" for r in runs)
+        add(t(x + 68 + 3 * 22 + 6, yy + 4, f"{n_out} of {len(runs)}", 13, "bold", col))
+    for j, (sid, col) in enumerate(zip(EXAMPLE[task], (NOC, OKT))):
+        shown = clean(ADV[sid]["evidence"])
+        for cut in SHOW_AS.get(sid, ()):                # a verbatim part of the evidence, when the whole is too long
+            assert cut in shown
+            shown = cut
+        add(t(x, y0 + 80 + j * 18, "“" + shown + "”", 11.5, "normal", col, style="italic"))
+add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-16}" r="5.5" fill="{NOC}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 12, "reply suggested an outdated model or code", 12, fill=BODY)
+    + f'<circle cx="{CX_SC+276}" cy="{ry[key]+RH[key]-16}" r="5" fill="#ffffff" stroke="#7a8699" stroke-width="1.5"/>' + t(CX_SC + 286, ry[key] + RH[key] - 12, "none (3 replies per prompt and task)", 12, fill=BODY))
 add(cav(key, ["Outdated advice may not run, may run with", "errors, or may fall back silently (you may", "not know which model you are using)"], -8))
 s, _ = terminal(CX_CAV + 14, ry[key] + 98, W_CAV - 16, [(">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
                                                        ("(no message)  → loads cpsam_v2", "#ff8a80")], 12.5); add(s)
