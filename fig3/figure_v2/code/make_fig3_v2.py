@@ -833,8 +833,7 @@ for i, (task, name, _) in enumerate(TASKS):
             assert cut in shown
             shown = cut
         add(t(x, y0 + 84 + j * 30, "“" + shown + "”", 11.5, "normal", col, style="italic"))
-add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-16}" r="5.5" fill="{NOC}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 12, "reply suggested an outdated model or code", 12, fill=BODY)
-    + f'<circle cx="{CX_SC+276}" cy="{ry[key]+RH[key]-16}" r="5" fill="#ffffff" stroke="#7a8699" stroke-width="1.5"/>' + t(CX_SC + 286, ry[key] + RH[key] - 12, "none (3 replies per prompt and task)", 12, fill=BODY))
+add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-16}" r="5.5" fill="{NOC}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 12, "outdated model or code suggested (one dot per reply, 3 replies per prompt and task)", 12, fill=BODY))
 add(cav(key, ["Outdated advice can fail or silently run", "another model. It checked the docs only", "when asked: ask it to check them"], -8))
 s, _ = terminal(CX_CAV + 14, ry[key] + 96, W_CAV - 16, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
                                                        ("AttributeError: no attribute 'Cellpose'", "#ff8a80"),
