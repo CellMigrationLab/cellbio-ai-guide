@@ -17,6 +17,8 @@ optimise_by_eye_endo_r3,optimise,by_eye,endo,3,104,ok,0.727,-85,,,14.1,0.185
 optimise_by_eye_endo_r3,optimise,by_eye,endo,3,209,ok,0.773,3,,,13.9,0.197
 optimise_by_eye_nuclei_r2,optimise,by_eye,nuclei,2,104,ok,0.976,20,,,3.3,0.071
 optimise_by_eye_nuclei_r2,optimise,by_eye,nuclei,2,209,ok,0.562,25,,,47.2,0.114
+optimise_by_eye_nuclei_r3,optimise,by_eye,nuclei,3,104,ok,0.962,9,,,3.1,0.069
+optimise_by_eye_nuclei_r3,optimise,by_eye,nuclei,3,209,ok,0.549,5,,,45.9,0.111
 optimise_labels_cancer_r1,optimise,labels,cancer,1,104,ok,0.927,11,,,9.9,0.058
 optimise_labels_cancer_r1,optimise,labels,cancer,1,209,ok,0.899,12,,,35.2,0.085
 optimise_labels_cancer_r3,optimise,labels,cancer,3,104,ok,0.911,9,,,9.5,0.054
