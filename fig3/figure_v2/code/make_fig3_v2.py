@@ -609,7 +609,7 @@ def build_scores_v2():
             ok = [f["status"] == "ok" for f in fields]
             blk = T["py"] if r["row"] == "code" else T["agent"]
             side = "before" if r["condition"] in ("simple", "by_eye") else "after"
-            blk[side].append(d["mean"]["f1"] if any(ok) else -1)
+            blk[side].append(d["mean"]["f1"] if all(ok) else ["x", d["mean"]["f1"]])   # x = a field failed (counts 0)
             blk[side + "_n"].append(sum(f["n_pred"] for f in fields) if all(ok) else None)
             if all(ok):
                 n_ref[task] = sum(f["n_ref"] for f in fields)
@@ -633,14 +633,15 @@ def build_scores_v2():
     return {"tasks": tasks, "n_runs": n_runs, "n_ref_heldout": n_ref}
 
 
-BOX1_ONLY = os.environ.get("BOX1_ONLY") == "1"   # row b: Box 1 only (simple vs Box 1 goes to the supplement)
 FSJ = build_scores_v2()
 json.dump(FSJ, open("fig_scores_v2.json", "w"), indent=1)
 FS = FSJ["tasks"]
 from fig3.scoring.tasks import heldout_reference   # manual annotation, held-out right halves (data/raw)
 import numpy as _np
-MAN = {k: sum(int(len(_np.unique(heldout_reference(k, f))) - 1) for f in (104, 209)) for k in TASK_IDS}
-MAN104 = {"nuclei": 441, "cancer": 124, "endo": 382}
+MAN = dict(FSJ["n_ref_heldout"])     # objects the scorer compares with (held-out halves of both FOVs, border rule applied)
+assert set(MAN) == set(TASK_IDS) and all(MAN.values()), "no scored run yet for some task"
+from fig3.scoring.tasks import reference as _reference
+MAN104 = {k: int(len(_np.unique(_reference(k, 104))) - 1) for k in TASK_IDS}   # whole FOV 1, as in the header images
 DEFC = "#9aa4b2"
 CAVF, CAVS = "#fdf0ef", "#efc2be"
 CHG = "#6b2c87"
@@ -652,8 +653,13 @@ TASK_TEXT = {"nuclei": ["Task: segment and count the endothelial nuclei", "(not 
 TASKS = [("nuclei", "Nuclei", "DAPI"), ("cancer", "Cancer cells", "brightfield"), ("endo", "Endothelial cells", "brightfield")]
 
 
+def val(x):
+    """Score of a run: a number, or ["x", mean] for a run in which a field failed (that field counts 0)."""
+    return x[1] if isinstance(x, list) else x
+
+
 def med(v):
-    v = [max(x, 0) for x in v if x is not None]
+    v = [max(val(x), 0) for x in v if x is not None]
     return float(np.median(v)) if len(v) else None
 
 
@@ -720,17 +726,14 @@ def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
             for v in vals:
                 if v is None:
                     continue
-                if v < 0:
-                    g.append(f'<path d="M{bx-4:.1f},{yy+1.5} l8,8 M{bx+4:.1f},{yy+1.5} l-8,8" stroke="{NOC}" stroke-width="2"/>')
+                if isinstance(v, list):                 # a field failed: x at the mean score
+                    cx = bx + bw * v[1]
+                    g.append(f'<path d="M{cx-4:.1f},{yy+1.5} l8,8 M{cx+4:.1f},{yy+1.5} l-8,8" stroke="{NOC}" stroke-width="2"/>')
                 else:
                     g.append(f'<circle cx="{bx+bw*v:.1f}" cy="{yy+5.5}" r="3.2" fill="#ffffff" stroke="{INK}" stroke-width="1.2"/>')
         n = medn(ns)
         if n is not None:
             g.append(t(bx + bw + 40, yy + 10, f"n={n}", 12, fill="#5b6676"))
-    for i, (runs, lbl) in enumerate(zip(shapes, [c[0] for c in conds])):
-        txt = shape_text(runs)
-        if txt:
-            g.append(t(x, y + 66 + i * 15, f"{lbl}: {txt}", 11.5, fill="#5b6676"))
     if d is not None:
         ax = x + 58 + bw * d
         g.append(f'<line x1="{ax:.1f}" y1="{y-6}" x2="{ax:.1f}" y2="{y+46}" stroke="{DEFC}" stroke-width="2" stroke-dasharray="3 2"/>')
@@ -760,6 +763,9 @@ for i, (task, name, mod) in enumerate(TASKS):
     row.append(t(x, Y0 + 30, f"{name}", 17, "bold", INK) + t(x + 2 * TT + 8, Y0 + 30, f"{mod} · FOV 1 · manual n = {MAN104[task]}", 13, fill=BODY, anchor="end"))
     row.append(img(x, Y0 + 44, TT, TT, src, f"{task} image") + img(x + TT + 8, Y0 + 44, TT, TT, A3 + f"labels_{task}.png", f"{task} manual labels"))
     row.append(t(x, Y0 + 44 + TT + 22, TASK_TEXT[task], 13, "bold", INK, lh=17))
+    for xi in (x, x + TT + 8):                    # the model worked on the left halves; scoring uses the right halves
+        row.append(f'<line x1="{xi + TT / 2:.1f}" y1="{Y0 + 44}" x2="{xi + TT / 2:.1f}" y2="{Y0 + 44 + TT}" stroke="#ffffff" stroke-width="1.6" stroke-dasharray="5 4" opacity="0.9"/>')
+    row.append(halo(x + 6, Y0 + 44 + TT - 8, "given", size=12) + halo(x + TT / 2 + 8, Y0 + 44 + TT - 8, "held out", size=12))
     row.append(halo(x + 6, Y0 + 62, "image", size=12.5) + halo(x + TT + 14, Y0 + 62, "desired result (manual)", size=12.5))
 add("".join(row))
 
@@ -798,21 +804,20 @@ ask(key, [("basic prompt", ["“Which tool, model and settings would you", "reco
 y = ry[key] + 40
 WB = 300
 s, hA = reply(CX_SC, y, WB, ["“Start with Cellpose 3 (cyto3) and", "fine-tune it … Cellpose-SAM is probably", "more accurate out of the box.”"], 12.5, False, "Basic prompt: from memory"); add(s)
-add(t(CX_SC + 4, y + hA + 4, "outdated cyto3 recommended: 2 of 9", 12.5, "bold", NOC))
+add(t(CX_SC + 4, y + hA + 4, "outdated model or code suggested: 6 of 9", 12.5, "bold", NOC))
 add(change_pill(CX_SC + WB + 48, y + 34, ["read the", "docs"]))
 XD = CX_SC + WB + 104
 s, hB = reply(XD, y, CX_CAV - 30 - XD, ["“Use CellposeModel with the default", "pretrained weights, which are cpsam_v2", "in the current docs.”"], 12.5, False, "Detailed prompt: after checking the docs"); add(s)
-add(t(XD + 4, y + hB + 4, "current model named: 9 of 9 (basic prompt: 3 of 9)", 12.5, "bold", OKT))
+add(t(XD + 4, y + hB + 4, "outdated model or code suggested: 0 of 9", 12.5, "bold", OKT))
 add(cav(key, ["Outdated advice may not run, may run with", "errors, or may fall back silently (you may", "not know which model you are using)"], -8))
 s, _ = terminal(CX_CAV + 14, ry[key] + 98, W_CAV - 16, [(">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
                                                        ("(no message)  → loads cpsam_v2", "#ff8a80")], 12.5); add(s)
 
 # ================================================================ b1 / b2 / c / d
 key = "b"
-ask(key, [("", ["“Please write a Python script to segment the …”", "+ ask for explicit, testable code"])] if BOX1_ONLY else
-    [("basic prompt", ["“Please write a Python script to segment the …”"]),
-     ("detailed prompt", ["Same request + ask for explicit parameters,", "input checks and a test on reference data"])])
-add(panel(key, ry[key] + 34, "py", None if BOX1_ONLY else "basic", "script" if BOX1_ONLY else "detailed"))
+ask(key, [("basic prompt", ["“Please write a Python script to segment the …”"]),
+         ("detailed prompt", ["Same request + ask for explicit parameters,", "input checks and a test on reference data"])])
+add(panel(key, ry[key] + 34, "py", "basic", "detailed"))
 add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"]))
 add(t(CX_CAV + 36, ry[key] + 92, ["Each script differs between runs, but the", "generated script gives the same result", "every time it is run."], 15, "bold", NOC, lh=19))
 
@@ -821,7 +826,7 @@ ask(key, [("by eye", ["“…run the pipeline, assess, improve…”"]), ("score
 add(panel(key, ry[key] + 34, "agent", "by eye", "scored"))
 add(cav(key, ["Without reference data the agent judges", "by eye: give it a score to optimise"]))
 key = "d"
-ask(key, [("count", ["“How many … are in this image?”"]), ("draw", ["“Draw around every … and count them.”"])])
+ask(key, [("", ["“How many … are in this image?”"])])
 y = ry[key] + 34
 for i, (task, name, _) in enumerate(TASKS):
     x = CX_SC + i * (GW + GG)
@@ -903,5 +908,5 @@ svg = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
        f'width="{W}" height="{H}" viewBox="0 0 {W} {H}" font-family="{FONT}">\n'
        f'<defs>{"".join(defs)}</defs>\n<rect width="{W}" height="{H}" fill="#ffffff"/>\n'
        + "\n".join(out) + "\n</svg>\n")
-open("../output/fig3_v2_box1only.svg" if BOX1_ONLY else "../output/fig3_v2.svg", "w", encoding="utf-8").write(svg)
+open("../output/fig3_v2.svg", "w", encoding="utf-8").write(svg)
 print("written", len(svg) // 1024, "KB; height", H)
