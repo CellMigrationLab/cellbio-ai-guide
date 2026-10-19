@@ -256,3 +256,19 @@ prompts, answer sheet and scenarios are untouched.
   (recorded LLM-written `test_*.py` files in `runs/` no longer execute inside `make check`), the NaN scan covers
   `fig3/figure_v2`, `fig3/scoring` and `fig3/v2`, and the manifest verifies the recorded file sizes.
 
+
+## Amendment: row D count corrections and protocol text (20 Oct 2026, authors' decision)
+
+- **Three row-D counts were read wrongly by `score.parse_count`** (first number in the reply). Two nuclei replies on field 104
+  (runs 1 and 3) gave the advice "an ERG, CD31 or VE-cadherin stain" before the estimate, and "CD31" was read as 31; one
+  endothelial reply on field 104 (run 1) first mentions "roughly 100-120" other (round) cells. The operator's reading of
+  these replies is stored in `v2/count_corrections.json` (nuclei run 1: 500, range 450-550; nuclei run 3: 600, range 500-700;
+  endothelial run 1: 350, range 300-400); `score.py` applies it and refuses to run if the rule no longer gives the value
+  recorded there. The other 15 replies were read by hand and the rule's value is correct. Replies, prompts and scenarios are
+  unchanged. Changed scores (`runs/direct_three_turns_*` `score.json`, `turn1` only): 31 -> 500, 31 -> 600, 110 -> 350. The
+  Fig. 3 row D dots for these three runs move accordingly; `direct_summary.csv` was regenerated.
+- The **border rule** in `PROTOCOL_V2.md` section 2 now states what `scoring/tasks.py` does (endothelial: border objects removed
+  from reference and prediction, so they affect count and F1), the header and model identifier were corrected, and a note
+  records what the figure shows for rows A and D. No run was affected.
+- Still open (authors): whether `score.parse_count` should be replaced by an anchored rule; whether `common/annotations.py`
+  should label regions after closing line gaps (a simple variant changes the four junction masks by -1 to +2 objects).

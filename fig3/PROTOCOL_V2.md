@@ -1,9 +1,8 @@
-# Figure 3, protocol v2 (draft for the authors' review, 17 Oct 2026)
+# Figure 3, protocol v2 (frozen 17 Oct 2026; revised 19 and 20 Oct 2026, see the notes below and `v2/FREEZE.json`)
 
 Replaces the round-2 design. The runs made under round 2 (three accepted, three rejected) are a **pilot**, not used in the
-figure (removed from the repository; git history). Nothing in this file is frozen yet; after the authors' review it is
-implemented in `fig3/v2/`, tested in a short preflight (section 11) and then frozen (hashes of every file that defines
-the protocol, including the operator code and the environment).
+figure (removed from the repository; git history). It was implemented in `fig3/v2/`, tested in a short preflight (section 11) and frozen on 17 Oct 2026 (hashes of every
+file that defines the protocol, including the operator code and the environment).
 
 Sources of the changes: the authors' plan of 17 Oct 2026, the amendments discussed in the session, and the two
 ChatGPT audits of 17 Oct 2026 (pull request 2: round-2 plan re-audit and analysis-code audit).
@@ -20,6 +19,15 @@ ChatGPT audits of 17 Oct 2026 (pull request 2: round-2 plan re-audit and analysi
 > The aim is a pipeline that works despite the diversity of the data. Superseded runs are kept in
 > `v2/runs_superseded/` (never edited). Details in `deviations.md`. Below, "field 104 = development, field 209 = test"
 > still holds for row D only (whole fields).
+
+> **Amendment of 20 Oct 2026 (what was done and shown, after the runs; no run, prompt or scenario changed).**
+> (1) The figure shows, for row A, one dot per reply (outdated model or code suggested, first-pass classification in
+> `v2/advice_outdated.csv`) with verbatim quotes, not one illustrative reply per condition. (2) For row D it shows only the
+> turn-1 count of each run per field against the manual count; the size and shape answers and the drawn ellipses were
+> asked and recorded but are not shown (decision of the authors, `deviations.md`). (3) Row D counts: the first-number
+> rule of `score.py` read "CD31" as 31 and a number for other cells as the count in three replies; they are corrected by the
+> operator's reading of the reply in `v2/count_corrections.json` (`deviations.md`). (4) The border rule and the model
+> identifier were corrected in sections 2 and 3, and the header above.
 
 ---
 
@@ -61,12 +69,14 @@ No statistical tests (3 replicates); every run is shown.
 - **Area**: pixel count × 0.649614² µm².
 - **Aspect ratio (AR)**: major / minor axis length of the ellipse with the same second moments (scikit-image
   `regionprops`, `axis_major_length / axis_minor_length`); objects with a minor axis < 2 px are excluded from AR.
-- Objects touching the image border are excluded from area and AR statistics (not from counts or F1).
+- Objects touching the image border are excluded from area and AR statistics. For the endothelial task they are also
+  removed from the reference and from the prediction before counting and scoring (`scoring/tasks.py`), so they do
+  affect the count and F1 of that task; for nuclei and cancer cells they are not removed (amendment of 20 Oct 2026).
 - The same code computes these from the manual references and from every model output.
 
 ## 3. Subjects, isolation and environment
 
-- **Subject model**: Claude via headless Claude Code sessions (`claude -p --restricted`), model `sonnet` (recorded per
+- **Subject model**: Claude via headless Claude Code sessions (`claude -p --restricted`), model `claude-sonnet-5-5` (recorded per
   run as the resolved model ID). The legend states that runs used Claude Code sessions, not the claude.ai app.
   (Changed from sub-agents before the preflight, authors' decision of 17 Oct 2026: a sub-agent inherits the operator
   session's project instructions, AGENTS.md, which describe this study, and its working directory, the repository.)

@@ -1,0 +1,30 @@
+{
+ "_about": "Row D, turn 1: replies where score.py's first-number rule read the wrong number. Operator reading of the reply (20 Oct 2026); score.py checks that the rule still gives 'rule_gave' and then uses these values. The replies are unchanged in direct_answers.json.",
+ "direct_three_turns_nuclei_f104_r1": {
+  "rule_gave": 31,
+  "count": 500,
+  "range": [
+   450,
+   550
+  ],
+  "reason": "'CD31' in the advice on markers was read as 31; the estimate is 'roughly 450-550'"
+ },
+ "direct_three_turns_nuclei_f104_r3": {
+  "rule_gave": 31,
+  "count": 600,
+  "range": [
+   500,
+   700
+  ],
+  "reason": "'CD31' in the advice on markers was read as 31; the estimate is 'roughly 600, plausible range 500-700'"
+ },
+ "direct_three_turns_endo_f104_r1": {
+  "rule_gave": 110,
+  "count": 350,
+  "range": [
+   300,
+   400
+  ],
+  "reason": "'roughly 100-120' is the number of the other (round) cells; the estimate for endothelial cells is 'roughly 300-400'"
+ }
+}

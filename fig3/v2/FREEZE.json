@@ -4,7 +4,7 @@
  "cli_version": "2.1.302 (Claude Code)",
  "python": "3.13.16",
  "files": {
-  "fig3/PROTOCOL_V2.md": "6143484d17f31cb021437b7437027d406d68d93fafae145680e13ccb6fc3ddf1",
+  "fig3/PROTOCOL_V2.md": "8f89b4f3ab57d44d15010285e76990a326fbc2e912ba2ae5eb6827e02c4765c0",
   "fig3/v2/prompts/advice_box1_cancer.txt": "4916dd77768a40ee14900cd58e75b1e45dcce63cc74d0cb2a7187742367c4171",
   "fig3/v2/prompts/advice_box1_endo.txt": "d9a7caf63b9f3f0d96ec44f09937c1ca81673ab337ab1a2d966fcfb73590e3c7",
   "fig3/v2/prompts/advice_box1_nuclei.txt": "5c4ab85ce8ca6661206cd0ffa295a280c1749279977b971948c47dd38499daaa",
@@ -37,7 +37,7 @@
   "fig3/v2/answer_sheet.md": "68cb2a0fb143722837470eb4acff0d25af617d7c8aa8087a70fe4c26d11205b7",
   "fig3/v2/run_operator.py": "e3fa2f848a7c6e44a880ba1e46d25d12c28218c903295f4b5eeb50272568e4bd",
   "fig3/v2/runner.py": "b8e771849b40e1dcf3d494346ab7aac1e54ccef39ae46c3ff79aaadded32611f",
-  "fig3/v2/score.py": "6e8e14b03963d6fd7c235ed3fd775828ac3b9fffccb5fff9f61e520dbddfc0f9",
+  "fig3/v2/score.py": "8f77db17be4285593ee5555e8d360e8013a782e183df8762cebb0a65f95671e4",
   "fig3/v2/make_protocol.py": "5c9921f4c1817cb4470eb38c03398c767a407a0242a9e4945285afc65b2bccc7",
   "fig3/v2/make_assets.py": "4ac47e98b38660484e32e78ad9cb86fb9463f5659faaae12adad44ae2acbef9b",
   "fig3/v2/freeze.py": "f14f8cd6e1464156841e1f767faeb4b52446308bd7fef337dcdc40440752bb99",
@@ -231,6 +231,22 @@
    "old_sha256": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
    "new_sha256": "b8e771849b40e1dcf3d494346ab7aac1e54ccef39ae46c3ff79aaadded32611f",
    "reason": "audit fix: refuse runtime files whose bytes match fig3/v2/assets or data/raw; reject one basename twice; R2EXEC_ROOT override; expose the operator venv to runs"
+  },
+  {
+   "date": "2026-10-20",
+   "file": "fig3/v2/score.py",
+   "old_sha256": "6e8e14b03963d6fd7c235ed3fd775828ac3b9fffccb5fff9f61e520dbddfc0f9",
+   "new_sha256": "8f77db17be4285593ee5555e8d360e8013a782e183df8762cebb0a65f95671e4",
+   "reason": "row D: counts read by operator for three replies where the first-number rule read the wrong number (v2/count_corrections.json); the rule itself is unchanged and checked",
+   "runs_affected": "direct_three_turns_nuclei_f104_r1, direct_three_turns_nuclei_f104_r3, direct_three_turns_endo_f104_r1 (score.json only; no reply, prompt or scenario changed)"
+  },
+  {
+   "date": "2026-10-20",
+   "file": "fig3/PROTOCOL_V2.md",
+   "old_sha256": "6143484d17f31cb021437b7437027d406d68d93fafae145680e13ccb6fc3ddf1",
+   "new_sha256": "8f89b4f3ab57d44d15010285e76990a326fbc2e912ba2ae5eb6827e02c4765c0",
+   "reason": "amendment note of 20 Oct 2026: header and model identifier corrected; border rule stated as implemented (endothelial: removed from reference and prediction); what the figure shows for rows A and D",
+   "runs_affected": "none (text only; no run, prompt or scenario changed)"
   }
  ]
 }

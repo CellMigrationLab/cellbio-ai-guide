@@ -199,11 +199,25 @@ def match_centres(task: str, field: int, centres: list[tuple[float, float]]) -> 
     return {"n_ref": len(cents), "n_drawn": len(centres), "tp": tp, "fp": fp, "fn": fn, "f1": round(f1, 3)}
 
 
+COUNT_CORRECTIONS = json.loads((Path(__file__).parent / "count_corrections.json").read_text())
+
+
+def corrected_count(run_name: str, parsed: dict) -> dict:
+    """Operator's reading of the reply for the few runs where the first-number rule read the wrong number
+    (count_corrections.json). The rule's own result must still be the one recorded there, so a change of the rule is noticed."""
+    fix = COUNT_CORRECTIONS.get(run_name)
+    if fix is None:
+        return parsed
+    if parsed["count"] != fix["rule_gave"]:
+        raise ValueError(f"{run_name}: parse_count gave {parsed['count']}, count_corrections.json expects {fix['rule_gave']}")
+    return {"count": fix["count"], "range": fix["range"], "corrected_from": fix["rule_gave"]}
+
+
 def score_direct(run_dir: Path, task: str) -> dict:
     ans = json.loads((run_dir / "direct_answers.json").read_text())
     field = int(ans["field"])
     ref = reference_summary(task, field)
-    out = {"field": field, "reference": ref, "turn1": parse_count(ans["turn1_text"])}
+    out = {"field": field, "reference": ref, "turn1": corrected_count(run_dir.name, parse_count(ans["turn1_text"]))}
     if out["turn1"]["count"] is not None:
         out["turn1"]["count_error"] = out["turn1"]["count"] - ref["count"]
         if out["turn1"]["range"]:
