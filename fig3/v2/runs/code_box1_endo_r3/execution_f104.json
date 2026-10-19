@@ -1,0 +1,22 @@
+{
+ "field": 104,
+ "script": "code_as_returned.py",
+ "packages": [
+  "cellpose>=4",
+  "tifffile",
+  "scikit-image",
+  "scipy",
+  "pandas",
+  "numpy"
+ ],
+ "runtime_files_refused": [],
+ "runtime_files_copied": [],
+ "command": [
+  "/home/user/r2exec_v2/runs/code_box1_endo_r3/f104/venv/bin/python",
+  "script.py"
+ ],
+ "exit_code": 0,
+ "timeout": false,
+ "runtime_s": 552.9,
+ "status": "ok"
+}
