@@ -814,6 +814,7 @@ ask(key, [("", ["“Please write a Python script to segment the …”", "+ ask 
 add(panel(key, ry[key] + 34, "py", None if BOX1_ONLY else "generic", "script" if BOX1_ONLY else "Box 1"))
 add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"]) if BOX1_ONLY else
     cav(key, ["Box 1 makes the settings visible;", "only the test shows if they work"]))
+add(t(CX_CAV + 36, ry[key] + 88, ["The code differs between runs, but each script", "gives the same result every time it is run."], 11.5, "normal", "#5b6270", lh=15))
 
 key = "c"
 ask(key, [("before", ["“…run the pipeline, assess, improve…”"]), ("after", ["“…score every version against my annotation…”"])])
