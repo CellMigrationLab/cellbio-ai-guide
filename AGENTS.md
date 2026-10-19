@@ -20,15 +20,14 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
   with the annotation), D direct answers (count; size and shape and drawn ellipses were also asked but are not in the
   figure). Rows B and C: the model gets a mosaic of the left halves of fields 104 and 209 and is scored on the right halves
   of both (mean F1); rows A and D use whole fields. Plan: `fig3/PROTOCOL_V2.md`; harness: `fig3/v2/`; figure:
-  `fig3/figure_v2/` (`make fig3v2`). The round-1 draft (`fig3/advice/`, `code/`, `optimise/`, `direct_answers/`,
-  `figure/`) is superseded and kept only as history until the authors confirm its removal.
+  `fig3/figure_v2/` (`make fig3`). The superseded round-1 draft was removed on
+  19 Oct 2026 (it is in git history).
 
 ## Current status (19 Oct 2026)
 - Figure 1 is final. Figure 2 was updated on 17 Oct 2026 after the code audit (panel e sampling; panel a scored on
   two fields). Figure 3: all 72 protocol-v2 main runs are recorded and scored (`fig3/v2/runs/`); the draft figure and its
   legends are in `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`; `legend_short.md`); the authors are reviewing it.
-- `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data (Fig. 3 round 1 and
-  v2). `make full` passes for Figures 1 and 2 (files it cannot regenerate are listed with the reason).
+- `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data (Fig. 3). `make full` passes for Figures 1 and 2 (files it cannot regenerate are listed with the reason).
 - Figure 3, protocol v2: preflight (12 runs, `fig3/v2/runs_preflight/`) not used in the figure; protocol frozen on 17 Oct
   2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless Claude Code sessions) and revised for rows B and
   C on 19 Oct 2026 (development mosaic, held-out halves, answer-sheet lines; see the amendments in `FREEZE.json` and

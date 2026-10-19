@@ -20,7 +20,6 @@ REPO = Path(__file__).resolve().parent.parent
 FIGURES = {  # figure folder -> (builder relative to the folder, output written by the builder, committed reference)
     "fig1": ("code/make_fig1.py", "figure/fig1.svg"),
     "fig2": ("code/make_fig2.py", "figure/fig2.svg"),
-    "fig3/figure": ("code/make_fig3.py", "output/fig3.svg"),
     "fig3/figure_v2": ("code/make_fig3_v2.py", "output/fig3_v2.svg"),
 }
 FIG2_SCORING_ORDER = ["errors", "score_perturb", "annot_agree", "bio_result", "al_intensity", "tubule_width"]
@@ -110,7 +109,7 @@ def check_fig2_scores(tmp: Path, with_squirrel: bool) -> list[bool]:
 def check_no_nan_json() -> bool:
     """No committed source-data or score JSON may contain NaN or Infinity (undefined values must be explicit nulls)."""
     bad = []
-    for folder in ("fig1/source_data", "fig2/source_data", "fig2/analysis", "fig3/figure/source_data", "fig3/v2"):
+    for folder in ("fig1/source_data", "fig2/source_data", "fig2/analysis", "fig3/figure_v2/source_data", "fig3/v2"):
         for path in sorted((REPO / folder).rglob("*.json")):
             json.loads(path.read_text(), parse_constant=lambda c: bad.append(f"{path.relative_to(REPO)}: {c}"))
     return report("no NaN/Infinity in committed JSON", not bad, "; ".join(bad[:5]))
@@ -130,10 +129,8 @@ def main(with_squirrel: bool) -> None:
         results.append(check_fig1_scores(tmp))
         results.append(check_fig1_step4(tmp))
         results += check_fig2_scores(tmp, with_squirrel)
-    proc = run([sys.executable, "fig3/scoring/build_scores.py", "--check"], cwd=REPO)
-    results.append(report("fig3: every score recomputed from the stored runs", proc.returncode == 0, proc.stdout.strip()[-300:]))
     proc = run([sys.executable, "fig3/v2/check_scores.py"], cwd=REPO)
-    results.append(report("fig3 v2: every score recomputed from the stored runs", proc.returncode == 0, proc.stdout.strip()[-300:]))
+    results.append(report("fig3: every score recomputed from the stored runs", proc.returncode == 0, proc.stdout.strip()[-300:]))
     print(f"\n{sum(results)}/{len(results)} checks passed")
     raise SystemExit(0 if all(results) else 1)
 

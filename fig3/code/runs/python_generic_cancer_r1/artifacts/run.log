@@ -1,7 +1,0 @@
-<fig3-work>/bf2/codeG_cancer/script.py:72: FutureWarning: `binary_closing` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.closing` instead.
-  mask = morphology.binary_closing(mask, morphology.disk(CLOSE_RADIUS))
-<fig3-work>/bf2/codeG_cancer/script.py:74: FutureWarning: `binary_opening` is deprecated since version 0.26 and will be removed in version 0.28. Use `skimage.morphology.opening` instead.
-  mask = morphology.binary_opening(mask, morphology.disk(OPEN_RADIUS))
-<fig3-work>/bf2/codeG_cancer/script.py:75: FutureWarning: Parameter `min_size` is deprecated since version 0.26.0 and will be removed in 2.0.0 (or later). To avoid this warning, please use the parameter `max_size` instead. For more details, see the documentation of `remove_small_objects`. Note that the new threshold removes objects smaller than **or equal to** its value, while the previous parameter only removed smaller ones.
-  mask = morphology.remove_small_objects(mask, MIN_AREA)
-Saved 166 cells to labels.tif

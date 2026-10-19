@@ -1,8 +1,0 @@
-Score = object F1 @ IoU>=0.5, one-to-one, border-touching objects ignored (pred and GT), on bf_dev.tif.
-v1  Cellpose-SAM, bg-subtract (gauss 50), percentile norm, diameter 50, cp 0, flow 0.4, min area 300: F1 0.543 (175 pred / 175 GT)
-v2  diameter 40 (cp -2 / 0): 0.449 / 0.436
-v3  diameter 70 (cp -2 / 0): 0.669 / 0.676
-v4  smoothing sigma 2 + diameter 60 (cp -2 / 0): 0.601 / 0.389  (smoothing hurt, dropped)
-v5  diameter 90 (cp -2 / 0): 0.678 / 0.682
-v6  FINAL: diameter 80, cp 0, flow 0.4, no smoothing, min area 300, run from scratch via pipeline.py: F1 0.695 (179 pred / 175 GT)
-Note: diameter chosen on the dev image only (tuned on one image, so held-out score may differ); plateau 70-90 suggests modest sensitivity.

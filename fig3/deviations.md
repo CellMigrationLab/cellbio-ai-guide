@@ -1,6 +1,7 @@
 # Figure 3: deviations from protocol and other things an auditor should know
 
-Round 1 (the current draft). Deviations under protocol v2 will be recorded in a section of their own.
+Round 1 (superseded; its records were removed from the repository on 19 Oct 2026 and are in git history before that commit; the
+sections below on round 1 are kept for the record). Deviations of protocol v2 follow in their own sections.
 
 Lessons from the round-2 pilot (3 scenarios, 17 Oct 2026; removed, see git history), built into the v2 harness: Claude
 sub-agents always have a shell (rows without code use the `subject-chat` agent); the harness scratchpad is shared

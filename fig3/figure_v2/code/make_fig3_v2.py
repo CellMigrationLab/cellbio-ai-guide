@@ -3,8 +3,8 @@
 Reads fig3/v2/runs/*/score.json (see build_scores_v2 below), writes source_data/fig_scores_v2.json first, then draws.
 Row b is the Python script only (the Fiji test was dropped). Rows b and c: the model works on a mosaic of the left halves
 of fields 104 and 209; bars and circles show the mean of the F1 on the held-out right halves of the two fields (the
-images in the header are the whole development field 104). Row d: whole fields. Re-run after every scenario: `make fig3v2` (cwd fig3/figure_v2/source_data).
-Row a (illustration) and the red call-outs are round-1 wording until the v2 item tables and the full results are reviewed.
+images in the header are the whole development field 104). Row d: whole fields. Re-run with `make fig3` (cwd fig3/figure_v2/source_data).
+Layout: full-page portrait, 1100 px wide (183 mm), smallest text 15 px (about 7 pt). Row a dots come from advice_outdated.csv.
 """
 import csv
 import os
