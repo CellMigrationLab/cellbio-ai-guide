@@ -805,10 +805,11 @@ s, _ = terminal(CX_CAV + 14, ry[key] + 62, W_CAV - 16, [(">>> CellposeModel(pret
 
 # ================================================================ b1 / b2 / c / d
 key = "b"
-ask(key, [("", ["“Please write a Python script to segment the …”", "+ the Box 1 checklist"])] if BOX1_ONLY else
+ask(key, [("", ["“Please write a Python script to segment the …”", "+ ask for explicit, testable code"])] if BOX1_ONLY else
     [("before", ["“Please write a Python script to segment the …”"]), ("after", ["Box 1 prompt"])])
-add(panel(key, ry[key] + 34, "py", None if BOX1_ONLY else "generic", "Box 1"))
-add(cav(key, ["Box 1 makes the settings visible;", "only the test shows if they work"]))
+add(panel(key, ry[key] + 34, "py", None if BOX1_ONLY else "generic", "script" if BOX1_ONLY else "Box 1"))
+add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"]) if BOX1_ONLY else
+    cav(key, ["Box 1 makes the settings visible;", "only the test shows if they work"]))
 
 key = "c"
 ask(key, [("before", ["“…run the pipeline, assess, improve…”"]), ("after", ["“…score every version against my annotation…”"])])
@@ -851,7 +852,7 @@ KH = 92
 add(rrect(28, KY, 1784, KH, 16, "#ffffff", NN["stroke"], 1.4)
     + t(48, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 16.5, "bold", INK))
 KEEP = [("lock", "Check how the service handles data"), ("check", "Verify advice against the docs"),
-        ("ruler", "Ask it to expose parameters (Box 1)"), ("target", "Give agents an external objective"),
+        ("ruler", "Ask for code that is easy to debug" if BOX1_ONLY else "Ask it to expose parameters (Box 1)"), ("target", "Give agents an external objective"),
         ("file", "Request masks, not only a number")]
 KW = (1784 - 40) / 5
 
