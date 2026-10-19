@@ -630,6 +630,7 @@ def build_scores_v2():
             if t2["turn2_median_area_um2"] is not None and rs["median_area_um2"]:
                 T["draw"]["area_ratio"].append(t2["turn2_median_area_um2"] / rs["median_area_um2"])
                 T["draw"]["ar_ratio"].append(t2["turn2_median_aspect_ratio"] / rs["median_aspect_ratio"])
+    n_runs = sum(_os.path.exists(_os.path.join(RUNS, sid, "meta.json")) for sid in sc)   # runs recorded (row A has no score file)
     return {"tasks": tasks, "n_runs": n_runs, "n_ref_heldout": n_ref}
 
 
