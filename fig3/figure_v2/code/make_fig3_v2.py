@@ -1,8 +1,9 @@
 """Figure 3 (protocol v2) in the layout of Figures 1 and 2: editable SVG built from the stored main runs.
 
 Reads fig3/v2/runs/*/score.json (see build_scores_v2 below), writes source_data/fig_scores_v2.json first, then draws.
-Row b is the Python script only (the Fiji test was dropped). Bars and circles show the TEST field 209; the images in the
-header are the development field 104. Re-run after every scenario: `make fig3v2` (cwd fig3/figure_v2/source_data).
+Row b is the Python script only (the Fiji test was dropped). Rows b and c: the model works on a mosaic of the left halves
+of fields 104 and 209; bars and circles show the mean of the F1 on the held-out right halves of the two fields (the
+images in the header are the whole development field 104). Row d: whole fields. Re-run after every scenario: `make fig3v2` (cwd fig3/figure_v2/source_data).
 Row a (illustration) and the red call-outs are round-1 wording until the v2 item tables and the full results are reviewed.
 """
 import csv
@@ -584,13 +585,15 @@ REF_209 = {}
 
 
 def build_scores_v2():
-    """Collect per-task lists from the stored v2 runs (test field 209); crashed or unscorable = -1 (drawn as x)."""
+    """Collect per-task lists from the stored v2 runs. Rows b and c: the mean of the F1 on the held-out right halves of
+    fields 104 and 209 (a failed field counts 0; both failed = -1, drawn as x). Row d: count / manual count, both fields."""
     with open("../../v2/scenarios.csv", newline="") as f:
         sc = {r["scenario_id"]: r for r in csv.DictReader(f)}
     tasks = {k: {"py": {"before": [], "after": [], "before_n": [], "after_n": []},
                  "agent": {"before": [], "after": [], "before_n": [], "after_n": []},
                  "draw": {"f1": [], "drawn": [], "asked": []}, "default": None} for k in TASK_IDS}
     n_runs = 0
+    n_ref = {k: 0 for k in TASK_IDS}
     for sid, r in sc.items():
         sp = _os.path.join(RUNS, sid, "score.json")
         if not _os.path.exists(sp):
@@ -599,25 +602,29 @@ def build_scores_v2():
         d, task = json.load(open(sp)), r["task"]
         T = tasks[task]
         if r["row"] in ("code", "optimise"):
-            res = d["f209"]
-            ok = res["status"] == "ok"
+            fields = [d["f104"], d["f209"]]
+            ok = [f["status"] == "ok" for f in fields]
             blk = T["py"] if r["row"] == "code" else T["agent"]
             side = "before" if r["condition"] in ("simple", "by_eye") else "after"
-            blk[side].append(res["f1"] if ok else -1)
-            blk[side + "_n"].append(res["n_pred"] if ok else None)
-        elif r["row"] == "direct" and d["field"] == 209:
+            blk[side].append(d["mean"]["f1"] if any(ok) else -1)
+            blk[side + "_n"].append(sum(f["n_pred"] for f in fields) if all(ok) else None)
+            if all(ok):
+                n_ref[task] = sum(f["n_ref"] for f in fields)
+        elif r["row"] == "direct":
             ok = d["turn3"]["status"] == "ok"
+            ref = d["reference"]["count"]
             T["draw"]["f1"].append(d["turn3"]["f1"] if ok else None)
-            T["draw"]["drawn"].append(d["turn3"]["n_drawn"] if ok else None)
-            T["draw"]["asked"].append(d["turn1"]["count"])
-    return {"tasks": tasks, "n_runs": n_runs}
+            T["draw"]["drawn"].append(d["turn3"]["n_drawn"] / ref if ok else None)
+            T["draw"]["asked"].append(d["turn1"]["count"] / ref if d["turn1"]["count"] is not None else None)
+    return {"tasks": tasks, "n_runs": n_runs, "n_ref_heldout": n_ref}
 
 
 FSJ = build_scores_v2()
 json.dump(FSJ, open("fig_scores_v2.json", "w"), indent=1)
 FS = FSJ["tasks"]
-from fig3.v2.score import reference_summary   # manual annotation of the test field (data/raw)
-MAN = {k: reference_summary(k, 209)["count"] for k in TASK_IDS}
+from fig3.scoring.tasks import heldout_reference   # manual annotation, held-out right halves (data/raw)
+import numpy as _np
+MAN = {k: sum(int(len(_np.unique(heldout_reference(k, f))) - 1) for f in (104, 209)) for k in TASK_IDS}
 MAN104 = {"nuclei": 441, "cancer": 124, "endo": 382}
 DEFC = "#9aa4b2"
 CAVF, CAVS = "#fdf0ef", "#efc2be"
@@ -781,13 +788,13 @@ y = ry[key] + 34
 for i, (task, name, _) in enumerate(TASKS):
     x = CX_SC + i * (GW + GG)
     dd = FS[task]["draw"]
-    man = MAN[task]
+    man = 1.0                                   # values are count / manual count (both whole fields)
     bw = GW - 20
     X = lambda v: x + min(v / man, 1.6) / 1.6 * bw
-    gg = [t(x, y, name, 13.5, "bold", INK) + t(x + GW - 6, y, f"manual n={man}", 11.5, fill="#5b6676", anchor="end"),
+    gg = [t(x, y, name, 13.5, "bold", INK) + t(x + GW - 6, y, "count / manual", 11.5, fill="#5b6676", anchor="end"),
           f'<line x1="{x}" y1="{y+30}" x2="{x+bw}" y2="{y+30}" stroke="#c9d1dc" stroke-width="1.2"/>',
           f'<line x1="{X(man):.1f}" y1="{y+18}" x2="{X(man):.1f}" y2="{y+42}" stroke="{INK}" stroke-width="2" stroke-dasharray="3 2"/>']
-    for v in dd["asked"]:
+    for v in [v for v in dd["asked"] if v is not None]:
         gg.append(f'<circle cx="{X(v):.1f}" cy="{y+30}" r="5" fill="{MCOL["sonnet"]}" stroke="#fff" stroke-width="1"/>')
     for v in dd["drawn"]:
         if v is not None:
@@ -842,7 +849,7 @@ for i, (ic, a_) in enumerate(KEEP):
     x = 48 + i * KW
     add(kicon(ic, x + 20, KY + 62, ACC) + t(x + 48, KY + 67, a_, 14.5, "bold", INK))
 
-add(t(1812 - 14, KY + KH + 18, f"DRAFT: {FSJ['n_runs']} of 72 main runs scored. Bars: median F1 on test field 209 (open circles: runs; x: crashed or no valid output); images above: development field 104.",
+add(t(1812 - 14, KY + KH + 18, f"DRAFT: {FSJ['n_runs']} of 72 main runs scored. Rows b, c: bar = median of the runs' mean F1 on the held-out halves of fields 104 and 209 (open circles: runs; x: failed). Images above: field 104.",
       12, fill="#7a8699", anchor="end"))
 H = KY + KH + 34
 svg = (f'<?xml version="1.0" encoding="UTF-8"?>\n'

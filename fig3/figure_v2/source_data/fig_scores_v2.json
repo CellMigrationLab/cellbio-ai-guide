@@ -3,29 +3,15 @@
   "nuclei": {
    "py": {
     "before": [],
-    "after": [
-     0.556
-    ],
+    "after": [],
     "before_n": [],
-    "after_n": [
-     505
-    ]
+    "after_n": []
    },
    "agent": {
-    "before": [
-     0.562,
-     0.549
-    ],
-    "after": [
-     0.55
-    ],
-    "before_n": [
-     487,
-     478
-    ],
-    "after_n": [
-     473
-    ]
+    "before": [],
+    "after": [],
+    "before_n": [],
+    "after_n": []
    },
    "draw": {
     "f1": [
@@ -35,47 +21,36 @@
      null
     ],
     "asked": [
-     1000
+     2.1141649048625792
     ]
    },
    "default": null
   },
   "cancer": {
    "py": {
-    "before": [
-     0.397
-    ],
+    "before": [],
     "after": [],
-    "before_n": [
-     119
-    ],
+    "before_n": [],
     "after_n": []
    },
    "agent": {
-    "before": [
-     0.844
-    ],
-    "after": [
-     0.899,
-     0.905
-    ],
-    "before_n": [
-     214
-    ],
-    "after_n": [
-     175,
-     184
-    ]
+    "before": [],
+    "after": [],
+    "before_n": [],
+    "after_n": []
    },
    "draw": {
     "f1": [
+     0.903,
      0.923
     ],
     "drawn": [
-     160
+     0.9112903225806451,
+     0.9815950920245399
     ],
     "asked": [
-     200
+     1.0483870967741935,
+     1.2269938650306749
     ]
    },
    "default": null
@@ -83,29 +58,19 @@
   "endo": {
    "py": {
     "before": [
-     0.631
+     0.387
     ],
     "after": [],
     "before_n": [
-     322
+     328
     ],
     "after_n": []
    },
    "agent": {
-    "before": [
-     0.773,
-     0.789
-    ],
-    "after": [
-     0.794
-    ],
-    "before_n": [
-     347,
-     345
-    ],
-    "after_n": [
-     358
-    ]
+    "before": [],
+    "after": [],
+    "before_n": [],
+    "after_n": []
    },
    "draw": {
     "f1": [
@@ -115,11 +80,16 @@
      null
     ],
     "asked": [
-     450.0
+     1.1597938144329898
     ]
    },
    "default": null
   }
  },
- "n_runs": 16
+ "n_runs": 5,
+ "n_ref_heldout": {
+  "nuclei": 0,
+  "cancer": 0,
+  "endo": 356
+ }
 }
