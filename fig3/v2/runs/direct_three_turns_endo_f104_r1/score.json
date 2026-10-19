@@ -1,0 +1,25 @@
+{
+ "field": 104,
+ "reference": {
+  "count": 382,
+  "median_area_um2": 893.4,
+  "median_aspect_ratio": 1.6
+ },
+ "turn1": {
+  "count": 110.0,
+  "range": [
+   100,
+   120
+  ],
+  "count_error": -272.0,
+  "reference_in_range": false
+ },
+ "turn2": {
+  "turn2_median_area_um2": 1000.0,
+  "turn2_median_aspect_ratio": 1.4
+ },
+ "turn3": {
+  "status": "no_valid_json",
+  "f1": 0.0
+ }
+}
