@@ -292,7 +292,10 @@ def outside(path_text: str, folder: Path) -> bool:
 # installed software and the shared model cache: outside the folder but part of the environment, not forbidden material
 # (noted in audit.json, not flagged); everything else outside the folder is flagged
 ENVIRONMENT_PATHS = ("/usr/", "/bin/", "/lib/", "/opt/", "/etc/", "/proc/", "/dev/null", "/root/.cellpose",
-                     "/root/.cache/pip", "/root/.local/lib")
+                     "/root/.cache/pip", "/root/.local/lib",
+                     # the operator's own home on any platform (Linux /home/<user>, /root or macOS /Users/<user>)
+                     str(Path.home() / ".cellpose") + "/", str(Path.home() / ".cache/pip") + "/",
+                     str(Path.home() / ".local/lib") + "/")
 
 
 def shell_paths_outside(command: str, folder: Path) -> list[str]:

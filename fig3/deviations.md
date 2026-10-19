@@ -226,3 +226,33 @@ Found in the preflight and fixed before the freeze (operator, runner, scorer, as
   operating session is idle, and every running subject is killed (`uptime` showed the machine had just booted). Runs 19, 52 and 62
   were interrupted three times in this way (attempts 1 to 3 in `v2/runs_rejected/`); from the fourth attempt the operator stays
   active (polling) for the whole run. The protocol rule (PROTOCOL_V2 section 9, session interruption: rerun) was applied each time.
+
+## Amendment: audit fixes (20 Oct 2026, external code review PR)
+
+A whole-repository audit found robustness gaps in the harness. None of the fixes below changes any recorded run, stored
+score or figure (verified: `make check` reproduces all stored scores; `runtime_files` on every stored run folder
+returns the same files the original code copied). The freeze was re-recorded after these changes; the subject model,
+prompts, answer sheet and scenarios are untouched.
+
+- **`runner.py`**: a runtime file whose bytes equal any file in `fig3/v2/assets` or `data/raw` is now refused like
+  `annotation.tif` (across `data/raw` this also catches held-out material under any name), and two runtime files that
+  share a basename now raise (the loader's pick was ambiguous before: copy order decided which file the pipeline read).
+  `EXEC_ROOT` is `R2EXEC_ROOT` from the environment, default unchanged (`/home/user/r2exec_v2`).
+- **`runner.py`**: when the runner itself runs from a virtual environment, the run's `PYTHONPATH` points at that
+  environment's `purelib` so `system_site_packages=True` gives the run the same packages it gives when started from a
+  system interpreter (previously a run under a venv-in-venv operator crashed on `import numpy`). On the operator host
+  (system interpreter) this changes nothing.
+- **`run_operator.py`**: `ENVIRONMENT_PATHS` gained home-relative entries (`~/.cellpose`, `~/.cache/pip`,
+  `~/.local/lib`), so the audit accepts an operator home on any platform, not only `/root` and `/home/<user>`.
+- **`common/matching.py`**: `match` validates both label images (`validate_labels`), so a probability map, NaN image
+  or stack fails instead of returning F1 0 silently.
+- **`common/labels.py`**: complex dtypes are rejected instead of being cast with a warning while the imaginary part is
+  discarded.
+- **`common/stats.py`**: `finite_values` refuses 2D input instead of silently flattening (a transposed array reaching
+  `pearson_r` used to correlate the wrong sample).
+- **`common/paths.py`**: `raw_file` refuses names that escape `data/raw` (absolute or `..`).
+- **`tools/check_all.py`, `data/make_manifest.py`**: check-harness fixes (not frozen): expected outputs are deleted
+  before each producer runs, all non-model Fig 2 scorers now run in `make check`, unit tests are discovered per folder
+  (recorded LLM-written `test_*.py` files in `runs/` no longer execute inside `make check`), the NaN scan covers
+  `fig3/figure_v2`, `fig3/scoring` and `fig3/v2`, and the manifest verifies the recorded file sizes.
+

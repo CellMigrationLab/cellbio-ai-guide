@@ -6,7 +6,10 @@ import numpy as np
 
 def finite_values(values, *, name: str, n_min: int = 1) -> np.ndarray:
     """Return values as a 1D float array; raise if fewer than n_min values or any is not finite."""
-    a = np.asarray(values, dtype=float).ravel()
+    a = np.asarray(values, dtype=float)
+    if a.ndim > 1:
+        raise ValueError(f"{name}: expected a 1D sample, got shape {a.shape} (a 2D input used to be flattened silently)")
+    a = a.ravel()
     if a.size < n_min:
         raise ValueError(f"{name}: need at least {n_min} values, got {a.size}")
     if not np.all(np.isfinite(a)):

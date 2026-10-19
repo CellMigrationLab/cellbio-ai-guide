@@ -6,11 +6,14 @@ pairs are accepted greedily from the highest IoU downwards, one-to-one, keeping 
 F1 = 2 TP / (2 TP + FP + FN); F1 is 0 when there are no matches (including two empty images).
 An IoU exactly equal to the threshold counts as a match. Labels do not overlap within an image, so for thresholds above
 0.5 each object has at most one candidate partner and greedy matching equals optimal matching
-(tests/test_matching_edge_cases.py).
+(tests/test_matching_edge_cases.py). At thr = 0.5 a greedy pass can lose a tied maximum-cardinality solution; the edge
+case test does not hit an exact tie, so prefer not to call at exactly 0.5 in new code.
 """
 from __future__ import annotations
 
 import numpy as np
+
+from common.labels import validate_labels
 
 
 def match(gt: np.ndarray, pr: np.ndarray, thr: float = 0.5) -> tuple[list[tuple[int, int, float]], set, set]:
@@ -18,6 +21,8 @@ def match(gt: np.ndarray, pr: np.ndarray, thr: float = 0.5) -> tuple[list[tuple[
 
     Returns (matched pairs [(gt_id, pred_id, iou)], unmatched reference ids (FN), unmatched predicted ids (FP)).
     """
+    gt = validate_labels(gt, name="reference")
+    pr = validate_labels(pr, name="prediction")
     if gt.shape != pr.shape:
         raise ValueError(f"Label images differ in shape: reference {gt.shape} vs prediction {pr.shape}")
     if not 0 < thr <= 1:

@@ -15,12 +15,14 @@ exits non-zero or times out is never 'ok', even if it wrote a file.
 from __future__ import annotations
 
 import gzip
+import hashlib
 import json
 import os
 import shutil
 import signal
 import subprocess
 import sys
+import sysconfig
 import time
 import venv
 from pathlib import Path
@@ -28,7 +30,7 @@ from pathlib import Path
 from common.paths import REPO_ROOT
 
 ASSETS = REPO_ROOT / "fig3" / "v2" / "assets"
-EXEC_ROOT = Path("/home/user/r2exec_v2")
+EXEC_ROOT = Path(os.environ.get("R2EXEC_ROOT", "/home/user/r2exec_v2"))
 TIMEOUT_S = 3600
 FIELD_ASSET = {104: "dev_{task}_image.tif", 209: "test_{task}_image.tif"}
 NEVER_COPY = ("annotation", "image.tif", "image.png")   # development data must not reach the test run
@@ -58,14 +60,41 @@ def manifest_names(agent_folder: Path) -> list[str]:
     return found
 
 
+def sha256_of_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+_reference_hashes: set[str] | None = None
+
+
+def reference_hashes() -> set[str]:
+    """SHA-256 of every file in fig3/v2/assets and data/raw: a runtime file byte-identical to any of these carries the
+    experiment's own data (development or held-out) and must not reach the test run."""
+    global _reference_hashes
+    if _reference_hashes is None:
+        files = [p for p in sorted(ASSETS.rglob("*")) if p.is_file()]
+        files += [p for p in sorted((REPO_ROOT / "data" / "raw").rglob("*")) if p.is_file()]
+        _reference_hashes = {sha256_of_file(p) for p in files}
+    return _reference_hashes
+
+
 def runtime_files(agent_folder: Path) -> list[Path]:
-    """Files named in runtime_manifest.json (row C); development images and annotations are refused."""
-    out = []
+    """Files named in runtime_manifest.json (row C); development data, held-out data and same-basename collisions are refused."""
+    out, seen_names = [], set()
     for name in manifest_names(agent_folder):
         path = (agent_folder / name).resolve()
         if not path.is_relative_to(agent_folder.resolve()):
             raise ValueError(f"runtime file outside the agent folder: {name}")
         if any(k in path.name for k in NEVER_COPY) or path.name == "pipeline.py":
+            continue          # refused ones are recorded in execution.json
+        if path.name in seen_names:
+            raise ValueError(f"two runtime files share the basename {path.name!r}; which one the pipeline would load is ambiguous")
+        seen_names.add(path.name)
+        if sha256_of_file(path) in reference_hashes():
             continue          # refused ones are recorded in execution.json
         out.append(path)
     return out
@@ -104,8 +133,11 @@ def run_field(run_dir: Path, field: int) -> dict:
         shutil.copyfile(script, work / "pipeline.py")
         for f in runtime_files(folder):
             shutil.copyfile(f, work / f.name)
-        refused = [n for n in manifest_names(folder) if any(k in Path(n).name for k in NEVER_COPY)]
-        copied = [f.name for f in runtime_files(folder)]
+        manifest_list = manifest_names(folder)
+        taken_files = runtime_files(folder)
+        taken = {f.name for f in taken_files}
+        refused = [n for n in manifest_list if Path(n).name not in taken and Path(n).name != "pipeline.py"]
+        copied = [f.name for f in taken_files]
         args = ["pipeline.py", "image.tif", "labels.tif", "measurements.csv"]
     else:
         raise ValueError(f"row {row!r} has nothing to run")
@@ -120,9 +152,13 @@ def run_field(run_dir: Path, field: int) -> dict:
         record["status"] = "install_failed"
     else:
         record["command"] = [str(python), *args]
+        # system_site_packages makes a child of a venv resolve the real system site-packages instead of this venv's, so
+        # when the runner itself runs in a virtual environment, expose that venv's packages to the run explicitly
+        parent_site = sysconfig.get_path("purelib") if sys.prefix != sys.base_prefix else ""
         t0 = time.time()
         proc = subprocess.Popen([str(python), *args], cwd=work, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                text=True, start_new_session=True, env={**os.environ, "PYTHONPATH": ""})
+                                text=True, start_new_session=True,
+                                env={**os.environ, "PYTHONPATH": parent_site})
         try:
             out, err = proc.communicate(timeout=TIMEOUT_S)
         except subprocess.TimeoutExpired:

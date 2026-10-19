@@ -1,5 +1,5 @@
 {
- "frozen_utc": "2026-10-17T18:26:10+00:00",
+ "frozen_utc": "2026-10-19T14:40:39+00:00",
  "subject_model": "claude-sonnet-5-5",
  "cli_version": "2.1.302 (Claude Code)",
  "python": "3.13.16",
@@ -35,8 +35,8 @@
   "fig3/v2/rows.csv": "ef36f3517244868410732b2720ae89ac444829c8d7f25d61174db1134ea6468e",
   "fig3/v2/scenarios.csv": "b45825e18e0d38843ab0569d096c180a0cf423780c7534d908e77fa6fb35078a",
   "fig3/v2/answer_sheet.md": "68cb2a0fb143722837470eb4acff0d25af617d7c8aa8087a70fe4c26d11205b7",
-  "fig3/v2/run_operator.py": "f2847e4e52aa7e177b88b396eeb2ed82c3c68c227c162a5b8e26ce16a1551e57",
-  "fig3/v2/runner.py": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
+  "fig3/v2/run_operator.py": "e3fa2f848a7c6e44a880ba1e46d25d12c28218c903295f4b5eeb50272568e4bd",
+  "fig3/v2/runner.py": "b8e771849b40e1dcf3d494346ab7aac1e54ccef39ae46c3ff79aaadded32611f",
   "fig3/v2/score.py": "6e8e14b03963d6fd7c235ed3fd775828ac3b9fffccb5fff9f61e520dbddfc0f9",
   "fig3/v2/make_protocol.py": "5c9921f4c1817cb4470eb38c03398c767a407a0242a9e4945285afc65b2bccc7",
   "fig3/v2/make_assets.py": "4ac47e98b38660484e32e78ad9cb86fb9463f5659faaae12adad44ae2acbef9b",
@@ -73,12 +73,12 @@
   "fig3/v2/assets/test_nuclei_image.tif": "5b5cfd44a3b3831efd76953924b500938b4a7c7239a5ca75bc82278d0af10394",
   "fig3/v2/environment_freeze.txt": "79248e0876cbf0310ba79083a1b764c78820b3a8cfeb0907919c00541e025d67",
   "fig3/scoring/tasks.py": "8b41002980b0ea8521c3b63a8ac8fab55374f462f18993547126fbf9fcac3f68",
-  "common/labels.py": "51544fd55d50fd7d860f63df07c6a4eea3428b9e8eee8985b84e4e3bdc80eee2",
-  "common/matching.py": "b1243829b0b118a69c1f230009e5f77adb4c431444ccc78770c755ec44307df0",
+  "common/labels.py": "31b9ffd28825906dc133ee39a5a62ada7fb8bb0d10f5c44d5cc28d6e5a4994c2",
+  "common/matching.py": "49bc22fb3cb556e4f5b7b0d26e62963c211e6c7edee031522800777cab019285",
   "common/annotations.py": "7d9a909bf7b1340eb772bdc0e0f4034a359b3916588281b65720d3235172ce9a",
   "common/metadata.py": "14e6c60a696601be353a899567d8bd0abdb4da07267c2674edf033d59a7ab7c3",
-  "common/stats.py": "929e94054d472d4c8550855fa19e14be14948ef67a77320fa18c41b8f19d9683",
-  "common/paths.py": "e4d4855007a021b36d29ced4b6f660cf6130efad84dd2a44da6c528f6cbca697",
+  "common/stats.py": "a8414357769091a8cbe8047d64812a9e558580e62fe70097ec4f5e7f66ae0fdf",
+  "common/paths.py": "0474537a138f84811e368cdd260a71d4f96646a338c4d9c93f04330b36b4a278",
   "box1/box1_final.md": "10216f40d7658993cf5c5bfd26caa51ee620b5397d81941546a3b672c8f37c25"
  },
  "amendments": [
@@ -189,6 +189,48 @@
    "new_sha256": "68cb2a0fb143722837470eb4acff0d25af617d7c8aa8087a70fe4c26d11205b7",
    "reason": "two truthful lines for the revised rows B and C: the development image is a mosaic of two fields (every Box 1 subject sees the seam in the preview and asks); image.png is a display copy of image.tif. Answering \"I don't know\" would have been untrue.",
    "runs_affected": "rows B and C from run 7 on; runs 2, 4 and 6 had no such question (run 6 mentioned the seam in its report)"
+  },
+  {
+   "date": "2026-10-20",
+   "file": "common/labels.py",
+   "old_sha256": "51544fd55d50fd7d860f63df07c6a4eea3428b9e8eee8985b84e4e3bdc80eee2",
+   "new_sha256": "31b9ffd28825906dc133ee39a5a62ada7fb8bb0d10f5c44d5cc28d6e5a4994c2",
+   "reason": "audit fix: reject complex dtypes"
+  },
+  {
+   "date": "2026-10-20",
+   "file": "common/matching.py",
+   "old_sha256": "b1243829b0b118a69c1f230009e5f77adb4c431444ccc78770c755ec44307df0",
+   "new_sha256": "49bc22fb3cb556e4f5b7b0d26e62963c211e6c7edee031522800777cab019285",
+   "reason": "audit fix: validate both label images in match()"
+  },
+  {
+   "date": "2026-10-20",
+   "file": "common/paths.py",
+   "old_sha256": "e4d4855007a021b36d29ced4b6f660cf6130efad84dd2a44da6c528f6cbca697",
+   "new_sha256": "0474537a138f84811e368cdd260a71d4f96646a338c4d9c93f04330b36b4a278",
+   "reason": "audit fix: raw_file refuses names outside data/raw"
+  },
+  {
+   "date": "2026-10-20",
+   "file": "common/stats.py",
+   "old_sha256": "929e94054d472d4c8550855fa19e14be14948ef67a77320fa18c41b8f19d9683",
+   "new_sha256": "a8414357769091a8cbe8047d64812a9e558580e62fe70097ec4f5e7f66ae0fdf",
+   "reason": "audit fix: refuse 2D input instead of flattening"
+  },
+  {
+   "date": "2026-10-20",
+   "file": "fig3/v2/run_operator.py",
+   "old_sha256": "f2847e4e52aa7e177b88b396eeb2ed82c3c68c227c162a5b8e26ce16a1551e57",
+   "new_sha256": "e3fa2f848a7c6e44a880ba1e46d25d12c28218c903295f4b5eeb50272568e4bd",
+   "reason": "audit fix: home-relative environment paths, so the audit accepts an operator home on any platform"
+  },
+  {
+   "date": "2026-10-20",
+   "file": "fig3/v2/runner.py",
+   "old_sha256": "b7ac211511f1255196829a995a8065af3c8f3d181c5f4ee2bf0df08778a989f1",
+   "new_sha256": "b8e771849b40e1dcf3d494346ab7aac1e54ccef39ae46c3ff79aaadded32611f",
+   "reason": "audit fix: refuse runtime files whose bytes match fig3/v2/assets or data/raw; reject one basename twice; R2EXEC_ROOT override; expose the operator venv to runs"
   }
  ]
 }

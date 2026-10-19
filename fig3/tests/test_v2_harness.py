@@ -1,6 +1,7 @@
 """Protocol v2 runner and scorer on synthetic runs (crash, timeout, no output, perfect output, measurement table,
 direct-answer ellipses)."""
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -158,6 +159,28 @@ class RuntimeManifest(unittest.TestCase):
                  "note": "a sentence, not a file", "x": ["annotation.tif", "image.tif"]}))
             self.assertEqual(runner.manifest_names(folder), ["pipeline.py", "weights.npy", "annotation.tif", "image.tif"])
             self.assertEqual([p.name for p in runner.runtime_files(folder)], ["weights.npy"])
+
+    def test_a_copy_of_reference_data_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            raw = (Path(runner.__file__).resolve().parents[2] / "data" / "raw"
+                   / "field104_endothelial_junctions_annotator1.tif")
+            for name in ("pipeline.py", "weights.npy", "heldout.tif"):
+                (folder / name).write_bytes(b"x")
+            shutil.copyfile(raw, folder / "heldout.tif")      # byte-identical to the repository's own data
+            (folder / "runtime_manifest.json").write_text(json.dumps({"files": ["pipeline.py", "weights.npy", "heldout.tif"]}))
+            self.assertEqual([p.name for p in runner.runtime_files(folder)], ["weights.npy"])
+
+    def test_two_runtime_files_with_one_basename_raise(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            (folder / "a").mkdir()
+            (folder / "a" / "w.npy").write_bytes(b"1")
+            (folder / "w.npy").write_bytes(b"2")
+            (folder / "pipeline.py").write_bytes(b"x")
+            (folder / "runtime_manifest.json").write_text(json.dumps({"files": ["pipeline.py", "w.npy", "a/w.npy"]}))
+            with self.assertRaises(ValueError):
+                runner.runtime_files(folder)
 
 
 if __name__ == "__main__":

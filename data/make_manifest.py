@@ -40,11 +40,17 @@ def main(verify: bool) -> None:
     if verify:
         rows = {r["path"]: r for r in csv.DictReader(open(MANIFEST))}
         bad = [str(p.relative_to(DATA)) for p in files if rows.get(str(p.relative_to(DATA)), {}).get("sha256") != sha256(p)]
+        sizes = [str(p.relative_to(DATA)) for p in files
+                 if rows.get(str(p.relative_to(DATA)), {}).get("bytes", "") != str(p.stat().st_size)]
         missing = [k for k in rows if not (DATA / k).is_file()]
-        for item in bad + missing:
-            print("MISMATCH or MISSING:", item)
-        print(f"{len(files)} files checked, {len(bad) + len(missing)} problems")
-        raise SystemExit(1 if bad or missing else 0)
+        for item in bad:
+            print("CHECKSUM MISMATCH:", item)
+        for item in sizes:
+            print("SIZE MISMATCH:", item)
+        for item in missing:
+            print("MISSING:", item)
+        print(f"{len(files)} files checked, {len(bad) + len(sizes) + len(missing)} problems")
+        raise SystemExit(1 if bad or sizes or missing else 0)
     with MANIFEST.open("w", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(["path", "bytes", "sha256", "source_key"])
