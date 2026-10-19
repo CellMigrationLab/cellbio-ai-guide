@@ -763,8 +763,8 @@ for i, (task, name, mod) in enumerate(TASKS):
     row.append(halo(x + 6, Y0 + 62, "image", size=12.5) + halo(x + TT + 14, Y0 + 62, "desired result (manual)", size=12.5))
 add("".join(row))
 
-ORDER = [("a", "Ask for advice", 176), ("b", "Ask for code: Python script", 156),
-         ("c", "Let an agent run it", 134), ("d", "Ask for the answer", 164)]
+ORDER = [("a", "Ask for advice", 196), ("b", "Ask for code: Python script", 182),
+         ("c", "Let an agent run it", 150), ("d", "Ask for the answer", 164)]
 ry, RH = {}, {}
 yy = Y0 + HDH + GAP
 for key, ttl, h in ORDER:
@@ -791,7 +791,7 @@ def ask(key, items, y0=42):
     for tg, lines in items:
         if tg:
             add(t(CX_ASK + 46, y + 2, tg, 11.5, "bold", CHG)); y += 5
-        s, h = prompt(CX_ASK, y, W_ASK, lines, 12); add(s); y += h - 6
+        s, h = prompt(CX_ASK, y, W_ASK, lines, 12); add(s); y += h + 10
 
 
 # ================================================================ a
@@ -832,7 +832,7 @@ for i, (task, name, _) in enumerate(TASKS):
         for cut in SHOW_AS.get(sid, ()):                # a verbatim part of the evidence, when the whole is too long
             assert cut in shown
             shown = cut
-        add(t(x, y0 + 80 + j * 18, "“" + shown + "”", 11.5, "normal", col, style="italic"))
+        add(t(x, y0 + 84 + j * 30, "“" + shown + "”", 11.5, "normal", col, style="italic"))
 add(f'<circle cx="{CX_SC+6}" cy="{ry[key]+RH[key]-16}" r="5.5" fill="{NOC}"/>' + t(CX_SC + 16, ry[key] + RH[key] - 12, "reply suggested an outdated model or code", 12, fill=BODY)
     + f'<circle cx="{CX_SC+276}" cy="{ry[key]+RH[key]-16}" r="5" fill="#ffffff" stroke="#7a8699" stroke-width="1.5"/>' + t(CX_SC + 286, ry[key] + RH[key] - 12, "none (3 replies per prompt and task)", 12, fill=BODY))
 add(cav(key, ["Outdated advice may not run, may run with", "errors, or may fall back silently (you may", "not know which model you are using)"], -8))
@@ -844,8 +844,8 @@ key = "b"
 ask(key, [("basic prompt", ["“Please write a Python script to segment the …”"]),
          ("detailed prompt", ["Same request + ask for explicit parameters,", "input checks and a test on reference data"])])
 add(panel(key, ry[key] + 34, "py", "basic", "detailed"))
-add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"]))
-add(t(CX_SC, ry[key] + 130, "Each script differs between runs, but the generated script gives the same result every time it is run.", 14, "bold", NOC))
+add(cav(key, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"], 4))
+add(caution(CX_CAV + 14, ry[key] + 106, NOC) + t(CX_CAV + 36, ry[key] + 112, ["Each script differs between runs, but the", "generated script gives the same result", "every time it is run."], 16.5, "bold", NOC, lh=21))
 
 key = "c"
 ask(key, [("by eye", ["“…run the pipeline, assess, improve…”"]), ("scored", ["+ “…score every version against my annotation…”"])])
