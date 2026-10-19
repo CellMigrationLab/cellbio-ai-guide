@@ -1,0 +1,8 @@
+v1  Inspected image.tif: 1022x1024 uint16 (12-bit), brightfield. Found a tile seam at column 512 (left median 2579, right 3088) -> normalise each side separately.
+v1  Preprocess: Gaussian background subtraction (sigma 40 px) + 1-99 percentile scaling per tile; Cellpose normalize=False so this is the only normalisation.
+v1  Cellpose cpsam_v2, CPU, diameter 50 px (~32 um; Cellpose rescales internally to its 30 px reference, labels returned at native grid), flow_thr 0.4, cellprob 0.0. 531 objects, ~5 min on 4 CPUs. Visual check: endothelial tessellation follows cell borders well; cancer cells are segmented as separate small round objects.
+v2  Tried intensity-std classifier for cancer cells: also flags endothelial cells next to debris -> rejected. Replaced with size rule (<1100 px ~ <25 um circle = non-endothelial).
+v2  Exclusions: border-touching cells (cropped), cells with >10% of a 3 px rim touching small objects (occluded by cancer cells/debris; area biased).
+v2  Result on image.tif: 531 objects -> 150 small, 44 border, 147 occluded, 190 kept. Median area 877 um2, median aspect ratio 1.51.
+v3  Replaced deprecated skimage property names; removed leftover code. Final pipeline.py run end-to-end (see below).
+v3  Final run: 530 objects -> 149 small, 44 border, 146 occluded, 191 kept (1 object differs from v1 run: Cellpose CPU run-to-run variation, not seeded).
