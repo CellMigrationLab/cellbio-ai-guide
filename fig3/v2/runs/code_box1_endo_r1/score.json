@@ -1,0 +1,46 @@
+{
+ "f104": {
+  "status": "ok",
+  "n_pred": 121,
+  "n_ref": 181,
+  "tp": 13,
+  "fn": 168,
+  "fp": 108,
+  "f1": 0.086,
+  "area_ratio_median": 0.607,
+  "measures": {
+   "count": 121,
+   "median_area_um2": 309.3,
+   "median_aspect_ratio": 1.219
+  },
+  "reference": {
+   "count": 207,
+   "median_area_um2": 858.3,
+   "median_aspect_ratio": 1.612
+  },
+  "count_error": -86,
+  "median_area_um2_error": -549.0,
+  "median_aspect_ratio_error": -0.393,
+  "n_matched_inner": 13,
+  "median_abs_area_error_pct": 39.3,
+  "median_abs_aspect_ratio_error": 0.295,
+  "measurements_csv": {
+   "status": "consistent",
+   "n_rows": 217,
+   "labels_missing": 0,
+   "rows_without_label": 0,
+   "area_disagrees": 0,
+   "aspect_ratio_disagrees": 0,
+   "area_column": "area_um2",
+   "aspect_ratio_column": "aspect_ratio"
+  }
+ },
+ "f209": {
+  "status": "crashed",
+  "f1": 0.0
+ },
+ "mean": {
+  "f1": 0.043,
+  "note": "mean of the object F1 on the held-out halves of fields 104 and 209 (failed = 0)"
+ }
+}
