@@ -1,0 +1,7 @@
+Change log (optimised only on image.tif / annotation.tif)
+1. Baseline: Cellpose-SAM (cpsam), native scale, normalise p1-99.5, flow 0.4, cellprob -1, no diameter. 651 objects (cancer nuclei included), 317/460 GT nuclei matched at IoU>0.5. All 143 misses were in x>512, where masks were ~2.5x too large (diffuse halo around nuclei).
+2. Added per-object half-maximum refinement (bg = 5th pct in bbox, core = eroded-mask median, fraction 0.5), largest component, fill holes: 435/460 GT matched.
+3. Added class filter: cancer nuclei are bright. Median raw intensity <= 750 and area 60-500 um2 (F1 plateau 700-800). Result at fraction 0.5: 461 nuclei, F1 0.906, median |area err| 13%, area bias -4.6%.
+4. Swept refinement fraction (0.35-0.6) and morphological opening on cached Cellpose output. Higher fraction: better F1, worse area. Opening: no benefit (not used). Chose 0.45 (F1 0.895, area bias -1.4%, median |area err| 10.7%).
+5. Not tried: upscaling (a 6.5 min CPU run each), cellprob sweeps; refinement made them unnecessary on this image.
+Process note: two early background runs were wasted (undefined variable bug; a pkill that killed its own shell); no effect on results.
