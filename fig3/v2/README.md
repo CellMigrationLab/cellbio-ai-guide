@@ -10,12 +10,14 @@ This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2
 | [rows.csv](rows.csv) | Defines the model access and tools offered for each row; also used in audits and metadata. |
 | [scenarios.csv](scenarios.csv) | Lists the 72 planned runs in seeded random order. |
 | [answer_sheet.md](answer_sheet.md) | Approved replies to model follow-up questions. |
-| [assets/](assets/) | Field-104 development images and annotations, plus the field-209 test image, prepared by `make_assets.py`. |
+| [assets/](assets/) | Whole-field images and annotations (rows A, D and scoring) and, from the revision of 19 Oct 2026, `halfdev_*` mosaics of the left halves of fields 104 and 209 for rows B and C; prepared by `make_assets.py`. |
 | [run_operator.py](run_operator.py) | Prepares, runs (headless subject sessions), audits and records each model conversation. |
 | [FREEZE.json](FREEZE.json) | SHA-256 of every file that defines the protocol, model ID and CLI version; `fig3/tests/test_v2_freeze.py` fails if any changes. |
 | [runner.py](runner.py) | Executes returned code on fields 104 and 209 in clean environments (rows B and C). |
 | [score.py](score.py) | Scores outputs from rows B, C and D. |
-| `runs/`, `runs_rejected/` | Accepted runs and rejected attempts, with reasons. |
+| `runs/`, `runs_rejected/`, `runs_superseded/` | Accepted runs; rejected attempts (reason in each `REJECTED` note); runs replaced by the revision of 19 Oct 2026 (`runs_superseded/README.md`). |
+| [check_scores.py](check_scores.py), [summarise_direct.py](summarise_direct.py), [advice_outdated.py](advice_outdated.py), [advice_api_check.py](advice_api_check.py), [code_metrics.py](code_metrics.py), [code_rating/](code_rating/) | Checks and secondary analyses made after the runs (each script's docstring says what it does and writes). |
+| [large_files.py](large_files.py) | Moves files over 50 MB out of the run records (listed in `LARGE_FILES.json`); run before committing. |
 | `runs_preflight/`, `runs_preflight_rejected/` | Preflight runs (section 11 of the protocol), not used in the figure. |
 | [environment_freeze.txt](environment_freeze.txt) | `pip freeze` of the environment that runs the code. |
 
@@ -29,7 +31,7 @@ All commands need `V2_STAGE=preflight` (runs in `runs_preflight/`, not used in t
 1. Prepare the run: `PYTHONPATH=. python fig3/v2/run_operator.py prepare <id>`. Preparation refuses a non-empty
    operator scratchpad.
 2. Start the subject: `run_operator.py start <id>`. This starts a fresh headless Claude Code session
-   (`claude -p --restricted`, model `sonnet`, new session ID) in the subject folder, with only the tools in the
+   (`claude -p --restricted`, model `claude-sonnet-5-5`, new session ID; start each subject in its own process namespace, see `fig3/deviations.md`, and keep the operating session active while it runs: an idle session suspends the machine and kills the subject) in the subject folder, with only the tools in the
    `cli_tools` column of `rows.csv`, and sends `subject_message.txt`. Never use a sub-agent: it would inherit this
    repository's AGENTS.md and working directory.
 3. Answer at most three follow-up questions, using only `answer_sheet.md`: `run_operator.py answer <id> "<text>"`.

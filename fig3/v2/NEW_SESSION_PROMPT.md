@@ -1,3 +1,6 @@
+> **Kept for reference.** The main run was completed on 19 Oct 2026 (72 runs). This prompt describes the original protocol; rows B and C
+> were revised afterwards (`fig3/PROTOCOL_V2.md` revision note, `fig3/deviations.md`), so do not use it unchanged to run new scenarios.
+
 # Prompt for a new session (operator of Figure 3, protocol v2)
 
 Paste the text below into a new Claude Code session started **in the repository `CellMigrationLab/cellbio-ai-guide`**

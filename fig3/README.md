@@ -2,7 +2,10 @@
 
 Figure 3 examines four ways a cell biologist might use an LLM: ask for advice, ask it to write code, let an agent run and optimise an analysis, or ask for a measurement directly.
 
-**Current status:** the [figure preview](figure/output/fig3_preview.png) and [legend](figure/legend.md) show **round 1**, a draft that will be replaced. The current design is [protocol v2](PROTOCOL_V2.md), implemented in [v2/](v2/README.md). Do not cite the round-1 results as the final study.
+**Current status (19 Oct 2026):** the study of [protocol v2](PROTOCOL_V2.md) is complete (72 runs, [v2/](v2/README.md)). The draft figure
+and its legends are in [figure_v2/](figure_v2/README.md); the round-1 draft below (`figure/`, `advice/`, `code/`, `optimise/`,
+`direct_answers/`) is **superseded**, kept as history until the authors confirm that it can be removed. Do not cite the round-1
+results as the final study.
 
 ## What was tested in round 1?
 
@@ -24,7 +27,8 @@ The run folders contain the prompts, verbatim conversations, metadata, code and 
 | [figure/](figure/) | Draft figure builder `code/make_fig3.py`, the scores it reads (`source_data/round1/`) and its output. |
 | [scoring/](scoring/) | Task references and scoring conventions (`tasks.py`), the draft score table (`build_scores.py`), rescoring of the agents' development scores and the all-runs table. |
 | [baselines/](baselines/) | Cellpose with default settings on the DAPI image, for comparison. |
-| [v2/](v2/README.md) | Harness of protocol v2 (prompts, runner, scorer, operator tools). |
+| [figure_v2/](figure_v2/README.md) | The Figure 3 builder (`make fig3v2`), its source data, SVG/PNG output and legends. |
+| [v2/](v2/README.md) | Harness of protocol v2 (prompts, runner, scorer, operator tools) and all run records. |
 
 ## Recheck the draft scores
 

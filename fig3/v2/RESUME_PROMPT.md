@@ -1,3 +1,6 @@
+> **Kept for reference.** The main run was completed on 19 Oct 2026 (72 runs). This prompt describes the original protocol; rows B and C
+> were revised afterwards (`fig3/PROTOCOL_V2.md` revision note, `fig3/deviations.md`), so do not use it unchanged to run new scenarios.
+
 # Resuming the Figure 3 main run (protocol v2) in a new session
 
 Use this if the operator session stopped (credits, time-out, container lost). Everything that counts is in git on

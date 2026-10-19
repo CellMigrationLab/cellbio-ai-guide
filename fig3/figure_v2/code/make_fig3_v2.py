@@ -16,7 +16,7 @@ import os
 import random
 from xml.sax.saxutils import escape
 
-W, H = 1840, 2334
+W, H = 1676, 2334          # canvas width: narrow, so the text stays large when the figure is scaled to a page
 AUDIT = os.environ.get("AUDIT", "1") == "1"  # audited wording is the default; AUDIT=0 restores the original
 
 
@@ -579,8 +579,11 @@ def note(x, y, lines, col=NOC):
 
 # ======================================================================= FIGURE 3 v9: three tasks; scores + counts per row; minimal text
 import os as _os
-A3 = "../../figure/source_data/round1/fig_assets/"
-RUNS = "../../v2/runs/"
+from common.paths import REPO_ROOT
+
+A3 = "assets/"                                   # header images (field 104 and its manual labels), in this folder
+V2 = REPO_ROOT / "fig3" / "v2"
+RUNS = str(V2 / "runs") + "/"
 TASK_IDS = ("nuclei", "cancer", "endo")
 REF_209 = {}
 
@@ -588,7 +591,7 @@ REF_209 = {}
 def build_scores_v2():
     """Collect per-task lists from the stored v2 runs. Rows b and c: the mean of the F1 on the held-out right halves of
     fields 104 and 209 (a failed field counts 0; both failed = -1, drawn as x). Row d: count / manual count, both fields."""
-    with open("../../v2/scenarios.csv", newline="") as f:
+    with open(V2 / "scenarios.csv", newline="") as f:
         sc = {r["scenario_id"]: r for r in csv.DictReader(f)}
     tasks = {k: {"py": {"before": [], "after": [], "before_n": [], "after_n": [], "before_shape": [], "after_shape": []},
                  "agent": {"before": [], "after": [], "before_n": [], "after_n": [], "before_shape": [], "after_shape": []},
@@ -684,14 +687,16 @@ def change_pill(cx, cy, lines, w=96):
 
 # ---------------------------------------------------------------- grid
 Y0 = 20
-LW_ = 64
-RX = 28 + LW_ + 10
-RW = 1812 - RX
-CX_ASK, W_ASK = RX + 18, 344
-CX_SC = CX_ASK + W_ASK + 28
-GW, GG = 288, 18
-CX_CAV = CX_SC + 3 * GW + 2 * GG + 24
-W_CAV = 1812 - 14 - CX_CAV
+M = 20                                  # outer margin
+LW_ = 52                                # delegation arrow strip
+RX = M + LW_ + 10
+RIGHT = W - M
+RW = RIGHT - RX
+CX_ASK, W_ASK = RX + 14, 336
+CX_SC = CX_ASK + W_ASK + 22
+GW, GG = 262, 12
+CX_CAV = CX_SC + 3 * GW + 2 * GG + 20
+W_CAV = RIGHT - 14 - CX_CAV
 GAP = 10
 
 
@@ -705,7 +710,7 @@ def shape_text(runs):
 
 def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
     """Two bars: median F1 of the runs; open circle = one run; red cross = a run in which a field failed (counts 0)."""
-    bw = GW - 150
+    bar_w = GW - 66 - 48                  # label 66 px, value 48 px
     g = []
     conds = [(lb, b, bn, BEFC), (la, a, an, F1C)]
     BH, STEP = 18, 40
@@ -713,22 +718,22 @@ def group(x, y, task, b, a, bn, an, lb, la, manual=None, shapes=([], [])):
         yy = y + i * STEP
         g.append(t(x, yy + 13, lbl, 13.5, "bold" if i else "normal", INK if i else BODY))
         bx = x + 66
-        g.append(f'<rect x="{bx}" y="{yy}" width="{bw-8}" height="{BH}" rx="4" fill="#eef1f5"/>')
+        g.append(f'<rect x="{bx}" y="{yy}" width="{bar_w}" height="{BH}" rx="4" fill="#eef1f5"/>')
         m = med(vals)
         if m is None:
-            g.append(t(bx + bw - 2, yy + 14, "…", 14, "bold", "#7a8699"))
+            g.append(t(bx + bar_w + 6, yy + 14, "…", 14, "bold", "#7a8699"))
             continue
-        g.append(f'<rect x="{bx}" y="{yy}" width="{(bw-8)*m:.1f}" height="{BH}" rx="4" fill="{col}"/>'
-                 + t(bx + bw - 2, yy + 14, f"{m:.2f}", 14.5, "bold", INK))
+        g.append(f'<rect x="{bx}" y="{yy}" width="{bar_w*m:.1f}" height="{BH}" rx="4" fill="{col}"/>'
+                 + t(bx + bar_w + 6, yy + 14, f"{m:.2f}", 14.5, "bold", INK))
         if len(vals) > 1:
             for v in vals:
                 if v is None:
                     continue
                 if isinstance(v, list):                 # a field failed: x at the mean score
-                    cx = bx + (bw - 8) * v[1]
+                    cx = bx + bar_w * v[1]
                     g.append(f'<path d="M{cx-4.5:.1f},{yy+4} l9,9 M{cx+4.5:.1f},{yy+4} l-9,9" stroke="{NOC}" stroke-width="2.2"/>')
                 else:
-                    g.append(f'<circle cx="{bx+(bw-8)*v:.1f}" cy="{yy+BH/2}" r="4" fill="#ffffff" stroke="{INK}" stroke-width="1.3"/>')
+                    g.append(f'<circle cx="{bx+bar_w*v:.1f}" cy="{yy+BH/2}" r="4" fill="#ffffff" stroke="{INK}" stroke-width="1.3"/>')
     return "".join(g)
 
 
@@ -745,7 +750,7 @@ def panel(key, y, sub, lb, la, half=False):
 
 
 # ---------------------------------------------------------------- task row: original image + desired result (full field)
-TT = 262                      # task image size; the three task blocks are spread evenly across the header
+TT = 236                      # task image size; the three task blocks are spread evenly across the header
 HDH = TT + 98
 add(group_svg := None) if False else None
 row = [rrect(RX, Y0, RW, HDH, 14, "#ffffff", NN["stroke"], 1.3)]
@@ -797,7 +802,7 @@ key = "a"
 ask(key, [("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
           ("detailed prompt", ["+ “…check current documentation”,", "model suitability, tests …"])])
 ADV = {}                                               # first-pass item check (fig3/v2/advice_outdated.py)
-with open("../../v2/advice_outdated.csv", newline="") as _f:
+with open(V2 / "advice_outdated.csv", newline="") as _f:
     for _r in csv.DictReader(_f):
         ADV[_r["scenario_id"]] = _r
 SHOW_AS = {"advice_box1_endo_r1": ("which are cpsam_v2 in the current docs",)}
@@ -893,7 +898,7 @@ add(t(CX_SC, ry["b"] - 2, "", 1))
 # ================================================================ delegation arrow
 AT, AB = ry["a"], ry["d"] + RH["d"]
 defs.append(f'<linearGradient id="deleg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d9cbea"/><stop offset="1" stop-color="{ACC}"/></linearGradient>')
-AXc = 28 + LW_ / 2
+AXc = M + LW_ / 2
 add(f'<path d="M{AXc-20},{AT} H{AXc+20} V{AB-26} H{AXc+30} L{AXc},{AB} L{AXc-30},{AB-26} H{AXc-20} Z" fill="url(#deleg)"/>'
     + f'<text x="{AXc+6}" y="{(AT+AB)/2}" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle" '
       f'transform="rotate(-90 {AXc+6} {(AT+AB)/2})">more of the analysis happens inside the LLM interaction</text>')
@@ -901,12 +906,12 @@ add(f'<path d="M{AXc-20},{AT} H{AXc+20} V{AB-26} H{AXc+30} L{AXc},{AB} L{AXc-30}
 # ================================================================ what to keep
 KY = ry["d"] + RH["d"] + GAP
 KH = 92
-add(rrect(28, KY, 1784, KH, 16, "#ffffff", NN["stroke"], 1.4)
-    + t(48, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 16.5, "bold", INK))
+add(rrect(M, KY, W - 2 * M, KH, 16, "#ffffff", NN["stroke"], 1.4)
+    + t(M + 20, KY + 28, "Regardless of the level of delegation, test on representative images with reference outputs", 16.5, "bold", INK))
 KEEP = [("lock", "Check how the service handles data"), ("check", "Verify advice against the docs"),
         ("ruler", "Ask for code that is easy to debug"), ("target", "Give agents a score to optimise"),
         ("file", ["Request code and intermediate", "outputs, not only the result"])]
-KW = (1784 - 40) / 5
+KW = (W - 2 * M - 40) / 5
 
 
 def kicon(name, cx, cy, col):
@@ -925,12 +930,10 @@ def kicon(name, cx, cy, col):
 
 
 for i, (ic, a_) in enumerate(KEEP):
-    x = 48 + i * KW
+    x = M + 20 + i * KW
     add(kicon(ic, x + 20, KY + 62, ACC) + t(x + 48, KY + (60 if isinstance(a_, list) else 67), a_, 14.5, "bold", INK, lh=18))
 
-add(t(1812 - 14, KY + KH + 18, f"DRAFT: {FSJ['n_runs']} of 72 main runs scored. Rows b, c: bar = median of the runs' mean F1 on the held-out halves of FOV 1 and FOV 2 (open circles: runs; x: failed). Images above: FOV 1.",
-      12, fill="#7a8699", anchor="end"))
-H = KY + KH + 34
+H = KY + KH + 20
 svg = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink" '
        f'width="{W}" height="{H}" viewBox="0 0 {W} {H}" font-family="{FONT}">\n'

@@ -13,29 +13,31 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
   results, see `fig1/README.md`).
 - **Fig. 2** is the deep-learning output good enough for the measurement? (Cellpose perturbations, denoising,
   artificial labelling, super-resolution with SQUIRREL).
-- **Fig. 3** what changes when a cell biologist uses an LLM (Claude) in four ways, on three tasks of increasing
+- **Fig. 3** what changes when a cell biologist uses an LLM (Claude Sonnet 5.5) in four ways, on three tasks of increasing
   difficulty (endothelial nuclei in DAPI, cancer cells and endothelial cells in brightfield: segment, count, area and
-  aspect ratio), scored against manual annotation on a development field (104) and a test field (209):
-  A advice (simple prompt vs Box 1), B code written by the model and run by us (simple vs Box 1), C an agent that writes,
-  runs and optimises (by eye vs with labels), D direct answers (count, size and shape, ellipses drawn).
-  Plan: `fig3/PROTOCOL_V2.md`; harness: `fig3/v2/`. The current draft figure is round 1 (`fig3/advice/`, `code/`,
-  `optimise/`, `direct_answers/`), which v2 replaces.
+  aspect ratio), scored against manual annotation: A advice (basic prompt vs a detailed prompt, the "Box 1" checklist),
+  B code written by the model and run by us (basic vs detailed), C an agent that writes, runs and optimises (by eye vs
+  with the annotation), D direct answers (count; size and shape and drawn ellipses were also asked but are not in the
+  figure). Rows B and C: the model gets a mosaic of the left halves of fields 104 and 209 and is scored on the right halves
+  of both (mean F1); rows A and D use whole fields. Plan: `fig3/PROTOCOL_V2.md`; harness: `fig3/v2/`; figure:
+  `fig3/figure_v2/` (`make fig3v2`). The round-1 draft (`fig3/advice/`, `code/`, `optimise/`, `direct_answers/`,
+  `figure/`) is superseded and kept only as history until the authors confirm its removal.
 
-## Current status (17 Oct 2026)
+## Current status (19 Oct 2026)
 - Figure 1 is final. Figure 2 was updated on 17 Oct 2026 after the code audit (panel e sampling; panel a scored on
-  two fields). Figure 3: the round-1 draft (`fig3/figure/output/fig3_preview.png`) is to be replaced by protocol v2.
-- `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data.
-- `make full` passes: the Figure 1 and 2 source data regenerate from `data/raw` and rebuild both figures byte-identical
-  (files it cannot regenerate are listed with the reason).
-- Figure 3 revision of 19 Oct 2026 (rows B and C only; see `fig3/PROTOCOL_V2.md` and `fig3/deviations.md`): the model is
-  given a mosaic of the left halves of fields 104 and 209; scripts and pipelines are scored on the held-out right halves
-  of both fields and the score is the mean of the two F1. The first B and C runs are in `fig3/v2/runs_superseded/`; rows
-  A and D runs already done stay in `fig3/v2/runs/`. Draft figure: `make fig3v2`.
-- Figure 3, protocol v2: preflight done (12 runs, `fig3/v2/runs_preflight/`, not used in the figure); protocol frozen on
-  17 Oct 2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless Claude Code sessions); the 72 main
-  runs go to `fig3/v2/runs/`, one commit per scenario. To resume an interrupted main run, start from
-  `fig3/v2/RESUME_PROMPT.md`. If you run scenarios, never show this repository to the model being tested (subjects
-  are started only by `fig3/v2/run_operator.py start`, never as sub-agents, which would receive this file).
+  two fields). Figure 3: all 72 protocol-v2 main runs are recorded and scored (`fig3/v2/runs/`); the draft figure and its
+  legends are in `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`; `legend_short.md`); the authors are reviewing it.
+- `make check` passes: all figures rebuild byte-identical; all scores reproduce from the stored data (Fig. 3 round 1 and
+  v2). `make full` passes for Figures 1 and 2 (files it cannot regenerate are listed with the reason).
+- Figure 3, protocol v2: preflight (12 runs, `fig3/v2/runs_preflight/`) not used in the figure; protocol frozen on 17 Oct
+  2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless Claude Code sessions) and revised for rows B and
+  C on 19 Oct 2026 (development mosaic, held-out halves, answer-sheet lines; see the amendments in `FREEZE.json` and
+  `fig3/deviations.md`). Runs that were replaced or interrupted are kept unedited in `fig3/v2/runs_superseded/` and
+  `fig3/v2/runs_rejected/` (with the reason in each folder); files over 50 MB are listed in `LARGE_FILES.json` and stored
+  outside git (`fig3/v2/large_files.py`). The main run is complete: `fig3/v2/RESUME_PROMPT.md` is kept for reference only.
+  If you run scenarios again, never show this repository to the model being tested (subjects are started only by
+  `fig3/v2/run_operator.py start`, never as sub-agents, which would receive this file) and start each in its own
+  process namespace.
 
 ## Working rules (the same practices Box 1 asks of an LLM)
 - **Never modify `data/raw/`.** Checksums are in `data/manifest.csv`; `make data` verifies them.
@@ -60,7 +62,7 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 
 ## Layout conventions
 `figX/code/` scripts are run with the working directory `figX/source_data/` and `PYTHONPATH` set to the repository root
-(the Makefile does this). Builders write to `figX/figure/` (Fig. 3: `fig3/figure/output/`).
+(the Makefile does this). Builders write to `figX/figure/` (Fig. 3: `fig3/figure_v2/output/`).
 
 ## Path placeholders in records
 Transcripts, logs and recovered commands (`*/code/recovered_inline/`) keep their

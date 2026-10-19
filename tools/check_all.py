@@ -21,6 +21,7 @@ FIGURES = {  # figure folder -> (builder relative to the folder, output written 
     "fig1": ("code/make_fig1.py", "figure/fig1.svg"),
     "fig2": ("code/make_fig2.py", "figure/fig2.svg"),
     "fig3/figure": ("code/make_fig3.py", "output/fig3.svg"),
+    "fig3/figure_v2": ("code/make_fig3_v2.py", "output/fig3_v2.svg"),
 }
 FIG2_SCORING_ORDER = ["errors", "score_perturb", "annot_agree", "bio_result", "al_intensity", "tubule_width"]
 FIG2_KNOWN_EXTRA_KEYS = {("panels/al_intensity.json", "r_pixel"),  # added by a recovered inline command, not used by Fig 2
@@ -131,6 +132,8 @@ def main(with_squirrel: bool) -> None:
         results += check_fig2_scores(tmp, with_squirrel)
     proc = run([sys.executable, "fig3/scoring/build_scores.py", "--check"], cwd=REPO)
     results.append(report("fig3: every score recomputed from the stored runs", proc.returncode == 0, proc.stdout.strip()[-300:]))
+    proc = run([sys.executable, "fig3/v2/check_scores.py"], cwd=REPO)
+    results.append(report("fig3 v2: every score recomputed from the stored runs", proc.returncode == 0, proc.stdout.strip()[-300:]))
     print(f"\n{sum(results)}/{len(results)} checks passed")
     raise SystemExit(0 if all(results) else 1)
 
