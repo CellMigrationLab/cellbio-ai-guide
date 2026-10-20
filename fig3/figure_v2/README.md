@@ -15,3 +15,7 @@ right halves of fields 104 and 209 ("FOV 1", "FOV 2"), circles = runs, cross = a
 in turn 1 against the manual count. Not shown, but in the repository: area and aspect-ratio results (`score.json`), the drawn
 ellipses and the refusals to draw them (`fig3/v2/direct_summary.csv`), code metrics and ratings (`fig3/v2/code_metrics.csv`,
 `fig3/v2/code_rating/`), the check of API calls in the advice code (`fig3/v2/advice_api_check.csv`).
+
+Colour encoding: panel a replaces the original green positive text with blue while retaining the original red for errors
+and outdated results; the warning bands retain their original red treatment. All median bars in panels b and c use the same indigo shown in the
+legend. Shape and labels also carry the meaning, so colour is not the only cue.
