@@ -555,16 +555,6 @@ def reply(x, y, w, lines, size=13, mono=True, title=None):
     return "".join(g), h + 12
 
 
-def terminal(x, y, w, lines, size=12.5):
-    h = 30 + 17 * len(lines)
-    g = [rrect(x, y, w, h, 8, "#1b2230", "none"),
-         "".join(f'<circle cx="{x+14+i*13}" cy="{y+12}" r="4" fill="{c}"/>' for i, c in enumerate(["#ff5f57", "#febc2e", "#28c840"]))]
-    yy = y + 32
-    for ln, col in lines:
-        g.append(t(x + 10, yy, ln, size, fill=col, extra=MONO)); yy += 17
-    return "".join(g), h + 12
-
-
 def check_box(x, y, w, lines):
     h = 22 + 18 * len(lines)
     return (rrect(x, y, w, h, 10, OKF, OKS, 1.4)
@@ -825,9 +815,8 @@ ADV = {}                                               # first-pass item check (
 with open(V2 / "advice_outdated.csv", newline="") as _f:
     for _r in csv.DictReader(_f):
         ADV[_r["scenario_id"]] = _r
-SHOW_AS = {"advice_box1_endo_r1": ("which are cpsam_v2 in the current docs",)}
 EXAMPLE = {"nuclei": ("advice_simple_nuclei_r1", "advice_box1_nuclei_r2"), "cancer": ("advice_simple_cancer_r2", "advice_box1_cancer_r3"),
-           "endo": ("advice_simple_endo_r3", "advice_box1_endo_r1")}
+           "endo": ("advice_simple_endo_r3", "advice_box1_endo_r2")}
 
 
 def clean(txt):
@@ -843,7 +832,7 @@ def two_prompts(y, left, right):
 
 
 # ================================================================ a
-y = new_row("a", "Ask for advice", 364, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
+y = new_row("a", "Ask for advice", 310, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
 ph = two_prompts(y + 42, ("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
                  ("detailed prompt", ["+ “…check current documentation”,", "model suitability, tests …"]))
 py_ = y + 42 + ph + 18
@@ -864,20 +853,11 @@ for i, (task, name, _) in enumerate(TASKS):
         add(t(x + 84 + 3 * 24 + 4, yy + 5, f"{n_out} of {len(runs)}", FS_TXT, "bold", col))
     for j, (sid, col) in enumerate(zip(EXAMPLE[task], (NOC, OKT))):
         shown = clean(ADV[sid]["evidence"])
-        for cut in SHOW_AS.get(sid, ()):                # a verbatim part of the evidence, when the whole is too long
-            assert cut in shown
-            shown = cut
         add(t(x, py_ + 94 + j * 22, "“" + shown + "”", FS_TXT, "normal", col, style="italic"))
 cy_ = py_ + 94 + 22 + 10
-TW = 420                                                # terminal width; the call-out takes the rest of the row
-cs, ch = callout(X0, cy_, XW - TW - 14, ["Outdated advice can fail or silently run another model.", "It checked the docs only when asked → ask it to check them"], h=98)
+cs, ch = callout(X0, cy_, XW, ["Outdated advice can fail or silently run another model. It checked the docs only when asked → ask it to check them"], h=44)
 add(cs)
-ts, th = terminal(X0 + XW - TW, cy_, TW, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
-                                          ("AttributeError: no attribute 'Cellpose'", "#ff8a80"),
-                                          (">>> CellposeModel(pretrained_model='cyto3')", "#d5dbe5"),
-                                          ("(no message)  → loads cpsam_v2", "#ff8a80")], 14.5)
-add(ts)
-assert cy_ + max(ch, th - 12) + 8 <= y + 364, (cy_ + max(ch, th - 12) + 8 - y)
+assert cy_ + 44 + 8 <= y + 310, (cy_ + 52 - y)
 
 # ================================================================ b
 y = new_row("b", "Ask for code: a Python script", 289,
