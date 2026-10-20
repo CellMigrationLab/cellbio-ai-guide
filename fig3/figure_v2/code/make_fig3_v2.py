@@ -649,7 +649,8 @@ MAN104 = {k: int(len(_np.unique(_reference(k, 104))) - 1) for k in TASK_IDS}   #
 DEFC = "#9aa4b2"
 CAVF, CAVS = "#fdf0ef", "#efc2be"
 CHG = "#6b2c87"
-OKT = "#1a7a4c"
+# Okabe-Ito blue/vermillion avoid a red-green distinction in panel a.
+OKT = "#0072b2"
 BEFC = "#b7c0e3"
 TASK_TEXT = {"nuclei": ["Task: segment and count the endothelial nuclei", "(not the cancer cells' nuclei); area and aspect ratio of each"],
              "cancer": ["Task: segment and count the cancer cells;", "area and aspect ratio of each"],
@@ -712,7 +713,7 @@ def group(x, y, vals_pair, labels):
     """Two bars: median F1 of the runs; open circle = one run; red cross = a run in which a field failed (counts 0)."""
     bar_w = PW - 76 - 54
     g = []
-    cols = (BEFC, F1C)
+    cols = (F1C, F1C)  # every median bar uses the colour shown in the legend
     BH, STEP = 20, 33
     for i, (lbl, vals, col) in enumerate(zip(labels, vals_pair, cols)):
         yy = y + i * STEP
@@ -869,7 +870,7 @@ for i, (task, name, _) in enumerate(TASKS):
         add(t(x, py_ + 94 + j * 22, "“" + shown + "”", FS_TXT, "normal", col, style="italic"))
 cy_ = py_ + 94 + 22 + 10
 TW = 420                                                # terminal width; the call-out takes the rest of the row
-cs, ch = callout(X0, cy_, XW - TW - 14, ["Outdated advice can fail or silently run another model.", "It checked the docs only when asked: ask it to check them"], h=98)
+cs, ch = callout(X0, cy_, XW - TW - 14, ["Outdated advice can fail or silently run another model.", "It checked the docs only when asked → ask it to check them"], h=98)
 add(cs)
 ts, th = terminal(X0 + XW - TW, cy_, TW, [(">>> models.Cellpose(model_type='nuclei')", "#d5dbe5"),
                                           ("AttributeError: no attribute 'Cellpose'", "#ff8a80"),
@@ -886,7 +887,7 @@ ph = two_prompts(y + 42, ("basic prompt", ["“Please write a Python script to s
 py_ = y + 42 + ph + 18
 add(panel(py_, "py", "basic", "detailed"))
 cy_ = py_ + 26 + 33 + 20 + 10
-cs, ch = callout(X0, cy_, BW, ["Writing code doesn't guarantee it runs:", "ask for code that is easier to debug"], h=60)
+cs, ch = callout(X0, cy_, BW, ["Writing code doesn't guarantee it runs →", "ask for code that is easier to debug"], h=60)
 add(cs)
 cs, _ = callout(X0 + BW + 14, cy_, BW, ["Asking again gives a different script, but each", "script gives the same result every time it is run."], h=60)
 add(cs)
@@ -900,7 +901,7 @@ ph = two_prompts(y + 42, ("by eye", ["“…run the pipeline, assess, improve…
 py_ = y + 42 + ph + 18
 add(panel(py_, "agent", "by eye", "scored"))
 cy_ = py_ + 26 + 33 + 20 + 10
-cs, ch = callout(X0, cy_, XW, ["Without reference data the agent judges by eye: giving it a score to optimise may help on harder tasks"], h=44)
+cs, ch = callout(X0, cy_, XW, ["Without reference data the agent judges by eye → giving it a score to optimise may help on harder tasks"], h=44)
 add(cs)
 assert cy_ + 44 + 8 <= y + 254, (cy_ + 52 - y)
 
@@ -908,7 +909,7 @@ assert cy_ + 44 + 8 <= y + 254, (cy_ + 52 - y)
 y = new_row("d", "Ask for the answer", 246, [("dot", "one run"), ("man", "manual count")])
 s1, h1 = prompt2(X0, y + 42, BW, "", ["“How many … are in this image?”"], h=60)
 add(s1)
-cs, ch = callout(X0 + BW + 14, y + 42, BW, ["Asking again gives a different count:", "the answer is not reproducible"], h=60)
+cs, ch = callout(X0 + BW + 14, y + 42, BW, ["Asking again gives a different count →", "the answer is not reproducible"], h=60)
 add(cs)
 py_ = y + 42 + 60 + 14
 for i, (task, name, _) in enumerate(TASKS):
