@@ -7,6 +7,7 @@ images in the header are the whole development field 104). Row d: whole fields. 
 Layout: full-page portrait, 1100 px wide (183 mm), smallest text 15 px (about 7 pt). Row a dots come from advice_outdated.csv.
 """
 import csv
+import textwrap
 import os
 import math
 import base64
@@ -815,7 +816,7 @@ ADV = {}                                               # first-pass item check (
 with open(V2 / "advice_outdated.csv", newline="") as _f:
     for _r in csv.DictReader(_f):
         ADV[_r["scenario_id"]] = _r
-EXAMPLE = {"nuclei": ("advice_simple_nuclei_r1", "advice_box1_nuclei_r2"), "cancer": ("advice_simple_cancer_r2", "advice_box1_cancer_r3"),
+EXAMPLE = {"nuclei": ("advice_simple_nuclei_r1", "advice_box1_nuclei_r3"), "cancer": ("advice_simple_cancer_r2", "advice_box1_cancer_r3"),
            "endo": ("advice_simple_endo_r3", "advice_box1_endo_r2")}
 
 
@@ -832,10 +833,12 @@ def two_prompts(y, left, right):
 
 
 # ================================================================ a
-y = new_row("a", "Ask for advice", 310, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
+y = new_row("a", "Ask for advice", 330, [("red", "outdated model or code suggested (one dot per reply, 3 per prompt and task)")])
 ph = two_prompts(y + 42, ("basic prompt", ["“Which tool, model and settings would you", "recommend? I don't need code.”"]),
                  ("detailed prompt", ["+ “…check current documentation”,", "model suitability, tests …"]))
 py_ = y + 42 + ph + 18
+quote_bottom = 0
+QUOTE_LH = 20
 for i, (task, name, _) in enumerate(TASKS):
     x = PX[i]
     add(t(x, py_ + 15, name, 16, "bold", INK))
@@ -851,13 +854,16 @@ for i, (task, name, _) in enumerate(TASKS):
                 add(f'<circle cx="{cx}" cy="{yy}" r="6.5" fill="#ffffff" stroke="#7a8699" stroke-width="1.5"/>')
         n_out = sum(r["outdated_suggested"] == "1" for r in runs)
         add(t(x + 84 + 3 * 24 + 4, yy + 5, f"{n_out} of {len(runs)}", FS_TXT, "bold", col))
-    for j, (sid, col) in enumerate(zip(EXAMPLE[task], (NOC, OKT))):
-        shown = clean(ADV[sid]["evidence"])
-        add(t(x, py_ + 94 + j * 22, "“" + shown + "”", FS_TXT, "normal", col, style="italic"))
-cy_ = py_ + 94 + 22 + 10
+    qy = py_ + 94
+    for sid, col in zip(EXAMPLE[task], (NOC, OKT)):
+        lines = textwrap.wrap("“" + clean(ADV[sid]["evidence"]) + "”", 49)    # about one panel width at this text size
+        add(t(x, qy, lines, FS_TXT, "normal", col, lh=QUOTE_LH, style="italic"))
+        qy += QUOTE_LH * len(lines) + 2
+    quote_bottom = max(quote_bottom, qy)
+cy_ = quote_bottom - 12
 cs, ch = callout(X0, cy_, XW, ["Outdated advice can fail or silently run another model. It checked the docs only when asked → ask it to check them"], h=44)
 add(cs)
-assert cy_ + 44 + 8 <= y + 310, (cy_ + 52 - y)
+assert cy_ + 44 + 8 <= y + 330, (cy_ + 52 - y)
 
 # ================================================================ b
 y = new_row("b", "Ask for code: a Python script", 289,
