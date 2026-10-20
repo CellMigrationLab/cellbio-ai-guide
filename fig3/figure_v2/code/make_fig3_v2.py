@@ -887,7 +887,7 @@ ph = two_prompts(y + 42, ("basic prompt", ["“Please write a Python script to s
 py_ = y + 42 + ph + 18
 add(panel(py_, "py", "basic", "detailed"))
 cy_ = py_ + 26 + 33 + 20 + 10
-cs, ch = callout(X0, cy_, BW, ["Writing code doesn't guarantee it runs →", "ask for code that is easier to debug"], h=60)
+cs, ch = callout(X0, cy_, BW, ["Writing code doesn't guarantee it runs → ask for code that is easier to debug"], h=60)
 add(cs)
 cs, _ = callout(X0 + BW + 14, cy_, BW, ["Asking again gives a different script, but each", "script gives the same result every time it is run."], h=60)
 add(cs)
@@ -909,7 +909,7 @@ assert cy_ + 44 + 8 <= y + 254, (cy_ + 52 - y)
 y = new_row("d", "Ask for the answer", 246, [("dot", "one run"), ("man", "manual count")])
 s1, h1 = prompt2(X0, y + 42, BW, "", ["“How many … are in this image?”"], h=60)
 add(s1)
-cs, ch = callout(X0 + BW + 14, y + 42, BW, ["Asking again gives a different count →", "the answer is not reproducible"], h=60)
+cs, ch = callout(X0 + BW + 14, y + 42, BW, ["Asking again gives a different count: the answer is not reproducible"], h=60)
 add(cs)
 py_ = y + 42 + 60 + 14
 for i, (task, name, _) in enumerate(TASKS):
