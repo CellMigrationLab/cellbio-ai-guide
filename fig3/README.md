@@ -46,3 +46,17 @@ returned scripts again requires the software listed in [environment/](../environ
 This is an illustration, not a model benchmark: one model, three tasks, three runs per condition. The subjects were
 headless Claude Code sessions, which differ from consumer chat interfaces (wrapper text, prescribed output files, controlled
 tools). See [deviations.md](deviations.md).
+
+## Check against the article's Figure 3 legend (21 Oct 2026)
+
+| Statement in the legend | Repository |
+|---|---|
+| Claude Sonnet 5.5 via headless Claude Code, v2.1.302-2.1.303 | Model `claude-sonnet-5-5`; CLI 2.1.302 (freeze) and 2.1.303 (runs 14-72), see `deviations.md` and each run's `session.json`. |
+| Web search in a-c, shell access in c | `v2/rows.csv`: advice, code and optimise have WebSearch/WebFetch; only optimise has a shell, in its own folder; direct has neither. |
+| Three responses per task and prompt (a), three scripts (b), dots three per FOV (d) | 72 runs: 18 advice, 18 code, 18 agent, 18 direct (3 per task, prompt and field). |
+| b and c: only the left halves of two FOVs given; right halves held out; mean of the F1 on two FOVs | Protocol revision of 19 Oct 2026; `scoring/tasks.py` (`HALF_X`), `v2/score.py`. |
+| Red crosses: code failures scored as 0 | A failed field counts 0; drawn in the figure at the run's mean score. |
+| "The experiment is illustrative, not a benchmark" | As stated in the limitations above. |
+
+Not stated in the legend, to be decided by the authors: the legend refers to "prompt" in a-c but does not say that the
+"detailed" prompt is Box 1 with four additions that the printed Box 1 does not contain (see [`../box1/README.md`](../box1/README.md)).

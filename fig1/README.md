@@ -92,7 +92,7 @@ Reproduced by `code/f1_scores.py`. Neither field 104 nor field 209 was in the St
 ## Still to confirm before deposit
 
 - Licence and deposit for the authors' own data: the Follain et al. brightfield/StarDist/pix2pix files (the paper lists Zenodo doi:10.5281/zenodo.17232437 and the community `pdac_dl`), the denoising pair, the HPMEC nuclei image and the TrackMate capture.
-- Super-resolution data: which Qiao et al. file and cell, who trained the RCAN model, and the licence.
+- Super-resolution data: which Qiao et al. file and cell, the RCAN training provenance (the prediction was provided by Iván Hidalgo-Cenalmor, as stated in the article), and the BioSR licence (not verified).
 - CARE denoising: training data and version (raw = uint16 `…_Z0_1.tif`, restored = float32 `…_Z0.tif`: confirmed).
 - TrackMate capture: source experiment, detector and tracker.
 - Manual annotations (`data/raw/field104_*`, `field209_*`): individual annotators and dates (prepared by the Jacquemet lab using Fiji for the FlowVision paper; not in the StarDist training set: confirmed).

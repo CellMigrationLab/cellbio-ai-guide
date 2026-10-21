@@ -24,7 +24,8 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
   19 Oct 2026 (it is in git history).
 
 ## Current status (20 Oct 2026)
-- **All three figures are final (signed off by the authors, 20 Oct 2026).** Figure 2 was updated on 17 Oct 2026 after the code
+- **All three figures are final (signed off by the authors, 20 Oct 2026); the article was finalised on 21 Oct 2026 and the
+  attribution in `CITATION.cff`, `data/sources.csv` and the READMEs was aligned with it.** Figure 2 was updated on 17 Oct 2026 after the code
   audit (panel e sampling; panel a scored on two fields); on 20 Oct 2026 Figures 1 and 2 were tightened horizontally and
   Figure 3 was laid out as a full-page portrait. Figure 3: all 72 protocol-v2 main runs are recorded (`fig3/v2/runs/`), 54 are scored (rows B, C and D)
   and the 18 row-A runs are classified rather than scored; the figure is in
