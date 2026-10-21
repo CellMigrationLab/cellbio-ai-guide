@@ -615,7 +615,7 @@ def card(x, y, w, h, title, key="N"):
 def row_frame(y, h, L, title, key="N"):
     k = C[key]
     return (rrect(M, y, W - 2 * M, h, 16, NN["bg"], NN["stroke"], 1.4)
-            + f'<circle cx="{M+42}" cy="{y+38}" r="22" fill="{NN["accent"]}"/>' + t(M + 42, y + 47, L, 25, "bold", "#fff", "middle")
+            + f'<circle cx="{M+42}" cy="{y+38}" r="22" fill="{NN["accent"]}"/>' + t(M + 42, y + 47, L.lower(), 25, "bold", "#fff", "middle")
             + t(M + 78, y + 46, title, 24, "bold", INK))
 
 
@@ -642,7 +642,7 @@ def ico(name, cx, cy, col):
 
 def frame(x, y, w, h, L, title):
     return (rrect(x, y, w, h, 16, NN["bg"], NN["stroke"], 1.4)
-            + f'<circle cx="{x+42}" cy="{y+38}" r="22" fill="{NN["accent"]}"/>' + t(x + 42, y + 47, L, 25, "bold", "#fff", "middle")
+            + f'<circle cx="{x+42}" cy="{y+38}" r="22" fill="{NN["accent"]}"/>' + t(x + 42, y + 47, L.lower(), 25, "bold", "#fff", "middle")
             + t(x + 78, y + 46, title, 24, "bold", INK))
 
 

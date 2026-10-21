@@ -12,7 +12,7 @@ It contains the figures, microscopy images and annotations, analysis code, the r
 | **Figure 2** | [SVG](fig2/figure/fig2.svg) · [PDF](fig2/figure/fig2.pdf) · [legend](fig2/legend.md) · [data and methods](fig2/README.md) | How to decide whether segmentation, denoising, artificial labelling or super-resolution is good enough for the intended measurement. |
 | **Figure 3** | [PNG](fig3/figure_v2/output/fig3_v2.png) · [SVG](fig3/figure_v2/output/fig3_v2.svg) · [PDF](fig3/figure_v2/output/fig3_v2.pdf) · [study overview](fig3/README.md) · [protocol](fig3/PROTOCOL_V2.md) | Four ways to use an LLM for image analysis. Seventy-two runs of an LLM (Claude Sonnet 5.5) on three tasks, scored against manual annotation (draft, under review by the authors). |
 | **Microscopy data** | [dataset guide](data/README.md) · [visual overview](data/overview.png) · [raw files](data/raw/) · [sources and licences](data/sources.csv) | Two annotated fields of cancer cells on an endothelial monolayer, plus the denoising, artificial-labelling and super-resolution examples used in the figures. |
-| **Box 1** | [copy the prompt (as in the article)](box1/box1_manuscript.md) · [version tested in Figure 3](box1/box1_final.md) · [differences](box1/README.md) | A reusable prompt for asking an LLM to produce an image-analysis workflow that can be inspected and tested. |
+| **Box 1** | [copy the prompt (as in the article)](box1/box1_manuscript.md) · [version tested in Figure 3](box1/box1_tested.md) · [differences](box1/README.md) | A reusable prompt for asking an LLM to produce an image-analysis workflow that can be inspected and tested. |
 
 ## Rebuild and check the figures
 
