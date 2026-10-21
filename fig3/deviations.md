@@ -1,7 +1,20 @@
 # Figure 3: deviations from protocol and other things an auditor should know
 
-Round 1 (superseded; its records were removed from the repository on 19 Oct 2026 and are in git history before that commit; the
-sections below on round 1 are kept for the record). Deviations of protocol v2 follow in their own sections.
+This file records everything in the Figure 3 experiment that departed from [`PROTOCOL_V2.md`](PROTOCOL_V2.md), and what an
+auditor should know about how the runs were made and scored. Amendments to frozen files are also listed in `v2/FREEZE.json`.
+
+## Before protocol v2 (summary; the records are in git history)
+
+Two earlier attempts preceded the protocol: a first study (16–17 Oct 2026: Claude Code sub-agents on one field, Fiji macros
+and Python scripts, a row in which the model drew polygons) and a three-scenario pilot of a revised design (17 Oct 2026). Both
+were discarded when a probe showed that a sub-agent receives the operator session's project instructions (this repository's
+AGENTS.md, which names the study and its conditions) and its working directory, so the model being tested could see the
+study. Their records were removed from the repository on 19 Oct 2026. What they taught, and what protocol v2 does about it:
+subjects are fresh headless sessions, never sub-agents; the harness scratchpad is shared and is emptied before each subject;
+answer-sheet lines must not mention files that were not sent; a script that fails is never scored as successful; and nuclei
+predictions are matched to the full manual annotation first, with only the unmatched objects lying on cancer cells ignored
+(the first rule dropped such objects before matching and so discarded correct predictions of the 17 annotated nuclei under
+cancer cells).
 
 **Records removed on 21 Oct 2026.** Only the 72 accepted runs are kept in the repository (`v2/runs/`). The preflight runs
 (`v2/runs_preflight/`, `v2/runs_preflight_rejected/`), the rejected attempts (`v2/runs_rejected/`), the superseded rows B and C
@@ -9,56 +22,13 @@ runs (`v2/runs_superseded/`), the exploratory summaries (`v2/direct_summary.csv`
 `v2/advice_api_check.csv`) and the operator prompts (`v2/RESUME_PROMPT.md`) that the sections below mention were removed from
 the working tree and are in git history before that commit.
 
-Lessons from the round-2 pilot (3 scenarios, 17 Oct 2026; removed, see git history), built into the v2 harness: Claude
-sub-agents always have a shell (rows without code use the `subject-chat` agent); the harness scratchpad is shared
-(emptied before each subject); torchvision must match the CPU build of torch; answer-sheet lines must not mention
-files that were not sent; a script that fails must never be scored as successful.
-
-## Prompts and harness
-- All runs used Claude Code sub-agents (not the claude.ai app). Each prompt starts with our wrapper text (role, which
-  file may be viewed, whether code can be run, which tools may be used) and ends with an output-format instruction
-  (`labels.tif`, one code block). Both are visible in every `prompt.md`.
-- Box 1 prompts included a setup line not in Box 1 ("My setup: Python … Cellpose 4.2.1.1 (CPU only)" / "a current Fiji
-  installation") so that the code could run in our environment.
-- Web tools (WebSearch/WebFetch) were allowed where stated but had to be loaded by the model before use; many runs did
-  not load them, one concluded it had no web access. "Did not check the documentation" is therefore partly a harness effect.
-- Box 1 v1 (stricter wording) runs were superseded by Box 1 v2 runs (`superseded/runs/python_box1_v1wording_*`).
-
-## Running the code
-- Fiji macros: the `input = …` and `output = …` lines were replaced by absolute paths so that the macros could run
-  headless; nothing else was edited.
-- Python scripts were run unchanged in a folder containing the image.
-- Two Fiji macros failed and wrote no output, counted as F1 0 (× in the figure): `fiji_generic_cancer_r3` calls a
-  non-existent command ("Set Scaling…"); `fiji_box1_nuclei_r2` calls `ceil()`, which the ImageJ macro language does not have.
-- Draw runs: the model's polygons were rasterised (`direct_answers/code/rasterise_poly.py`). `draw_nuclei_r2` returned
-  centres plus a hexagon rule instead of polygons; it was rasterised from its own rule. Endothelial "outlines" were a
-  placeholder grid, as one reply states.
-
-## Agents (row c)
-- The nuclei agent with annotation wrote its working files outside its folder; they were copied back
-  (`optimise/runs/with_annotation_nuclei/artifacts/written_outside_sandbox/`).
-- The cancer agent (rerun) wrote intermediate files to `/tmp`.
-- The endothelial agent (rerun) copied `pipeline.py` and `log.txt` outside its folder and deleted the copies (it said so).
-- The first attempts of the cancer and endothelial agents with annotation were interrupted by a session restart and
-  rerun from clean folders (`superseded/runs/optimise_with_annotation_*_interrupted`).
-- By-eye agents were scored on the held-out half so that both conditions are compared on the same cells.
-- Agents' reported development scores came from their own scoring code; re-scored with ours in `optimise/dev_rescored.json`.
-
-## Answers to follow-up questions (pilots only)
-- In the Box 1 v3 pilots we answered the models' questions from a fixed answer sheet (the pilots were later removed; git history).
-  One answer was wrong ("label the visible part of endothelial cells under cancer cells"; the annotation runs under
-  them); the advice run that spotted the inconsistency received the correction, the code pilot did not.
-
-## Scoring conventions
-- Nuclei, round 1 (draft figure): predicted objects lying > 30 % on annotated cancer cells were ignored before
-  matching (cancer-cell nuclei are not annotated). This also discarded correct predictions of the 17 annotated
-  endothelial nuclei under cancer cells (best achievable F1 0.98). Found by the tests on 17 Oct 2026.
-- Nuclei, from round 2: predictions are matched to the full manual annotation (441 nuclei) first; only unmatched
-  objects lying > 30 % on cancer cells are ignored. Round-1 nuclei scores under this rule (for comparison): Python
-  Box 1 0.94 → 0.96, Cellpose default 0.94 → 0.96, other runs change by < 0.01.
-- Endothelial cells: objects touching the image border are removed from reference and prediction; reference cells come
-  from annotator 1's junction lines (`lines_to_cells`, slivers < 150 px removed).
-- Code that crashed or wrote no label image: F1 0, drawn as ×.
+## Scoring conventions (protocol v2; implemented in `scoring/tasks.py` and `v2/score.py`)
+- Nuclei: predictions are matched to the full manual annotation (441 nuclei in field 104, 473 in field 209) first; only
+  unmatched predicted objects lying > 30 % on annotated cancer cells are then ignored, because cancer-cell nuclei are not
+  annotated.
+- Endothelial cells: the reference comes from annotator 1's junction lines (`common.annotations.lines_to_cells`, slivers
+  < 150 px removed); objects touching the image border are removed from reference and prediction.
+- Rows B and C: a script or pipeline that crashed or wrote no label image scores F1 0 on that field (drawn as ×).
 
 ## Protocol v2 (operator: Claude Code, from 17 Oct 2026)
 Changes made before the preflight, decided by the authors on 17 Oct 2026 (PROTOCOL_V2 sections 3 and 13 updated):

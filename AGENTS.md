@@ -23,17 +23,21 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
   `fig3/figure_v2/` (`make fig3`). The superseded round-1 draft was removed on
   19 Oct 2026 (it is in git history).
 
-## Current status (20 Oct 2026)
+## Current status (21 Oct 2026)
 - **All three figures are final (signed off by the authors, 20 Oct 2026); the article was finalised on 21 Oct 2026 and the
   attribution in `CITATION.cff`, `data/sources.csv` and the READMEs was aligned with it.** Figure 2 was updated on 17 Oct 2026 after the code
-  audit (panel e sampling; panel a scored on two fields); on 20 Oct 2026 Figures 1 and 2 were tightened horizontally and
-  Figure 3 was laid out as a full-page portrait. Figure 3: all 72 protocol-v2 main runs are recorded (`fig3/v2/runs/`), 54 are scored (rows B, C and D)
-  and the 18 row-A runs are classified rather than scored; the figure is in
-  `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`, `.pdf`; the legend is kept in the manuscript, not here).
+  audit (panel e sampling; panel a scored on two fields); on 20–21 Oct 2026 Figures 1 and 2 were tightened horizontally,
+  Figure 1's panel letters set in lower case and Figure 3 laid out as a full-page portrait. Figure 3: all 72 protocol-v2 main
+  runs are recorded (`fig3/v2/runs/`), 54 are scored (rows B, C and D) and the 18 row-A runs are classified rather than
+  scored; the figure is in `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`, `.pdf`; the legends of all figures are in the
+  article, not here). On 21 Oct 2026 the repository was reduced to what the figures need (records, analyses and drafts that no
+  figure uses were removed; they are in git history).
 - `make check` passes: all figure SVGs rebuild byte-identical; all scores reproduce from the stored data (Fig. 3). `make full` passes for Figures 1 and 2 (files it cannot regenerate are listed with the reason).
 - Figure 3, protocol v2: protocol frozen on 17 Oct 2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless
   Claude Code sessions), revised for rows B and C on 19 Oct 2026 (development mosaic, held-out halves, answer-sheet lines) and
-  the harness hardened on 20 Oct 2026 (amendments in `FREEZE.json` and `fig3/deviations.md`). Only the 72 accepted runs are
+  the harness hardened on 20 Oct 2026. Every change to a frozen file since the freeze is an amendment entry in `FREEZE.json`
+  (old and new hash, reason, runs affected) with a matching section in `fig3/deviations.md`; `fig3/tests/test_v2_freeze.py`
+  fails if a frozen file changes without one. Only the 72 accepted runs are
   kept (`fig3/v2/runs/`); the preflight, rejected and superseded runs were removed from the working tree on 21 Oct 2026 and
   are in git history (`fig3/deviations.md` describes them). Files over 50 MB are listed in `LARGE_FILES.json` and stored
   outside git (`fig3/v2/large_files.py`).
@@ -58,8 +62,8 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
 - **Test against reference data.** Any change must keep `make check` passing, or the change must explain, in the same
   commit, why a number changed.
 - **Record deviations** (anything that departed from the stated protocol) in the relevant `deviations.md`.
-- **LLM runs are records.** Do not edit transcripts or LLM-written code in `fig3/*/runs/`; put any corrected copy next to
-  it and say what changed.
+- **LLM runs are records.** Do not edit transcripts or LLM-written code in `fig3/v2/runs/`; put any corrected copy next to
+  it and say what changed (as `v2/count_corrections.json` does for three misread counts).
 - **Report honestly**: if something cannot be reproduced, say so in the README of that figure.
 
 ## Layout conventions

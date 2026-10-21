@@ -1,5 +1,7 @@
 {
- "frozen_utc": "2026-10-19T14:40:39+00:00",
+ "frozen_utc": "2026-10-17T18:26:10+00:00",
+ "re_recorded_utc": "2026-10-19T14:40:39+00:00",
+ "note": "frozen_utc is the original freeze (commit c4f280b5). The record was re-written on 2026-10-19 (CLI version and Python unchanged) when hashes were updated for the amendments listed below; every change to a frozen file since the freeze is an amendment entry with its old and new hash.",
  "subject_model": "claude-sonnet-5-5",
  "cli_version": "2.1.302 (Claude Code)",
  "python": "3.13.16",
