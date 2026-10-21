@@ -19,8 +19,6 @@ d9e11a9f-Huvec_nuclei_seg.tif,field104_pix2pix_dapi_stardist_nuclei_labels.tif,f
 c34d5e81-HR.tif,biosr_er_highres_reference.tif,biosr2021;rcan2018,BioSR higher-resolution acquisition of the same region
 14715134-MAX_2026.02.24_ECs_AsPC-1perfusion26.02.13-2.sld_-_HPMEC_ctrl_-_Position_1-1.tif,hpmec_nuclei_max_projection.tif,authors_unpublished,"HPMEC nuclei, maximum projection, 0.158436 um/px (Fig 1 panel b)"
 fab3a3d9-TrackMate_capture_of_Merged2.tif,trackmate_capture_tracks.tif,authors_unpublished;trackmate2022,"TrackMate capture, 1.31483 um/px (Fig 1 panel c step 5)"
-1a852ce0-Tracks_2_Tracking_results_input_siCCT8_si5_Position_26_spots.pdf,trackmate_tracks_siCCT8_position26.pdf,authors_unpublished;trackmate2022,"TrackMate track report (explored for Fig 1, not shown)"
-3128d326-Tracks_R1_cell_migration_R1_-_Position_79_XY1562686175_Z0_T00_C1.pdf,trackmate_tracks_R1_position79.pdf,authors_unpublished;trackmate2022,"TrackMate track report (explored for Fig 1, not shown)"
 b896b111-BF_209.tif,field209_brightfield.tif,follain2026,"1024 x 1022 px, uint16"
 fb052084-209_DAPI_acquired.tif,field209_dapi.tif,follain2026,"1024 x 1022 px, uint16"
 b0661c23-209_acquired_PECAM.tif,field209_pecam1.tif,follain2026,"1024 x 1022 px, uint16"
@@ -34,4 +32,3 @@ e1d886a0-209_DAPI_fake_image_by_pix2pix.tif,field209_pix2pix_predicted_dapi.tif,
 764caf77-209_HUVEC_mask_from_pix2pix_images.tif,field209_pix2pix_pecam1_cellpose_cell_labels.tif,follain2026,"1024 x 1024 px, uint16, 500 objects"
 4ab8a570-209_HUVEC_junctions_cellpose_from_pix2pix.tif,field209_pix2pix_pecam1_cellpose_cell_outlines.tif,follain2026,"1024 x 1024 px, uint16"
 d65d3989-209_HUVEC_nuclei_prediction_after_pix2pix.tif,field209_pix2pix_dapi_stardist_nuclei_labels.tif,follain2026;stardist2018;zerocostdl4mic2021,"1024 x 1024 px, int32, 437 objects"
-13f9199a-cell_migration_high_and_low_-_Position_2_-_1_XY1562738054_Z0_GT.tif,care_denoising_highsnr_reference.tif,authors_unpublished;care2018,"1024 x 1024 px, uint16"

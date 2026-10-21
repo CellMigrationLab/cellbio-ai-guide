@@ -45,14 +45,12 @@ The pix2pix outputs are 1024 × 1024 pixels and have a one-row offset relative t
 | Files | What they show |
 |---|---|
 | `care_denoising_acquired.tif`, `care_denoising_restored.tif` | Low-SNR acquired image and CARE restoration (Figures 1a and 2c); pixel size 0.6337 µm |
-| `care_denoising_highsnr_reference.tif` | Higher-SNR acquisition of the same field; not used in the figures |
 | `biosr_er_lowres_input.tif`, `biosr_er_rcan_prediction.tif`, `biosr_er_highres_reference.tif` | Endoplasmic reticulum, RCAN super-resolution and acquired higher-resolution reference (Figures 1a and 2e) |
 | `hpmec_nuclei_max_projection.tif` | HPMEC nuclei in Figure 1b; pixel size 0.158436 µm |
 | `trackmate_capture_tracks.tif` | Tracking example in Figure 1c; pixel size 1.31483 µm |
-| `trackmate_tracks_*.pdf` | Reports explored during figure development but not shown |
 | `raw/third_party/deepbacs_*` | Published bacterial detection and classification examples in Figure 1a |
 
-CARE, BioSR, HPMEC and TrackMate images have no manual annotation in this repository; BioSR has an acquired higher-resolution reference. The [overview](overview.png) makes the distinction visible.
+CARE, BioSR, HPMEC and TrackMate images have no manual annotation in this repository; BioSR has an acquired higher-resolution reference and CARE a higher-SNR one only in the original dataset. The [overview](overview.png) makes the distinction visible.
 
 ## Verify or add data
 
