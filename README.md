@@ -10,11 +10,11 @@ Everything behind the three figures is here: the microscopy images and manual an
 
 | Material | Open | What it contains |
 |---|---|---|
-| **Figure 1** | [SVG](fig1/figure/fig1.svg) · [PDF](fig1/figure/fig1.pdf) · [legend](fig1/legend.md) · [data and methods](fig1/README.md) | Where AI enters a microscopy workflow, and a practical route from a biological question to a checked analysis. |
-| **Figure 2** | [SVG](fig2/figure/fig2.svg) · [PDF](fig2/figure/fig2.pdf) · [legend](fig2/legend.md) · [data and methods](fig2/README.md) | How to decide whether segmentation, denoising, artificial labelling or super-resolution is good enough for the intended measurement. |
+| **Figure 1** | [SVG](fig1/figure/fig1.svg) · [PDF](fig1/figure/fig1.pdf) · [data and methods](fig1/README.md) | Where AI enters a microscopy workflow, and a practical route from a biological question to a checked analysis. |
+| **Figure 2** | [SVG](fig2/figure/fig2.svg) · [PDF](fig2/figure/fig2.pdf) · [data and methods](fig2/README.md) | How to decide whether segmentation, denoising, artificial labelling or super-resolution is good enough for the intended measurement. |
 | **Figure 3** | [PNG](fig3/figure_v2/output/fig3_v2.png) · [SVG](fig3/figure_v2/output/fig3_v2.svg) · [PDF](fig3/figure_v2/output/fig3_v2.pdf) · [study overview](fig3/README.md) · [protocol](fig3/PROTOCOL_V2.md) | Four ways to use an LLM for image analysis: 72 recorded runs of Claude Sonnet 5.5 on three segmentation and counting tasks, scored against manual annotation. |
 | **Microscopy data** | [dataset guide](data/README.md) · [visual overview](data/overview.png) · [raw files](data/raw/) · [sources and licences](data/sources.csv) | Two annotated fields of cancer cells on an endothelial monolayer, plus the denoising, artificial-labelling and super-resolution examples used in the figures. |
-| **Box 1** | [copy the prompt (as in the article)](box1/box1_manuscript.md) · [version tested in Figure 3](box1/box1_tested.md) · [differences](box1/README.md) | A reusable prompt for asking an LLM to produce an image-analysis workflow that can be inspected and tested. |
+| **Box 1** | [copy the prompt (as in the article)](box1/box1_manuscript.md) · [version tested in Figure 3](box1/box1_final.md) · [differences](box1/README.md) | A reusable prompt for asking an LLM to produce an image-analysis workflow that can be inspected and tested. |
 
 ## Rebuild and check the figures
 
@@ -40,8 +40,8 @@ Figure 3 is built from recorded LLM conversations. The replies cannot be regener
 |---|---|
 | [`data/`](data/) | Raw images, annotations, checksums, provenance and source licences. |
 | [`common/`](common/) | Shared analysis code and tests, including label validation, object matching, annotation conversion and image metadata. |
-| [`fig1/`](fig1/) | Figure 1 code, source data, figure files, legend and provenance notes. |
-| [`fig2/`](fig2/) | Figure 2 code, source data, figure files, legend and provenance notes. |
+| [`fig1/`](fig1/) | Figure 1 code, source data, figure files and provenance notes. |
+| [`fig2/`](fig2/) | Figure 2 code, source data, figure files and provenance notes. |
 | [`fig3/`](fig3/) | The LLM experiment: protocol, the harness that ran it and the 72 run records (`v2/`), the scoring code, the figure builder (`figure_v2/`) and tests. |
 | [`box1/`](box1/) | Box 1 as printed in the article, and the slightly extended version tested in Figure 3 (differences in `box1/README.md`). Earlier versions survive in git history. |
 | [`tools/`](tools/) | Repository checks (fast and full) and SVG-to-PDF conversion. |

@@ -1,6 +1,6 @@
 # Figure 1: Using AI in microscopy image analysis
 
-Final version: `figure/fig1.svg` / `fig1.pdf` (builder `code/make_fig1.py`, working version v16 of 16 Oct 2026; layout tightened and panel letters set in lower case 20–21 Oct 2026).
+Final version: `figure/fig1.svg` / `fig1.pdf`; the legend is in the article (builder `code/make_fig1.py`, working version v16 of 16 Oct 2026; layout tightened and panel letters set in lower case 20–21 Oct 2026).
 
 ## Rebuild
 ```

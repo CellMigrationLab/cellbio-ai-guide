@@ -6,10 +6,9 @@ tested. This folder holds it in two forms.
 | File | What it is |
 |---|---|
 | [box1_manuscript.md](box1_manuscript.md) | Box 1 exactly as printed in the article. Copy this one. |
-| [box1_tested.md](box1_tested.md) | The version used for the "detailed" prompts of Figure 3: the printed Box 1 plus four lines added after the pilots, with a table of which rows received each line. |
-| [box1_final.md](box1_final.md) | The working copy of that tested version, with the four additions marked ➕. It is one of the frozen protocol files (`fig3/v2/FREEZE.json`); `fig3/v2/make_protocol.py` fills it in per task to make the prompts in `fig3/v2/prompts/`. |
+| [box1_final.md](box1_final.md) | The version used for the "detailed" prompts of Figure 3: the printed Box 1 plus four lines added after the preflight, marked ➕. It is one of the frozen protocol files (`fig3/v2/FREEZE.json`); `fig3/v2/make_protocol.py` fills it in per task to make the prompts in `fig3/v2/prompts/`. |
 
-The four additions that the tested version has and the printed Box 1 does not:
+The four additions that the tested version has and the printed Box 1 does not (the first three went to every row that received Box 1; the fourth only to the agent rows, whose prompt has the optimisation paragraph; the second was left out of the by-eye agent prompt, which gives no annotation):
 
 1. a slot for the software, its version and the hardware ("I use [software and version] on [hardware]");
 2. "Include a test I can run on my annotated example and tell me what result would mean that the analysis failed";

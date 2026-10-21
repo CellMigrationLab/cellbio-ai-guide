@@ -1,6 +1,6 @@
 # Figure 2: Is the deep-learning output good enough for the measurement?
 
-Final version: `figure/fig2.svg` / `fig2.pdf`; legend `legend.md`. Builder `code/make_fig2.py` (working version v3 of
+Final version: `figure/fig2.svg` / `fig2.pdf` (the legend is in the article). Builder `code/make_fig2.py` (working version v3 of
 16 Oct 2026; panels a and e updated 17 Oct 2026; layout tightened 20 Oct 2026).
 
 ## Rebuild and re-score
