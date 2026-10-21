@@ -1,8 +1,0 @@
-{
- "subject_folder": "/home/user/sessions_v2/v019",
- "files": [
-  "image.tif <- halfdev_endo_image.tif",
-  "annotation.tif <- halfdev_endo_annotation.tif"
- ],
- "cli_tools": "Read,Write,Edit,Bash,Glob,Grep,WebSearch,WebFetch"
-}

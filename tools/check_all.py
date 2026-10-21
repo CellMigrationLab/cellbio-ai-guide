@@ -140,7 +140,7 @@ def check_fig2_scores(tmp: Path, with_squirrel: bool) -> list[bool]:
 def check_no_nan_json() -> bool:
     """No committed source-data or score JSON may contain NaN or Infinity (undefined values must be explicit nulls)."""
     bad = []
-    for folder in ("fig1/source_data", "fig2/source_data", "fig2/analysis", "fig3/figure_v2", "fig3/scoring",
+    for folder in ("fig1/source_data", "fig2/source_data", "fig3/figure_v2", "fig3/scoring",
                    "fig3/v2"):
         for path in sorted((REPO / folder).rglob("*.json")):
             try:

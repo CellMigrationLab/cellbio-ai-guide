@@ -6,7 +6,7 @@ brightfield. Results are scored against the authors' manual annotations.
 
 | Row | Request | Scored how |
 |---|---|---|
-| A | Ask for advice (basic prompt or detailed prompt) | Replies checked for outdated models or code ([v2/advice_outdated.csv](v2/advice_outdated.csv), first-pass classification by the operator, to be reviewed by the authors) |
+| A | Ask for advice (basic prompt or detailed prompt) | Replies checked for outdated models or code ([v2/advice_outdated.csv](v2/advice_outdated.csv)) |
 | B | Ask for a Python script, which we run (basic or detailed prompt) | F1 on held-out halves of two fields, mean of the two |
 | C | Let an agent write, run and improve a pipeline (by eye, or with the annotation as score) | Same as B |
 | D | Ask for the answer (count) | Count against the manual count, per field |
@@ -20,7 +20,7 @@ the authors, 20 Oct 2026).
 | Path | Contents |
 |---|---|
 | [PROTOCOL_V2.md](PROTOCOL_V2.md) | The plan, frozen on 17 Oct 2026 and revised for rows B and C on 19 Oct 2026. |
-| [v2/](v2/README.md) | The harness (prompts, runner, scorer, operator tools) and every run record (`runs/`; replaced, interrupted or preflight runs are kept unedited in `runs_superseded/`, `runs_rejected/`, `runs_preflight/`). |
+| [v2/](v2/README.md) | The harness (prompts, runner, scorer, operator tools) and the records of the 72 accepted runs (`runs/`). |
 | [figure_v2/](figure_v2/README.md) | The figure builder (`make fig3`), its source data, SVG/PNG/PDF output. |
 | [scoring/](scoring/) | Task references and scoring conventions (`tasks.py`). |
 | [deviations.md](deviations.md) | Everything that departed from the protocol, and other things an auditor should know. |
@@ -57,6 +57,3 @@ tools). See [deviations.md](deviations.md).
 | b and c: only the left halves of two FOVs given; right halves held out; mean of the F1 on two FOVs | Protocol revision of 19 Oct 2026; `scoring/tasks.py` (`HALF_X`), `v2/score.py`. |
 | Red crosses: code failures scored as 0 | A failed field counts 0; drawn in the figure at the run's mean score. |
 | "The experiment is illustrative, not a benchmark" | As stated in the limitations above. |
-
-Not stated in the legend, to be decided by the authors: the legend refers to "prompt" in a-c but does not say that the
-"detailed" prompt is Box 1 with four additions that the printed Box 1 does not contain (see [`../box1/README.md`](../box1/README.md)).

@@ -1,7 +1,0 @@
-Optimisation used only image.tif + annotation.tif (single image; thresholds are therefore tuned on n=124 cells of one field).
-v1: flat-field (Gaussian sigma 50 px divide) + 1-99 percentile norm, Cellpose 4.2 default model cpsam_v2, diameter 30 px (=19.5 um; annotated median area 291 um2 -> ~19 um),
-    flow 0.4, cellprob 0.0, area filter 80-700 um2, hole fill. Result: 176 objects, recall 0.968, precision 0.682, F1@0.5 0.800.
-    Diagnosis: 56 FPs = large smooth endothelial cells (area ~500-700 um2, low internal texture) + small debris.
-v2: max area 700->600 um2, min solidity 0.93, min intensity std (normalised image) 0.20. Result: 135 objects, TP 120, precision 0.889, recall 0.968,
-    F1 0.927, mean IoU 0.827, area bias +7.9 um2 (MAE 39), AR MAE 0.072. Not tuned further to avoid overfitting to one image.
-Not changed: diameter, flow/cellprob thresholds (not swept), no retraining.

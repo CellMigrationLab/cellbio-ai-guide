@@ -1,9 +1,0 @@
-Optimisation on image.tif only (1022x1024 uint16, 0.65 um/px). No other images accessed.
-1. Baseline: Cellpose-SAM (cpsam_v2), raw image, normalise 1-99 pct. Not kept: monolayer contrast is very low and background drifts.
-2. Added Gaussian background subtraction (sigma 50 px). Visual check: monolayer borders follow cell outlines well.
-3. Compared diameter=50 px (441 objects, good polygons) vs diameter=None (274 objects, ~84 s, merged/undersegmented). Kept diameter=50 (~32 um).
-4. Cancer cells were segmented as separate small bright/dark-ringed round objects. Added rejection by area and in-label intensity std.
-5. Bug found: Cellpose normalises its input in place, so the std test saw rescaled data and removed only 5 objects. Fixed by passing flat.copy().
-6. Rejection thresholds: area<=1500 px & std>=110 left larger cancer cells; raised to 2500 px. Added min area 450 um^2 (below the stated 25 um size). Trade-off: some endothelial cells with a cancer cell on top are also rejected; a few dim cancer cells remain.
-7. Table flags touches_border and touches_cancer_or_debris added; border cells are kept in the label image but should be excluded from shape statistics.
-Final on image.tif: 441 objects -> 144 rejected -> 297 endothelial (259 not touching border); median area 853 um2, aspect ratio 1.52 (interior cells). Runtime ~40 s on CPU.

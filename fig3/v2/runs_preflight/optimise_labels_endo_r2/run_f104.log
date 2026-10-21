@@ -1,6 +1,0 @@
-$ pipeline.py image.tif labels.tif measurements.csv
-exit 0
---- stdout
-327 cells; median area 823 um2; median aspect ratio 1.52
-
---- stderr

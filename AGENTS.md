@@ -29,16 +29,14 @@ drew the figures, and, for Figure 3, every prompt, reply and output of the LLM r
   audit (panel e sampling; panel a scored on two fields); on 20 Oct 2026 Figures 1 and 2 were tightened horizontally and
   Figure 3 was laid out as a full-page portrait. Figure 3: all 72 protocol-v2 main runs are recorded (`fig3/v2/runs/`), 54 are scored (rows B, C and D)
   and the 18 row-A runs are classified rather than scored; the figure is in
-  `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`, `.pdf`; the legend is kept in the manuscript, not here). Open for the
-  authors, with no effect on the figures as signed off: the row-A item classification (`v2/advice_outdated.csv`),
-  `score.parse_count`, and the order of region growing in `common/annotations.py` (see `fig3/deviations.md`).
+  `fig3/figure_v2/` (`output/fig3_v2.svg`, `.png`, `.pdf`; the legend is kept in the manuscript, not here).
 - `make check` passes: all figure SVGs rebuild byte-identical; all scores reproduce from the stored data (Fig. 3). `make full` passes for Figures 1 and 2 (files it cannot regenerate are listed with the reason).
-- Figure 3, protocol v2: preflight (12 runs, `fig3/v2/runs_preflight/`) not used in the figure; protocol frozen on 17 Oct
-  2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless Claude Code sessions) and revised for rows B and
-  C on 19 Oct 2026 (development mosaic, held-out halves, answer-sheet lines), and the harness was hardened on 20 Oct 2026
-  (see the amendments in `FREEZE.json` and `fig3/deviations.md`). Runs that were replaced or interrupted are kept unedited in `fig3/v2/runs_superseded/` and
-  `fig3/v2/runs_rejected/` (with the reason in each folder); files over 50 MB are listed in `LARGE_FILES.json` and stored
-  outside git (`fig3/v2/large_files.py`). The main run is complete: `fig3/v2/RESUME_PROMPT.md` is kept for reference only.
+- Figure 3, protocol v2: protocol frozen on 17 Oct 2026 (`fig3/v2/FREEZE.json`, subject model `claude-sonnet-5-5` as headless
+  Claude Code sessions), revised for rows B and C on 19 Oct 2026 (development mosaic, held-out halves, answer-sheet lines) and
+  the harness hardened on 20 Oct 2026 (amendments in `FREEZE.json` and `fig3/deviations.md`). Only the 72 accepted runs are
+  kept (`fig3/v2/runs/`); the preflight, rejected and superseded runs were removed from the working tree on 21 Oct 2026 and
+  are in git history (`fig3/deviations.md` describes them). Files over 50 MB are listed in `LARGE_FILES.json` and stored
+  outside git (`fig3/v2/large_files.py`).
   If you run scenarios again, never show this repository to the model being tested (subjects are started only by
   `fig3/v2/run_operator.py start`, never as sub-agents, which would receive this file) and start each in its own
   process namespace.

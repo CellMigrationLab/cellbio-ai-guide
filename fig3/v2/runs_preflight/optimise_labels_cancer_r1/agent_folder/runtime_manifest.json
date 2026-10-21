@@ -1,7 +1,0 @@
-{
-  "entry_point": "pipeline.py",
-  "command": "python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
-  "files_needed": ["pipeline.py", "/root/.cellpose/models/cpsam_v2 (Cellpose 4.2.1.1 default pretrained weights, 1.2 GB, must exist locally or be downloadable)"],
-  "not_needed_at_runtime": ["evaluate.py", "annotation.tif"],
-  "python_packages": ["numpy", "scipy", "scikit-image", "tifffile", "pandas", "cellpose==4.2.1.1", "torch"]
-}

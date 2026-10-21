@@ -1,3 +1,0 @@
-{"field": 104, "f1_iou_0.5": 0.925, "count": 129, "median_area_error_pct": -4.4, "median_aspect_ratio_error": 0.007,
- "scope": "agent's own evaluate.py against annotation.tif (field 104), whole image",
- "source": "final reply and log.txt (copied by the operator, numbers as stated)"}

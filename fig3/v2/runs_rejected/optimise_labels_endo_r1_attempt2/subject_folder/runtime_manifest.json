@@ -1,9 +1,0 @@
-{
-  "entrypoint": "pipeline.py",
-  "command": "python pipeline.py <input.tif> <labels.tif> <measurements.csv>",
-  "files_required": ["pipeline.py"],
-  "model_weights": {"name": "cpsam_v2", "location": "~/.cellpose/models/cpsam_v2 (Cellpose 4.2 built-in, auto-downloaded on first use)"},
-  "python_packages": ["numpy", "scipy", "scikit-image", "tifffile", "pandas", "cellpose==4.2.*", "torch"],
-  "extra_outputs": ["<labels>_overlay.png"],
-  "not_needed_at_runtime": ["evaluate.py (validation only)", "annotation.tif"]
-}

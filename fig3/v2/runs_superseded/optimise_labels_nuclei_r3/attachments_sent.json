@@ -1,8 +1,0 @@
-{
- "subject_folder": "/home/user/sessions_v2/v008",
- "files": [
-  "image.tif <- dev_nuclei_image.tif",
-  "annotation.tif <- dev_nuclei_annotation.tif"
- ],
- "cli_tools": "Read,Write,Edit,Bash,Glob,Grep,WebSearch,WebFetch"
-}

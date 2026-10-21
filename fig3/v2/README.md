@@ -15,17 +15,16 @@ This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2
 | [FREEZE.json](FREEZE.json) | SHA-256 of every file that defines the protocol, model ID and CLI version; `fig3/tests/test_v2_freeze.py` fails if any changes. |
 | [runner.py](runner.py) | Executes returned code on fields 104 and 209 in clean environments (rows B and C). |
 | [score.py](score.py) | Scores outputs from rows B, C and D. |
-| `runs/`, `runs_rejected/`, `runs_superseded/` | Accepted runs; rejected attempts (reason in each `REJECTED` note); runs replaced by the revision of 19 Oct 2026 (`runs_superseded/README.md`). |
-| [check_scores.py](check_scores.py), [summarise_direct.py](summarise_direct.py), [advice_outdated.py](advice_outdated.py), [advice_api_check.py](advice_api_check.py), [code_metrics.py](code_metrics.py), [code_rating/](code_rating/) | Checks and secondary analyses made after the runs (each script's docstring says what it does and writes). |
+| `runs/` | The 72 accepted runs (prompts, replies, returned code or agent folder, execution records, scores). Rejected, superseded and preflight runs were removed on 21 Oct 2026 (git history; see `fig3/deviations.md`). |
+| [check_scores.py](check_scores.py), [advice_outdated.py](advice_outdated.py) | Recompute every stored score from the run records (used by `make check`); classify the row-A replies (`advice_outdated.csv`, read by the figure). |
 | [large_files.py](large_files.py) | Moves files over 50 MB out of the run records (listed in `LARGE_FILES.json`); run before committing. |
-| `runs_preflight/`, `runs_preflight_rejected/` | Preflight runs (section 11 of the protocol), not used in the figure. |
 | [environment_freeze.txt](environment_freeze.txt) | `pip freeze` of the environment that runs the code. |
 
 ## Running one scenario
 
 The commands below are for the **operator**, not the LLM being tested. Run them from the repository root. Replace `<id>` with the scenario ID.
 
-All commands need `V2_STAGE=preflight` (runs in `runs_preflight/`, not used in the figure) or `V2_STAGE=main`, and
+All commands need `V2_STAGE=main` (`V2_STAGE=preflight` was used for the preflight, whose records are not kept), and
 `SUBJECT_SCRATCHPAD` set to the operator session's scratchpad directory (it must stay empty).
 
 1. Prepare the run: `PYTHONPATH=. python fig3/v2/run_operator.py prepare <id>`. Preparation refuses a non-empty
@@ -46,7 +45,7 @@ All commands need `V2_STAGE=preflight` (runs in `runs_preflight/`, not used in t
 6. Execute code for rows B and C: `PYTHONPATH=. python fig3/v2/runner.py fig3/v2/<runs folder>/<id>`.
 7. Score: `PYTHONPATH=. python fig3/v2/score.py fig3/v2/<runs folder>/<id>`. Row A uses the item check defined in
    protocol section 5.
-8. Commit and push after every scenario, so that an interrupted session loses nothing. To resume in a new session,
-   use [RESUME_PROMPT.md](RESUME_PROMPT.md); `run_operator.py status` lists complete, partial and next scenarios.
+8. Commit and push after every scenario, so that an interrupted session loses nothing; `run_operator.py status` lists
+   complete, partial and next scenarios.
 
 Keep every held-out annotation away from the subject model: the right halves of fields 104 and 209 given to rows B and C, and the whole field-209 annotation used for row D. Do not alter the generated prompts, answer sheet or scoring rules during the experiment; changes require a documented protocol revision.

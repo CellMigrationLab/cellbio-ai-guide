@@ -1,8 +1,0 @@
-{
- "subject_folder": "/home/user/sessions_v2_preflight/v002",
- "files": [
-  "image.tif <- dev_endo_image.tif",
-  "image.png <- dev_endo_image.png"
- ],
- "cli_tools": "Read,WebSearch,WebFetch"
-}

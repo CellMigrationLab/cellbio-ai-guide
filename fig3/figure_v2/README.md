@@ -12,6 +12,5 @@ the figure from the stored runs and writes `output/fig3_v2.svg` (editable; the s
 What each row shows: **a** replies that suggested an outdated model or code (one dot per reply; classification and verbatim
 evidence in `fig3/v2/advice_outdated.csv`); **b**, **c** median over three runs of the mean object F1 (IoU 0.5) on the held-out
 right halves of fields 104 and 209 ("FOV 1", "FOV 2"), circles = runs, cross = a field failed (counts 0); **d** the count stated
-in turn 1 against the manual count. Not shown, but in the repository: area and aspect-ratio results (`score.json`), the drawn
-ellipses and the refusals to draw them (`fig3/v2/direct_summary.csv`), code metrics and ratings (`fig3/v2/code_metrics.csv`,
-`fig3/v2/code_rating/`), the check of API calls in the advice code (`fig3/v2/advice_api_check.csv`).
+in turn 1 against the manual count. Not shown, but in the run records: area and aspect-ratio results and the drawn ellipses or the refusals to
+draw them (`score.json`, `direct_answers.json`, `turns.json`).

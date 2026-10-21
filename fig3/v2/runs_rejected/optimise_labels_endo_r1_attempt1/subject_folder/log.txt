@@ -1,7 +1,0 @@
-LOG OF CHANGES (optimised only on image.tif / annotation.tif)
-[1] Inspected data: 1022x1024 uint16, GT 413 cells (median 849 um2, median AR 1.62). GT has holes (label 0) where cancer cells sit.
-[2] Baseline: flat-field (gauss 40 subtract/divide local sd) + rescale 0.6 + cpsam_v2 pretrained (flow 0.4, cellprob 0): F1@IoU0.5=0.455, pred median area 550 vs GT 849, AR 1.30 vs 1.62. Segments cancer cells, misses faint endothelium. Runtime ~220 s.
-[3] Inpaint detected cancer cells then cpsam: worse (F1 0.33, 218 objects). Rejected.
-[4] Classical seeds (local texture energy) + watershed: F1<0.05. Rejected.
-[5] Full fine-tuning on CPU: ~70 s per 256px crop-step -> infeasible. Switched to fine-tuning only last 4 ViT blocks+neck+out on cached frozen-trunk tokens (work/train2.py), training on rows y<500 only, validating on rows >=540 (spatial hold-out).
-[6] ft_a (40 crops from rows<500, 150 steps, last 4 blocks, lr 1e-4): held-out rows>=540: F1@0.5 0.705 (pretrained: 0.438); area median 935 vs GT 854; AR 1.50 vs 1.61. Inference ~110 s. Adopted approach.

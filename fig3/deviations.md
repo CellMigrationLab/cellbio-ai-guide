@@ -3,6 +3,12 @@
 Round 1 (superseded; its records were removed from the repository on 19 Oct 2026 and are in git history before that commit; the
 sections below on round 1 are kept for the record). Deviations of protocol v2 follow in their own sections.
 
+**Records removed on 21 Oct 2026.** Only the 72 accepted runs are kept in the repository (`v2/runs/`). The preflight runs
+(`v2/runs_preflight/`, `v2/runs_preflight_rejected/`), the rejected attempts (`v2/runs_rejected/`), the superseded rows B and C
+runs (`v2/runs_superseded/`), the exploratory summaries (`v2/direct_summary.csv`, `v2/code_metrics.csv`, `v2/code_rating/`,
+`v2/advice_api_check.csv`) and the operator prompts (`v2/RESUME_PROMPT.md`) that the sections below mention were removed from
+the working tree and are in git history before that commit.
+
 Lessons from the round-2 pilot (3 scenarios, 17 Oct 2026; removed, see git history), built into the v2 harness: Claude
 sub-agents always have a shell (rows without code use the `subject-chat` agent); the harness scratchpad is shared
 (emptied before each subject); torchvision must match the CPU build of torch; answer-sheet lines must not mention
@@ -266,9 +272,7 @@ prompts, answer sheet and scenarios are untouched.
   endothelial run 1: 350, range 300-400); `score.py` applies it and refuses to run if the rule no longer gives the value
   recorded there. The other 15 replies were read by hand and the rule's value is correct. Replies, prompts and scenarios are
   unchanged. Changed scores (`runs/direct_three_turns_*` `score.json`, `turn1` only): 31 -> 500, 31 -> 600, 110 -> 350. The
-  Fig. 3 row D dots for these three runs move accordingly; `direct_summary.csv` was regenerated.
+  Fig. 3 row D dots for these three runs move accordingly.
 - The **border rule** in `PROTOCOL_V2.md` section 2 now states what `scoring/tasks.py` does (endothelial: border objects removed
   from reference and prediction, so they affect count and F1), the header and model identifier were corrected, and a note
   records what the figure shows for rows A and D. No run was affected.
-- Still open (authors): whether `score.parse_count` should be replaced by an anchored rule; whether `common/annotations.py`
-  should label regions after closing line gaps (a simple variant changes the four junction masks by -1 to +2 objects).

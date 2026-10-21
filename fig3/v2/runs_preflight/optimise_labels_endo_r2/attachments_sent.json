@@ -1,8 +1,0 @@
-{
- "subject_folder": "/home/user/sessions_v2_preflight/v004",
- "files": [
-  "image.tif <- dev_endo_image.tif",
-  "annotation.tif <- dev_endo_annotation.tif"
- ],
- "cli_tools": "Read,Write,Edit,Bash,Glob,Grep,WebSearch,WebFetch"
-}

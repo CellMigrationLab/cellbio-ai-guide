@@ -45,7 +45,7 @@ The pix2pix outputs are 1024 × 1024 pixels and have a one-row offset relative t
 | Files | What they show |
 |---|---|
 | `care_denoising_acquired.tif`, `care_denoising_restored.tif` | Low-SNR acquired image and CARE restoration (Figures 1a and 2c); pixel size 0.6337 µm |
-| `care_denoising_highsnr_reference.tif` | Higher-SNR acquisition of the same field; used in [exploratory analysis](../fig2/analysis/README.md), not the final figure |
+| `care_denoising_highsnr_reference.tif` | Higher-SNR acquisition of the same field; not used in the figures |
 | `biosr_er_lowres_input.tif`, `biosr_er_rcan_prediction.tif`, `biosr_er_highres_reference.tif` | Endoplasmic reticulum, RCAN super-resolution and acquired higher-resolution reference (Figures 1a and 2e) |
 | `hpmec_nuclei_max_projection.tif` | HPMEC nuclei in Figure 1b; pixel size 0.158436 µm |
 | `trackmate_capture_tracks.tif` | Tracking example in Figure 1c; pixel size 1.31483 µm |
@@ -67,7 +67,3 @@ The script [add_raw_files.py](add_raw_files.py) copies new uploads without chang
 ## Sources and licences
 
 See [sources.csv](sources.csv) for the original paper, DOI and licence for each dataset. Authors' images and annotations are covered by [CC BY 4.0](../LICENSE-content.md); third-party data retain their own licences. DeepBacs source data: 10.5281/zenodo.5551016 and 10.5281/zenodo.5551057. The Follain et al. paper lists a related deposit at 10.5281/zenodo.17232437. Check the source record before reusing any individual file.
-
-## Information to confirm before release
-
-Still to be recorded: the individual annotators' names and annotation dates (the annotations were prepared by the Jacquemet lab using Fiji for the FlowVision paper), the CARE model version and training data, the TrackMate experiment and tracking settings, and the exact BioSR source file/cell (the BioSR licence, CC BY 4.0, was confirmed by the authors on 21 Oct 2026) and the RCAN training provenance (the RCAN prediction was provided by Iván Hidalgo-Cenalmor, as stated in the article). These details should be confirmed by the authors rather than inferred. The [Figure 1 provenance notes](../fig1/README.md) list the remaining source-specific questions.

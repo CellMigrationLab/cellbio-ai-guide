@@ -1,3 +1,0 @@
-{"field": 104, "f1_iou_0.5": 0.78, "count": 377, "median_area_um2": 920, "median_aspect_ratio": 1.57,
- "scope": "agent's own evaluation against annotation.tif (field 104)",
- "source": "log.txt step 5 and final reply (copied by the operator, numbers as stated)"}

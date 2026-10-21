@@ -1,6 +1,0 @@
-1. Inspected image.tif: 1022x1024 uint16, max 4095. Dim oval endothelial nuclei (~20x27 px) plus bright round cancer nuclei/clusters.
-2. Cellpose cpsam_v2, CPU, percentile (1-99.5) scaling, no rescale: good outlines (~600 objects). A log-transform input merged neighbours (median area 740 vs 388 px) -> rejected.
-3. Mean intensity is bimodal (valley ~600-700 counts): drop objects >650 as cancer nuclei (first tried 800: left blurry bright cancer nuclei).
-4. Drop objects <50 um2 (debris).
-5. Rescue rule: bright objects that are >=210 um2, AR>=1.35 and mean<=900 are kept (4 large textured oval nuclei were wrongly removed). Heuristic from 4 objects in one image.
-6. Replaced deprecated skimage property names. Final: 602 objects -> 450 endothelial nuclei. Runtime ~1 min on CPU.

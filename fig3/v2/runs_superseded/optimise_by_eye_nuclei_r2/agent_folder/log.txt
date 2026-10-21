@@ -1,5 +1,0 @@
-1. Baseline: Cellpose cpsam_v2, CPU, percentile 1-99.5 normalisation, native scale (no resize; nuclei ~20-26 px). 585 objects, incl. many bright cancer cells (~38 s).
-2. Cancer-cell exclusion v1: mean intensity >= 650 removed (large objects >200 um^2 rescued as big endothelial nuclei). Left round dimmer cancer cells (590-609) and removed dim-haze elongated endothelial nuclei (650-800).
-3. Cancer-cell exclusion v2: aspect-dependent threshold 500+1000*(aspect-1), cap 1000, same large-object rescue. 479 nuclei, visually better.
-4. Min area 50 -> 80 um^2 to drop fragments. Final count in report.
-Tuned by eye on image.tif only; no ground truth available.

@@ -48,7 +48,7 @@ Two caveats are listed first because they affect what the figure claims.
 
 | File | Source | Processing |
 |---|---|---|
-| `detection_input.png`, `detection_boxes.json` | DeepBacs *E. coli* growth-stage dataset and YOLOv2 model, Spahn et al. 2022 (*Commun. Biol.*, doi:10.1038/s42003-022-03634-z); Zenodo doi:10.5281/zenodo.5551016, CC BY 4.0. Image `image_patches/test_images/pos_8_frame_80_2.png`; boxes from the model archive's `Quality Control/predicted_bounding_boxes_for_custom_ROI_QC.csv` | Published predictions (model not re-run). 14 boxes: 8 rod, 3 dividing, 3 microcolony. 256 × 256 px, 0.5–99.5 percentile stretch. Pixel size for the scale bar: 160 nm (the paper quotes 158 nm — to confirm) |
+| `detection_input.png`, `detection_boxes.json` | DeepBacs *E. coli* growth-stage dataset and YOLOv2 model, Spahn et al. 2022 (*Commun. Biol.*, doi:10.1038/s42003-022-03634-z); Zenodo doi:10.5281/zenodo.5551016, CC BY 4.0. Image `image_patches/test_images/pos_8_frame_80_2.png`; boxes from the model archive's `Quality Control/predicted_bounding_boxes_for_custom_ROI_QC.csv` | Published predictions (model not re-run). 14 boxes: 8 rod, 3 dividing, 3 microcolony. 256 × 256 px, 0.5–99.5 percentile stretch. Pixel size for the scale bar: 160 nm (the paper quotes 158 nm; the 1 % difference is invisible at this scale) |
 | `segmentation_input_output.png` | Brightfield cancer cells and custom StarDist labels, Follain et al. 2026 (*EMBO J.*, doi:10.1038/s44318-025-00678-9); 0.649614 µm/px | Model not re-run. Crop y 60–270, x 200–410; 0.3–99.7 percentile stretch; nearest-neighbour resize. Left half input, right half label overlay. `code/export_splits.py` |
 | `classification_input_output.png` | DeepBacs antibiotic phenotyping, Zenodo doi:10.5281/zenodo.5551057, CC BY 4.0; input `test/stitched_images/images/synthetic_image_23.png`, predictions from the model archive's QC CSV | Published predictions (model not re-run). Left: x 60–260 of the input. Right: two highest-confidence (> 0.6) cells per class (Control, Mecillinam, Nalidixate, Rifampicin) from other test images, box ± 6 px. **See caveat 2** |
 | `denoising_input_output.png` | CARE denoising, provided by the authors (raw uint16 / restored float32), 0.6337 µm/px | Crop y 640–840, x 520–720; each half stretched to its own 0.3–99.7 percentiles. `code/export_splits.py` |
@@ -88,15 +88,6 @@ Object-level F1 over the whole field against `field104_cancer_cells_manual_label
 | StarDist (custom) | 102 | 97 | 5 | 27 | 0.858 | 0.86 |
 
 Reproduced by `code/f1_scores.py`. Neither field 104 nor field 209 was in the StarDist training set (authors, 17 Oct 2026).
-
-## Still to confirm before deposit
-
-- Licence and deposit for the authors' own data: the Follain et al. brightfield/StarDist/pix2pix files (the paper lists Zenodo doi:10.5281/zenodo.17232437 and the community `pdac_dl`), the denoising pair, the HPMEC nuclei image and the TrackMate capture.
-- Super-resolution data: which Qiao et al. file and cell, the RCAN training provenance (the prediction was provided by Iván Hidalgo-Cenalmor, as stated in the article); the BioSR licence, CC BY 4.0, was confirmed by the authors on 21 Oct 2026.
-- CARE denoising: training data and version (raw = uint16 `…_Z0_1.tif`, restored = float32 `…_Z0.tif`: confirmed).
-- TrackMate capture: source experiment, detector and tracker.
-- Manual annotations (`data/raw/field104_*`, `field209_*`): individual annotators and dates (prepared by the Jacquemet lab using Fiji for the FlowVision paper; not in the StarDist training set: confirmed).
-- DeepBacs detection pixel size (160 vs 158 nm).
 
 ## Folder names
 `source_data/` folders were renamed after porting (17 Oct 2026) to the panel they feed: `data` → `panel_b`,

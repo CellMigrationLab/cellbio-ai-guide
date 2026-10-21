@@ -1,8 +1,0 @@
-Optimisation used only image.tif / annotation.tif. Metric: F1 of matched cells (IoU>=0.5) vs annotation, plus count/area/aspect-ratio distributions.
-1. Cellpose-SAM defaults on percentile-normalised raw image: 230 objects, F1@0.5=0.24. Mostly cancer cells; endothelium missed.
-2. Raw, diameter 50/70: F1 0.52/0.61.
-3. Added Gaussian flat-field subtraction (sigma 40): F1 0.66 (d=50), 0.67 (d=70). Kept d=70. (Dividing by local SD: no gain.)
-4. Swept flow_threshold (0.4/0.8), cellprob (-1/0/1), diameter (60/70/90): all 0.65-0.67; kept 0.4 / 0.0 / 70.
-5. Added removal of cancer cells (area<700 um2 and internal std>=120) with bounded neighbour fill into freed area; added debris filter (<150 um2): F1@0.5=0.78, F1@0.7=0.42, 377 vs 382 cells; median area 920 vs 894 um2; median aspect ratio 1.57 vs 1.60.
-6. Added touches_border column to CSV (truncated cells bias area/shape).
-Thresholds in step 5 were chosen by looking at this one image (risk of overfitting).
