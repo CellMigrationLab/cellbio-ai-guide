@@ -1,6 +1,6 @@
 # Figure 1: Using AI in microscopy image analysis
 
-Final version: `figure/fig1.svg` / `fig1.pdf` (builder `code/make_fig1.py`, = working version v16, 16 Oct 2026).
+Final version: `figure/fig1.svg` / `fig1.pdf` (builder `code/make_fig1.py`, working version v16 of 16 Oct 2026; layout tightened and panel letters set in lower case 20–21 Oct 2026).
 
 ## Rebuild
 ```
@@ -31,10 +31,9 @@ the original working folder (`U` = the upload folder, now `data/raw/` with the n
 `dl_deepbacs`, `dl_abx` = `data/raw/third_party/`). `code/` holds only the producers of `source_data/` and the builder; earlier builders and explorations were removed
 (git history).
 
-Changes in v16 relative to the provenance notes below (written for the data package of 16 Oct, 11:58): the step-3
+The provenance notes below were written for the data package of 16 Oct 2026 and use its file names; the table above gives the names used here. Changes since then: the step-3
 candidates are labelled "Pre-trained generalist" and "Custom-trained"; the super-resolution tile is a 2× zoom
-(`split_sr_zoom.png`, 31.3 nm pixels, 1 µm scale bar). Panel-c tile file names in the notes below refer to the package;
-the table above gives the names used here.
+(`split_sr_zoom.png`, 31.3 nm pixels, 1 µm scale bar).
 
 ## Provenance
 

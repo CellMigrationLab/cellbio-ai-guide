@@ -1,6 +1,6 @@
 # Licence for images, annotations, figures, prompts and text
 
-**Code** (all `*.py`, `*.sh`, `*.ijm`, `Makefile`): MIT, see `LICENSE`.
+**Code** (all `*.py`, `*.sh`, `Makefile`): MIT, see `LICENSE`.
 
 **Everything else produced by the authors** (images and annotations in `data/raw/` that come from the authors, derived
 images and label images, figures, legends, prompts, Box 1, documentation): Creative Commons Attribution 4.0

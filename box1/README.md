@@ -1,19 +1,20 @@
 # Box 1: the reusable prompt
 
+Box 1 of the article is a prompt template for asking an LLM to produce an image-analysis workflow that can be inspected and
+tested. This folder holds it in two forms.
+
 | File | What it is |
 |---|---|
-| [box1_manuscript.md](box1_manuscript.md) | Box 1 as printed in the article. |
-| [box1_tested.md](box1_tested.md) | The Box 1 that was actually tested in Figure 3, written out clean (the article's Box 1 plus the four additions), with where each addition appears. |
-| [box1_final.md](box1_final.md) | The same version the "detailed" prompts of Figure 3 were built from (protocol v2, [`fig3/PROTOCOL_V2.md`](../fig3/PROTOCOL_V2.md) section 4; the filled-in prompts are in `fig3/v2/prompts/`). |
+| [box1_manuscript.md](box1_manuscript.md) | Box 1 exactly as printed in the article. Copy this one. |
+| [box1_tested.md](box1_tested.md) | The version used for the "detailed" prompts of Figure 3: the printed Box 1 plus four lines added after the pilots, with a table of which rows received each line. |
+| [box1_final.md](box1_final.md) | The working copy of that tested version, with the four additions marked ➕. It is one of the frozen protocol files (`fig3/v2/FREEZE.json`); `fig3/v2/make_protocol.py` fills it in per task to make the prompts in `fig3/v2/prompts/`. |
 
-**The two are not identical.** `box1_final.md` has four additions (marked ➕ in that file) that are not in the printed
-Box 1:
+The four additions that the tested version has and the printed Box 1 does not:
 
-1. a slot for the software and version and the hardware ("I use [software and version] on [hardware]");
+1. a slot for the software, its version and the hardware ("I use [software and version] on [hardware]");
 2. "Include a test I can run on my annotated example and tell me what result would mean that the analysis failed";
 3. "If I ask for counts or measurements, return the masks or outlines they come from";
-4. "read and write only inside [working folder]" in the optimisation paragraph.
+4. "read and write only inside [working folder]", in the paragraph for agents that optimise the workflow.
 
-These came from the pilots (17 Oct 2026). Results of the "detailed" conditions in Figure 3 are therefore for the Box 1
-with these four additions. The article's Figure 3 legend does not define the detailed prompt; the authors should either add
-the four lines to Box 1 or say in the legend that the detailed prompt is Box 1 plus these additions (see `fig3/README.md`).
+They came from the preflight of 17 Oct 2026 and were kept out of the printed Box 1 for brevity. Earlier drafts of the prompt
+are in git history.

@@ -72,4 +72,4 @@ original commands; local folder prefixes were replaced by placeholders: `<work>`
 `<fig3-work>` = `<work>/fig3`), `<uploads>` (the raw files, now `data/raw/` under the names in `data/raw_name_map.csv`),
 `<tasks>`, `<transcript>`, `<transcript2>` (session records, not included). The protocol-v2 run records (`fig3/v2/runs*/`)
 keep the real paths of the operator's throwaway cloud container (`/home/user/sessions_v2/`, `/home/user/r2exec_v2/`,
-`/home/user/sessions_v2_preflight/`, `/home/user/large_files_archive/`); they contain no personal data.
+`/home/user/large_files_archive/`); they contain no personal data.

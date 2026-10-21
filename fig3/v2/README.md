@@ -1,6 +1,6 @@
 # Figure 3 protocol v2: running and scoring the experiment
 
-This folder contains the implementation of [Figure 3 protocol v2](../PROTOCOL_V2.md). **Read the protocol before running a scenario.**
+This folder contains everything that ran the Figure 3 experiment: the generated prompts, the operator tools that started and recorded each conversation, the runner that executed the returned code, the scorer, and the 72 run records. The plan it implements is [PROTOCOL_V2.md](../PROTOCOL_V2.md); read it before running a scenario.
 
 ## Files to know
 
@@ -42,8 +42,8 @@ All commands need `V2_STAGE=main` (`V2_STAGE=preflight` was used for the preflig
 5. Save returned artefacts: `run_operator.py collect <id>`. Row B: `code_as_returned.py` (the last Python block of the
    last reply with code); any path-only edits go into `code_run.py` with `EDITS.md`, and requested packages into
    `packages.txt`. Row C: `agent_folder/`. Row D: `direct_answers.json` (fill in the turn-2 medians from the reply).
-6. Execute code for rows B and C: `PYTHONPATH=. python fig3/v2/runner.py fig3/v2/<runs folder>/<id>`.
-7. Score: `PYTHONPATH=. python fig3/v2/score.py fig3/v2/<runs folder>/<id>`. Row A uses the item check defined in
+6. Execute code for rows B and C: `PYTHONPATH=. python fig3/v2/runner.py fig3/v2/runs/<id>`.
+7. Score: `PYTHONPATH=. python fig3/v2/score.py fig3/v2/runs/<id>`. Row A uses the item check defined in
    protocol section 5.
 8. Commit and push after every scenario, so that an interrupted session loses nothing; `run_operator.py status` lists
    complete, partial and next scenarios.
